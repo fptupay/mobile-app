@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
   DefaultTheme,
@@ -11,18 +10,14 @@ import { useColorScheme } from "react-native";
 
 export { ErrorBoundary } from "expo-router";
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
-};
-
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Inter: require("../assets/fonts/Inter-Regular.ttf"),
-    ...FontAwesome.font,
+    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
+    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -49,8 +44,7 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen name="index" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>
   );
