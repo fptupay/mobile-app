@@ -33,6 +33,18 @@ export function useThemeColor(
   }
 }
 
+export function NormalText(props: TextProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+  return (
+    <DefaultText
+      style={[{ color }, style, { fontFamily: "Inter" }]}
+      {...otherProps}
+    />
+  );
+}
+
 export function MediumText(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
@@ -40,6 +52,18 @@ export function MediumText(props: TextProps) {
   return (
     <DefaultText
       style={[{ color }, style, { fontFamily: "Inter-Medium" }]}
+      {...otherProps}
+    />
+  );
+}
+
+export function SemiText(props: TextProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+  return (
+    <DefaultText
+      style={[{ color }, style, { fontFamily: "Inter-SemiBold" }]}
       {...otherProps}
     />
   );
