@@ -11,12 +11,15 @@ import {
 
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BackButton from "../components/BackButton";
 import { MediumText } from "../components/Themed";
 
 export default function ResetPassword() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
+
+      <BackButton href="/forget-password" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

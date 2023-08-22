@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -6,21 +7,24 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BackButton from "../components/BackButton";
 import { MediumText, NormalText } from "../components/Themed";
 
 export default function ForgetPassword() {
   return (
-    <SafeAreaView className="px-4 flex-1">
+    <SafeAreaView className="flex-1">
+      <BackButton href="/" />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
+        className="flex-1 px-4"
       >
         <StatusBar style="auto" />
+
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
@@ -44,11 +48,12 @@ export default function ForgetPassword() {
               />
             </View>
             <View className="w-full mt-8 space-y-2">
-              <TouchableOpacity className=" bg-primary rounded-lg py-3">
-                <MediumText className="text-white text-center">
-                  Xác nhận
-                </MediumText>
-              </TouchableOpacity>
+              <Link
+                href="/reset-password"
+                className=" bg-primary rounded-lg py-3 text-center"
+              >
+                <MediumText className="text-white">Xác nhận</MediumText>
+              </Link>
             </View>
           </View>
         </TouchableWithoutFeedback>
