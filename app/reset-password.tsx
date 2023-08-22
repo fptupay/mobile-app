@@ -11,9 +11,9 @@ import {
 
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../components/Themed";
+import { MediumText } from "../components/Themed";
 
-export default function LoginScreen() {
+export default function ResetPassword() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
@@ -23,24 +23,24 @@ export default function LoginScreen() {
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center justify-center space-y-8">
+          <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../assets/images/login-mascot.png")}
-              className="w-[172px] h-[145px]"
+              source={require("../assets/images/reset-mascot.png")}
+              className="w-[198px] h-[145px] mx-auto"
             />
-            <MediumText className="text-3xl tracking-tighter">
-              Đăng nhập tài khoản{" "}
-              <MediumText className="text-primary">FPTUPay</MediumText> của bạn{" "}
+            <MediumText className="text-3xl tracking-tighter text-left">
+              Đặt lại mật khẩu
             </MediumText>
             <View className="w-full space-y-4">
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
-                placeholder="Mã sinh viên"
+                placeholder="Mật khẩu mới"
+                secureTextEntry={true}
                 style={{ fontFamily: "Inter" }}
               />
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg bg-transparent focus:border-primary"
-                placeholder="Mật khẩu"
+                placeholder="Xác nhận mật khẩu"
                 secureTextEntry={true}
                 style={{ fontFamily: "Inter" }}
               />
@@ -50,10 +50,7 @@ export default function LoginScreen() {
                 href="/phone-confirmation"
                 className=" bg-primary rounded-lg text-center py-3"
               >
-                <MediumText className="text-white">Đăng nhập</MediumText>
-              </Link>
-              <Link href="/forget-password" className="text-center">
-                <NormalText className="text-primary">Quên mật khẩu?</NormalText>
+                <MediumText className="text-white">Xác nhận</MediumText>
               </Link>
             </View>
           </View>
