@@ -1,15 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
 
-import { MediumText, View } from "../components/Themed";
+import { MediumText, NormalText, View } from "../components/Themed";
+import { Link } from "expo-router";
 
 export default function ModalScreen() {
   return (
     <View style={styles.container}>
       <MediumText className="text-tertiary">This is a text</MediumText>
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      <Link href="/ekyc-rule" className="text-center ">
+        <NormalText className="text-primary">Go to rule</NormalText>
+      </Link>
     </View>
   );
 }
