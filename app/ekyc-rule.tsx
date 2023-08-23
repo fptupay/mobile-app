@@ -5,6 +5,8 @@ import { Link } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MediumText, NormalText } from '../components/Themed'
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import BackButton from '../components/BackButton'
+import QuestionButton from '../components/QuestionButton'
 
 interface StepCardProps{
   imageSource:ImageSourcePropType;
@@ -24,12 +26,14 @@ const StepCard: React.FC<StepCardProps> = ({ imageSource, title, stepNumber }) =
 );
 export default function EkycRule() {
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="px-4">
         <StatusBar style="auto" />
-        <View className='relative p-5'>
+        <BackButton href="index"/>
+        <QuestionButton href="index"/>
+        <View className='relative p-5 mt-14'>
           <View>
               <MediumText className="text-3xl">Xác minh danh tính</MediumText>
-              <NormalText className='w-[256px] mt-2'>Bắt đầu xác minh danh tính sau khi hiểu rõ các quy 
+              <NormalText className='w-[256px] mt-2 text-tertiary'>Bắt đầu xác minh danh tính sau khi hiểu rõ các quy 
               định khi xác minh qua các bước dưới đây</NormalText>
           </View>
           <View className='mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md  flex-row items-center justify-between'>
