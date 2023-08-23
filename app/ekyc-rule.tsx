@@ -57,7 +57,7 @@ export default function EkycRule() {
           </View>
           <View className=" mt-10 bg-primary rounded-lg">
                 <Link
-                  href="/+html"
+                  href="/ekyc-camera"
                   className=" py-3 text-center "
                 >
                   <MediumText className="text-white">Quét thẻ</MediumText>
