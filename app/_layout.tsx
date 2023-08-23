@@ -46,6 +46,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="index" options={{ presentation: "modal" }} />
         <Stack.Screen name="ekyc-rule" options={{headerShown:false}} />
+        <Stack.Screen name="ekyc-camera" options={{headerShown:false}} />
       </Stack>
     </ThemeProvider>
   );
