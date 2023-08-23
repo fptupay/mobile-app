@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { Link } from 'expo-router' 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MediumText, NormalText } from '../components/Themed'
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 interface StepCardProps{
   imageSource:ImageSourcePropType;
@@ -36,8 +37,11 @@ export default function EkycRule() {
               <StepCard imageSource={require('../assets/images/accpet.png')} title="Xác nhận thông tin" stepNumber={2} />
               <StepCard imageSource={require('../assets/images/take.png')} title="Xác nhận khuôn mặt" stepNumber={3} />
           </View>
-          <View className='mt-8 relative w-full mb-8'>
-              <View className='w-[322px] absolute top-0'>
+          <View className='mt-8 relative w-full mb-8 flex-row items-center justify-between'>
+              <View>
+                <BouncyCheckbox onPress={(isChecked: boolean) => {}} />
+              </View>
+              <View className='w-[322px] absolute top-0 left-7'>
                   <NormalText className=' text-gray-500 text-sm font-normal leading-18'>
                   Tôi đồng ý với{' '}
                     <NormalText className='text-orange-500 font-medium'>Chính sách bảo mật</NormalText>
