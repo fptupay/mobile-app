@@ -23,7 +23,9 @@ export default function EkycRule() {
                   className="w-[40px] h-[35px] left-7 top-2"
                 />
                 <NormalText className='text-center mt-4'>Chụp ảnh giấy tờ tùy thân</NormalText>
-                <Text className='absolute left-6 top-0 text-center text-white text-base font-medium bg-orange-500 rounded-md'>1</Text>
+                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-4 top-0'>
+                  <Text className='text-center text-white text-base'>1</Text>
+                </View>
               </View>
               
               <View className='w-[100px] h-[85px] relative text-center'>
@@ -32,7 +34,9 @@ export default function EkycRule() {
                   className="w-[33px] h-[35px] left-7 top-2"
                 />
                 <NormalText className='text-center mt-4'>Xác nhận thông tin</NormalText>
-                <Text className='absolute left-6 top-0 text-center text-white text-base font-medium bg-orange-500'>1</Text>
+                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-5 top-0'>
+                  <Text className='text-center text-white text-base'>1</Text>
+                </View>
               </View>
               <View className='w-[100px] h-[85px] relative text-center'>
                 <Image
@@ -40,7 +44,10 @@ export default function EkycRule() {
                   className="w-[35px] h-[35px] left-7 top-2"
                 />
                 <NormalText className='text-center mt-4'>Xác nhận khuôn mặt</NormalText>
-                <Text className='absolute left-6 top-0 text-center text-white text-base font-medium bg-orange-500'>1</Text>
+                
+                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-5 top-0'>
+                  <Text className='text-center text-white text-base'>1</Text>
+                </View>
               </View>
               
           </View>
@@ -55,17 +62,20 @@ export default function EkycRule() {
                   </NormalText>
               </View>
           </View>
-          <View className="w-full mt-10">
+          <View className=" mt-10 bg-primary rounded-lg">
                 <Link
                   href="/+html"
-                  className=" bg-primary rounded-lg py-3 text-center"
+                  className=" py-3 text-center "
                 >
-                  <MediumText className="text-white rounded-md">Quét thẻ</MediumText>
+                  <MediumText className="text-white">Quét thẻ</MediumText>
                 </Link>
-              </View>
+          </View>
         </View>
+        
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  
+})
