@@ -1,11 +1,26 @@
-import { StyleSheet, Text, View, Image, Platform, TouchableNativeFeedback } from 'react-native'
+import { StyleSheet, Text, View, Image, Platform, TouchableNativeFeedback, ImageSourcePropType } from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { Link } from 'expo-router' 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MediumText, NormalText } from '../components/Themed'
-import Svg, {Path} from 'react-native-svg'
 
+interface StepCardProps{
+  imageSource:ImageSourcePropType;
+  title: string;
+  stepNumber: number;
+}
+const StepCard: React.FC<StepCardProps> = ({ imageSource, title, stepNumber }) => (
+  <View className='w-[100px] h-[85px] relative text-center'>
+    <View className='w-[40px] h-[40px] items-center'>
+      <Image source={imageSource} className='left-7 top-2' />
+    </View>
+    <NormalText className='text-center mt-4'>{title}</NormalText>
+    <View className='bg-orange-500 rounded-full absolute w-5 h-5 left-5 top-0 justify-center'>
+      <Text className='text-center text-white'>{stepNumber}</Text>
+    </View>
+  </View>
+);
 export default function EkycRule() {
   return (
     <SafeAreaView className="flex-1 px-4">
@@ -17,39 +32,9 @@ export default function EkycRule() {
               định khi xác minh qua các bước dưới đây</NormalText>
           </View>
           <View className='mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md  flex-row items-center justify-between'>
-              <View className='w-[100px] h-[85px] relative text-center'>
-                <Image
-                  source={require("../assets/images/ekyc.png")}
-                  className="w-[40px] h-[35px] left-7 top-2"
-                />
-                <NormalText className='text-center mt-4'>Chụp ảnh giấy tờ tùy thân</NormalText>
-                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-4 top-0'>
-                  <Text className='text-center text-white text-base'>1</Text>
-                </View>
-              </View>
-              
-              <View className='w-[100px] h-[85px] relative text-center'>
-                <Image
-                  source={require("../assets/images/accpet.png")}
-                  className="w-[33px] h-[35px] left-7 top-2"
-                />
-                <NormalText className='text-center mt-4'>Xác nhận thông tin</NormalText>
-                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-5 top-0'>
-                  <Text className='text-center text-white text-base'>1</Text>
-                </View>
-              </View>
-              <View className='w-[100px] h-[85px] relative text-center'>
-                <Image
-                  source={require("../assets/images/take.png")}
-                  className="w-[35px] h-[35px] left-7 top-2"
-                />
-                <NormalText className='text-center mt-4'>Xác nhận khuôn mặt</NormalText>
-                
-                <View className=' bg-orange-500 rounded-full absolute w-5 h-5 left-5 top-0'>
-                  <Text className='text-center text-white text-base'>1</Text>
-                </View>
-              </View>
-              
+              <StepCard imageSource={require('../assets/images/ekyc.png')} title="Chụp ảnh giấy tờ tùy thân" stepNumber={1} />
+              <StepCard imageSource={require('../assets/images/accpet.png')} title="Xác nhận thông tin" stepNumber={2} />
+              <StepCard imageSource={require('../assets/images/take.png')} title="Xác nhận khuôn mặt" stepNumber={3} />
           </View>
           <View className='mt-8 relative w-full mb-8'>
               <View className='w-[322px] absolute top-0'>
@@ -77,5 +62,4 @@ export default function EkycRule() {
 }
 
 const styles = StyleSheet.create({
-  
 })
