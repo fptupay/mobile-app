@@ -45,7 +45,7 @@ export default function PhoneConfirmation() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/reset-password"
+                href="/otp"
                 className=" bg-primary rounded-lg py-3 text-center"
               >
                 <MediumText className="text-white">Xác nhận</MediumText>
