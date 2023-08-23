@@ -1,9 +1,15 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Camera, CameraType } from "expo-camera";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../components/Themed";
 
 const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
   return (
@@ -20,7 +26,16 @@ const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
 };
 
 export default function EkycCamera() {
+  let camera: Camera | null;
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [capturedImage, setCapturedImage] = useState<any>(null);
+
+  const takePicture = async () => {
+    if (!camera) return;
+    const photo = await camera.takePictureAsync();
+    console.log("photo", photo);
+    setCapturedImage(photo);
+  };
 
   if (!permission) {
     return <Text>Loading...</Text>;
@@ -65,7 +80,18 @@ export default function EkycCamera() {
       <View className="w-full h-1/3 my-8">
         <Text className="text-center text-[#F97316] mb-2">Mặt trước</Text>
         <View className="overflow-hidden rounded-xl mb-5">
-          <Camera type={CameraType.back} className="w-full h-full" />
+          {capturedImage ? (
+            <ImageBackground
+              source={{ uri: capturedImage.uri }}
+              style={{ width: "100%", height: "100%" }}
+            />
+          ) : (
+            <Camera
+              ref={(r) => (camera = r)}
+              type={CameraType.back}
+              className="w-full h-full"
+            />
+          )}
         </View>
       </View>
       <View>
@@ -77,7 +103,10 @@ export default function EkycCamera() {
         </Text>
       </View>
       <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-[#808080] mx-auto mt-8">
-        <TouchableOpacity className="bg-[#808080] w-full h-full rounded-full" />
+        <TouchableOpacity
+          onPress={takePicture}
+          className="bg-[#808080] w-full h-full rounded-full"
+        />
       </View>
     </SafeAreaView>
   );
