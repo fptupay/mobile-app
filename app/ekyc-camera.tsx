@@ -10,6 +10,7 @@ import { Camera, CameraType } from "expo-camera";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TextButton, { TextButtonType } from "../components/TextButton";
 
 const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
   return (
@@ -36,6 +37,10 @@ export default function EkycCamera() {
     console.log("photo", photo);
     setCapturedImage(photo);
   };
+
+  const retakePicture = () => {
+    setCapturedImage(null);
+  }
 
   if (!permission) {
     return <Text>Loading...</Text>;
@@ -102,12 +107,30 @@ export default function EkycCamera() {
           hoặc ảnh quá tối
         </Text>
       </View>
-      <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-[#808080] mx-auto mt-8">
-        <TouchableOpacity
-          onPress={takePicture}
-          className="bg-[#808080] w-full h-full rounded-full"
-        />
-      </View>
+      {capturedImage ? (
+        <>
+          <View className="mt-8">
+            <TextButton
+              href="/"
+              text="Dùng ảnh này"
+              type={TextButtonType.PRIMARY}
+            />
+          </View>
+          <TouchableOpacity onPress={retakePicture} className="mt-4">
+            <TextButton
+              text="Hủy bỏ"
+              type={TextButtonType.SECONDARY}
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-[#808080] mx-auto mt-8">
+          <TouchableOpacity
+            onPress={takePicture}
+            className="bg-[#808080] w-full h-full rounded-full"
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
