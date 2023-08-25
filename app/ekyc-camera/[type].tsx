@@ -7,10 +7,11 @@ import {
   View,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TextButton, { TextButtonType } from "../components/TextButton";
+import TextButton, { TextButtonType } from "../../components/TextButton";
+import { useLocalSearchParams } from "expo-router";
 
 const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
   return (
@@ -27,20 +28,26 @@ const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
 };
 
 export default function EkycCamera() {
+  const { type } = useLocalSearchParams();
+
   let camera: Camera | null;
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [capturedImage, setCapturedImage] = useState<any>(null);
 
+  useEffect(() => {
+    setCapturedImage(null);
+  }, [type]);
+
   const takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync();
+    const photo = await camera.takePictureAsync({ skipProcessing: true });
     console.log("photo", photo);
     setCapturedImage(photo);
   };
 
   const retakePicture = () => {
     setCapturedImage(null);
-  }
+  };
 
   if (!permission) {
     return <Text>Loading...</Text>;
@@ -64,7 +71,7 @@ export default function EkycCamera() {
         <Text className="text-3xl font-semibold">Chụp thẻ căn cước</Text>
       </View>
       <View className="flex flex-row justify-center items-center">
-        <StepCircle index="1" active={true} />
+        <StepCircle index="1" active={type == "front"} />
         <View
           style={{
             borderBottomColor: "#808080",
@@ -72,7 +79,7 @@ export default function EkycCamera() {
             borderBottomWidth: StyleSheet.hairlineWidth,
           }}
         />
-        <StepCircle index="2" active={false} />
+        <StepCircle index="2" active={type == "back"} />
         <View
           style={{
             borderBottomColor: "#808080",
@@ -83,7 +90,9 @@ export default function EkycCamera() {
         <StepCircle index="3" active={false} />
       </View>
       <View className="w-full h-1/3 my-8">
-        <Text className="text-center text-[#F97316] mb-2">Mặt trước</Text>
+        <Text className="text-center text-[#F97316] mb-2">
+          Mặt {type == "front" ? "trước" : "sau"}
+        </Text>
         <View className="overflow-hidden rounded-xl mb-5">
           {capturedImage ? (
             <ImageBackground
@@ -112,16 +121,18 @@ export default function EkycCamera() {
         <>
           <View className="mt-8">
             <TextButton
-              href="/"
+              href={{
+                pathname: `${
+                  type == "front" ? "/ekyc-camera/[type]" : "/ekyc-rule"
+                }`,
+                params: { type: `${type == "front" ? "back" : ""}` },
+              }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />
           </View>
           <TouchableOpacity onPress={retakePicture} className="mt-4">
-            <TextButton
-              text="Hủy bỏ"
-              type={TextButtonType.SECONDARY}
-            />
+            <TextButton text="Hủy bỏ" type={TextButtonType.SECONDARY} />
           </TouchableOpacity>
         </>
       ) : (

@@ -91,7 +91,10 @@ export default function EkycRule() {
         </View>
         <View className="mt-10">
           <TextButton
-            href="/ekyc-camera"
+            href={{
+              pathname: "/ekyc-camera/[type]",
+              params: { type: "front" },
+            }}
             text="Quét thẻ"
             type={TextButtonType.PRIMARY}
           />
