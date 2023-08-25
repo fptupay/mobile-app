@@ -94,6 +94,7 @@ export default function EkycCamera() {
             <Camera
               ref={(r) => (camera = r)}
               type={CameraType.back}
+              ratio="4:3"
               className="w-full h-full"
             />
           )}
