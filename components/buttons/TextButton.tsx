@@ -1,9 +1,7 @@
 import { Link } from "expo-router";
 import React from "react";
-import CustomIcon from "./Icon";
 import { View } from "react-native";
-import { MediumText } from "./Themed";
-import { LucideIcon } from "lucide-react-native";
+import { MediumText } from "../Themed";
 
 export const TextButtonType = {
   PRIMARY: "primary",

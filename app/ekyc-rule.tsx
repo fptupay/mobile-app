@@ -3,19 +3,16 @@ import {
   Text,
   View,
   Image,
-  Platform,
-  TouchableNativeFeedback,
   ImageSourcePropType,
 } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../components/Themed";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import BackButton from "../components/BackButton";
-import QuestionButton from "../components/QuestionButton";
-import TextButton, { TextButtonType } from "../components/TextButton";
+import BackButton from "../components/buttons/BackButton";
+import QuestionButton from "../components/buttons/QuestionButton";
+import TextButton, { TextButtonType } from "../components/buttons/TextButton";
 
 interface StepCardProps {
   imageSource: ImageSourcePropType;

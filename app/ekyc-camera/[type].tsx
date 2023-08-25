@@ -1,7 +1,6 @@
 import {
   Button,
   ImageBackground,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -10,22 +9,11 @@ import { Camera, CameraType } from "expo-camera";
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TextButton, { TextButtonType } from "../../components/TextButton";
 import { useLocalSearchParams } from "expo-router";
-
-const StepCircle = ({ index, active }: { index: string; active: boolean }) => {
-  return (
-    <View
-      className={`${
-        active ? "bg-[#F97316]" : "border border-[#808080]"
-      } w-[32px] h-[32px] flex rounded-full justify-center items-center`}
-    >
-      <Text className={`${active ? "text-white" : "text-[#808080]"}`}>
-        {index}
-      </Text>
-    </View>
-  );
-};
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
+import StepProgress from "../../components/progress/StepProgress";
 
 export default function EkycCamera() {
   const { type } = useLocalSearchParams();
@@ -70,25 +58,7 @@ export default function EkycCamera() {
       <View className="mt-10 mb-8">
         <Text className="text-3xl font-semibold">Chụp thẻ căn cước</Text>
       </View>
-      <View className="flex flex-row justify-center items-center">
-        <StepCircle index="1" active={type == "front"} />
-        <View
-          style={{
-            borderBottomColor: "#808080",
-            width: 95,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-        <StepCircle index="2" active={type == "back"} />
-        <View
-          style={{
-            borderBottomColor: "#808080",
-            width: 95,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-        <StepCircle index="3" active={false} />
-      </View>
+      <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
         <Text className="text-center text-[#F97316] mb-2">
           Mặt {type == "front" ? "trước" : "sau"}
