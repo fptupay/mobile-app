@@ -22,7 +22,7 @@ export default function FaceDetector() {
       </View>
 
       <View>
-        <Text className="text-[#808080] text-justify">
+        <Text className="text-tertiary text-justify">
           <Text className="font-semibold text-black">Hướng dẫn:&nbsp;</Text>
           Tiến hành hướng khuôn mặt vào chính giữa khung hình. Sau đó, quay sang
           trái, quay sang phải và quay về giữa

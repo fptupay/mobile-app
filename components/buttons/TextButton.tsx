@@ -20,14 +20,14 @@ export default function TextButton({ href, text, type }: TextButtonProps) {
       className={`${
         type == TextButtonType.PRIMARY
           ? "bg-primary"
-          : "bg-white border border-[#808080]"
-      } rounded-lg`}
+          : "bg-white border border-tertiary"
+      } rounded-lg px-1 py-2`}
     >
       {href ? (
-        <Link href={href} className="py-3 w-full text-center">
+        <Link href={href} className="py-2 w-full text-center">
           <MediumText
             className={`${
-              type == TextButtonType.PRIMARY ? "text-white" : "text-[#808080]"
+              type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
             }`}
           >
             {text}
@@ -36,8 +36,8 @@ export default function TextButton({ href, text, type }: TextButtonProps) {
       ) : (
         <MediumText
           className={`${
-            type == TextButtonType.PRIMARY ? "text-white" : "text-[#808080]"
-          } py-3 w-full text-center`}
+            type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
+          } py-2 w-full text-center`}
         >
           {text}
         </MediumText>

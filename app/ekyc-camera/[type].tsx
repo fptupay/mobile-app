@@ -60,7 +60,7 @@ export default function EkycCamera() {
       </View>
       <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
-        <Text className="text-center text-[#F97316] mb-2">
+        <Text className="text-center text-primary mb-2">
           Mặt {type == StepType.FRONT ? "trước" : "sau"}
         </Text>
         <View className="overflow-hidden rounded-xl mb-5">
@@ -80,7 +80,7 @@ export default function EkycCamera() {
         </View>
       </View>
       <View>
-        <Text className="text-[#808080] text-justify">
+        <Text className="text-tertiary text-justify">
           <Text className="font-semibold text-black">Lưu ý:&nbsp;</Text>
           Đảm bảo ảnh rõ nét, đầy đủ thông tin, ảnh đúng định dạng. Không chụp
           ảnh từ màn hình thiết bị, ảnh photo, ảnh mất góc, ảnh bị chói sáng
@@ -108,10 +108,10 @@ export default function EkycCamera() {
           </TouchableOpacity>
         </>
       ) : (
-        <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-[#808080] mx-auto mt-8">
+        <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-tertiary mx-auto mt-8">
           <TouchableOpacity
             onPress={takePicture}
-            className="bg-[#808080] w-full h-full rounded-full"
+            className="bg-tertiary w-full h-full rounded-full"
           />
         </View>
       )}

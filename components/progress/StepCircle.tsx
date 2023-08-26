@@ -14,16 +14,16 @@ export default function StepCircle({
     <View
       className={`${
         active
-          ? "bg-[#F97316]"
+          ? "bg-primary"
           : complete
-          ? "border border-[#F97316]"
-          : "border border-[#808080]"
+          ? "border border-primary"
+          : "border border-tertiary"
       } w-[32px] h-[32px] flex rounded-full justify-center items-center`}
     >
       {complete ? (
         <Check size={16} color="#F97316" />
       ) : (
-        <Text className={`${active ? "text-white" : "text-[#808080]"}`}>
+        <Text className={`${active ? "text-white" : "text-tertiary"}`}>
           {index}
         </Text>
       )}
