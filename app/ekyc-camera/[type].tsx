@@ -13,7 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
-import StepProgress from "../../components/progress/StepProgress";
+import StepProgress, { StepType } from "../../components/progress/StepProgress";
 
 export default function EkycCamera() {
   const { type } = useLocalSearchParams();
@@ -61,7 +61,7 @@ export default function EkycCamera() {
       <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
         <Text className="text-center text-[#F97316] mb-2">
-          Mặt {type == "front" ? "trước" : "sau"}
+          Mặt {type == StepType.FRONT ? "trước" : "sau"}
         </Text>
         <View className="overflow-hidden rounded-xl mb-5">
           {capturedImage ? (
@@ -81,7 +81,7 @@ export default function EkycCamera() {
       </View>
       <View>
         <Text className="text-[#808080] text-justify">
-          <Text className="font- text-black">Lưu ý:&nbsp;</Text>
+          <Text className="font-semibold text-black">Lưu ý:&nbsp;</Text>
           Đảm bảo ảnh rõ nét, đầy đủ thông tin, ảnh đúng định dạng. Không chụp
           ảnh từ màn hình thiết bị, ảnh photo, ảnh mất góc, ảnh bị chói sáng
           hoặc ảnh quá tối
@@ -93,9 +93,11 @@ export default function EkycCamera() {
             <TextButton
               href={{
                 pathname: `${
-                  type == "front" ? "/ekyc-camera/[type]" : "/ekyc-rule"
+                  type == "front"
+                    ? "/ekyc-camera/[type]"
+                    : "/ekyc-camera/face-detector"
                 }`,
-                params: { type: `${type == "front" ? "back" : ""}` },
+                params: { type: `${type == StepType.FRONT ? StepType.BACK : StepType.SELFIE}` },
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
