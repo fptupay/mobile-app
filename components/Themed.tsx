@@ -6,8 +6,10 @@
 import {
   Text as DefaultText,
   View as DefaultView,
+  Image as DefaultImage,
   useColorScheme,
 } from "react-native";
+import { SafeAreaView as DefaultSafeAreaView } from "react-native-safe-area-context";
 
 import Colors from "../constants/Colors";
 
@@ -18,6 +20,7 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
+export type ImageProps = ThemeProps & DefaultImage["props"];
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -77,4 +80,24 @@ export function View(props: ViewProps) {
   );
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function SafeAreaView(props: ViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background"
+  );
+
+  return <DefaultSafeAreaView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function Image(props: ImageProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const tintColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "text"
+  );
+
+  return <DefaultImage tintColor={tintColor} style={[style]} {...otherProps} />;
 }

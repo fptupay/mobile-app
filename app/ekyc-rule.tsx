@@ -1,18 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ImageSourcePropType,
-} from "react-native";
+import { StyleSheet, ImageSourcePropType } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../components/Themed";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import BackButton from "../components/buttons/BackButton";
 import QuestionButton from "../components/buttons/QuestionButton";
 import TextButton, { TextButtonType } from "../components/buttons/TextButton";
+import { MediumText, NormalText, SafeAreaView, View, Image } from "../components/Themed";
 
 interface StepCardProps {
   imageSource: ImageSourcePropType;
@@ -26,11 +19,11 @@ const StepCard: React.FC<StepCardProps> = ({
 }) => (
   <View className="w-[30%]  h-full relative text-center">
     <View className="w-[45px] h-[40px] items-center">
-      <Image source={imageSource} className=" left-8 top-2" />
+      <Image source={imageSource} className="left-8 top-2" />
     </View>
-    <Text className="text-center mt-4 wd:w-[30%]">{title}</Text>
+    <NormalText className="text-center mt-4 wd:w-[30%]">{title}</NormalText>
     <View className="bg-orange-500 rounded-full absolute w-5 h-5 left-7 top-0 justify-center">
-      <Text className="text-center text-white">{stepNumber}</Text>
+      <NormalText className="text-center">{stepNumber}</NormalText>
     </View>
   </View>
 );
@@ -38,17 +31,17 @@ export default function EkycRule() {
   const [isAgree, setAgree] = useState(false);
 
   return (
-    <SafeAreaView className="flex-1 px-5 bg-white">
+    <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
       <BackButton href="index" />
       <QuestionButton href="index" />
       <View className="mt-16 mb-8">
         <View>
-          <Text className="text-3xl font-semibold">Xác minh danh tính</Text>
-          <Text className="mt-2 text-justify text-tertiary">
+          <MediumText className="text-3xl font-semibold">Xác minh danh tính</MediumText>
+          <MediumText className="mt-2 text-justify text-tertiary">
             Bắt đầu xác minh danh tính sau khi hiểu rõ các quy định khi xác minh
             qua các bước dưới đây
-          </Text>
+          </MediumText>
         </View>
         <View className="mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md flex-row items-center justify-between">
           <StepCard
