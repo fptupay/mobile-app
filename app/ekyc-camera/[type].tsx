@@ -1,3 +1,7 @@
+import { Camera, CameraType } from "expo-camera";
+import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   ImageBackground,
@@ -5,11 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Camera, CameraType } from "expo-camera";
-import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
@@ -95,9 +95,13 @@ export default function EkycCamera() {
                 pathname: `${
                   type == "front"
                     ? "/ekyc-camera/[type]"
-                    : "/ekyc-camera/face-detector"
+                    : "/ekyc-camera/face-authenticator"
                 }`,
-                params: { type: `${type == StepType.FRONT ? StepType.BACK : StepType.SELFIE}` },
+                params: {
+                  type: `${
+                    type == StepType.FRONT ? StepType.BACK : StepType.SELFIE
+                  }`,
+                },
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}

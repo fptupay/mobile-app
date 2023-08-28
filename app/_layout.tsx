@@ -51,7 +51,7 @@ function RootLayoutNav() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ekyc-camera/face-detector"
+          name="ekyc-camera/face-authenticator"
           options={{ headerShown: false }}
         />
       </Stack>
