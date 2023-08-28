@@ -37,7 +37,7 @@ export default function EkycRule() {
       <QuestionButton href="index" />
       <View className="mt-16 mb-8">
         <View>
-          <MediumText className="text-3xl font-semibold">Xác minh danh tính</MediumText>
+          <MediumText className="text-3xl">Xác minh danh tính</MediumText>
           <MediumText className="mt-2 text-justify text-tertiary">
             Bắt đầu xác minh danh tính sau khi hiểu rõ các quy định khi xác minh
             qua các bước dưới đây

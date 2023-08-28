@@ -5,15 +5,13 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   ImageBackground,
-  Text,
-  TouchableOpacity,
-  View,
+  TouchableOpacity
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
 import StepProgress, { StepType } from "../../components/progress/StepProgress";
+import { MediumText, NormalText, SafeAreaView, SemiText, View } from "../../components/Themed";
 
 export default function EkycCamera() {
   const { type } = useLocalSearchParams();
@@ -38,31 +36,31 @@ export default function EkycCamera() {
   };
 
   if (!permission) {
-    return <Text>Loading...</Text>;
+    return <NormalText>Loading...</NormalText>;
   }
 
   if (!permission.granted) {
     return (
       <SafeAreaView>
-        <Text className="text-center">
+        <NormalText className="text-center">
           We need your permission to show the camera
-        </Text>
+        </NormalText>
         <Button onPress={requestPermission} title="Grant permission" />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 px-5 bg-white">
+    <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
       <View className="mt-10 mb-8">
-        <Text className="text-3xl font-semibold">Chụp thẻ căn cước</Text>
+        <MediumText className="text-3xl">Chụp thẻ căn cước</MediumText>
       </View>
       <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
-        <Text className="text-center text-primary mb-2">
+        <NormalText className="text-center text-primary mb-2">
           Mặt {type == StepType.FRONT ? "trước" : "sau"}
-        </Text>
+        </NormalText>
         <View className="overflow-hidden rounded-xl mb-5">
           {capturedImage ? (
             <ImageBackground
@@ -80,12 +78,12 @@ export default function EkycCamera() {
         </View>
       </View>
       <View>
-        <Text className="text-tertiary text-justify">
-          <Text className="font-semibold text-black">Lưu ý:&nbsp;</Text>
+        <NormalText className="text-tertiary text-justify">
+          <SemiText>Lưu ý:&nbsp;</SemiText>
           Đảm bảo ảnh rõ nét, đầy đủ thông tin, ảnh đúng định dạng. Không chụp
           ảnh từ màn hình thiết bị, ảnh photo, ảnh mất góc, ảnh bị chói sáng
           hoặc ảnh quá tối
-        </Text>
+        </NormalText>
       </View>
       {capturedImage ? (
         <>
