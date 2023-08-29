@@ -11,7 +11,7 @@ import {
 
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../components/Themed";
+import { MediumText, NormalText } from "../../components/Themed";
 
 export default function LoginScreen() {
   return (
@@ -25,7 +25,7 @@ export default function LoginScreen() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 items-center justify-center space-y-8">
             <Image
-              source={require("../assets/images/login-mascot.png")}
+              source={require("../../assets/images/login-mascot.png")}
               className="w-[172px] h-[145px]"
             />
             <MediumText className="text-3xl tracking-tighter">
@@ -47,12 +47,15 @@ export default function LoginScreen() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/"
+                href="/authentication/phone-confirmation"
                 className=" bg-primary rounded-lg text-center py-3"
               >
                 <MediumText className="text-white">Đăng nhập</MediumText>
               </Link>
-              <Link href="/" className="text-center">
+              <Link
+                href="/authentication/forget-password"
+                className="text-center"
+              >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>
               </Link>
             </View>

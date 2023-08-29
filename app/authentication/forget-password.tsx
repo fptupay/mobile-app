@@ -11,8 +11,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../components/BackButton";
-import { MediumText, NormalText } from "../components/Themed";
+import BackButton from "../../components/BackButton";
+import { MediumText, NormalText } from "../../components/Themed";
 
 export default function ForgetPassword() {
   return (
@@ -28,7 +28,7 @@ export default function ForgetPassword() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../assets/images/forgot-mascot.png")}
+              source={require("../../assets/images/forgot-mascot.png")}
               className="w-[178px] h-[160px] mx-auto"
             />
             <View>
@@ -49,7 +49,7 @@ export default function ForgetPassword() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/"
+                href="/authentication/"
                 className=" bg-primary rounded-lg py-3 text-center"
               >
                 <MediumText className="text-white">Xác nhận</MediumText>

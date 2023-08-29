@@ -1,19 +1,12 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { useColorScheme } from "react-native";
-
+import { Slot, SplashScreen, useRouter } from "expo-router";
+import React, { useEffect } from "react";
 export { ErrorBoundary } from "expo-router";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const [loaded, error] = useFonts({
     Inter: require("../assets/fonts/Inter-Regular.ttf"),
     "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
@@ -35,33 +28,5 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="ekyc-rule" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="ekyc-camera/[type]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ekyc-camera/face-authenticator"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="phone-confirmation"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="forget-password" options={{ headerShown: false }} />
-        <Stack.Screen name="reset-password" options={{ headerShown: false }} />
-        <Stack.Screen name="otp" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
-  );
+  return <Slot />;
 }

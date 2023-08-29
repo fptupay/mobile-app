@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../components/Themed";
+import { MediumText, NormalText } from "../../components/Themed";
 
 export default function PhoneConfirmation() {
   return (
@@ -25,7 +25,7 @@ export default function PhoneConfirmation() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../assets/images/reset-mascot.png")}
+              source={require("../../assets/images/reset-mascot.png")}
               className="w-[220px] h-[160px] mx-auto"
             />
             <View>
@@ -45,7 +45,7 @@ export default function PhoneConfirmation() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/otp"
+                href="/authentication/otp"
                 className=" bg-primary rounded-lg py-3 text-center"
               >
                 <MediumText className="text-white">Xác nhận</MediumText>

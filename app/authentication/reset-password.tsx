@@ -11,8 +11,8 @@ import {
 
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../components/BackButton";
-import { MediumText } from "../components/Themed";
+import BackButton from "../../components/BackButton";
+import { MediumText } from "../../components/Themed";
 
 export default function ResetPassword() {
   return (
@@ -28,7 +28,7 @@ export default function ResetPassword() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../assets/images/reset-mascot.png")}
+              source={require("../../assets/images/reset-mascot.png")}
               className="w-[198px] h-[145px] mx-auto"
             />
             <MediumText className="text-3xl tracking-tighter text-left">
@@ -50,7 +50,7 @@ export default function ResetPassword() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/"
+                href="/authentication/login"
                 className=" bg-primary rounded-lg text-center py-3"
               >
                 <MediumText className="text-white">Xác nhận</MediumText>

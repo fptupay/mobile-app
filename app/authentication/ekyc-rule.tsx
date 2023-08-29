@@ -1,11 +1,19 @@
-import { StyleSheet, ImageSourcePropType } from "react-native";
-import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { ImageSourcePropType, StyleSheet } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import BackButton from "../components/buttons/BackButton";
-import QuestionButton from "../components/buttons/QuestionButton";
-import TextButton, { TextButtonType } from "../components/buttons/TextButton";
-import { MediumText, NormalText, SafeAreaView, View, Image } from "../components/Themed";
+import {
+  Image,
+  MediumText,
+  NormalText,
+  SafeAreaView,
+  View,
+} from "../../components/Themed";
+import BackButton from "../../components/buttons/BackButton";
+import QuestionButton from "../../components/buttons/QuestionButton";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 interface StepCardProps {
   imageSource: ImageSourcePropType;
@@ -45,17 +53,17 @@ export default function EkycRule() {
         </View>
         <View className="mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md flex-row items-center justify-between">
           <StepCard
-            imageSource={require("../assets/images/ekyc.png")}
+            imageSource={require("../../assets/images/ekyc.png")}
             title="Chụp ảnh giấy tờ tùy thân"
             stepNumber={1}
           />
           <StepCard
-            imageSource={require("../assets/images/accpet.png")}
+            imageSource={require("../../assets/images/accpet.png")}
             title="Xác nhận thông tin"
             stepNumber={2}
           />
           <StepCard
-            imageSource={require("../assets/images/take.png")}
+            imageSource={require("../../assets/images/take.png")}
             title="Xác nhận khuôn mặt"
             stepNumber={3}
           />

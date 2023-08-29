@@ -10,11 +10,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../components/BackButton";
-import { OtpInput } from "../components/OtpInput";
-import { MediumText, NormalText } from "../components/Themed";
-import Colors from "../constants/Colors";
-import { OtpInputRef } from "../types/OtpInput.type";
+import BackButton from "../../components/BackButton";
+import { OtpInput } from "../../components/OtpInput";
+import { MediumText, NormalText } from "../../components/Themed";
+import Colors from "../../constants/Colors";
+import { OtpInputRef } from "../../types/OtpInput.type";
 
 export default function Otp() {
   const otpInputRef = useRef<OtpInputRef>(null);
