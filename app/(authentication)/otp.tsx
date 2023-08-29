@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -17,6 +18,8 @@ import Colors from "../../constants/Colors";
 import { OtpInputRef } from "../../types/OtpInput.type";
 
 export default function Otp() {
+  const router = useRouter();
+
   const otpInputRef = useRef<OtpInputRef>(null);
   const [otpCode, setOtpCode] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -74,6 +77,7 @@ export default function Otp() {
                     ? Colors.tertiary
                     : Colors.primary,
                 }}
+                onPress={() => router.push("/ekyc-rule")}
               >
                 <MediumText className="text-white text-center">
                   Xác nhận

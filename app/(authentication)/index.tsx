@@ -47,7 +47,7 @@ export default function LoginScreen() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/authentication/phone-confirmation"
+                href="/type"
                 className=" bg-primary rounded-lg text-center py-3"
               >
                 <MediumText className="text-white">Đăng nhập</MediumText>

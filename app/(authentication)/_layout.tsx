@@ -16,7 +16,7 @@ export default function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="ekyc-rule" options={{ headerShown: false }} />
-        <Stack.Screen name="[type]" options={{ headerShown: false }} />
+        <Stack.Screen name="type" options={{ headerShown: false }} />
         <Stack.Screen
           name="face-authenticator"
           options={{ headerShown: false }}

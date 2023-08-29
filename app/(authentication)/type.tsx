@@ -2,16 +2,18 @@ import { Camera, CameraType } from "expo-camera";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
+import { Button, ImageBackground, TouchableOpacity } from "react-native";
 import {
-  Button,
-  ImageBackground,
-  TouchableOpacity
-} from "react-native";
+  MediumText,
+  NormalText,
+  SafeAreaView,
+  SemiText,
+  View,
+} from "../../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
 import StepProgress, { StepType } from "../../components/progress/StepProgress";
-import { MediumText, NormalText, SafeAreaView, SemiText, View } from "../../components/Themed";
 
 export default function EkycCamera() {
   const { type } = useLocalSearchParams();
@@ -92,7 +94,7 @@ export default function EkycCamera() {
               href={{
                 pathname: `${
                   type == "front"
-                    ? "/ekyc-camera/[type]"
+                    ? "/ekyc-camera/type"
                     : "/ekyc-camera/face-authenticator"
                 }`,
                 params: {
