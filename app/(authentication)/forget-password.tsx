@@ -1,4 +1,3 @@
-import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -13,6 +12,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton";
 import { MediumText, NormalText } from "../../components/Themed";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 export default function ForgetPassword() {
   return (
@@ -48,12 +50,11 @@ export default function ForgetPassword() {
               />
             </View>
             <View className="w-full mt-8 space-y-2">
-              <Link
-                href="/authentication/"
-                className=" bg-primary rounded-lg py-3 text-center"
-              >
-                <MediumText className="text-white">Xác nhận</MediumText>
-              </Link>
+              <TextButton
+                text="Xác nhận"
+                type={TextButtonType.PRIMARY}
+                href="/(authentication)/reset-password"
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>

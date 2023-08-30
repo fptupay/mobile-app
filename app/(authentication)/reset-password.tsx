@@ -9,10 +9,12 @@ import {
   View,
 } from "react-native";
 
-import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton";
 import { MediumText } from "../../components/Themed";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 export default function ResetPassword() {
   return (
@@ -49,12 +51,11 @@ export default function ResetPassword() {
               />
             </View>
             <View className="w-full mt-8 space-y-2">
-              <Link
-                href="/authentication/login"
-                className=" bg-primary rounded-lg text-center py-3"
-              >
-                <MediumText className="text-white">Xác nhận</MediumText>
-              </Link>
+              <TextButton
+                text="Xác nhận"
+                type={TextButtonType.PRIMARY}
+                href="/(authentication)"
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>
