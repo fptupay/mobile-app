@@ -94,8 +94,8 @@ export default function EkycCamera() {
               href={{
                 pathname: `${
                   type == "front"
-                    ? "/ekyc-camera/type"
-                    : "/ekyc-camera/face-authenticator"
+                    ? "/ekyc/[type]"
+                    : "/ekyc/face-authenticator"
                 }`,
                 params: {
                   type: `${

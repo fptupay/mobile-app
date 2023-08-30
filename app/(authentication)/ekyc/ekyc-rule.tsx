@@ -8,12 +8,12 @@ import {
   NormalText,
   SafeAreaView,
   View,
-} from "../../components/Themed";
-import QuestionButton from "../../components/buttons/QuestionButton";
+} from "../../../components/Themed";
+import QuestionButton from "../../../components/buttons/QuestionButton";
 import TextButton, {
   TextButtonType,
-} from "../../components/buttons/TextButton";
-import { StepType } from "../../components/progress/StepProgress";
+} from "../../../components/buttons/TextButton";
+import { StepType } from "../../../components/progress/StepProgress";
 
 interface StepCardProps {
   imageSource: ImageSourcePropType;
@@ -52,17 +52,17 @@ export default function EkycRule() {
         </View>
         <View className="mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md flex-row items-center justify-between">
           <StepCard
-            imageSource={require("../../assets/images/ekyc.png")}
+            imageSource={require("../../../assets/images/ekyc.png")}
             title="Chụp ảnh giấy tờ tùy thân"
             stepNumber={1}
           />
           <StepCard
-            imageSource={require("../../assets/images/accpet.png")}
+            imageSource={require("../../../assets/images/accpet.png")}
             title="Xác nhận thông tin"
             stepNumber={2}
           />
           <StepCard
-            imageSource={require("../../assets/images/take.png")}
+            imageSource={require("../../../assets/images/take.png")}
             title="Xác nhận khuôn mặt"
             stepNumber={3}
           />
@@ -94,7 +94,7 @@ export default function EkycRule() {
           <View className="mt-10">
             <TextButton
               href={{
-                pathname: "/ekyc-camera/[type]",
+                pathname: "/ekyc/[type]",
                 params: { type: StepType.FRONT },
               }}
               text="Quét thẻ"

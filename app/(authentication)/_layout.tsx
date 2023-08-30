@@ -15,10 +15,10 @@ export default function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="ekyc-rule" options={{ headerShown: false }} />
-        <Stack.Screen name="ekyc-camera/[type]" options={{ headerShown: false }} />
+        <Stack.Screen name="ekyc/ekyc-rule" options={{ headerShown: false }} />
+        <Stack.Screen name="ekyc/[type]" options={{ headerShown: false }} />
         <Stack.Screen
-          name="ekyc-camera/face-authenticator"
+          name="ekyc/face-authenticator"
           options={{ headerShown: false }}
         />
         <Stack.Screen

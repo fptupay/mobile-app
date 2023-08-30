@@ -4,11 +4,19 @@ import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { ImageBackground, TouchableOpacity } from "react-native";
-import { MediumText, NormalText, SafeAreaView, SemiText, View } from "../../../components/Themed";
+import {
+  MediumText,
+  NormalText,
+  SafeAreaView,
+  SemiText,
+  View,
+} from "../../../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../../../components/buttons/TextButton";
-import StepProgress from "../../../components/progress/StepProgress";
+import StepProgress, {
+  StepType,
+} from "../../../components/progress/StepProgress";
 
 export default function FaceAuthenticator() {
   let camera: Camera | null;
@@ -37,9 +45,7 @@ export default function FaceAuthenticator() {
   const getFaceData = () => {
     if (faceData.length === 0) {
       return (
-        <SemiText className="text-red-700">
-          Không tìm thấy khuôn mặt
-        </SemiText>
+        <SemiText className="text-red-700">Không tìm thấy khuôn mặt</SemiText>
       );
     }
   };
@@ -93,10 +99,11 @@ export default function FaceAuthenticator() {
             <TextButton
               href={{
                 pathname: `${
-                  type == "front"
-                    ? "/ekyc-camera/[type]"
-                    : "/ekyc-camera/face-detector"
+                  type == "front" ? "/ekyc/[type]" : "/ekyc/face-detector"
                 }`,
+                params: {
+                  type: StepType.FRONT,
+                },
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
