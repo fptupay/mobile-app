@@ -47,13 +47,13 @@ export default function LoginScreen() {
             </View>
             <View className="w-full mt-8 space-y-2">
               <Link
-                href="/type"
+                href="/(authentication)/otp"
                 className=" bg-primary rounded-lg text-center py-3"
               >
                 <MediumText className="text-white">Đăng nhập</MediumText>
               </Link>
               <Link
-                href="/authentication/forget-password"
+                href="/(authentication)/forget-password"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

@@ -9,11 +9,11 @@ import {
   SafeAreaView,
   SemiText,
   View,
-} from "../../components/Themed";
+} from "../../../components/Themed";
 import TextButton, {
   TextButtonType,
-} from "../../components/buttons/TextButton";
-import StepProgress, { StepType } from "../../components/progress/StepProgress";
+} from "../../../components/buttons/TextButton";
+import StepProgress, { StepType } from "../../../components/progress/StepProgress";
 
 export default function EkycCamera() {
   const { type } = useLocalSearchParams();

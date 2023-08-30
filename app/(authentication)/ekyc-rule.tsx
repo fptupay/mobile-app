@@ -14,6 +14,7 @@ import QuestionButton from "../../components/buttons/QuestionButton";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
+import { StepType } from "../../components/progress/StepProgress";
 
 interface StepCardProps {
   imageSource: ImageSourcePropType;
@@ -96,7 +97,7 @@ export default function EkycRule() {
             <TextButton
               href={{
                 pathname: "/ekyc-camera/[type]",
-                params: { type: "front" },
+                params: { type: StepType.FRONT },
               }}
               text="Quét thẻ"
               type={TextButtonType.PRIMARY}
