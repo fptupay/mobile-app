@@ -12,6 +12,9 @@ import {
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../../components/Themed";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 export default function LoginScreen() {
   return (
@@ -24,14 +27,17 @@ export default function LoginScreen() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 items-center justify-center space-y-8">
-            <Image
-              source={require("../../assets/images/login-mascot.png")}
-              className="w-[172px] h-[145px]"
-            />
-            <MediumText className="text-3xl tracking-tighter">
-              Đăng nhập tài khoản{" "}
-              <MediumText className="text-primary">FPTUPay</MediumText> của bạn{" "}
-            </MediumText>
+            <View className="flex items-center">
+              <Image
+                source={require("../../assets/images/login-mascot.png")}
+                className="w-[172px] h-[145px]"
+              />
+              <MediumText className="text-3xl tracking-tighter text-center">
+                Đăng nhập tài khoản{" "}
+                <MediumText className="text-primary">FPTUPay</MediumText> của
+                bạn{" "}
+              </MediumText>
+            </View>
             <View className="w-full space-y-4">
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
@@ -46,12 +52,11 @@ export default function LoginScreen() {
               />
             </View>
             <View className="w-full mt-8 space-y-2">
-              <Link
+              <TextButton
+                text="Đăng nhập"
                 href="/(authentication)/otp"
-                className=" bg-primary rounded-lg text-center py-3"
-              >
-                <MediumText className="text-white">Đăng nhập</MediumText>
-              </Link>
+                type={TextButtonType.PRIMARY}
+              />
               <Link
                 href="/(authentication)/forget-password"
                 className="text-center"
