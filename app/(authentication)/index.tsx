@@ -54,7 +54,7 @@ export default function LoginScreen() {
             <View className="w-full mt-8 space-y-2">
               <TextButton
                 text="Đăng nhập"
-                href="/(authentication)/otp"
+                href="/(authentication)/phone-confirmation"
                 type={TextButtonType.PRIMARY}
               />
               <Link

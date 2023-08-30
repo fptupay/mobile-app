@@ -11,11 +11,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../../components/BackButton";
 import { OtpInput } from "../../components/OtpInput";
 import { MediumText, NormalText } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import { OtpInputRef } from "../../types/OtpInput.type";
+import BackButton from "../../components/buttons/BackButton";
 
 export default function Otp() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function Otp() {
 
   return (
     <SafeAreaView className="flex-1">
-      <BackButton href="/phone-confirmation" />
+      <BackButton href="/(authentication)/phone-confirmation" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

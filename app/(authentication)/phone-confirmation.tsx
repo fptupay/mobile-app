@@ -12,6 +12,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../../components/Themed";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 export default function PhoneConfirmation() {
   return (
@@ -44,12 +47,11 @@ export default function PhoneConfirmation() {
               />
             </View>
             <View className="w-full mt-8 space-y-2">
-              <Link
-                href="/authentication/otp"
-                className=" bg-primary rounded-lg py-3 text-center"
-              >
-                <MediumText className="text-white">Xác nhận</MediumText>
-              </Link>
+              <TextButton
+                text="Xác nhận"
+                type={TextButtonType.PRIMARY}
+                href="/(authentication)/otp"
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>

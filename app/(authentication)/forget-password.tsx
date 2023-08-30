@@ -10,16 +10,16 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../../components/BackButton";
 import { MediumText, NormalText } from "../../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
+import BackButton from "../../components/buttons/BackButton";
 
 export default function ForgetPassword() {
   return (
     <SafeAreaView className="flex-1">
-      <BackButton href="/" />
+      <BackButton href="/(authentication)" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

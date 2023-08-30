@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   View,
 } from "../../components/Themed";
-import BackButton from "../../components/buttons/BackButton";
 import QuestionButton from "../../components/buttons/QuestionButton";
 import TextButton, {
   TextButtonType,
@@ -42,9 +41,8 @@ export default function EkycRule() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
-      <BackButton href="index" />
       <QuestionButton href="index" />
-      <View className="mt-16 mb-8">
+      <View className="mt-10 mb-8">
         <View>
           <MediumText className="text-3xl">Xác minh danh tính</MediumText>
           <MediumText className="mt-2 text-justify text-tertiary">
