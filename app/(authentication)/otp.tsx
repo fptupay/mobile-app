@@ -77,7 +77,8 @@ export default function Otp() {
                     ? Colors.tertiary
                     : Colors.primary,
                 }}
-                onPress={() => router.push("/(authentication)/ekyc/ekyc-rule")}
+                //onPress={() => router.push("/(authentication)/ekyc/ekyc-rule")}
+                onPress={() => router.push("/notification")}
               >
                 <MediumText className="text-white text-center">
                   Xác nhận
