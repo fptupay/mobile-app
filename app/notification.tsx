@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from '../components/buttons/BackButton';
 import { MediumText } from '../components/Themed';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function notification() {
@@ -72,7 +73,7 @@ export default function notification() {
     const renderItem = ({ item }: { item: typeof featuresData[0] }) => (
         <TouchableWithoutFeedback>
            <View className='flex flex-row justify-center items-center h-[75px] w-full total-container border-b border-gray-300 relative'>
-                <View className="bg-[#3074E3] rounded-full w-2 h-2 left-4"></View>
+                <View className="bg-[#3074E3] rounded-full w-2 h-2 left-5"></View>
                 <View className='w-[48px] h-[48px] rounded-full border border-gray-400 border-opacity-40 left-6'>
                     <Image source={item.icon} className='w-full h-full rounded-full'/>
                 </View>
@@ -98,8 +99,8 @@ export default function notification() {
             <MediumText className='w-full flex items-center justify-center text-xl font-medium my-4'>
                 Thông báo
             </MediumText>
-        </View>
-        <View className=' px-4 bg-white h-full w-full rounded-tr-[30px] rounded-tl-[30px] backdrop-blur-[4px] relative'>
+        </View>  
+        <View className='px-4 bg-white h-full w-full rounded-tr-[30px] rounded-tl-[30px] backdrop-blur-[4px] relative'>
             <View className='w-full h-[24px] flex justify-start items-center left-2'>
                 <View className='w-[73px] self-stretch  h-[17px]'>
                     <MediumText className='absolute w-[41px] left-0 top-3 text-center font-normal leading-[18px] text-[#3074EE]'>Tất cả</MediumText>
@@ -109,7 +110,7 @@ export default function notification() {
                 </View>
             </View>
             <View className='h-full pt-4 w-full'>
-                <View className='px-2 relative'>
+                <View>
                     <FlatList
                         data={features}
                         keyExtractor={item => `${item.id}`}
@@ -119,8 +120,6 @@ export default function notification() {
             </View>
             
         </View>
-       
-        
         
     </SafeAreaView>
   )
@@ -129,7 +128,7 @@ export default function notification() {
 const styles = StyleSheet.create({
     background: {
         width:'100%',
-        height:'100%',
+        height:'50%',
         backgroundColor: 'linear-gradient(180deg, rgba(249, 115, 22, 0.75) 0%, rgba(253, 200, 48, 0.50) 100%)'
     }
 })
