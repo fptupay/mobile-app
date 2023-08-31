@@ -71,7 +71,7 @@ export default function notification() {
     
     const renderItem = ({ item }: { item: typeof featuresData[0] }) => (
         <TouchableWithoutFeedback>
-           <View className='flex-row justify-center items-center h-[75px] w-full total-container border-b border-gray-300 relative'>
+           <View className='flex flex-row justify-center items-center h-[75px] w-full total-container border-b border-gray-300 relative'>
                 <View className="bg-[#3074E3] rounded-full w-2 h-2 left-4"></View>
                 <View className='w-[48px] h-[48px] rounded-full border border-gray-400 border-opacity-40 left-6'>
                     <Image source={item.icon} className='w-full h-full rounded-full'/>
@@ -95,7 +95,7 @@ export default function notification() {
   return (
     <SafeAreaView className='flex-1' style={styles.background}>
         <View className='w-full px-4'>
-            <MediumText className='w-full flex items-center justify-center text-xl font-medium mt-4 mb-4'>
+            <MediumText className='w-full flex items-center justify-center text-xl font-medium my-4'>
                 Thông báo
             </MediumText>
         </View>
@@ -117,6 +117,7 @@ export default function notification() {
                     />
                 </View>
             </View>
+            
         </View>
        
         
