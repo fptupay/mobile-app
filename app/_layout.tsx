@@ -27,5 +27,5 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Slot />;
+  return <Slot initialRouteName="/(account)" />;
 }
