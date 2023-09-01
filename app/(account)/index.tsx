@@ -1,7 +1,16 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { FlatList, View } from "react-native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomIcon from "../../components/Icon";
 import { MediumText, NormalText, SemiText } from "../../components/Themed";
@@ -19,11 +28,19 @@ const MainAction: React.FC<MainActionProps> = ({ image, title }) => (
     <View className="w-[48px] h-[48px] items-center bg-black rounded-full justify-center">
       <CustomIcon name={image} size={24} color="#fff" />
     </View>
-    <MediumText className="text-center mt-4 wd:w-[30%]">{title}</MediumText>
+    <MediumText className="text-center mt-4 wd:w-[30%] text-secondary">
+      {title}
+    </MediumText>
   </View>
 );
 
 export default function Home() {
+  const [isSearching, setIsSearching] = useState(false);
+
+  const toggleSearch = () => {
+    setIsSearching(!isSearching);
+  };
+
   const transactions = [
     {
       id: 1,
@@ -124,21 +141,25 @@ export default function Home() {
       <View className="h-[350px]">
         <LinearGradient
           // Background Linear Gradient
-          colors={["#f97316bf", "#fdc83080"]}
+          colors={["#fdc83080", "#f97316bf"]}
           className="absolute top-0 left-0 right-0 h-full"
         />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex flex-row space-x-2 items-center">
             <View className="w-9 h-9 rounded-full bg-gray-200"></View>
             <View>
-              <NormalText>Xin chào</NormalText>
-              <SemiText>Phạm Quang Hưng</SemiText>
+              <NormalText className="text-secondary">Xin chào</NormalText>
+              <SemiText className="text-secondary">Phạm Quang Hưng</SemiText>
             </View>
           </View>
 
           <View className="mt-6">
-            <NormalText className="text-base">Số dư của bạn</NormalText>
-            <SemiText className="text-3xl">{formatMoney(100000000)}đ</SemiText>
+            <NormalText className="text-base text-secondary">
+              Số dư của bạn
+            </NormalText>
+            <SemiText className="text-3xl text-secondary">
+              {formatMoney(100000000)}đ
+            </SemiText>
           </View>
 
           <View className="mt-6">
@@ -152,15 +173,49 @@ export default function Home() {
       </View>
 
       <View className="absolute top-[320px] left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px]">
-        <View className="pt-4 flex-row justify-between">
-          <NormalText className="text-tertiary uppercase">Hôm nay</NormalText>
-          <View className="flex-row">
-            <View className="mr-4">
-              <CustomIcon name="BarChart" size={24} color={Colors.tertiary} />
+        {!isSearching ? (
+          <View className="mt-5 flex-row items-center justify-between">
+            <NormalText className="text-tertiary uppercase">Hôm nay</NormalText>
+            <View className="flex-row">
+              <View className="mr-4">
+                <CustomIcon name="BarChart" size={24} color={Colors.tertiary} />
+              </View>
+              <TouchableOpacity onPress={toggleSearch}>
+                <CustomIcon name="Search" size={24} color={Colors.tertiary} />
+              </TouchableOpacity>
             </View>
-            <CustomIcon name="Search" size={24} color={Colors.tertiary} />
           </View>
-        </View>
+        ) : (
+          <View className="my-5 mt-8 flex-row items-center justify-center">
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              className="flex-1"
+            >
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View className="flex-1 items-center justify-center">
+                  <View className="w-full relative">
+                    <TextInput
+                      className="h-12 px-10 py-3 bg-[#D9D9D9] rounded-lg focus:border-primary"
+                      placeholderTextColor={Colors.tertiary}
+                      placeholder="Tìm kiếm giao dịch"
+                      style={{ fontFamily: "Inter" }}
+                    />
+                    <View className="absolute top-3 left-2">
+                      <CustomIcon
+                        name="Search"
+                        size={24}
+                        color={Colors.tertiary}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+            <TouchableOpacity className="ml-3" onPress={toggleSearch}>
+              <NormalText className="text-secondary">Hủy</NormalText>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <FlatList
           data={transactions}
@@ -170,7 +225,9 @@ export default function Home() {
               <View className="flex-row items-center space-x-4">
                 <View className="w-10 h-10 rounded-full bg-gray-200"></View>
                 <View className="w-[200px]">
-                  <MediumText>{item.name}</MediumText>
+                  <MediumText className="text-secondary">
+                    {item.name}
+                  </MediumText>
                   <NormalText className="text-ellipsis text-tertiary">
                     {item.message}
                   </NormalText>
