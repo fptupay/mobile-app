@@ -98,12 +98,7 @@ export default function FaceAuthenticator() {
           <View className="mt-8">
             <TextButton
               href={{
-                pathname: `${
-                  type == "front" ? "/ekyc/[type]" : "/ekyc/face-detector"
-                }`,
-                params: {
-                  type: StepType.FRONT,
-                },
+                pathname: "/(home)/my-wallet",
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
