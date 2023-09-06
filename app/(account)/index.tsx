@@ -164,8 +164,6 @@ export default function Home() {
       })
     ).current;
 
-    console.log(scrollY);
-
     const bottomSheetAnimation = {
       transform: [
         {
