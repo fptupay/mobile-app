@@ -138,6 +138,7 @@ export default function Home() {
   };
 
   const BottomSheet = () => {
+    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT-350);
     const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25;
     const MAX_DOWNWARD_TRANSLATE_Y = 0;
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -158,9 +159,12 @@ export default function Home() {
           } else if (lastGestureDy.current > MAX_DOWNWARD_TRANSLATE_Y) {
             lastGestureDy.current = MAX_DOWNWARD_TRANSLATE_Y;
           }
+          setScrollY(WINDOW_HEIGHT-350-lastGestureDy.current);
         },
       })
     ).current;
+
+    console.log(scrollY);
 
     const bottomSheetAnimation = {
       transform: [
@@ -184,7 +188,7 @@ export default function Home() {
             className="w-48 h-10 pt-2 justify-start items-center mx-auto"
             {...panResponder.panHandlers}
           >
-            <View className="w-28 h-2 rounded-xl bg-tertiary"></View>
+            <View className="w-28 h-1 rounded-xl bg-tertiary"></View>
           </View>
           {!isSearching ? (
             <View className="mt-1 flex-row items-center justify-between">
@@ -237,6 +241,7 @@ export default function Home() {
           )}
 
           <FlatList
+          contentContainerStyle={{ paddingBottom: 400*(WINDOW_HEIGHT-350)/scrollY}}
             data={transactions}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
