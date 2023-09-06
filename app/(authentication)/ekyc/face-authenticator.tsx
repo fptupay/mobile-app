@@ -98,7 +98,7 @@ export default function FaceAuthenticator() {
           <View className="mt-8">
             <TextButton
               href={{
-                pathname: "/(home)/my-wallet",
+                pathname: "/(account)",
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}

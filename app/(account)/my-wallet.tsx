@@ -1,9 +1,4 @@
-import {
-  NormalText,
-  SafeAreaView,
-  SemiText,
-  View,
-} from "../../components/Themed";
+import { NormalText, SemiText, View } from "../../components/Themed";
 import { Image, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import List from "../../components/list";
@@ -11,6 +6,7 @@ import { ListItemProps } from "../../components/list/ListItem";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
+import CustomIcon from "../../components/Icon";
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -72,7 +68,7 @@ const otherFunctions: ListItemProps[] = [
 
 export default function MyWallet() {
   return (
-    <SafeAreaView className="flex-1">
+    <View className="flex-1">
       <ScrollView contentContainerStyle={{ paddingBottom: 250 }}>
         <View className="h-1/4 bg-white rounded-bl-[30px] rounded-br-[30px] relative flex justify-center items-center">
           <LinearGradient
@@ -80,8 +76,12 @@ export default function MyWallet() {
             colors={["#fdc83080", "#f97316bf"]}
           />
           <View className="absolute bg-transparent flex items-center">
-            <View className="w-[72px] h-[72px] rounded-full"></View>
-            <SemiText className="text-center text-secondary mt-4">
+            <View className="w-[72px] h-[72px] rounded-full relative">
+              <View className="bg-white rounded-full w-7 h-7 absolute -bottom-1 -right-1 flex justify-center items-center">
+                <CustomIcon name="Pencil" color="black" size={16} />
+              </View>
+            </View>
+            <SemiText className="text-center text-secondary mt-5">
               Cao Quynh Anh
             </SemiText>
           </View>
@@ -109,7 +109,7 @@ export default function MyWallet() {
             <Image source={require("../../assets/images/account-mascot.png")} />
           </View>
 
-          <View className="mt-3">
+          <View className="mt-5">
             <List data={walletFunctions} />
           </View>
 
@@ -130,6 +130,6 @@ export default function MyWallet() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
