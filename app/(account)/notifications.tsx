@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, TouchableWithoutFeedback,KeyboardAvoidingView,NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Image, TouchableWithoutFeedback,KeyboardAvoidingView,Animated, PanResponder} from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import React, {useRef, useState} from 'react'
 import { useRouter } from "expo-router";
@@ -9,9 +9,7 @@ import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
 
 
 export default function Notifications() {
-  const flatListRef = useRef<FlatList | null>(null);
-  const itemHeight = 75;
-  const [currentIndex, setCurrentIndex] = useState(0); 
+  
   const featuresData = [
     {
         id: 1,
@@ -87,45 +85,99 @@ export default function Notifications() {
 
   const [features, setFeatures] = React.useState(featuresData);
 
-  const scrollToIndex = (index: number) => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({ index, animated: true });
-    }
-  };
-
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    const newCurrentIndex = Math.floor(offsetY / itemHeight);
-    if (newCurrentIndex !== currentIndex) {
-      setCurrentIndex(newCurrentIndex);
-    }
-  };
-
   const renderItem = ({ item }: { item: typeof featuresData[0] }) => (
-      <KeyboardAvoidingView>
-          <View className='flex-row justify-center items-center h-[75px] w-full border-b border-gray-300'>
-              <View className="bg-[#3074E3] rounded-full w-2 h-2 left-4"></View>
-              <View className='w-[48px] h-[48px] rounded-full border border-gray-400 border-opacity-40 left-6'>
-                  <Image source={item.icon} className='w-full h-full rounded-full'/>
-              </View>
-              <View className='left-10'>
-                  <Text className='text-[#0F172A]'>{item.description}</Text>
-                  <View className='flex-row justify-start items-center mt-2'>
-                      <Text className=' text-[#808080] text-sm'>{item.time}</Text>
-                      <View className="bg-[#808080] rounded-full w-1 h-1 left-5"></View>
-                      <Text className='left-10 top-0 text-[#3074E3] '>{item.from}</Text>
-                  </View>
-              </View>
-          </View>
-      </KeyboardAvoidingView>
-  )
+    <KeyboardAvoidingView>
+        <View className='flex-row justify-center items-center h-[75px] w-full border-b border-gray-300'>
+            <View className="bg-[#3074E3] rounded-full w-2 h-2 left-4"></View>
+            <View className='w-[48px] h-[48px] rounded-full border border-gray-400 border-opacity-40 left-6'>
+                <Image source={item.icon} className='w-full h-full rounded-full'/>
+            </View>
+            <View className='left-10'>
+                <Text className='text-[#0F172A]'>{item.description}</Text>
+                <View className='flex-row justify-start items-center mt-2'>
+                    <Text className=' text-[#808080] text-sm'>{item.time}</Text>
+                    <View className="bg-[#808080] rounded-full w-1 h-1 left-5"></View>
+                    <Text className='left-10 top-0 text-[#3074E3] '>{item.from}</Text>
+                </View>
+            </View>
+        </View>
+    </KeyboardAvoidingView>
+)
+
+  const Content = () => {
+    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT-350);
+    const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25;
+    const MAX_DOWNWARD_TRANSLATE_Y = 0;
+    const animatedValue = useRef(new Animated.Value(0)).current;
+    const lastGestureDy = useRef(0);
+    const panResponder = useRef(
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderGrant: () => {
+          animatedValue.setOffset(lastGestureDy.current);
+        },
+        onPanResponderMove: (event, gesture) => {
+          animatedValue.setValue(gesture.dy);
+        },
+        onPanResponderRelease: (event, gesture) => {
+          lastGestureDy.current += gesture.dy;
+          if (lastGestureDy.current < MAX_UPWARD_TRANSLATE_Y) {
+            lastGestureDy.current = MAX_UPWARD_TRANSLATE_Y;
+          } else if (lastGestureDy.current > MAX_DOWNWARD_TRANSLATE_Y) {
+            lastGestureDy.current = MAX_DOWNWARD_TRANSLATE_Y;
+          }
+          setScrollY(WINDOW_HEIGHT-350-lastGestureDy.current);
+        },
+      })
+    ).current;
+
+    const contentNotifiAnimation = {
+      transform: [
+        {
+          translateY: animatedValue.interpolate({
+            inputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
+            outputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
+            extrapolate: "clamp",
+          }),
+        },
+      ],
+    };
+
+    return (
+      <View className="flex-1 bg-black">
+        <Animated.View
+          className="flex-1 px-4 bg-white left-0 right-0 backdrop-blur-[4px] rounded-t-[30px] absolute -top-6"
+          style={[{ maxHeight: WINDOW_HEIGHT}, contentNotifiAnimation]}
+        >
+            <View className='w-full h-[24px] flex justify-start items-center left-2'>
+                <View className='w-[73px] self-stretch  h-[17px]'>
+                    <MediumText className='absolute w-[41px] left-0 top-3 text-center font-normal leading-[18px] text-[#3074EE]'>Tất cả</MediumText>
+                </View>
+                <View className='absolute bg-[#DB2A34] rounded-[4px] left-[50px] top-2'>
+                    <Text className='w-full h-full items-center text-white p-1'>10</Text>
+                </View>
+            </View>
+            <View className='h-full pt-4 w-full'>
+                <View className='px-2 relative'>
+                    <FlatList
+                    contentContainerStyle={{ paddingBottom: 200*(WINDOW_HEIGHT-350)/scrollY}}
+                        data={featuresData}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderItem}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
+            </View>
+        </Animated.View>
+      </View>
+    );
+  };
 
   return (
     <View className="flex-1">
        <StatusBar style="auto" />
        <View className="h-[100px]">
           <LinearGradient
-              // Background Linear Gradient
               colors={["#fdc83080", "#f97316bf"]}
               className="absolute top-0 left-0 right-0 h-full"
             />
@@ -137,30 +189,7 @@ export default function Notifications() {
                 </View>
             </SafeAreaView>
         </View>
-        <View className='flex-1 bg-black'>
-          <View className='flex-1 px-4 bg-white left-0 right-0 backdrop-blur-[4px] rounded-t-[30px] absolute -top-6'>
-                <View className='w-full h-[24px] flex justify-start items-center left-2'>
-                    <View className='w-[73px] self-stretch  h-[17px]'>
-                        <MediumText className='absolute w-[41px] left-0 top-3 text-center font-normal leading-[18px] text-[#3074EE]'>Tất cả</MediumText>
-                    </View>
-                    <View className='absolute bg-[#DB2A34] rounded-[4px] left-[50px] top-2'>
-                        <Text className='w-full h-full items-center text-white p-1'>10</Text>
-                    </View>
-                </View>
-                <View className='h-full pt-4 w-full'>
-                    <View className='px-2 relative'>
-                        <FlatList
-                            ref={flatListRef}
-                            data={features}
-                            keyExtractor={(item) => `${item.id}`}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={renderItem}
-                            onMomentumScrollEnd={onScroll}
-                        />
-                    </View>
-                </View>
-          </View>
-        </View>
+        <Content/>
     </View>
   );
 }
