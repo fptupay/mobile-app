@@ -1,11 +1,10 @@
-import { Text, View, FlatList, TouchableOpacity, Image, TouchableWithoutFeedback,KeyboardAvoidingView,Animated, PanResponder} from 'react-native';
+import { Text, View, FlatList, Image,KeyboardAvoidingView,Animated, PanResponder} from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import React, {useRef, useState} from 'react'
-import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText } from "../../components/Themed";
-import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
+import { WINDOW_HEIGHT } from "../../utils/helper";
 
 
 export default function Notifications() {
