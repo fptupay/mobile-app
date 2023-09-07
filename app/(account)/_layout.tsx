@@ -50,7 +50,7 @@ export default function AccountLayout() {
         }}
       />
       <Tabs.Screen
-        name="my-account"
+        name="my-wallet"
         options={{
           tabBarLabel: "Ví của tôi",
           tabBarIcon: ({ color, size }) => (
