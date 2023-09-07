@@ -19,6 +19,9 @@ import { MediumText, NormalText, SemiText } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import { IconProps } from "../../types/Icon.type";
 import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
+import TextButton, {
+  TextButtonType,
+} from "../../components/buttons/TextButton";
 
 interface MainActionProps {
   image: IconProps["name"];
@@ -289,6 +292,11 @@ export default function Home() {
             <View>
               <NormalText className="text-secondary">Xin chào</NormalText>
               <SemiText className="text-secondary">Phạm Quang Hưng</SemiText>
+              <TextButton
+                text="Liên kết"
+                href="/add-bank"
+                type={TextButtonType.PRIMARY}
+              />
             </View>
           </View>
 
@@ -303,9 +311,12 @@ export default function Home() {
 
           <View className="mt-6">
             <View className="flex-row justify-between">
-              <MainAction image="Plus" title="Nạp tiền" />
+              <MainAction 
+              image="Plus" 
+              title="Nạp tiền" 
+              />
               <MainAction image="ArrowRight" title="Chuyển tiền" />
-              <MainAction image="WalletCards" title="Rút tiền" />
+              <MainAction image="WalletCards" title="Rút tiền"  />
             </View>
           </View>
         </SafeAreaView>
