@@ -101,7 +101,7 @@ export default function Notifications() {
             </View>
         </View>
     </KeyboardAvoidingView>
-)
+  )
 
   const Content = () => {
     const [scrollY, setScrollY] = useState(WINDOW_HEIGHT-350);
