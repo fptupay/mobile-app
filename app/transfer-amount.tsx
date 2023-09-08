@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 import SharedLayout from "../components/SharedLayout";
 import TextField from "../components/TextField";
-import { MediumText, NormalText } from "../components/Themed";
+import { MediumText, NormalText, SemiText } from "../components/Themed";
 import TextButton from "../components/buttons/TextButton";
 import { formatMoney } from "../utils/helper";
 
@@ -13,13 +13,24 @@ export default function TransferAmountScreen() {
 
   const handleAmountChange = (amount: string) => {
     const numericValue = amount.replace(/\D/g, "");
+
+    const baseAmount = parseInt(numericValue) || 0;
+    // prevent user from entering more than 100 million
+    if (numericValue.length > 8 && numericValue !== "100000000") {
+      return;
+    }
+
+    // format amount with dot by thousands
     const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     setAmount(formattedAmount);
 
-    const baseAmount = parseInt(numericValue) || 0;
     const suggestions =
-      baseAmount === 0 ? [] : [baseAmount, baseAmount * 10, baseAmount * 100];
-    setSuggestions(suggestions);
+      baseAmount === 0
+        ? []
+        : baseAmount > 999999
+        ? [baseAmount, baseAmount * 10]
+        : [baseAmount, baseAmount * 10, baseAmount * 100];
+    setSuggestions(suggestions.filter((suggestion) => suggestion <= 100000000));
   };
 
   const handleSuggestionPress = (suggestion: number) => {
@@ -38,14 +49,17 @@ export default function TransferAmountScreen() {
         <MediumText className="text-primary">Thay đổi</MediumText>
       </View>
 
-      <View>
+      <View className="flex-row justify-center items-center">
         <TextInput
-          className="text-4xl font-semibold text-primary text-center"
+          className="text-4xl font-semibold text-primary"
           placeholder="0đ"
           value={amount}
           onChangeText={handleAmountChange}
           keyboardType="numeric"
         />
+        {amount ? (
+          <SemiText className="text-4xl font-semibold text-primary">đ</SemiText>
+        ) : null}
       </View>
       <View className="space-x-2 flex-row">
         {suggestions.map((suggestion) => (
