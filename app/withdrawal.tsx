@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -8,13 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import GradientBackground from "../components/GradientBackground";
 import CustomIcon from "../components/Icon";
+import SharedLayout from "../components/SharedLayout";
 import TextField from "../components/TextField";
 import { MediumText, NormalText, SemiText } from "../components/Themed";
-import BackButton from "../components/buttons/BackButton";
-import QuestionButton from "../components/buttons/QuestionButton";
 import TextButton from "../components/buttons/TextButton";
 
 interface BankProps {
@@ -79,67 +75,53 @@ export default function Home() {
   );
 
   return (
-    <View className="flex-1">
-      <StatusBar style="auto" />
-
-      <View className="h-48">
-        <GradientBackground />
-        <SafeAreaView className="px-4 pt-4">
-          <View className="flex flex-row justify-between">
-            <BackButton href="/(account)" />
-            <QuestionButton href="" />
-          </View>
-          <MediumText className="text-2xl mt-5">Rút tiền</MediumText>
-        </SafeAreaView>
-      </View>
-      <View className="absolute top-36 left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-between">
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
-            <SemiText className="my-4">Rút tiền từ FPTUPay</SemiText>
-            <TextField
-              value={value}
-              label="Số tiền cần rút"
-              errorText={error}
-              onChangeText={(text) => setValue(text)}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-        <View className="flex-1 mt-8">
-          <SemiText className="mb-4">Đến ngân hàng</SemiText>
-          <FlatList
-            className="flex-grow-0 h-60"
-            data={banks}
-            keyExtractor={(item) => item.id}
-            renderItem={renderedBankItem}
-            showsVerticalScrollIndicator={false}
+    <SharedLayout href="/(account)" title="Rút tiền">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <SemiText className="my-4">Rút tiền từ FPTUPay</SemiText>
+          <TextField
+            value={value}
+            label="Số tiền cần rút"
+            errorText={error}
+            onChangeText={(text) => setValue(text)}
           />
-          <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mb-4">
-            <View className="flex flex-row items-center">
-              <CustomIcon name="PlusCircle" size={24} color="#0F172A" />
-              <View className="ml-2">
-                <MediumText className="text-black">Thêm ngân hàng</MediumText>
-                <NormalText className="text-tertiary">
-                  Miễn phí nạp, rút tiền
-                </NormalText>
-              </View>
-            </View>
-            <CustomIcon name="ChevronRight" size={24} color="#000" />
-          </View>
-          <View>
-            <View className="flex flex-row gap-x-2 items-center mb-4">
-              <Image
-                source={require("../assets/images/tick.png")}
-                className="w-6 h-6"
-              />
-              <NormalText className="text-tertiary flex-1 text-xs">
-                Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
-                <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
+        </View>
+      </TouchableWithoutFeedback>
+      <View className="flex-1 mt-8">
+        <SemiText className="mb-4">Đến ngân hàng</SemiText>
+        <FlatList
+          className="flex-grow-0 h-60"
+          data={banks}
+          keyExtractor={(item) => item.id}
+          renderItem={renderedBankItem}
+          showsVerticalScrollIndicator={false}
+        />
+        <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mb-4">
+          <View className="flex flex-row items-center">
+            <CustomIcon name="PlusCircle" size={24} color="#0F172A" />
+            <View className="ml-2">
+              <MediumText className="text-black">Thêm ngân hàng</MediumText>
+              <NormalText className="text-tertiary">
+                Miễn phí nạp, rút tiền
               </NormalText>
             </View>
-            <TextButton href="/" text="Rút tiền" type="primary" />
           </View>
+          <CustomIcon name="ChevronRight" size={24} color="#000" />
+        </View>
+        <View>
+          <View className="flex flex-row gap-x-2 items-center mb-4">
+            <Image
+              source={require("../assets/images/tick.png")}
+              className="w-6 h-6"
+            />
+            <NormalText className="text-tertiary flex-1 text-xs">
+              Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
+              <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
+            </NormalText>
+          </View>
+          <TextButton href="/" text="Rút tiền" type="primary" />
         </View>
       </View>
-    </View>
+    </SharedLayout>
   );
 }
