@@ -16,7 +16,7 @@ export default function TransferAmountScreen() {
     const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     setAmount(formattedAmount);
 
-    const baseAmount = parseInt(amount) || 0;
+    const baseAmount = parseInt(numericValue) || 0;
     const suggestions =
       baseAmount === 0 ? [] : [baseAmount, baseAmount * 10, baseAmount * 100];
     setSuggestions(suggestions);
