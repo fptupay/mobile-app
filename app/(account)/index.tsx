@@ -297,6 +297,11 @@ export default function Home() {
                 href="/add-bank"
                 type={TextButtonType.PRIMARY}
               />
+              <TextButton
+                text="Success"
+                href="/add-bank-success"
+                type={TextButtonType.PRIMARY}
+              />
             </View>
           </View>
 

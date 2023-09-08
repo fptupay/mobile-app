@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, {useState, useRef, useEffect } from "react";
+import React, {useState, useRef} from "react";
 import QuestionButton from "../components/buttons/QuestionButton";
 import {
   Text,
@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  TextInput
+  TextInput,
+  Modal
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../components/Themed";
@@ -21,9 +22,14 @@ import {LinearGradient} from 'expo-linear-gradient'
 import { WINDOW_HEIGHT } from "../utils/helper";
 import CustomIcon from "../components/Icon";
 import Colors from "../constants/Colors";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import TextButton, {
+  TextButtonType,
+} from "../components/buttons/TextButton";
 
 
 export default function addBank() {
+  
   const featuresData = [
     {
         id: 1,
@@ -76,13 +82,17 @@ export default function addBank() {
       bank: "Agribank"
     }
   ]
+  const route = useRoute();
+  const navigation = useNavigation();
   const [features, setFeatures] = React.useState(featuresData);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const setDepositSuccessful = route.params?.setDepositSuccessful;
+  const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
+  
   const toggleSearch = () => {
     setIsSearching(!isSearching);
   };
-  
+
   const renderItem = ({ item }) => (
     <KeyboardAvoidingView>
         <View className='flex-row justify-between items-center py-3 h-[75px] w-full border-b border-gray-300'>
@@ -240,24 +250,57 @@ export default function addBank() {
 
   return (
     <View className="flex-1">
-      <StatusBar style="auto" />
-      <QuestionButton href="index" />
-      <BackButton href="/(account)/index" />
-      <View className="h-[150px]">
-          <LinearGradient
-            // Background Linear Gradient
-            colors={["#fdc83080", "#f97316bf"]}
-            className="absolute top-0 left-0 right-0 h-full"
-          />
-          <SafeAreaView className="px-4">
-              <View className='w-full px-4 mt-10'>
-                <MediumText className='w-full text-xl'>
-                    Liên kết ngân hàng
-                </MediumText>
+        <StatusBar style="auto" />
+        <QuestionButton href="index" />
+        <BackButton href="/(account)/index" />
+        <View className="h-[150px]">
+            <LinearGradient
+              // Background Linear Gradient
+              colors={["#fdc83080", "#f97316bf"]}
+              className="absolute top-0 left-0 right-0 h-full"
+            />
+            <SafeAreaView className="px-4">
+                <View className='w-full px-4 mt-10'>
+                  <MediumText className='w-full text-xl'>
+                      Liên kết ngân hàng
+                  </MediumText>
+                </View>
+            </SafeAreaView>
+        </View>
+        <Content/>
+        {setDepositSuccessful && (
+          <Modal
+          animationType="fade"
+          transparent={true}
+          visible={depositSuccessfulVisible}
+          onRequestClose={() => setDepositSuccessfulVisible(false)}
+        >
+          <View className='flex-1 justify-end mb-20 px-4'>
+            <View className='bg-black w-full h-[350px] rounded-lg'>
+              <Image
+                source={require("../assets/images/deposit.gif")}
+                className="w-[220px] h-[160px] mx-auto"
+              />
+              <Text>Nạp tiền thành công!</Text>
+
+              <View className="w-full top-12 px-4">
+                  <TextButton
+                  text="Tạo dao dịch mới"
+                  type={TextButtonType.PRIMARY}
+                  href='/add-bank-success'
+                  />
               </View>
-          </SafeAreaView>
-      </View>
-      <Content/>
+              <View className="w-full top-12 mt-2 px-4">
+                  <TextButton
+                  text="Về màn hình chính"
+                  type={TextButtonType.aa}
+                  href='/add-bank-success'
+                  />
+              </View>
+            </View>
+          </View>
+          </Modal>
+        )}
     </View>
   )
 }
