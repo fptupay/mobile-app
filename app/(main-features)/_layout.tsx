@@ -16,6 +16,7 @@ export default function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="load-money" options={{ headerShown: false }} />
         <Stack.Screen name="add-bank-item" options={{ headerShown: false }} />
+        <Stack.Screen name="add-money-otp" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

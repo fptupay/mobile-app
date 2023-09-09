@@ -31,7 +31,7 @@ export default function LoadMoney() {
     setAmount(value);
   };
 
-  console.log("setDepositSuccessful", setDepositSuccessful)
+  console.log("setDepositSuccessful", setDepositSuccessful);
 
   return (
     <SharedLayout href="/(account)" title="Nạp tiền">
@@ -82,13 +82,11 @@ export default function LoadMoney() {
               <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
             </NormalText>
           </View>
-          <TouchableOpacity>
-
           <TextButton
             text="Thanh toán"
             type={TextButtonType.PRIMARY}
-            />
-            </TouchableOpacity>
+            href="/(main-features)/add-money-otp"
+          />
         </View>
       </View>
       {setDepositSuccessful && (

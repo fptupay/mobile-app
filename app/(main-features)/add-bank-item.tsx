@@ -34,7 +34,7 @@ export default function AddBankItem() {
             </NormalText>
           </View>
           <TextButton
-            href="/add-bank-success"
+            href="/add-money-otp"
             text="Liên kết ngay"
             type={TextButtonType.SECONDARY}
           />

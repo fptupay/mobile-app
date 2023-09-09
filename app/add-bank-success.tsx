@@ -33,7 +33,7 @@ export default function addBankSuccess() {
               source={require("../assets/images/reset-mascot.png")}
               className="w-[220px] h-[160px] mx-auto"
             />
-            <MediumText className='text-2xl tracking-tight text-center'>Liên kết thành công!</MediumText>
+            <MediumText className='text-2xl tracking-tight text-center text-secondary'>Liên kết thành công!</MediumText>
        </View>
         <View className="w-full space-y-2 mb-10">
             <TextButton
