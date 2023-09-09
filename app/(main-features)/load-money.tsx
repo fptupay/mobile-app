@@ -7,8 +7,15 @@ import TextButton, {
 } from "../../components/buttons/TextButton";
 import SelectField from "../../components/SelectField";
 import IconButton from "../../components/buttons/IconButton";
+import { useState } from "react";
 
 export default function LoadMoney() {
+  const [amount, setAmount] = useState("");
+
+  const handleAmountInput = (value: string) => {
+    setAmount(value);
+  };
+
   return (
     <SharedLayout href="/(account)" title="Nạp tiền">
       <View className="pt-5 py-10 bg-transparent h-full flex flex-col justify-between">
@@ -21,15 +28,23 @@ export default function LoadMoney() {
               label="Số tiền trong ví"
               className="my-5"
               value="20.567.000đ"
+              editable={false}
+              selectTextOnFocus={false}
             />
-            <TextField label="Số tiền cần nạp" />
+            <TextField
+              label="Số tiền cần nạp"
+              editable={true}
+              selectTextOnFocus={true}
+              value={amount}
+              onChangeText={handleAmountInput}
+            />
           </View>
           <View className="py-8 bg-transparent">
-            <SemiText className="text-secondary">Từ ngân hàng</SemiText>
+            <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
             <SelectField
               label="techcombank"
               description="Miễn phí thanh toán"
-              className="my-5"
+              className="mb-5"
             />
             <IconButton
               label="Thêm ngân hàng"

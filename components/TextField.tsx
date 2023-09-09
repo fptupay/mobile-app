@@ -14,8 +14,16 @@ interface TextFieldProps extends React.ComponentProps<typeof TextInput> {
 }
 
 export default function TextField(props: TextFieldProps) {
-  const { label, errorText, value, style, onBlur, onFocus, ...otherProps } =
-    props;
+  const {
+    label,
+    errorText,
+    value,
+    style,
+    editable,
+    onBlur,
+    onFocus,
+    ...otherProps
+  } = props;
   const [isFocused, setIsFocused] = useState(false);
 
   const inputRef = useRef<TextInput>(null);
@@ -33,7 +41,9 @@ export default function TextField(props: TextFieldProps) {
   return (
     <View style={style}>
       <TextInput
-        className="p-4 font-semibold rounded-lg border border-gray-300 focus:border-primary"
+        className={`p-4 font-semibold rounded-lg border border-gray-300 focus:border-primary ${
+          !editable && "text-gray-500"
+        }`}
         ref={inputRef}
         {...otherProps}
         value={value}
