@@ -14,7 +14,7 @@ export default function AddBankItem() {
           <View className="bg-transparent">
             <SemiText className="text-secondary">Thông tin liên kết</SemiText>
             <TextField
-              label="Số thẻ/tài khoản"
+              label="Mã số sinh viên"
               className="my-5"
               value="001912111545484878"
             />
@@ -34,7 +34,7 @@ export default function AddBankItem() {
             </NormalText>
           </View>
           <TextButton
-            href="/"
+            href="/add-bank-success"
             text="Liên kết ngay"
             type={TextButtonType.SECONDARY}
           />

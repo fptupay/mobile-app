@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import React, { useRef, useState } from "react";
 import {
@@ -20,9 +19,6 @@ import { MediumText, NormalText, SemiText } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import { IconProps } from "../../types/Icon.type";
 import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
 import GradientBackground from "../../components/GradientBackground";
 import { useRouter } from "expo-router";
 
@@ -304,16 +300,6 @@ export default function Home() {
             <View>
               <NormalText className="text-secondary">Xin chào</NormalText>
               <SemiText className="text-secondary">Phạm Quang Hưng</SemiText>
-              <TextButton
-                text="Liên kết"
-                href="/add-bank"
-                type={TextButtonType.PRIMARY}
-              />
-              <TextButton
-                text="Success"
-                href="/add-bank-success"
-                type={TextButtonType.PRIMARY}
-              />
             </View>
           </View>
 

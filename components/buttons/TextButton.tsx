@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { MediumText } from "../Themed";
 
 export const TextButtonType = {
@@ -12,12 +12,14 @@ type TextButtonProps = {
   href?: any;
   text: string;
   type: string;
+  onPress?: () => void;
 };
 
-export default function TextButton({ href, text, type }: TextButtonProps) {
+export default function TextButton({ href, text, type, onPress }: TextButtonProps) {
   const route = useRouter();
 
   return (
+    <TouchableOpacity onPress={onPress}>
     <View
       className={`${
         type == TextButtonType.PRIMARY
@@ -48,5 +50,6 @@ export default function TextButton({ href, text, type }: TextButtonProps) {
         </MediumText>
       )}
     </View>
+    </TouchableOpacity>
   );
 }

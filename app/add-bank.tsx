@@ -29,7 +29,7 @@ import TextButton, {
 } from "../components/buttons/TextButton";
 import { BlurView } from 'expo-blur';
 
-type AddBankRouteParams = {
+export type AddBankRouteParams = {
   setDepositSuccessful?: boolean;
 };
 
@@ -282,42 +282,7 @@ export default function addBank() {
               </SafeAreaView>
           </View>
           <Content/>
-          {setDepositSuccessful && (
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={depositSuccessfulVisible}
-              onRequestClose={() => setIsModalVisible(false)}
-            >
-              <BlurView intensity={20} style={{ flex: 1 }}>
-                <View className='flex-1 justify-end mb-16 px-4'>
-                  <View className='bg-white w-full h-[370px] rounded-lg border-[#F97316] border-2'>
-                    <Image
-                      source={require("../assets/images/deposit.gif")}
-                      className="w-[220px] h-[160px] mx-auto"
-                    />
-                    <MediumText className='text-2xl tracking-tight text-center'>Nạp tiền thành công!</MediumText>
-
-                    <View className="w-full top-12 px-4">
-                        <TextButton
-                        text="Tạo giao dịch mới"
-                        type={TextButtonType.PRIMARY}
-                        href='/add-bank-success'
-                        />
-                    </View>
-                    <View className="w-full top-12 mt-2 px-4 pb-4">
-                        <TextButton
-                        text="Về màn hình chính"
-                        type={TextButtonType.SECONDARY }
-                        href='/add-bank-success'
-                        />
-                    </View>
-                  </View>
-                
-                </View>
-              </BlurView>
-            </Modal>
-          )}
+          
     </View>
     
   )
