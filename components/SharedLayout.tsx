@@ -33,7 +33,7 @@ export default function SharedLayout({
         </SafeAreaView>
       </View>
 
-      <View className="absolute top-36 left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-between">
+      <View className="absolute top-36 left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] ">
         {children}
       </View>
     </View>
