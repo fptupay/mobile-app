@@ -13,7 +13,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
-  Modal
+  Modal,
+  StyleSheet
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../components/Themed";
@@ -26,6 +27,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import TextButton, {
   TextButtonType,
 } from "../components/buttons/TextButton";
+import { BlurView } from 'expo-blur';
 
 
 export default function addBank() {
@@ -88,6 +90,7 @@ export default function addBank() {
   const [isSearching, setIsSearching] = useState(false);
   const setDepositSuccessful = route.params?.setDepositSuccessful;
   const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   
   const toggleSearch = () => {
     setIsSearching(!isSearching);
@@ -249,59 +252,63 @@ export default function addBank() {
   };
 
   return (
-    <View className="flex-1">
-        <StatusBar style="auto" />
-        <QuestionButton href="index" />
-        <BackButton href="/(account)/index" />
-        <View className="h-[150px]">
-            <LinearGradient
-              // Background Linear Gradient
-              colors={["#fdc83080", "#f97316bf"]}
-              className="absolute top-0 left-0 right-0 h-full"
-            />
-            <SafeAreaView className="px-4">
-                <View className='w-full px-4 mt-10'>
-                  <MediumText className='w-full text-xl'>
-                      Liên kết ngân hàng
-                  </MediumText>
-                </View>
-            </SafeAreaView>
-        </View>
-        <Content/>
-        {setDepositSuccessful && (
-          <Modal
-          animationType="fade"
-          transparent={true}
-          visible={depositSuccessfulVisible}
-          onRequestClose={() => setDepositSuccessfulVisible(false)}
-        >
-          <View className='flex-1 justify-end mb-20 px-4'>
-            <View className='bg-black w-full h-[350px] rounded-lg'>
-              <Image
-                source={require("../assets/images/deposit.gif")}
-                className="w-[220px] h-[160px] mx-auto"
+    
+      <View className="flex-1">
+          <StatusBar style="auto" />
+          <QuestionButton href="index" />
+          <BackButton href="/(account)/index" />
+          <View className="h-[150px]">
+              <LinearGradient
+                // Background Linear Gradient
+                colors={["#fdc83080", "#f97316bf"]}
+                className="absolute top-0 left-0 right-0 h-full"
               />
-              <Text>Nạp tiền thành công!</Text>
-
-              <View className="w-full top-12 px-4">
-                  <TextButton
-                  text="Tạo dao dịch mới"
-                  type={TextButtonType.PRIMARY}
-                  href='/add-bank-success'
-                  />
-              </View>
-              <View className="w-full top-12 mt-2 px-4">
-                  <TextButton
-                  text="Về màn hình chính"
-                  type={TextButtonType.aa}
-                  href='/add-bank-success'
-                  />
-              </View>
-            </View>
+              <SafeAreaView className="px-4">
+                  <View className='w-full px-4 mt-10'>
+                    <MediumText className='w-full text-xl'>
+                        Liên kết ngân hàng
+                    </MediumText>
+                  </View>
+              </SafeAreaView>
           </View>
-          </Modal>
-        )}
+          <Content/>
+          {setDepositSuccessful && (
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={depositSuccessfulVisible}
+              onRequestClose={() => setIsModalVisible(false)}
+            >
+              <BlurView intensity={20} style={{ flex: 1 }}>
+                <View className='flex-1 justify-end mb-16 px-4'>
+                  <View className='bg-white w-full h-[370px] rounded-lg border-[#F97316] border-2'>
+                    <Image
+                      source={require("../assets/images/deposit.gif")}
+                      className="w-[220px] h-[160px] mx-auto"
+                    />
+                    <MediumText className='text-2xl tracking-tight text-center'>Nạp tiền thành công!</MediumText>
+
+                    <View className="w-full top-12 px-4">
+                        <TextButton
+                        text="Tạo giao dịch mới"
+                        type={TextButtonType.PRIMARY}
+                        href='/add-bank-success'
+                        />
+                    </View>
+                    <View className="w-full top-12 mt-2 px-4 pb-4">
+                        <TextButton
+                        text="Về màn hình chính"
+                        type={TextButtonType.back}
+                        href='/add-bank-success'
+                        />
+                    </View>
+                  </View>
+                
+                </View>
+              </BlurView>
+            </Modal>
+          )}
     </View>
+    
   )
 }
-
