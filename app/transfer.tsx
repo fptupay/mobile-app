@@ -11,7 +11,7 @@ export default function TransferMoneyScreen() {
   const [error, setError] = useState<string>();
 
   return (
-    <SharedLayout href="/(account)" title="Chuyển tiền tới">
+    <SharedLayout href="/transfer-list" title="Chuyển tiền tới">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="space-y-6">
           <SemiText className="mt-4">Thông tin người nhận mới</SemiText>

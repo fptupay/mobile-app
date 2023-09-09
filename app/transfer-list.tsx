@@ -112,7 +112,7 @@ export default function TransferListScreen() {
   };
 
   return (
-    <SharedLayout href="/transfer" title="Chuyển tiền tới">
+    <SharedLayout href="/(account)" title="Chuyển tiền tới">
       <TouchableOpacity
         onPress={() => router.push("/transfer")}
         className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4"
