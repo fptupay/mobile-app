@@ -39,7 +39,7 @@ export default function TransferAmountScreen() {
 
   return (
     <SharedLayout href="/transfer" title="Chuyển tiền">
-      <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center m-4">
+      <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
         <View className="flex items-center">
           <View className="ml-2">
             <MediumText className="text-black">Phạm Quang Hưng</MediumText>
