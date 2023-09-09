@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -32,6 +33,7 @@ const mockTransferList = [
 ];
 
 export default function TransferListScreen() {
+  const router = useRouter();
   const [transferType, setTransferType] = useState<string>(transferTypes[0]);
   const [searchText, setSearchText] = useState<string>("");
 
@@ -111,10 +113,14 @@ export default function TransferListScreen() {
 
   return (
     <SharedLayout href="/transfer" title="Chuyển tiền tới">
-      <View className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4">
+      <TouchableOpacity
+        onPress={() => router.push("/transfer")}
+        className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4"
+        activeOpacity={0.8}
+      >
         <CustomIcon name="UserPlus" size={24} color="#000" />
         <MediumText className="ml-2">Người thụ hưởng mới</MediumText>
-      </View>
+      </TouchableOpacity>
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
