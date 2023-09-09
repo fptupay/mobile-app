@@ -5,8 +5,6 @@ import { NormalText, SemiText, View } from "../../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
-import SelectField from "../../components/SelectField";
-import IconButton from "../../components/buttons/IconButton";
 
 export default function AddBankItem() {
   return (
