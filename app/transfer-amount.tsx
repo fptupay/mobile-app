@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import SharedLayout from "../components/SharedLayout";
 import TextField from "../components/TextField";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
+import { MediumText, NormalText } from "../components/Themed";
 import TextButton from "../components/buttons/TextButton";
 import { formatMoney } from "../utils/helper";
 
@@ -12,6 +20,10 @@ export default function TransferAmountScreen() {
   const [message, setMessage] = useState<string>("");
 
   const handleAmountChange = (amount: string) => {
+    // amount should not start with 0
+    if (amount.startsWith("0")) {
+      return;
+    }
     const numericValue = amount.replace(/\D/g, "");
 
     const baseAmount = parseInt(numericValue) || 0;
@@ -39,49 +51,55 @@ export default function TransferAmountScreen() {
 
   return (
     <SharedLayout href="/transfer" title="Chuyển tiền">
-      <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
-        <View className="flex items-center">
-          <View className="ml-2">
-            <MediumText className="text-black">Phạm Quang Hưng</MediumText>
-            <NormalText className="text-tertiary">HE160005</NormalText>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          {/* Recipient info */}
+          <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
+            <View>
+              <MediumText className="text-black">Phạm Quang Hưng</MediumText>
+              <NormalText className="text-tertiary">HE160005</NormalText>
+            </View>
+            <MediumText className="text-primary">Thay đổi</MediumText>
           </View>
-        </View>
-        <MediumText className="text-primary">Thay đổi</MediumText>
-      </View>
 
-      <View className="flex-row justify-center items-center">
-        <TextInput
-          className="text-4xl font-semibold text-primary"
-          placeholder="0đ"
-          value={amount}
-          onChangeText={handleAmountChange}
-          keyboardType="numeric"
-        />
-        {amount ? (
-          <SemiText className="text-4xl font-semibold text-primary">đ</SemiText>
-        ) : null}
-      </View>
-      <View className="space-x-2 flex-row">
-        {suggestions.map((suggestion) => (
-          <TouchableOpacity
-            key={suggestion}
-            onPress={() => handleSuggestionPress(suggestion)}
-            className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
-          >
-            <MediumText>{formatMoney(suggestion)}</MediumText>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <TextField
-        value={message}
-        label="Nhắn gửi"
-        onChangeText={(text) => setMessage(text)}
-      />
-      <TextButton
-        href="/transfer-confirmation"
-        text="Chuyển tiền"
-        type="primary"
-      />
+          {/* Entered amount */}
+          <View className="flex-1 flex-row justify-center items-center">
+            <TextInput
+              className="text-4xl font-semibold text-primary w-full text-center"
+              placeholder="0đ"
+              value={amount}
+              onChangeText={handleAmountChange}
+              keyboardType="numeric"
+            />
+          </View>
+          {/* Suggestion */}
+          <View className="space-x-2 flex-row">
+            {suggestions.map((suggestion) => (
+              <TouchableOpacity
+                key={suggestion}
+                onPress={() => handleSuggestionPress(suggestion)}
+                className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+              >
+                <MediumText>{formatMoney(suggestion)}</MediumText>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TextField
+            value={message}
+            label="Nhắn gửi"
+            onChangeText={(text) => setMessage(text)}
+            className="my-4"
+          />
+          <TextButton
+            href="/transfer-confirmation"
+            text="Chuyển tiền"
+            type="primary"
+          />
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SharedLayout>
   );
 }
