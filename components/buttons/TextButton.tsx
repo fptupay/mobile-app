@@ -1,6 +1,6 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { MediumText } from "../Themed";
 
 export const TextButtonType = {
@@ -15,6 +15,8 @@ type TextButtonProps = {
 };
 
 export default function TextButton({ href, text, type }: TextButtonProps) {
+  const route = useRouter();
+
   return (
     <View
       className={`${
@@ -24,7 +26,10 @@ export default function TextButton({ href, text, type }: TextButtonProps) {
       } rounded-lg px-1 py-2`}
     >
       {href ? (
-        <Link href={href} className="py-2 w-full text-center">
+        <Pressable
+          onPress={() => route.push(href)}
+          className="flex items-center py-2 w-full"
+        >
           <MediumText
             className={`${
               type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
@@ -32,7 +37,7 @@ export default function TextButton({ href, text, type }: TextButtonProps) {
           >
             {text}
           </MediumText>
-        </Link>
+        </Pressable>
       ) : (
         <MediumText
           className={`${

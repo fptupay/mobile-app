@@ -33,7 +33,7 @@ export default function TextField(props: TextFieldProps) {
   return (
     <View style={style}>
       <TextInput
-        className="p-4 rounded-lg border border-gray-300 focus:border-primary"
+        className="p-4 font-semibold rounded-lg border border-gray-300 focus:border-primary"
         ref={inputRef}
         {...otherProps}
         value={value}
@@ -59,7 +59,7 @@ export default function TextField(props: TextFieldProps) {
               {
                 translateY: focusAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [20, -12],
+                  outputRange: [20, -7],
                 }),
               },
               {
@@ -70,9 +70,9 @@ export default function TextField(props: TextFieldProps) {
               },
             ],
           }}
-          className="absolute px-2 bg-white"
+          className="absolute px-2 bg-white -mt-1"
         >
-          <Text className="text-sm text-gray-300 focus:text-primary">
+          <Text className="text-sm text-gray-500 focus:text-primary">
             {label}
             {errorText ? "*" : ""}
           </Text>

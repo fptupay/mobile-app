@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   PanResponder,
   Platform,
+  Pressable,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -19,10 +20,13 @@ import { MediumText, NormalText, SemiText } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import { IconProps } from "../../types/Icon.type";
 import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
+import GradientBackground from "../../components/GradientBackground";
+import { useRouter } from "expo-router";
 
 interface MainActionProps {
   image: IconProps["name"];
   title: string;
+  route: any;
 }
 
 const transactions = [
@@ -119,16 +123,23 @@ const transactions = [
   },
 ];
 
-const MainAction: React.FC<MainActionProps> = ({ image, title }) => (
-  <View className="w-[30%] h-full relative text-center items-center">
-    <View className="w-[48px] h-[48px] items-center bg-black rounded-full justify-center">
-      <CustomIcon name={image} size={24} color="#fff" />
-    </View>
-    <MediumText className="text-center mt-4 wd:w-[30%] text-secondary">
-      {title}
-    </MediumText>
-  </View>
-);
+const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
+  const router = useRouter();
+
+  const handleRouting = () => {
+    router.push(route);
+  };
+  return (
+    <Pressable onPress={handleRouting} className="w-[30%] h-full relative text-center items-center">
+      <View className="w-[48px] h-[48px] items-center bg-black rounded-full justify-center">
+        <CustomIcon name={image} size={24} color="#fff" />
+      </View>
+      <MediumText className="text-center mt-4 wd:w-[30%] text-secondary">
+        {title}
+      </MediumText>
+    </Pressable>
+  );
+};
 
 export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
@@ -138,7 +149,7 @@ export default function Home() {
   };
 
   const BottomSheet = () => {
-    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT-350);
+    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT - 350);
     const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25;
     const MAX_DOWNWARD_TRANSLATE_Y = 0;
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -159,7 +170,7 @@ export default function Home() {
           } else if (lastGestureDy.current > MAX_DOWNWARD_TRANSLATE_Y) {
             lastGestureDy.current = MAX_DOWNWARD_TRANSLATE_Y;
           }
-          setScrollY(WINDOW_HEIGHT-350-lastGestureDy.current);
+          setScrollY(WINDOW_HEIGHT - 350 - lastGestureDy.current);
         },
       })
     ).current;
@@ -180,7 +191,7 @@ export default function Home() {
       <View className="flex-1 bg-black">
         <Animated.View
           className="absolute flex-1 left-0 right-0 -top-8 bg-white px-4 rounded-t-[30px]"
-          style={[{ maxHeight: WINDOW_HEIGHT}, bottomSheetAnimation]}
+          style={[{ maxHeight: WINDOW_HEIGHT }, bottomSheetAnimation]}
         >
           <View
             className="w-48 h-10 pt-2 justify-start items-center mx-auto"
@@ -239,7 +250,9 @@ export default function Home() {
           )}
 
           <FlatList
-          contentContainerStyle={{ paddingBottom: 400*(WINDOW_HEIGHT-350)/scrollY}}
+            contentContainerStyle={{
+              paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY,
+            }}
             data={transactions}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
@@ -278,11 +291,7 @@ export default function Home() {
     <View className="flex-1">
       <StatusBar style="auto" />
       <View className="h-[350px]">
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["#fdc83080", "#f97316bf"]}
-          className="absolute top-0 left-0 right-0 h-full"
-        />
+        <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex flex-row space-x-2 items-center">
             <View className="w-9 h-9 rounded-full bg-gray-200"></View>
@@ -303,9 +312,21 @@ export default function Home() {
 
           <View className="mt-6">
             <View className="flex-row justify-between">
-              <MainAction image="Plus" title="Nạp tiền" />
-              <MainAction image="ArrowRight" title="Chuyển tiền" />
-              <MainAction image="WalletCards" title="Rút tiền" />
+              <MainAction
+                route="/(main-features)/load-money"
+                image="Plus"
+                title="Nạp tiền"
+              />
+              <MainAction
+                route="/(main-features)/load-money"
+                image="ArrowRight"
+                title="Chuyển tiền"
+              />
+              <MainAction
+                route="/(main-features)/load-money"
+                image="WalletCards"
+                title="Rút tiền"
+              />
             </View>
           </View>
         </SafeAreaView>

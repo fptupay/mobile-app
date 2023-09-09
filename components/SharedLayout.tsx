@@ -25,11 +25,11 @@ export default function SharedLayout({
       <View className="h-48">
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
-          <View className="flex flex-row justify-between">
-            <BackButton href={href} />
-            <QuestionButton href="" />
-          </View>
-          <MediumText className="text-2xl mt-5">{title}</MediumText>
+          <BackButton href={href} />
+          <QuestionButton href="" />
+          <MediumText className="text-2xl text-secondary mt-9">
+            {title}
+          </MediumText>
         </SafeAreaView>
       </View>
 
