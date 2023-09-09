@@ -8,34 +8,19 @@ import TextButton, {
 import SelectField from "../../components/SelectField";
 import IconButton from "../../components/buttons/IconButton";
 
-export default function LoadMoney() {
+export default function AddBankItem() {
   return (
-    <SharedLayout href="/(account)" title="Nạp tiền">
+    <SharedLayout href="/(main-features)/load-money" title="Agribank">
       <View className="pt-5 py-10 bg-transparent h-full flex flex-col justify-between">
         <View className="bg-transparent">
           <View className="bg-transparent">
-            <SemiText className="text-secondary">
-              Nạp tiền vào ví FPTU Pay
-            </SemiText>
+            <SemiText className="text-secondary">Thông tin liên kết</SemiText>
             <TextField
-              label="Số tiền trong ví"
+              label="Số thẻ/tài khoản"
               className="my-5"
-              value="20.567.000đ"
+              value="001912111545484878"
             />
-            <TextField label="Số tiền cần nạp" />
-          </View>
-          <View className="py-8 bg-transparent">
-            <SemiText className="text-secondary">Từ ngân hàng</SemiText>
-            <SelectField
-              label="techcombank"
-              description="Miễn phí thanh toán"
-              className="my-5"
-            />
-            <IconButton
-              label="Thêm ngân hàng"
-              description="Miễn phí nạp, rút tiền"
-              href="/(main-features)/add-bank-item"
-            />
+            <TextField label="Chủ thẻ" value="CAO QUYNH ANH" />
           </View>
         </View>
 
@@ -52,8 +37,8 @@ export default function LoadMoney() {
           </View>
           <TextButton
             href="/"
-            text="Thanh toán"
-            type={TextButtonType.PRIMARY}
+            text="Liên kết ngay"
+            type={TextButtonType.SECONDARY}
           />
         </View>
       </View>
