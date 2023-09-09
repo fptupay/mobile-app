@@ -10,14 +10,20 @@ import { MediumText } from "../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../components/buttons/TextButton";
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation,RouteProp } from '@react-navigation/native';
+import {StackNavigationProp } from '@react-navigation/stack'
 
+type AddBankScreenRouteParams = {
+  setDepositSuccessful: boolean;
+};
+type NavigationProps = StackNavigationProp<any, 'add-bank'>;
 
 export default function addBankSuccess() {
-    const navigation = useNavigation();
-    const handleTextButtonClick = () => {
-        navigation.navigate("add-bank", { setDepositSuccessful: true });
-    };
+  
+  const navigation = useNavigation<NavigationProps>();
+  const handleTextButtonClick = () => {
+    navigation.navigate('add-bank', { setDepositSuccessful: true } as AddBankScreenRouteParams);
+  };
     
   return (
     <SafeAreaView className="flex-1 px-4">

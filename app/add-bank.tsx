@@ -14,7 +14,7 @@ import {
   Keyboard,
   TextInput,
   Modal,
-  StyleSheet
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../components/Themed";
@@ -23,12 +23,15 @@ import {LinearGradient} from 'expo-linear-gradient'
 import { WINDOW_HEIGHT } from "../utils/helper";
 import CustomIcon from "../components/Icon";
 import Colors from "../constants/Colors";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import TextButton, {
   TextButtonType,
 } from "../components/buttons/TextButton";
 import { BlurView } from 'expo-blur';
 
+type AddBankRouteParams = {
+  setDepositSuccessful?: boolean;
+};
 
 export default function addBank() {
   
@@ -84,19 +87,29 @@ export default function addBank() {
       bank: "Agribank"
     }
   ]
-  const route = useRoute();
+  const route = useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
   const navigation = useNavigation();
   const [features, setFeatures] = React.useState(featuresData);
   const [isSearching, setIsSearching] = useState(false);
-  const setDepositSuccessful = route.params?.setDepositSuccessful;
+  const setDepositSuccessful = route.params?.setDepositSuccessful || false;
   const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+  const [searchText, setSearchText] = useState('');
+
+  const startSearch = () => {
+    setIsSearching(true);
+  };
+
+  const cancelSearch = () => {
+    setIsSearching(false);
+    setSearchText('');
+  };
+
   const toggleSearch = () => {
     setIsSearching(!isSearching);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: typeof featuresData[0] }) => (
     <KeyboardAvoidingView>
         <View className='flex-row justify-between items-center py-3 h-[75px] w-full border-b border-gray-300'>
           <View className='flex-row items-center space-x-4'>
@@ -229,16 +242,13 @@ export default function addBank() {
                   <NormalText className="text-secondary">Hủy</NormalText>
                 </TouchableOpacity>
               </View>
-              <View>
-                <MediumText>Gợi ý cho bạn</MediumText>
-              </View>
             </View>
           )}
           
             <View className='h-full pt-2 w-full'>
                 <View className='px-4'>
                     <FlatList
-                    contentContainerStyle={{ paddingBottom: 200*(WINDOW_HEIGHT-350)/scrollY}}
+                    contentContainerStyle={{ paddingBottom: 400*(WINDOW_HEIGHT-350)/scrollY}}
                         data={featuresData}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={renderItem}
@@ -298,7 +308,7 @@ export default function addBank() {
                     <View className="w-full top-12 mt-2 px-4 pb-4">
                         <TextButton
                         text="Về màn hình chính"
-                        type={TextButtonType.back}
+                        type={TextButtonType.SECONDARY }
                         href='/add-bank-success'
                         />
                     </View>

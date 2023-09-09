@@ -13,8 +13,10 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/native": "^6.0.2",
+    "@react-navigation/stack": "^6.3.17",
     "@tanstack/react-query": "^4.32.6",
     "expo": "~49.0.7",
+    "expo-blur": "~12.4.1",
     "expo-camera": "~13.4.2",
     "expo-face-detector": "~12.2.0",
     "expo-font": "~11.4.0",
@@ -39,8 +41,7 @@
     "react-native-web": "~0.19.6",
     "standard": "^17.1.0",
     "tailwindcss": "^3.3.2",
-    "zustand": "^4.4.1",
-    "expo-blur": "~12.4.1"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
