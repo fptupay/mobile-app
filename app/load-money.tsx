@@ -6,6 +6,8 @@ import {
   Modal,
   TouchableOpacity,
   FlatList,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { MediumText, NormalText, SemiText } from "../components/Themed";
 import TextButton, { TextButtonType } from "../components/buttons/TextButton";
@@ -51,71 +53,73 @@ export default function LoadMoney() {
 
   return (
     <SharedLayout href="/(account)" title="Nạp tiền">
-      <View className="pt-5 py-10 bg-transparent  flex flex-col justify-between">
-        <View className="bg-transparent">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View className="pt-5 py-10 bg-transparent  flex flex-col justify-between">
           <View className="bg-transparent">
-            <SemiText className="text-secondary">
-              Nạp tiền vào ví FPTU Pay
-            </SemiText>
-            <TextField
-              label="Số tiền trong ví"
-              className="my-5"
-              value="20.567.000đ"
-              editable={false}
-              selectTextOnFocus={false}
-            />
-            <TextField
-              keyboardType="numeric"
-              label="Số tiền cần nạp"
-              editable={true}
-              selectTextOnFocus={true}
-              value={amount}
-              onChangeText={handleAmountInput}
-            />
+            <View className="bg-transparent">
+              <SemiText className="text-secondary">
+                Nạp tiền vào ví FPTU Pay
+              </SemiText>
+              <TextField
+                label="Số tiền trong ví"
+                className="my-5"
+                value="20.567.000đ"
+                editable={false}
+                selectTextOnFocus={false}
+              />
+              <TextField
+                keyboardType="numeric"
+                label="Số tiền cần nạp"
+                editable={true}
+                selectTextOnFocus={true}
+                value={amount}
+                onChangeText={handleAmountInput}
+              />
+            </View>
+            <View className="py-8 bg-transparent">
+              <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
+              <FlatList
+                className="max-h-[120px] mb-5 border border-gray-300 rounded-lg p-2"
+                data={listBank}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={(item) => (
+                  <SelectField
+                    label={item.item.label}
+                    description={item.item.description}
+                    className="mb-5"
+                  />
+                )}
+              />
+              <IconButton
+                label="Thêm ngân hàng"
+                description="Miễn phí nạp, rút tiền"
+                href="/add-bank"
+              />
+            </View>
           </View>
-          <View className="py-8 bg-transparent">
-            <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
-            <FlatList
-              className="max-h-[120px] mb-5 border border-gray-300 rounded-lg p-2"
-              data={listBank}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={(item) => (
-                <SelectField
-                  label={item.item.label}
-                  description={item.item.description}
-                  className="mb-5"
-                />
-              )}
-            />
-            <IconButton
-              label="Thêm ngân hàng"
-              description="Miễn phí nạp, rút tiền"
-              href="/add-bank"
-            />
-          </View>
-        </View>
 
-        <View className="bg-transparent">
-          <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
-            <Image
-              source={require("../assets/images/tick.png")}
-              className="w-6 h-6"
-            />
-            <NormalText className="text-tertiary flex-1 text-xs">
-              Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
-              <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
-            </NormalText>
+          <View className="bg-transparent">
+            <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
+              <Image
+                source={require("../assets/images/tick.png")}
+                className="w-6 h-6"
+              />
+              <NormalText className="text-tertiary flex-1 text-xs">
+                Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
+                <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
+              </NormalText>
+            </View>
+            <TouchableOpacity>
+              <TextButton
+                text="Thanh toán"
+                type={TextButtonType.PRIMARY}
+                href="(main-features)/add-bank-item"
+                disable={selectedBank == "" || amount == ""}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <TextButton
-              text="Thanh toán"
-              type={TextButtonType.PRIMARY}
-              href="(main-features)/add-bank-item"
-              disable={selectedBank == ''||amount==''}
-            />
-          </TouchableOpacity>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
       {setDepositSuccessful && (
         <Modal
           animationType="fade"
@@ -123,14 +127,14 @@ export default function LoadMoney() {
           visible={depositSuccessfulVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <BlurView intensity={10} style={{ flex: 1 }}>
-            <View className="flex-1 justify-end mb-16 px-4">
-              <View className="bg-white w-full h-[400px] rounded-lg border-[#dfac87] border-2">
+          <BlurView intensity={15} style={{ flex: 1, backgroundColor: 'rgba(80, 80, 80, 0.80)' }}>
+            <View className="flex-1 justify-end mb-24 px-4">
+              <View className="bg-white w-full h-[400px] rounded-lg shadow-2xl">
                 <Image
                   source={require("../assets/images/deposit.gif")}
                   className="w-[220px] h-[160px] mx-auto"
                 />
-                <MediumText className="text-2xl tracking-tight text-center">
+                <MediumText className="text-2xl tracking-tight text-center text-secondary">
                   Nạp tiền thành công!
                 </MediumText>
 

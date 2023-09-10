@@ -21,7 +21,7 @@ export default function SelectField(props: SelectFieldProps) {
   const handleSelectBank = (e: boolean) => {
     if (e) {
       setSelectedBank(label);
-    }else{
+    } else {
       setSelectedBank("");
     }
   };
@@ -44,6 +44,7 @@ export default function SelectField(props: SelectFieldProps) {
       <View>
         <BouncyCheckbox
           onPress={(e) => handleSelectBank(e)}
+          isChecked={selectedBank == label}
           fillColor={selectedBank == label ? Colors.primary : Colors.tertiary}
           unfillColor={Colors.tertiary}
           iconStyle={{ borderColor: Colors.tertiary }}
