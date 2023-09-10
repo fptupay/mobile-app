@@ -21,6 +21,8 @@ export default function SelectField(props: SelectFieldProps) {
   const handleSelectBank = (e: boolean) => {
     if (e) {
       setSelectedBank(label);
+    }else{
+      setSelectedBank("");
     }
   };
 
