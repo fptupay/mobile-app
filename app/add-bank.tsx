@@ -85,16 +85,16 @@ export default function addBank() {
       bank: "Agribank"
     }
   ]
+  const textInputRef = useRef<TextInput | null>(null);
   const [features, setFeatures] = React.useState(featuresData);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
 
-  const startSearch = () => {
-    setIsSearching(true);
-  };
-
   const toggleSearch = () => {
     setIsSearching(!isSearching);
+    if (!isSearching && textInputRef.current) {
+      textInputRef.current.focus();
+    }
   };
 
   const renderItem = ({ item }: { item: typeof featuresData[0] }) => (
@@ -162,7 +162,7 @@ export default function addBank() {
           className="flex-1 px-4 bg-white left-0 right-0 backdrop-blur-[4px] rounded-t-[30px] absolute -top-10"
           style={[{ maxHeight: WINDOW_HEIGHT}, contentAnimation]}
         >
-          {isSearching ? (
+          {!isSearching ? (
             <View className="">
               <View className='my-5 flex-row items-center justify-center'>
                 <KeyboardAvoidingView
