@@ -1,27 +1,50 @@
 import SharedLayout from "../components/SharedLayout";
 import TextField from "../components/TextField";
-import {View, Image, Modal, Touchable, TouchableOpacity } from "react-native";
 import {
-  MediumText,
-  NormalText,
-  SemiText
-} from "../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../components/buttons/TextButton";
+  View,
+  Image,
+  Modal,
+  Touchable,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { MediumText, NormalText, SemiText } from "../components/Themed";
+import TextButton, { TextButtonType } from "../components/buttons/TextButton";
 import SelectField from "../components/SelectField";
 import IconButton from "../components/buttons/IconButton";
 import { useState } from "react";
 import { BlurView } from "expo-blur";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { AddBankRouteParams } from "./add-bank";
+import { useBankStore } from "../stores/bankStore";
+
+const listBank = [
+  {
+    id: 1,
+    label: "techcombank",
+    description: "Miễn phí thanh toán",
+  },
+  {
+    id: 2,
+    label: "vietcombank",
+    description: "Miễn phí thanh toán",
+  },
+  {
+    id: 3,
+    label: "Viettinbank",
+    description: "Miễn phí thanh toán",
+  },
+];
 
 export default function LoadMoney() {
-  const route = useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
+  const route =
+    useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
   const [amount, setAmount] = useState("");
   const setDepositSuccessful = route.params?.setDepositSuccessful || false;
-  const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
+  const [depositSuccessfulVisible, setDepositSuccessfulVisible] =
+    useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const selectedBank = useBankStore((state) => state.selectedBank);
 
   const handleAmountInput = (value: string) => {
     setAmount(value);
@@ -52,10 +75,17 @@ export default function LoadMoney() {
           </View>
           <View className="py-8 bg-transparent">
             <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
-            <SelectField
-              label="techcombank"
-              description="Miễn phí thanh toán"
-              className="mb-5"
+            <FlatList
+              className="max-h-[120px] mb-5 border border-gray-300 rounded-lg p-2"
+              data={listBank}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={(item) => (
+                <SelectField
+                  label={item.item.label}
+                  description={item.item.description}
+                  className="mb-5"
+                />
+              )}
             />
             <IconButton
               label="Thêm ngân hàng"
@@ -77,13 +107,13 @@ export default function LoadMoney() {
             </NormalText>
           </View>
           <TouchableOpacity>
-
-          <TextButton
-            text="Thanh toán"
-            type={TextButtonType.PRIMARY}
-            href="(main-features)/add-bank-item"
+            <TextButton
+              text="Thanh toán"
+              type={TextButtonType.PRIMARY}
+              href="(main-features)/add-bank-item"
+              disable={selectedBank == ''}
             />
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </View>
       {setDepositSuccessful && (
@@ -123,6 +153,6 @@ export default function LoadMoney() {
           </BlurView>
         </Modal>
       )}
-   </SharedLayout>
+    </SharedLayout>
   );
 }

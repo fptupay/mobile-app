@@ -1,8 +1,8 @@
-import React, { useState } from "react";
 import { Image, TextInput, View } from "react-native";
 import { NormalText, SemiText } from "./Themed";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Colors from "../constants/Colors";
+import { useBankStore } from "../stores/bankStore";
 
 interface SelectFieldProps extends React.ComponentProps<typeof TextInput> {
   label: string;
@@ -15,15 +15,21 @@ const IconComponent = () => {
 
 export default function SelectField(props: SelectFieldProps) {
   const { label, description, value, style, ...otherProps } = props;
+  const selectedBank = useBankStore((state) => state.selectedBank);
+  const setSelectedBank = useBankStore((state) => state.setSelectedBank);
 
-  const [select, setSelect] = useState(false);
+  const handleSelectBank = (e: boolean) => {
+    if (e) {
+      setSelectedBank(label);
+    }
+  };
 
   return (
     <View
       {...otherProps}
       style={style}
       className={`p-4 rounded-lg flex flex-row items-center justify-between border ${
-        select ? "border-primary" : "border-gray-300"
+        selectedBank == label ? "border-primary" : "border-gray-300"
       }`}
     >
       <View className="flex flex-row gap-3 items-center">
@@ -35,8 +41,8 @@ export default function SelectField(props: SelectFieldProps) {
       </View>
       <View>
         <BouncyCheckbox
-          onPress={(isChecked: boolean) => setSelect(isChecked)}
-          fillColor={select ? Colors.primary : Colors.tertiary}
+          onPress={(e) => handleSelectBank(e)}
+          fillColor={selectedBank == label ? Colors.primary : Colors.tertiary}
           unfillColor={Colors.tertiary}
           iconStyle={{ borderColor: Colors.tertiary }}
           className="w-7 h-7"

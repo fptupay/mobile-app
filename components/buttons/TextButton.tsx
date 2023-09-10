@@ -13,25 +13,44 @@ type TextButtonProps = {
   text: string;
   type: string;
   onPress?: () => void;
+  disable?: boolean;
 };
 
-export default function TextButton({ href, text, type, onPress }: TextButtonProps) {
+export default function TextButton({
+  href,
+  text,
+  type,
+  onPress,
+  disable,
+}: TextButtonProps) {
   const route = useRouter();
 
   return (
-    <TouchableOpacity onPress={onPress}>
-    <View
-      className={`${
-        type == TextButtonType.PRIMARY
-          ? "bg-primary"
-          : "bg-white border border-tertiary"
-      } rounded-lg px-1 py-2`}
-    >
-      {href ? (
-        <Pressable
-          onPress={() => route.push(href)}
-          className="flex items-center py-2 w-full"
-        >
+    <TouchableOpacity onPress={onPress} disabled={disable}>
+      <View
+        className={`${
+          disable
+            ? "bg-gray-300"
+            : type == TextButtonType.PRIMARY
+            ? "bg-primary"
+            : "bg-white border border-tertiary"
+        } rounded-lg px-1 py-2`}
+      >
+        {href ? (
+          <Pressable
+            disabled={disable}
+            onPress={() => route.push(href)}
+            className="flex items-center py-2 w-full"
+          >
+            <MediumText
+              className={`${
+                type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
+              } py-2 w-full text-center`}
+            >
+              {text}
+            </MediumText>
+          </Pressable>
+        ) : (
           <MediumText
             className={`${
               type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
@@ -39,17 +58,8 @@ export default function TextButton({ href, text, type, onPress }: TextButtonProp
           >
             {text}
           </MediumText>
-        </Pressable>
-      ) : (
-        <MediumText
-          className={`${
-            type == TextButtonType.PRIMARY ? "text-white" : "text-tertiary"
-          } py-2 w-full text-center`}
-        >
-          {text}
-        </MediumText>
-      )}
-    </View>
+        )}
+      </View>
     </TouchableOpacity>
   );
 }
