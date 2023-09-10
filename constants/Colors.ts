@@ -19,4 +19,5 @@ export default {
   primary: "#F97316",
   secondary: "#0F172A",
   tertiary: "#808080",
+  error: "#B00020",
 };
