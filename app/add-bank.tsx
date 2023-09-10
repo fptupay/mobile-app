@@ -259,7 +259,7 @@ export default function addBank() {
               />
               <SafeAreaView className="px-4">
                   <View className='w-full px-4 mt-10'>
-                    <MediumText className='w-full text-xl'>
+                    <MediumText className='w-full text-2xl text-secondary'>
                         Liên kết ngân hàng
                     </MediumText>
                   </View>

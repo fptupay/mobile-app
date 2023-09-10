@@ -5,8 +5,12 @@ import { NormalText, SemiText, View } from "../../components/Themed";
 import TextButton, {
   TextButtonType,
 } from "../../components/buttons/TextButton";
+import { useState } from "react";
 
 export default function AddBankItem() {
+  const [accountId, setAccountId] = useState("001912111545484878");
+  const [accountName, setAccountName] = useState("CAO QUYNH ANH");
+
   return (
     <SharedLayout href="/load-money" title="Agribank">
       <View className="pt-5 py-10 bg-transparent h-full flex flex-col justify-between">
@@ -14,11 +18,19 @@ export default function AddBankItem() {
           <View className="bg-transparent">
             <SemiText className="text-secondary">Thông tin liên kết</SemiText>
             <TextField
-              label="Mã số sinh viên"
+              label="Số thẻ/tài khoản"
               className="my-5"
-              value="001912111545484878"
+              keyboardType="numeric"
+              value={accountId}
+              editable={true}
+              onChangeText={(text) => setAccountId(text)}
             />
-            <TextField label="Chủ thẻ" value="CAO QUYNH ANH" />
+            <TextField
+              label="Chủ thẻ"
+              value={accountName}
+              editable={true}
+              onChangeText={(text) => setAccountName(text)}
+            />
           </View>
         </View>
 
@@ -36,7 +48,8 @@ export default function AddBankItem() {
           <TextButton
             href="/add-money-otp"
             text="Liên kết ngay"
-            type={TextButtonType.SECONDARY}
+            type={TextButtonType.PRIMARY}
+            disable={accountId.length === 0 || accountName.length === 0}
           />
         </View>
       </View>

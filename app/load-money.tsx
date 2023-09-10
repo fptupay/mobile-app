@@ -4,7 +4,6 @@ import {
   View,
   Image,
   Modal,
-  Touchable,
   TouchableOpacity,
   FlatList,
 } from "react-native";
@@ -14,7 +13,7 @@ import SelectField from "../components/SelectField";
 import IconButton from "../components/buttons/IconButton";
 import { useState } from "react";
 import { BlurView } from "expo-blur";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useRoute, RouteProp } from "@react-navigation/native";
 import { AddBankRouteParams } from "./add-bank";
 import { useBankStore } from "../stores/bankStore";
 
@@ -66,6 +65,7 @@ export default function LoadMoney() {
               selectTextOnFocus={false}
             />
             <TextField
+              keyboardType="numeric"
               label="Số tiền cần nạp"
               editable={true}
               selectTextOnFocus={true}
@@ -111,7 +111,7 @@ export default function LoadMoney() {
               text="Thanh toán"
               type={TextButtonType.PRIMARY}
               href="(main-features)/add-bank-item"
-              disable={selectedBank == ''}
+              disable={selectedBank == ''||amount==''}
             />
           </TouchableOpacity>
         </View>
