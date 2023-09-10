@@ -11,18 +11,19 @@ import TextButton, {
   TextButtonType,
 } from "../components/buttons/TextButton";
 import {useNavigation,RouteProp } from '@react-navigation/native';
-import {StackNavigationProp } from '@react-navigation/stack'
+import {StackNavigationProp } from '@react-navigation/stack';
 
 type AddBankScreenRouteParams = {
   setDepositSuccessful: boolean;
 };
-type NavigationProps = StackNavigationProp<any, 'add-bank'>;
+type NavigationProps = StackNavigationProp<any, 'load-money'>;
 
 export default function addBankSuccess() {
   
   const navigation = useNavigation<NavigationProps>();
+  
   const handleTextButtonClick = () => {
-    navigation.navigate('add-bank', { setDepositSuccessful: true } as AddBankScreenRouteParams);
+    navigation.navigate('load-money' , { setDepositSuccessful: true } as AddBankScreenRouteParams);
   };
     
   return (
@@ -35,13 +36,13 @@ export default function addBankSuccess() {
             />
             <MediumText className='text-2xl tracking-tight text-center text-secondary'>Liên kết thành công!</MediumText>
        </View>
-        <View className="w-full space-y-2 mb-10">
-            <TextButton
+      <View className="w-full space-y-2 mb-10">
+          <TextButton
             text="Nạp tiền ngay"
             type={TextButtonType.PRIMARY}
             onPress={handleTextButtonClick}
-            />
-        </View>
+          />
+      </View>
     </SafeAreaView>
   )
 }

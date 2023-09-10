@@ -8,7 +8,7 @@ import TextButton, {
 
 export default function AddBankItem() {
   return (
-    <SharedLayout href="/(main-features)/load-money" title="Agribank">
+    <SharedLayout href="/load-money" title="Agribank">
       <View className="pt-5 py-10 bg-transparent h-full flex flex-col justify-between">
         <View className="bg-transparent">
           <View className="bg-transparent">

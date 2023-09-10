@@ -315,17 +315,17 @@ export default function Home() {
           <View className="mt-6">
             <View className="flex-row justify-between">
               <MainAction
-                route="/(main-features)/load-money"
+                route="/load-money"
                 image="Plus"
                 title="Nạp tiền"
               />
               <MainAction
-                route="/(main-features)/load-money"
+                route="/load-money"
                 image="ArrowRight"
                 title="Chuyển tiền"
               />
               <MainAction
-                route="/(main-features)/load-money"
+                route="/load-money"
                 image="WalletCards"
                 title="Rút tiền"
               />

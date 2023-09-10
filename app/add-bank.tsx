@@ -13,9 +13,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
-  Modal,
   Platform,
+  Pressable
 } from "react-native";
+import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MediumText, NormalText } from "../components/Themed";
 import BackButton from "../components/buttons/BackButton";
@@ -23,11 +24,8 @@ import {LinearGradient} from 'expo-linear-gradient'
 import { WINDOW_HEIGHT } from "../utils/helper";
 import CustomIcon from "../components/Icon";
 import Colors from "../constants/Colors";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import TextButton, {
-  TextButtonType,
-} from "../components/buttons/TextButton";
-import { BlurView } from 'expo-blur';
+import { ChevronRight, PlusSquare } from "lucide-react-native";
+
 
 export type AddBankRouteParams = {
   setDepositSuccessful?: boolean;
@@ -87,22 +85,12 @@ export default function addBank() {
       bank: "Agribank"
     }
   ]
-  const route = useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
-  const navigation = useNavigation();
   const [features, setFeatures] = React.useState(featuresData);
   const [isSearching, setIsSearching] = useState(false);
-  const setDepositSuccessful = route.params?.setDepositSuccessful || false;
-  const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const router = useRouter();
 
   const startSearch = () => {
     setIsSearching(true);
-  };
-
-  const cancelSearch = () => {
-    setIsSearching(false);
-    setSearchText('');
   };
 
   const toggleSearch = () => {
@@ -121,11 +109,9 @@ export default function addBank() {
               </View>
           </View>
           <View className="">
-            <CustomIcon
-              name="ChevronRight"
-              size={24}
-              color={Colors.tertiary}
-            />
+            <Pressable onPress={() => router.push('/(main-features)/add-bank-item')}>
+              <ChevronRight size={24} color={Colors.secondary} />
+            </Pressable>
           </View>
         </View>
     </KeyboardAvoidingView>
@@ -176,7 +162,7 @@ export default function addBank() {
           className="flex-1 px-4 bg-white left-0 right-0 backdrop-blur-[4px] rounded-t-[30px] absolute -top-10"
           style={[{ maxHeight: WINDOW_HEIGHT}, contentAnimation]}
         >
-          {!isSearching ? (
+          {isSearching ? (
             <View className="">
               <View className='my-5 flex-row items-center justify-center'>
                 <KeyboardAvoidingView
@@ -245,31 +231,29 @@ export default function addBank() {
             </View>
           )}
           
-            <View className='h-full pt-2 w-full'>
-                <View className='px-4'>
-                    <FlatList
-                    contentContainerStyle={{ paddingBottom: 400*(WINDOW_HEIGHT-350)/scrollY}}
-                        data={featuresData}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={renderItem}
-                        showsVerticalScrollIndicator={false}
-                    />
-                </View>
-            </View>
+          <View className='h-full pt-2 w-full'>
+              <View className='px-4'>
+                  <FlatList
+                  contentContainerStyle={{ paddingBottom: 400*(WINDOW_HEIGHT-350)/scrollY}}
+                      data={featuresData}
+                      keyExtractor={(item) => item.id.toString()}
+                      renderItem={renderItem}
+                      showsVerticalScrollIndicator={false}
+                  />
+              </View>
+          </View>
         </Animated.View>
       </View>
     );
   };
 
   return (
-    
       <View className="flex-1">
           <StatusBar style="auto" />
           <QuestionButton href="index" />
-          <BackButton href="/(account)/index" />
-          <View className="h-[150px]">
+          <BackButton href="/load-money"/>
+          <View className="h-48">
               <LinearGradient
-                // Background Linear Gradient
                 colors={["#fdc83080", "#f97316bf"]}
                 className="absolute top-0 left-0 right-0 h-full"
               />
@@ -282,8 +266,6 @@ export default function addBank() {
               </SafeAreaView>
           </View>
           <Content/>
-          
     </View>
-    
   )
 }
