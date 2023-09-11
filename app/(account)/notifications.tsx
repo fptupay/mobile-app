@@ -17,70 +17,70 @@ export default function Notifications() {
   const featuresData = [
     {
       id: 1,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 2,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 3,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 4,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 5,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 6,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 7,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 8,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 9,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
     },
     {
       id: 10,
-      icon: require('@/assets/images/fpt.png'),
+      icon: require('../../assets/images/fpt.png'),
       time: '1 phút trước',
       from: 'Từ APT Academy',
       description: 'Thông báo về mức học phí dự kiến năm học 2023 - 2024'
