@@ -1,6 +1,8 @@
-import { Link } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React from "react";
+import { MediumText, NormalText } from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+
+import { StatusBar } from 'expo-status-bar'
+import React from 'react'
 import {
   Image,
   Keyboard,
@@ -8,19 +10,15 @@ import {
   Platform,
   TextInput,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
+  View
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PhoneConfirmation() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 pt-0"
       >
         <StatusBar style="auto" />
@@ -28,7 +26,7 @@ export default function PhoneConfirmation() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../../assets/images/reset-mascot.png")}
+              source={require('@/assets/images/reset-mascot.png')}
               className="w-[220px] h-[160px] mx-auto"
             />
             <View>
@@ -43,7 +41,7 @@ export default function PhoneConfirmation() {
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
                 placeholder="Số điện thoại"
-                style={{ fontFamily: "Inter" }}
+                style={{ fontFamily: 'Inter' }}
               />
             </View>
             <View className="w-full mt-8 space-y-2">
@@ -57,5 +55,5 @@ export default function PhoneConfirmation() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 }

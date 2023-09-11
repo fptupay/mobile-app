@@ -1,49 +1,50 @@
-import React, { useState } from "react";
+import CustomIcon from '@/components/Icon'
+import SharedLayout from '@/components/SharedLayout'
+import TextField from '@/components/TextField'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import TextButton from '@/components/buttons/TextButton'
+
+import React, { useState } from 'react'
 import {
   FlatList,
   Image,
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import CustomIcon from "../components/Icon";
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
-import TextButton from "../components/buttons/TextButton";
+  View
+} from 'react-native'
 
 interface BankProps {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 interface BankItemProps {
-  item: BankProps;
-  onPress: () => void;
+  item: BankProps
+  onPress: () => void
 }
 
 export default function Home() {
   const banks: BankProps[] = [
     {
-      id: "1",
-      name: "MBBank",
+      id: '1',
+      name: 'MBBank'
     },
     {
-      id: "2",
-      name: "Techcombank",
+      id: '2',
+      name: 'Techcombank'
     },
     {
-      id: "3",
-      name: "ACB",
-    },
-  ];
-  const [value, setValue] = useState("");
-  const [error, setError] = useState("");
+      id: '3',
+      name: 'ACB'
+    }
+  ]
+  const [value, setValue] = useState('')
+  const [error] = useState('')
 
   const BankItem = ({ item, onPress }: BankItemProps) => {
     const borderColor =
-      selectedBankId === item.id ? "border-primary" : "border-gray-300";
+      selectedBankId === item.id ? 'border-primary' : 'border-gray-300'
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -65,14 +66,14 @@ export default function Home() {
           </View>
         ) : null}
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
-  const [selectedBankId, setselectedBankId] = useState<string>();
+  const [selectedBankId, setselectedBankId] = useState<string>()
 
   const renderedBankItem = ({ item }: { item: BankProps }) => (
     <BankItem item={item} onPress={() => setselectedBankId(item.id)} />
-  );
+  )
 
   return (
     <SharedLayout href="/(account)" title="Rút tiền">
@@ -111,11 +112,11 @@ export default function Home() {
         <View>
           <View className="flex flex-row gap-x-2 items-center mb-4">
             <Image
-              source={require("../assets/images/tick.png")}
+              source={require('@/assets/images/tick.png')}
               className="w-6 h-6"
             />
             <NormalText className="text-tertiary flex-1 text-xs">
-              Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
+              Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
               <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
             </NormalText>
           </View>
@@ -123,5 +124,5 @@ export default function Home() {
         </View>
       </View>
     </SharedLayout>
-  );
+  )
 }

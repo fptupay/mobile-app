@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from 'expo-status-bar'
 import {
   Image,
   Keyboard,
@@ -6,15 +6,13 @@ import {
   Platform,
   TextInput,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
+  View
+} from 'react-native'
 
-import { Link } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
+import { MediumText, NormalText } from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { Link } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function LoginScreen() {
   return (
@@ -22,33 +20,33 @@ export default function LoginScreen() {
       <StatusBar style="auto" />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
-                source={require("../../assets/images/login-mascot.png")}
+                source={require('@/assets/images/login-mascot.png')}
                 className="w-[172px] h-[145px]"
               />
               <MediumText className="text-3xl tracking-tighter text-center">
-                Đăng nhập tài khoản{" "}
+                Đăng nhập tài khoản{' '}
                 <MediumText className="text-primary">FPTUPay</MediumText> của
-                bạn{" "}
+                bạn{' '}
               </MediumText>
             </View>
             <View className="w-full space-y-4">
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
                 placeholder="Mã sinh viên"
-                style={{ fontFamily: "Inter" }}
+                style={{ fontFamily: 'Inter' }}
               />
               <TextInput
                 className="h-12 px-4 py-3 border border-gray-300 rounded-lg bg-transparent focus:border-primary"
                 placeholder="Mật khẩu"
                 secureTextEntry={true}
-                style={{ fontFamily: "Inter" }}
+                style={{ fontFamily: 'Inter' }}
               />
             </View>
             <View className="w-full mt-8 space-y-2">
@@ -68,5 +66,5 @@ export default function LoginScreen() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 }

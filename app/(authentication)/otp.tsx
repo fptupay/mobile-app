@@ -1,43 +1,42 @@
-import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useRef, useState } from "react";
+import { OtpInput } from '@/components/OtpInput'
+import { MediumText, NormalText } from '@/components/Themed'
+import BackButton from '@/components/buttons/BackButton'
+import Colors from '@/constants/Colors'
+import { OtpInputRef } from '@/types/OtpInput.type'
+import { useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { OtpInput } from "../../components/OtpInput";
-import { MediumText, NormalText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { OtpInputRef } from "../../types/OtpInput.type";
-import BackButton from "../../components/buttons/BackButton";
+  View
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Otp() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const otpInputRef = useRef<OtpInputRef>(null);
-  const [otpCode, setOtpCode] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const otpInputRef = useRef<OtpInputRef>(null)
+  const [otpCode, setOtpCode] = useState<string>('')
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
   useEffect(() => {
-    setIsDisabled(otpCode.length < 6);
-  }, [otpCode]);
+    setIsDisabled(otpCode.length < 6)
+  }, [otpCode])
 
   const handleClear = () => {
-    otpInputRef.current?.clear();
-  };
+    otpInputRef.current?.clear()
+  }
 
   return (
     <SafeAreaView className="flex-1">
       <BackButton href="/(authentication)/phone-confirmation" />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
       >
         <StatusBar style="auto" />
@@ -73,11 +72,9 @@ export default function Otp() {
                 disabled={isDisabled}
                 className="rounded-lg py-3 text-center w-full disabled:bg-gray-400"
                 style={{
-                  backgroundColor: isDisabled
-                    ? Colors.tertiary
-                    : Colors.primary,
+                  backgroundColor: isDisabled ? Colors.tertiary : Colors.primary
                 }}
-                onPress={() => router.push("/(authentication)/ekyc/ekyc-rule")}
+                onPress={() => router.push('/(authentication)/ekyc/ekyc-rule')}
               >
                 <MediumText className="text-white text-center">
                   Xác nhận
@@ -88,29 +85,5 @@ export default function Otp() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-  },
-  inputsContainer: {
-    flexDirection: "row",
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  codeContainer: {
-    borderWidth: 1,
-    borderRadius: 12,
-    borderColor: "#DFDFDE",
-    height: 60,
-    width: 44,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  codeText: {
-    fontSize: 28,
-    lineHeight: 38,
-  },
-});

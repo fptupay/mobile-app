@@ -1,29 +1,27 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { ImageSourcePropType, StyleSheet } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {
   Image,
   MediumText,
   NormalText,
   SafeAreaView,
-  View,
-} from "../../../components/Themed";
-import QuestionButton from "../../../components/buttons/QuestionButton";
-import TextButton, {
-  TextButtonType,
-} from "../../../components/buttons/TextButton";
-import { StepType } from "../../../components/progress/StepProgress";
+  View
+} from '@/components/Themed'
+import QuestionButton from '@/components/buttons/QuestionButton'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { StepType } from '@/components/progress/StepProgress'
+import { StatusBar } from 'expo-status-bar'
+import React, { useState } from 'react'
+import { ImageSourcePropType } from 'react-native'
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 interface StepCardProps {
-  imageSource: ImageSourcePropType;
-  title: string;
-  stepNumber: number;
+  imageSource: ImageSourcePropType
+  title: string
+  stepNumber: number
 }
 const StepCard: React.FC<StepCardProps> = ({
   imageSource,
   title,
-  stepNumber,
+  stepNumber
 }) => (
   <View className="w-[30%]  h-full relative text-center">
     <View className="w-[45px] h-[40px] items-center">
@@ -34,9 +32,9 @@ const StepCard: React.FC<StepCardProps> = ({
       <NormalText className="text-center">{stepNumber}</NormalText>
     </View>
   </View>
-);
+)
 export default function EkycRule() {
-  const [isAgree, setAgree] = useState(false);
+  const [isAgree, setAgree] = useState(false)
 
   return (
     <SafeAreaView className="flex-1 px-4">
@@ -52,17 +50,17 @@ export default function EkycRule() {
         </View>
         <View className="mt-8 w-full p-3 border border-gray-300 border-opacity-50 rounded-md flex-row items-center justify-between">
           <StepCard
-            imageSource={require("../../../assets/images/ekyc.png")}
+            imageSource={require('@/assets/images/ekyc.png')}
             title="Chụp ảnh giấy tờ tùy thân"
             stepNumber={1}
           />
           <StepCard
-            imageSource={require("../../../assets/images/accpet.png")}
+            imageSource={require('@/assets/images/accpet.png')}
             title="Xác nhận thông tin"
             stepNumber={2}
           />
           <StepCard
-            imageSource={require("../../../assets/images/take.png")}
+            imageSource={require('@/assets/images/take.png')}
             title="Xác nhận khuôn mặt"
             stepNumber={3}
           />
@@ -75,7 +73,7 @@ export default function EkycRule() {
           </View>
           <View className="w-[322px] absolute top-0 left-7">
             <NormalText className=" text-gray-500 text-sm font-normal leading-18">
-              Tôi đồng ý với{" "}
+              Tôi đồng ý với{' '}
               <NormalText className="text-orange-500 font-medium">
                 Chính sách bảo mật
               </NormalText>
@@ -84,7 +82,7 @@ export default function EkycRule() {
                 Điều khoản sử dụng
               </NormalText>
               <NormalText className="text-gray-500">
-                {" "}
+                {' '}
                 của FPTU Pay khi tiến hành xác minh danh tính
               </NormalText>
             </NormalText>
@@ -94,8 +92,8 @@ export default function EkycRule() {
           <View className="mt-10">
             <TextButton
               href={{
-                pathname: "/ekyc/[type]",
-                params: { type: StepType.FRONT },
+                pathname: '/ekyc/[type]',
+                params: { type: StepType.FRONT }
               }}
               text="Quét thẻ"
               type={TextButtonType.PRIMARY}
@@ -104,7 +102,5 @@ export default function EkycRule() {
         )}
       </View>
     </SafeAreaView>
-  );
+  )
 }
-
-const styles = StyleSheet.create({});

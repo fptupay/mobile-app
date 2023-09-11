@@ -1,44 +1,43 @@
-import { Camera, CameraType } from "expo-camera";
-import { useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { Button, ImageBackground, TouchableOpacity } from "react-native";
 import {
   MediumText,
   NormalText,
   SafeAreaView,
   SemiText,
-  View,
-} from "../../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../../components/buttons/TextButton";
-import StepProgress, { StepType } from "../../../components/progress/StepProgress";
+  View
+} from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import StepProgress, { StepType } from '@/components/progress/StepProgress'
+
+import { Camera, CameraType } from 'expo-camera'
+import { useLocalSearchParams } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import React, { useEffect, useState } from 'react'
+import { Button, ImageBackground, TouchableOpacity } from 'react-native'
 
 export default function EkycCamera() {
-  const { type } = useLocalSearchParams();
+  const { type } = useLocalSearchParams()
 
-  let camera: Camera | null;
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [capturedImage, setCapturedImage] = useState<any>(null);
+  let camera: Camera | null
+  const [permission, requestPermission] = Camera.useCameraPermissions()
+  const [capturedImage, setCapturedImage] = useState<any>(null)
 
   useEffect(() => {
-    setCapturedImage(null);
-  }, [type]);
+    setCapturedImage(null)
+  }, [type])
 
   const takePicture = async () => {
-    if (!camera) return;
-    const photo = await camera.takePictureAsync({ skipProcessing: true });
-    console.log("photo", photo);
-    setCapturedImage(photo);
-  };
+    if (!camera) return
+    const photo = await camera.takePictureAsync({ skipProcessing: true })
+    console.log('photo', photo)
+    setCapturedImage(photo)
+  }
 
   const retakePicture = () => {
-    setCapturedImage(null);
-  };
+    setCapturedImage(null)
+  }
 
   if (!permission) {
-    return <NormalText>Loading...</NormalText>;
+    return <NormalText>Loading...</NormalText>
   }
 
   if (!permission.granted) {
@@ -49,7 +48,7 @@ export default function EkycCamera() {
         </NormalText>
         <Button onPress={requestPermission} title="Grant permission" />
       </SafeAreaView>
-    );
+    )
   }
 
   return (
@@ -61,13 +60,13 @@ export default function EkycCamera() {
       <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
         <NormalText className="text-center text-primary mb-2">
-          Mặt {type == StepType.FRONT ? "trước" : "sau"}
+          Mặt {type == StepType.FRONT ? 'trước' : 'sau'}
         </NormalText>
         <View className="overflow-hidden rounded-xl mb-5">
           {capturedImage ? (
             <ImageBackground
               source={{ uri: capturedImage.uri }}
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: '100%', height: '100%' }}
             />
           ) : (
             <Camera
@@ -93,15 +92,13 @@ export default function EkycCamera() {
             <TextButton
               href={{
                 pathname: `${
-                  type == "front"
-                    ? "/ekyc/[type]"
-                    : "/ekyc/face-authenticator"
+                  type == 'front' ? '/ekyc/[type]' : '/ekyc/face-authenticator'
                 }`,
                 params: {
                   type: `${
                     type == StepType.FRONT ? StepType.BACK : StepType.SELFIE
-                  }`,
-                },
+                  }`
+                }
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
@@ -120,5 +117,5 @@ export default function EkycCamera() {
         </View>
       )}
     </SafeAreaView>
-  );
+  )
 }
