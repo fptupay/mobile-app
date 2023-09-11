@@ -1,4 +1,4 @@
-import * as icons from "lucide-react-native";
+import * as icons from 'lucide-react-native'
 
 export interface IconProps {
   name: keyof typeof icons;

@@ -1,4 +1,4 @@
-import { ColorValue, TextStyle, ViewStyle } from "react-native";
+import { ColorValue, TextStyle, ViewStyle } from 'react-native'
 
 export interface OtpInputProps {
   numberOfDigits: number;

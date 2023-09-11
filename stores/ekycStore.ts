@@ -10,10 +10,10 @@ interface EkycProps {
 }
 
 export const useEkycStore = create<EkycProps>((set) => ({
-    frontImage: null,
-    backImage: null,
-    selfieImage: null,
-    setFrontImage: (frontImage: string) => set({ frontImage }),
-    setBackImage: (backImage: string) => set({ backImage }),
-    setSelfieImage: (selfieImage: string) => set({ selfieImage })
+	frontImage: null,
+	backImage: null,
+	selfieImage: null,
+	setFrontImage: (frontImage: string) => set({ frontImage }),
+	setBackImage: (backImage: string) => set({ backImage }),
+	setSelfieImage: (selfieImage: string) => set({ selfieImage })
 }))
