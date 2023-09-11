@@ -1,7 +1,5 @@
 import { Image, TextInput, View } from "react-native";
 import { NormalText, SemiText } from "./Themed";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import Colors from "../constants/Colors";
 import { useBankStore } from "../stores/bankStore";
 
 interface SelectFieldProps extends React.ComponentProps<typeof TextInput> {
@@ -9,22 +7,9 @@ interface SelectFieldProps extends React.ComponentProps<typeof TextInput> {
   description?: string | null;
 }
 
-const IconComponent = () => {
-  return <View className="w-3 h-3 bg-white rounded-full"></View>;
-};
-
 export default function SelectField(props: SelectFieldProps) {
   const { label, description, value, style, ...otherProps } = props;
   const selectedBank = useBankStore((state) => state.selectedBank);
-  const setSelectedBank = useBankStore((state) => state.setSelectedBank);
-
-  const handleSelectBank = (e: boolean) => {
-    if (e) {
-      setSelectedBank(label);
-    } else {
-      setSelectedBank("");
-    }
-  };
 
   return (
     <View
@@ -42,16 +27,13 @@ export default function SelectField(props: SelectFieldProps) {
         </View>
       </View>
       <View>
-        <BouncyCheckbox
-          onPress={(e) => handleSelectBank(e)}
-          isChecked={selectedBank == label}
-          fillColor={selectedBank == label ? Colors.primary : Colors.tertiary}
-          unfillColor={Colors.tertiary}
-          iconStyle={{ borderColor: Colors.tertiary }}
-          className="w-7 h-7"
-          iconImageStyle={{ display: "none" }}
-          iconComponent={<IconComponent />}
-        />
+        <View
+          className={`w-6 h-6 rounded-full items-center justify-center ${
+            selectedBank == label ? "bg-primary" : "bg-tertiary"
+          }`}
+        >
+          <View className="w-3 h-3 rounded-full bg-white" />
+        </View>
       </View>
     </View>
   );

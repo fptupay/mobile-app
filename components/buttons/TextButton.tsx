@@ -26,7 +26,7 @@ export default function TextButton({
   const route = useRouter();
 
   return (
-    <TouchableOpacity onPress={onPress} disabled={disable}>
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress} disabled={disable}>
       <View
         className={`${
           disable
@@ -40,7 +40,7 @@ export default function TextButton({
           <Pressable
             disabled={disable}
             onPress={() => route.push(href)}
-            className="flex items-center py-2 w-full"
+            className="flex items-center w-full"
           >
             <MediumText
               className={`${

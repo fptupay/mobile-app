@@ -53,7 +53,7 @@ export default function Home() {
         <View className="flex-row items-center gap-x-2">
           <CustomIcon name="Landmark" size={24} color="#0F172A" />
           <View>
-            <MediumText>{item.name}</MediumText>
+            <MediumText className="text-secondary">{item.name}</MediumText>
             <NormalText className="text-tertiary">
               Miễn phí thanh toán
             </NormalText>
@@ -78,7 +78,7 @@ export default function Home() {
     <SharedLayout href="/(account)" title="Rút tiền">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-          <SemiText className="my-4">Rút tiền từ FPTUPay</SemiText>
+          <SemiText className="my-4 text-secondary">Rút tiền từ FPTUPay</SemiText>
           <TextField
             value={value}
             label="Số tiền cần rút"
@@ -88,7 +88,7 @@ export default function Home() {
         </View>
       </TouchableWithoutFeedback>
       <View className="flex-1 mt-8">
-        <SemiText className="mb-4">Đến ngân hàng</SemiText>
+        <SemiText className="mb-4 text-secondary">Đến ngân hàng</SemiText>
         <FlatList
           className="flex-grow-0 h-60"
           data={banks}

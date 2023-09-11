@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  GestureResponderEvent,
 } from "react-native";
 import { MediumText, NormalText, SemiText } from "../components/Themed";
 import TextButton, { TextButtonType } from "../components/buttons/TextButton";
@@ -43,10 +44,11 @@ export default function LoadMoney() {
     useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
   const [amount, setAmount] = useState("");
   const setDepositSuccessful = route.params?.setDepositSuccessful || false;
-  const [depositSuccessfulVisible, setDepositSuccessfulVisible] =
+  const [depositSuccessfulVisible] =
     useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [, setIsModalVisible] = useState(false);
   const selectedBank = useBankStore((state) => state.selectedBank);
+  const setSelectedBank = useBankStore((state) => state.setSelectedBank);
 
   const handleAmountInput = (value: string) => {
     setAmount(value);
@@ -86,12 +88,14 @@ export default function LoadMoney() {
             <View className="py-8 bg-transparent">
               <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
               {listBank.map((item) => (
-                <SelectField
-                  key={item.id}
-                  label={item.label}
-                  description={item.description}
-                  className="mb-5"
-                />
+                <TouchableOpacity activeOpacity={0.8} onPress={()=>setSelectedBank(item.label)}>
+                  <SelectField
+                    key={item.id}
+                    label={item.label}
+                    description={item.description}
+                    className="mb-5"
+                  />
+                </TouchableOpacity>
               ))}
               <IconButton
                 label="Thêm ngân hàng"
@@ -102,7 +106,7 @@ export default function LoadMoney() {
           </View>
         </ScrollView>
       </View>
-      <View className="bg-white p-4 pb-10 shadow-sm shadow-primary absolute right-0 left-0 bottom-0">
+      <View className="bg-white p-4 pb-10 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
           <Image
             source={require("../assets/images/tick.png")}
