@@ -1,4 +1,4 @@
-import { IconProps } from "../../types/Icon.type";
+import { IconProps } from "@/types/Icon.type";
 import CustomIcon from "../Icon";
 import { NormalText, View } from "../Themed";
 
@@ -35,7 +35,7 @@ export default function ListItem({
       </View>
       {rightIcon && (
         <View className="p-2 w-9 h-9 flex items-center justify-center bg-[#FAFAFA]">
-          <CustomIcon name={rightIcon} size="24" color="#f97316" />
+          <CustomIcon name={rightIcon} size={24} color="#f97316" />
         </View>
       )}
     </View>

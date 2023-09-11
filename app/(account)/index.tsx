@@ -1,4 +1,12 @@
+import GradientBackground from "@/components/GradientBackground";
+import CustomIcon from "@/components/Icon";
+import { MediumText, NormalText, SemiText } from "@/components/Themed";
+import Colors from "@/constants/Colors";
+import { IconProps } from "@/types/Icon.type";
+import { WINDOW_HEIGHT, formatMoney } from "@/utils/helper";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+
 import React, { useRef, useState } from "react";
 import {
   Animated,
@@ -14,13 +22,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomIcon from "../../components/Icon";
-import { MediumText, NormalText, SemiText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { IconProps } from "../../types/Icon.type";
-import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
-import GradientBackground from "../../components/GradientBackground";
-import { useRouter } from "expo-router";
 
 interface MainActionProps {
   image: IconProps["name"];
@@ -314,11 +315,7 @@ export default function Home() {
 
           <View className="mt-6">
             <View className="flex-row justify-between">
-              <MainAction
-                route="/load-money"
-                image="Plus"
-                title="Nạp tiền"
-              />
+              <MainAction route="/load-money" image="Plus" title="Nạp tiền" />
               <MainAction
                 route="/load-money"
                 image="ArrowRight"

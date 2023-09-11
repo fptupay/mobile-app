@@ -9,12 +9,10 @@ import {
   View,
 } from "react-native";
 
+import { MediumText, NormalText } from "@/components/Themed";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
 
 export default function LoginScreen() {
   return (
@@ -29,7 +27,7 @@ export default function LoginScreen() {
           <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
-                source={require("../../assets/images/login-mascot.png")}
+                source={require("@/assets/images/login-mascot.png")}
                 className="w-[172px] h-[145px]"
               />
               <MediumText className="text-3xl tracking-tighter text-center">

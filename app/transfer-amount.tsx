@@ -1,3 +1,9 @@
+import SharedLayout from "@/components/SharedLayout";
+import TextField from "@/components/TextField";
+import { MediumText, NormalText } from "@/components/Themed";
+import TextButton from "@/components/buttons/TextButton";
+import { formatMoney } from "@/utils/helper";
+
 import React, { useState } from "react";
 import {
   Keyboard,
@@ -8,11 +14,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import { MediumText, NormalText } from "../components/Themed";
-import TextButton from "../components/buttons/TextButton";
-import { formatMoney } from "../utils/helper";
 
 export default function TransferAmountScreen() {
   const [amount, setAmount] = useState<string>();

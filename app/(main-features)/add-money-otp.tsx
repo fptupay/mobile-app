@@ -1,22 +1,19 @@
+import { OtpInput } from "@/components/OtpInput";
+import SharedLayout from "@/components/SharedLayout";
+import { MediumText, NormalText } from "@/components/Themed";
+import Colors from "@/constants/Colors";
+import { OtpInputRef } from "@/types/OtpInput.type";
+
 import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { OtpInput } from "../../components/OtpInput";
-import { MediumText, NormalText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { OtpInputRef } from "../../types/OtpInput.type";
-import BackButton from "../../components/buttons/BackButton";
-import SharedLayout from "../../components/SharedLayout";
 
 export default function AddMoneyOtp() {
   const router = useRouter();

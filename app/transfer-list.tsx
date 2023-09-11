@@ -1,3 +1,8 @@
+import CustomIcon from "@/components/Icon";
+import SharedLayout from "@/components/SharedLayout";
+import { MediumText, NormalText, SemiText } from "@/components/Themed";
+import Colors from "@/constants/Colors";
+
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -8,10 +13,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import CustomIcon from "../components/Icon";
-import SharedLayout from "../components/SharedLayout";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
-import Colors from "../constants/Colors";
 
 const transferTypes = ["Tất cả", "Gần đây", "Đã lưu"];
 const mockTransferList = [

@@ -1,13 +1,12 @@
-import { NormalText, SemiText, View } from "../../components/Themed";
-import { Animated, Image, ScrollView } from "react-native";
+import CustomIcon from "@/components/Icon";
+import { NormalText, SemiText, View } from "@/components/Themed";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
+import List from "@/components/list";
+import { ListItemProps } from "@/components/list/ListItem";
+
 import { LinearGradient } from "expo-linear-gradient";
-import List from "../../components/list";
-import { ListItemProps } from "../../components/list/ListItem";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
-import CustomIcon from "../../components/Icon";
 import { useRef } from "react";
+import { Animated, Image, ScrollView } from "react-native";
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -83,7 +82,7 @@ const DynamicHeader = ({ value }: any) => {
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
-  
+
   const sizeAnimation = value.interpolate({
     inputRange: [0, Scroll_Distance],
     outputRange: [72, 0],
@@ -101,9 +100,13 @@ const DynamicHeader = ({ value }: any) => {
       />
       <View className="absolute bg-transparent pt-8 flex items-center">
         <Animated.View
-          style={{ opacity: opacityAnimation, width: sizeAnimation, height: sizeAnimation }}
+          style={{
+            opacity: opacityAnimation,
+            width: sizeAnimation,
+            height: sizeAnimation,
+          }}
           className="w-[72px] h-[72px] rounded-full relative"
-          >
+        >
           <Image
             className="rounded-full w-[72px] h-[72px] bg-black"
             source={require("../../assets/images/account-mascot.png")}

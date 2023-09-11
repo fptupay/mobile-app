@@ -1,26 +1,23 @@
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import {View, Image, Modal, Touchable, TouchableOpacity } from "react-native";
-import {
-  MediumText,
-  NormalText,
-  SemiText
-} from "../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../components/buttons/TextButton";
-import SelectField from "../components/SelectField";
-import IconButton from "../components/buttons/IconButton";
-import { useState } from "react";
+import SelectField from "@/components/SelectField";
+import SharedLayout from "@/components/SharedLayout";
+import TextField from "@/components/TextField";
+import { MediumText, NormalText, SemiText } from "@/components/Themed";
+import IconButton from "@/components/buttons/IconButton";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
+
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useState } from "react";
+import { Image, Modal, TouchableOpacity, View } from "react-native";
 import { AddBankRouteParams } from "./add-bank";
 
 export default function LoadMoney() {
-  const route = useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
+  const route =
+    useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
   const [amount, setAmount] = useState("");
   const setDepositSuccessful = route.params?.setDepositSuccessful || false;
-  const [depositSuccessfulVisible, setDepositSuccessfulVisible] = useState(true);
+  const [depositSuccessfulVisible, setDepositSuccessfulVisible] =
+    useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleAmountInput = (value: string) => {
@@ -68,7 +65,7 @@ export default function LoadMoney() {
         <View className="bg-transparent">
           <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
             <Image
-              source={require("../assets/images/tick.png")}
+              source={require("@/assets/images/tick.png")}
               className="w-6 h-6"
             />
             <NormalText className="text-tertiary flex-1 text-xs">
@@ -77,13 +74,12 @@ export default function LoadMoney() {
             </NormalText>
           </View>
           <TouchableOpacity>
-
-          <TextButton
-            text="Thanh toán"
-            type={TextButtonType.PRIMARY}
-            href="(main-features)/add-bank-item"
+            <TextButton
+              text="Thanh toán"
+              type={TextButtonType.PRIMARY}
+              href="(main-features)/add-bank-item"
             />
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </View>
       {setDepositSuccessful && (
@@ -97,7 +93,7 @@ export default function LoadMoney() {
             <View className="flex-1 justify-end mb-16 px-4">
               <View className="bg-white w-full h-[400px] rounded-lg border-[#dfac87] border-2">
                 <Image
-                  source={require("../assets/images/deposit.gif")}
+                  source={require("@/assets/images/deposit.gif")}
                   className="w-[220px] h-[160px] mx-auto"
                 />
                 <MediumText className="text-2xl tracking-tight text-center">
@@ -123,6 +119,6 @@ export default function LoadMoney() {
           </BlurView>
         </Modal>
       )}
-   </SharedLayout>
+    </SharedLayout>
   );
 }

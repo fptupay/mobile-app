@@ -1,3 +1,9 @@
+import CustomIcon from "@/components/Icon";
+import SharedLayout from "@/components/SharedLayout";
+import TextField from "@/components/TextField";
+import { MediumText, NormalText, SemiText } from "@/components/Themed";
+import TextButton from "@/components/buttons/TextButton";
+
 import React, { useState } from "react";
 import {
   FlatList,
@@ -7,11 +13,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import CustomIcon from "../components/Icon";
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
-import TextButton from "../components/buttons/TextButton";
 
 interface BankProps {
   id: string;
@@ -111,7 +112,7 @@ export default function Home() {
         <View>
           <View className="flex flex-row gap-x-2 items-center mb-4">
             <Image
-              source={require("../assets/images/tick.png")}
+              source={require("@/assets/images/tick.png")}
               className="w-6 h-6"
             />
             <NormalText className="text-tertiary flex-1 text-xs">

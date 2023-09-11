@@ -1,9 +1,9 @@
+import Colors from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { ChevronRight, PlusSquare } from "lucide-react-native";
 import React from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { NormalText, SemiText } from "../Themed";
-import { ChevronRight, PlusSquare } from "lucide-react-native";
-import Colors from "../../constants/Colors";
 
 interface IconButtonProps extends React.ComponentProps<typeof TextInput> {
   label: string;

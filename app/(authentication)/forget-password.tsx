@@ -1,3 +1,6 @@
+import { MediumText, NormalText } from "@/components/Themed";
+import BackButton from "@/components/buttons/BackButton";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -10,11 +13,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText, NormalText } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
-import BackButton from "../../components/buttons/BackButton";
 
 export default function ForgetPassword() {
   return (
@@ -30,7 +28,7 @@ export default function ForgetPassword() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../../assets/images/forgot-mascot.png")}
+              source={require("@/assets/images/forgot-mascot.png")}
               className="w-[178px] h-[160px] mx-auto"
             />
             <View>

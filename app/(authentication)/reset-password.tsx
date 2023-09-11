@@ -9,12 +9,10 @@ import {
   View,
 } from "react-native";
 
+import { MediumText } from "@/components/Themed";
+import BackButton from "@/components/buttons/BackButton";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MediumText } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
-import BackButton from "../../components/buttons/BackButton";
 
 export default function ResetPassword() {
   return (
@@ -30,7 +28,7 @@ export default function ResetPassword() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center space-y-8">
             <Image
-              source={require("../../assets/images/reset-mascot.png")}
+              source={require("@/assets/images/reset-mascot.png")}
               className="w-[198px] h-[145px] mx-auto"
             />
             <MediumText className="text-3xl tracking-tighter text-left">

@@ -1,3 +1,8 @@
+import { OtpInput } from "@/components/OtpInput";
+import { MediumText, NormalText } from "@/components/Themed";
+import BackButton from "@/components/buttons/BackButton";
+import Colors from "@/constants/Colors";
+import { OtpInputRef } from "@/types/OtpInput.type";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,11 +16,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { OtpInput } from "../../components/OtpInput";
-import { MediumText, NormalText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { OtpInputRef } from "../../types/OtpInput.type";
-import BackButton from "../../components/buttons/BackButton";
 
 export default function Otp() {
   const router = useRouter();

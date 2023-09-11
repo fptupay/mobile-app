@@ -1,6 +1,6 @@
+import CustomIcon from "@/components/Icon";
+import Colors from "@/constants/Colors";
 import { Tabs } from "expo-router";
-import CustomIcon from "../../components/Icon";
-import Colors from "../../constants/Colors";
 
 export default function AccountLayout() {
   return (

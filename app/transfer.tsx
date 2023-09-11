@@ -1,9 +1,10 @@
+import SharedLayout from "@/components/SharedLayout";
+import TextField from "@/components/TextField";
+import { SemiText } from "@/components/Themed";
+import TextButton from "@/components/buttons/TextButton";
+
 import React, { useState } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import { SemiText } from "../components/Themed";
-import TextButton from "../components/buttons/TextButton";
 
 export default function TransferMoneyScreen() {
   const [studentCode, setStudentCode] = useState<string>();

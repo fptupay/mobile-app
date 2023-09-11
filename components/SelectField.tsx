@@ -1,8 +1,8 @@
+import Colors from "@/constants/Colors";
 import React, { useState } from "react";
 import { Image, TextInput, View } from "react-native";
-import { NormalText, SemiText } from "./Themed";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import Colors from "../constants/Colors";
+import { NormalText, SemiText } from "./Themed";
 
 interface SelectFieldProps extends React.ComponentProps<typeof TextInput> {
   label: string;

@@ -1,22 +1,19 @@
-import { Camera, CameraType } from "expo-camera";
-import * as FaceDetector from "expo-face-detector";
-import { useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { ImageBackground, TouchableOpacity } from "react-native";
 import {
   MediumText,
   NormalText,
   SafeAreaView,
   SemiText,
   View,
-} from "../../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../../components/buttons/TextButton";
-import StepProgress, {
-  StepType,
-} from "../../../components/progress/StepProgress";
+} from "@/components/Themed";
+import TextButton, { TextButtonType } from "@/components/buttons/TextButton";
+import StepProgress from "@/components/progress/StepProgress";
+
+import { Camera, CameraType } from "expo-camera";
+import * as FaceDetector from "expo-face-detector";
+import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { ImageBackground, TouchableOpacity } from "react-native";
 
 export default function FaceAuthenticator() {
   let camera: Camera | null;
