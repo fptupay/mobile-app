@@ -45,6 +45,8 @@ export default function TextField(props: TextFieldProps) {
           !editable && "text-gray-500"
         }`}
         ref={inputRef}
+        editable={editable}
+        selectTextOnFocus={editable}
         {...otherProps}
         value={value}
         onBlur={(event) => {
