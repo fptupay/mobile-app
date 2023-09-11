@@ -15,7 +15,7 @@ import TextButton from "../components/buttons/TextButton";
 import { formatMoney } from "../utils/helper";
 
 export default function TransferAmountScreen() {
-  const [amount, setAmount] = useState<string>();
+  const [amount, setAmount] = useState<string>("");
   const [suggestions, setSuggestions] = useState<number[]>([]);
   const [message, setMessage] = useState<string>("");
 
