@@ -40,7 +40,7 @@ export default function Payments() {
         <PaymentItem title="Các khoản phí khác" icon="MoreHorizontal" />
       </ScrollView>
       <View className="mt-auto mb-4">
-        <TextButton href="/payment-amount" text="Tiếp tục" type="primary" />
+        <TextButton href="/payment-checkout" text="Tiếp tục" type="primary" />
       </View>
     </SharedLayout>
   )
