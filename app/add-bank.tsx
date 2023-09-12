@@ -34,52 +34,52 @@ export default function addBank() {
   const featuresData = [
     {
       id: 1,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 2,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 3,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 4,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 5,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 6,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 7,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 8,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 9,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     },
     {
       id: 10,
-      icon: require('../assets/images/fpt.png'),
+      icon: require('../assets/images/tick.png'),
       bank: 'Agribank'
     }
   ]
