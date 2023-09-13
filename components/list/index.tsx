@@ -1,12 +1,12 @@
-import { SemiText, View } from "../Themed";
-import ListItem, { ListItemProps } from "./ListItem";
+import { SemiText, View } from '../Themed'
+import ListItem, { ListItemProps } from './ListItem'
 
 export default function List({
   data,
-  title,
+  title
 }: {
-  data: ListItemProps[];
-  title?: string;
+  data: ListItemProps[]
+  title?: string
 }) {
   return (
     <View className="mx-4">
@@ -24,5 +24,5 @@ export default function List({
         ))}
       </View>
     </View>
-  );
+  )
 }

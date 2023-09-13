@@ -1,55 +1,55 @@
-import React, { useState } from "react";
+import SharedLayout from '@/components/SharedLayout'
+import TextField from '@/components/TextField'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import IconButton from '@/components/buttons/IconButton'
+import TextButton from '@/components/buttons/TextButton'
+
+import React, { useState } from 'react'
 import {
   Image,
   Keyboard,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
-import IconButton from "../components/buttons/IconButton";
-import TextButton from "../components/buttons/TextButton";
+  View
+} from 'react-native'
 
 interface BankProps {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 interface BankItemProps {
-  item: BankProps;
-  onPress: () => void;
+  item: BankProps
+  onPress: () => void
 }
 
 export default function Home() {
   const banks: BankProps[] = [
     {
-      id: "1",
-      name: "MBBank",
+      id: '1',
+      name: 'MBBank'
     },
     {
-      id: "2",
-      name: "Techcombank",
+      id: '2',
+      name: 'Techcombank'
     },
     {
-      id: "3",
-      name: "ACB",
+      id: '3',
+      name: 'ACB'
     },
     {
-      id: "4",
-      name: "ACB",
-    },
-  ];
+      id: '4',
+      name: 'ACB'
+    }
+  ]
 
-  const [amount, setAmount] = useState("");
-  const [selectedBankId, setSelectedBankId] = useState<string>("");
-  const [error, setError] = useState("");
+  const [amount, setAmount] = useState('')
+  const [selectedBankId, setSelectedBankId] = useState<string>('')
 
   const BankItem = ({ item, onPress }: BankItemProps) => {
     const borderColor =
-      selectedBankId === item.id ? "border-primary" : "border-gray-300";
+      selectedBankId === item.id ? 'border-primary' : 'border-gray-300'
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -57,7 +57,7 @@ export default function Home() {
         onPress={onPress}
       >
         <View className="flex-row items-center gap-x-2">
-          <Image source={require("../assets/images/techcombank.png")} />
+          <Image source={require('../assets/images/techcombank.png')} />
           <View>
             <MediumText className="text-secondary">{item.name}</MediumText>
             <NormalText className="text-tertiary">
@@ -71,8 +71,8 @@ export default function Home() {
           </View>
         ) : null}
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   return (
     <SharedLayout href="/(account)" title="Rút tiền">
@@ -119,11 +119,11 @@ export default function Home() {
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
           <Image
-            source={require("../assets/images/tick.png")}
+            source={require('../assets/images/tick.png')}
             className="w-6 h-6"
           />
           <NormalText className="text-tertiary flex-1 text-xs">
-            Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
+            Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
             <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
           </NormalText>
         </View>
@@ -131,9 +131,9 @@ export default function Home() {
           text="Thanh toán"
           type="primary"
           href="(main-features)/add-bank-item"
-          disable={selectedBankId == "" || amount == ""}
+          disable={selectedBankId == '' || amount == ''}
         />
       </View>
     </SharedLayout>
-  );
+  )
 }

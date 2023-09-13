@@ -1,54 +1,51 @@
-import { Camera, CameraType } from "expo-camera";
-import * as FaceDetector from "expo-face-detector";
-import { useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { ImageBackground, TouchableOpacity } from "react-native";
 import {
   MediumText,
   NormalText,
   SafeAreaView,
   SemiText,
-  View,
-} from "../../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../../components/buttons/TextButton";
-import StepProgress, {
-  StepType,
-} from "../../../components/progress/StepProgress";
+  View
+} from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import StepProgress from '@/components/progress/StepProgress'
+
+import { Camera, CameraType } from 'expo-camera'
+import * as FaceDetector from 'expo-face-detector'
+import { useLocalSearchParams } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { useEffect, useState } from 'react'
+import { ImageBackground, TouchableOpacity } from 'react-native'
 
 export default function FaceAuthenticator() {
-  let camera: Camera | null;
-  const { type } = useLocalSearchParams();
-  const [faceData, setFaceData] = useState([]);
-  const [capturedImage, setCapturedImage] = useState<any>(null);
+  let camera: Camera | null
+  const { type } = useLocalSearchParams()
+  const [faceData, setFaceData] = useState([])
+  const [capturedImage, setCapturedImage] = useState<any>(null)
 
   useEffect(() => {
-    setCapturedImage(null);
-  }, [type]);
+    setCapturedImage(null)
+  }, [type])
 
   const takePicture = async () => {
-    const photo = await camera?.takePictureAsync({ skipProcessing: true });
-    console.log("photo", photo);
-    setCapturedImage(photo);
-  };
+    const photo = await camera?.takePictureAsync({ skipProcessing: true })
+    console.log('photo', photo)
+    setCapturedImage(photo)
+  }
 
   const retakePicture = () => {
-    setCapturedImage(null);
-  };
+    setCapturedImage(null)
+  }
 
   const handleFacesDetected = ({ faces }: { faces: any }) => {
-    setFaceData(faces);
-  };
+    setFaceData(faces)
+  }
 
   const getFaceData = () => {
     if (faceData.length === 0) {
       return (
         <SemiText className="text-red-700">Không tìm thấy khuôn mặt</SemiText>
-      );
+      )
     }
-  };
+  }
 
   return (
     <SafeAreaView className="flex-1 px-4">
@@ -64,7 +61,7 @@ export default function FaceAuthenticator() {
         {capturedImage ? (
           <ImageBackground
             source={{ uri: capturedImage.uri }}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: '100%', height: '100%' }}
           />
         ) : (
           <Camera
@@ -77,7 +74,7 @@ export default function FaceAuthenticator() {
               detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
               runClassifications: FaceDetector.FaceDetectorClassifications.none,
               minDetectionInterval: 100,
-              tracking: true,
+              tracking: true
             }}
           />
         )}
@@ -98,7 +95,7 @@ export default function FaceAuthenticator() {
           <View className="mt-8">
             <TextButton
               href={{
-                pathname: "/(account)",
+                pathname: '/(account)'
               }}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
@@ -117,5 +114,5 @@ export default function FaceAuthenticator() {
         </View>
       )}
     </SafeAreaView>
-  );
+  )
 }

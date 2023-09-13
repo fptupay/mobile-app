@@ -1,5 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useRef, useState } from "react";
+import GradientBackground from '@/components/GradientBackground'
+import CustomIcon from '@/components/Icon'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import Colors from '@/constants/Colors'
+import { IconProps } from '@/types/Icon.type'
+import { WINDOW_HEIGHT, formatMoney } from '@/utils/helper'
+import { useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+
+import React, { useRef, useState } from 'react'
 import {
   Animated,
   FlatList,
@@ -11,123 +19,116 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import CustomIcon from "../../components/Icon";
-import { MediumText, NormalText, SemiText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { IconProps } from "../../types/Icon.type";
-import { WINDOW_HEIGHT, formatMoney } from "../../utils/helper";
-import GradientBackground from "../../components/GradientBackground";
-import { useRouter } from "expo-router";
+  View
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface MainActionProps {
-  image: IconProps["name"];
-  title: string;
-  route: any;
+  image: IconProps['name']
+  title: string
+  route: any
 }
 
 const transactions = [
   {
     id: 1,
-    recipient: "Nguyễn Văn A",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn A',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 2,
-    recipient: "Nguyễn Văn B",
-    name: "Học phí",
+    recipient: 'Nguyễn Văn B',
+    name: 'Học phí',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 3,
-    recipient: "Nguyễn Văn C",
-    name: "Lương tháng 9",
+    recipient: 'Nguyễn Văn C',
+    name: 'Lương tháng 9',
     amount: 100000,
-    type: "income",
-    message: "Công ty X chuyển tiền lương tháng 9",
-    date: "2021-09-01",
+    type: 'income',
+    message: 'Công ty X chuyển tiền lương tháng 9',
+    date: '2021-09-01'
   },
   {
     id: 4,
-    recipient: "Nguyễn Văn D",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn D',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 5,
-    recipient: "Nguyễn Văn E",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn E',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "income",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'income',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 6,
-    recipient: "Nguyễn Văn F",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn F',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 7,
-    recipient: "Nguyễn Lan Anh",
-    name: "Chuyển tiền ăn",
+    recipient: 'Nguyễn Lan Anh',
+    name: 'Chuyển tiền ăn',
     amount: 100000,
-    type: "income",
-    message: "Nguyễn Lan Anh chuyển tiền",
-    date: "2021-09-01",
+    type: 'income',
+    message: 'Nguyễn Lan Anh chuyển tiền',
+    date: '2021-09-01'
   },
   // there are 2 types: income and expense, with varied amount
   {
     id: 8,
-    recipient: "Nguyễn Văn H",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn H',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 9,
-    recipient: "Nguyễn Văn I",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn I',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "expense",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
+    type: 'expense',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
   },
   {
     id: 10,
-    recipient: "Nguyễn Văn K",
-    name: "Mua sắm",
+    recipient: 'Nguyễn Văn K',
+    name: 'Mua sắm',
     amount: 100000,
-    type: "income",
-    message: "Mua sắm tạp hoá",
-    date: "2021-09-01",
-  },
-];
+    type: 'income',
+    message: 'Mua sắm tạp hoá',
+    date: '2021-09-01'
+  }
+]
 
 const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
-  const router = useRouter();
+  const router = useRouter()
 
   const handleRouting = () => {
-    router.push(route);
-  };
+    router.push(route)
+  }
   return (
     <Pressable
       onPress={handleRouting}
@@ -140,42 +141,42 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
         {title}
       </MediumText>
     </Pressable>
-  );
-};
+  )
+}
 
 export default function Home() {
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(false)
 
   const toggleSearch = () => {
-    setIsSearching(!isSearching);
-  };
+    setIsSearching(!isSearching)
+  }
 
   const BottomSheet = () => {
-    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT - 350);
-    const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25;
-    const MAX_DOWNWARD_TRANSLATE_Y = 0;
-    const animatedValue = useRef(new Animated.Value(0)).current;
-    const lastGestureDy = useRef(0);
+    const [scrollY, setScrollY] = useState(WINDOW_HEIGHT - 350)
+    const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25
+    const MAX_DOWNWARD_TRANSLATE_Y = 0
+    const animatedValue = useRef(new Animated.Value(0)).current
+    const lastGestureDy = useRef(0)
     const panResponder = useRef(
       PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderGrant: () => {
-          animatedValue.setOffset(lastGestureDy.current);
+          animatedValue.setOffset(lastGestureDy.current)
         },
         onPanResponderMove: (event, gesture) => {
-          animatedValue.setValue(gesture.dy);
+          animatedValue.setValue(gesture.dy)
         },
         onPanResponderRelease: (event, gesture) => {
-          lastGestureDy.current += gesture.dy;
+          lastGestureDy.current += gesture.dy
           if (lastGestureDy.current < MAX_UPWARD_TRANSLATE_Y) {
-            lastGestureDy.current = MAX_UPWARD_TRANSLATE_Y;
+            lastGestureDy.current = MAX_UPWARD_TRANSLATE_Y
           } else if (lastGestureDy.current > MAX_DOWNWARD_TRANSLATE_Y) {
-            lastGestureDy.current = MAX_DOWNWARD_TRANSLATE_Y;
+            lastGestureDy.current = MAX_DOWNWARD_TRANSLATE_Y
           }
-          setScrollY(WINDOW_HEIGHT - 350 - lastGestureDy.current);
-        },
+          setScrollY(WINDOW_HEIGHT - 350 - lastGestureDy.current)
+        }
       })
-    ).current;
+    ).current
 
     const bottomSheetAnimation = {
       transform: [
@@ -183,11 +184,11 @@ export default function Home() {
           translateY: animatedValue.interpolate({
             inputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
             outputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
-            extrapolate: "clamp",
-          }),
-        },
-      ],
-    };
+            extrapolate: 'clamp'
+          })
+        }
+      ]
+    }
 
     return (
       <View className="flex-1 bg-black">
@@ -222,7 +223,7 @@ export default function Home() {
           ) : (
             <View className="my-5 flex-row items-center justify-center">
               <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 className="flex-1"
               >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -232,7 +233,7 @@ export default function Home() {
                         className="h-12 px-10 py-3 bg-[#D9D9D9] rounded-lg focus:border-primary"
                         placeholderTextColor={Colors.tertiary}
                         placeholder="Tìm kiếm giao dịch"
-                        style={{ fontFamily: "Inter" }}
+                        style={{ fontFamily: 'Inter' }}
                       />
                       <View className="absolute top-3 left-2">
                         <CustomIcon
@@ -253,7 +254,7 @@ export default function Home() {
 
           <FlatList
             contentContainerStyle={{
-              paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY,
+              paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
             }}
             data={transactions}
             keyExtractor={(item) => item.id.toString()}
@@ -273,10 +274,10 @@ export default function Home() {
                 <View>
                   <NormalText
                     className={
-                      item.type === "income" ? "text-green-500" : "text-red-500"
+                      item.type === 'income' ? 'text-green-500' : 'text-red-500'
                     }
                   >
-                    {item.type === "income" ? "+" : "-"}
+                    {item.type === 'income' ? '+' : '-'}
                     {formatMoney(item.amount)}
                   </NormalText>
                 </View>
@@ -286,8 +287,8 @@ export default function Home() {
           />
         </Animated.View>
       </View>
-    );
-  };
+    )
+  }
 
   return (
     <View className="flex-1">
@@ -314,11 +315,7 @@ export default function Home() {
 
           <View className="mt-6">
             <View className="flex-row justify-between">
-              <MainAction
-                route="/load-money"
-                image="Plus"
-                title="Nạp tiền"
-              />
+              <MainAction route="/load-money" image="Plus" title="Nạp tiền" />
               <MainAction
                 route="/load-money"
                 image="ArrowRight"
@@ -336,5 +333,5 @@ export default function Home() {
 
       <BottomSheet />
     </View>
-  );
+  )
 }

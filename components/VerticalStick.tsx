@@ -1,21 +1,15 @@
-import { memo, useEffect, useRef } from "react";
-import {
-  Animated,
-  ColorValue,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
+import { memo, useEffect, useRef } from 'react'
+import { Animated, ColorValue, StyleSheet, View, ViewStyle } from 'react-native'
 
 interface VerticalStickProps {
-  focusColor?: ColorValue;
-  style?: ViewStyle;
-  focusStickBlinkingDuration?: number;
+  focusColor?: ColorValue
+  style?: ViewStyle
+  focusStickBlinkingDuration?: number
 }
 
 export const VerticalStick: React.FC<VerticalStickProps> = memo(
   ({ focusColor, style, focusStickBlinkingDuration = 350 }) => {
-    const opacityAnim = useRef(new Animated.Value(1)).current;
+    const opacityAnim = useRef(new Animated.Value(1)).current
 
     useEffect(() => {
       Animated.loop(
@@ -23,19 +17,19 @@ export const VerticalStick: React.FC<VerticalStickProps> = memo(
           Animated.timing(opacityAnim, {
             toValue: 0,
             useNativeDriver: true,
-            duration: focusStickBlinkingDuration,
+            duration: focusStickBlinkingDuration
           }),
           Animated.timing(opacityAnim, {
             toValue: 1,
             useNativeDriver: true,
-            duration: focusStickBlinkingDuration,
-          }),
+            duration: focusStickBlinkingDuration
+          })
         ]),
         {
-          iterations: -1,
+          iterations: -1
         }
-      ).start();
-    }, []);
+      ).start()
+    }, [])
 
     return (
       <Animated.View style={{ opacity: opacityAnim }}>
@@ -43,18 +37,18 @@ export const VerticalStick: React.FC<VerticalStickProps> = memo(
           style={[
             styles.stick,
             focusColor ? { backgroundColor: focusColor } : {},
-            style,
+            style
           ]}
         />
       </Animated.View>
-    );
+    )
   }
-);
+)
 
 const styles = StyleSheet.create({
   stick: {
     width: 2,
     height: 30,
-    backgroundColor: "green",
-  },
-});
+    backgroundColor: 'green'
+  }
+})

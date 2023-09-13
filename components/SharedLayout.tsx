@@ -1,23 +1,23 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { WINDOW_HEIGHT } from "../utils/helper";
-import GradientBackground from "./GradientBackground";
-import { MediumText } from "./Themed";
-import BackButton from "./buttons/BackButton";
-import QuestionButton from "./buttons/QuestionButton";
+import { WINDOW_HEIGHT } from '@/utils/helper'
+import { StatusBar } from 'expo-status-bar'
+import React from 'react'
+import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import GradientBackground from './GradientBackground'
+import { MediumText } from './Themed'
+import BackButton from './buttons/BackButton'
+import QuestionButton from './buttons/QuestionButton'
 
 interface SharedLayoutProps {
-  href: string;
-  title: string;
-  children: React.ReactNode;
+  href: string
+  title: string
+  children: React.ReactNode
 }
 
 export default function SharedLayout({
   href,
   title,
-  children,
+  children
 }: SharedLayoutProps) {
   return (
     <View className="flex-1">
@@ -44,5 +44,5 @@ export default function SharedLayout({
         {children}
       </View>
     </View>
-  );
+  )
 }

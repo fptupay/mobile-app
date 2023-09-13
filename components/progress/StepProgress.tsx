@@ -1,11 +1,11 @@
-import { View, StyleSheet } from "react-native";
-import StepCircle from "./StepCircle";
+import { View, StyleSheet } from 'react-native'
+import StepCircle from './StepCircle'
 
 export const StepType = {
-  FRONT: "front",
-  BACK: "back",
-  SELFIE: "selfie",
-};
+  FRONT: 'front',
+  BACK: 'back',
+  SELFIE: 'selfie'
+}
 
 export default function StepProgress({ type }: { type: string | string[] }) {
   return (
@@ -17,9 +17,9 @@ export default function StepProgress({ type }: { type: string | string[] }) {
       />
       <View
         style={{
-          borderBottomColor: "#808080",
+          borderBottomColor: '#808080',
           width: 95,
-          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomWidth: StyleSheet.hairlineWidth
         }}
       />
       <StepCircle
@@ -29,12 +29,12 @@ export default function StepProgress({ type }: { type: string | string[] }) {
       />
       <View
         style={{
-          borderBottomColor: "#808080",
+          borderBottomColor: '#808080',
           width: 95,
-          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomWidth: StyleSheet.hairlineWidth
         }}
       />
       <StepCircle index="3" active={type == StepType.SELFIE} complete={false} />
     </View>
-  );
+  )
 }

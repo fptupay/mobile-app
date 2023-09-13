@@ -1,42 +1,39 @@
-import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useRef, useState } from "react";
+import { OtpInput } from '@/components/OtpInput'
+import SharedLayout from '@/components/SharedLayout'
+import { MediumText, NormalText } from '@/components/Themed'
+import Colors from '@/constants/Colors'
+import { OtpInputRef } from '@/types/OtpInput.type'
+
+import { useRouter } from 'expo-router'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { OtpInput } from "../../components/OtpInput";
-import { MediumText, NormalText } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { OtpInputRef } from "../../types/OtpInput.type";
-import BackButton from "../../components/buttons/BackButton";
-import SharedLayout from "../../components/SharedLayout";
+  View
+} from 'react-native'
 
 export default function AddMoneyOtp() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const otpInputRef = useRef<OtpInputRef>(null);
-  const [otpCode, setOtpCode] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const otpInputRef = useRef<OtpInputRef>(null)
+  const [otpCode, setOtpCode] = useState<string>('')
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
   useEffect(() => {
-    setIsDisabled(otpCode.length < 6);
-  }, [otpCode]);
+    setIsDisabled(otpCode.length < 6)
+  }, [otpCode])
 
   const handleClear = () => {
-    otpInputRef.current?.clear();
-  };
+    otpInputRef.current?.clear()
+  }
 
   return (
     <SharedLayout href="/(main-features)/load-money" title="Nhập mã OTP">
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -67,11 +64,9 @@ export default function AddMoneyOtp() {
                 disabled={isDisabled}
                 className="rounded-lg py-3 text-center w-full disabled:bg-gray-400"
                 style={{
-                  backgroundColor: isDisabled
-                    ? Colors.tertiary
-                    : Colors.primary,
+                  backgroundColor: isDisabled ? Colors.tertiary : Colors.primary
                 }}
-                onPress={() => router.push("/add-bank-success")}
+                onPress={() => router.push('/add-bank-success')}
               >
                 <MediumText className="text-white text-center">
                   Xác nhận
@@ -82,5 +77,5 @@ export default function AddMoneyOtp() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SharedLayout>
-  );
+  )
 }

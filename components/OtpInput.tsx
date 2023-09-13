@@ -1,31 +1,31 @@
-import { forwardRef, useImperativeHandle } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import Colors from "../constants/Colors";
-import { useOtpInput } from "../hooks/useOtpInput";
-import { OtpInputProps, OtpInputRef } from "../types/OtpInput.type";
-import { VerticalStick } from "./VerticalStick";
+import { forwardRef, useImperativeHandle } from 'react'
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import Colors from '../constants/Colors'
+import { useOtpInput } from '../hooks/useOtpInput'
+import { OtpInputProps, OtpInputRef } from '../types/OtpInput.type'
+import { VerticalStick } from './VerticalStick'
 
 export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
   const {
     models: { text, inputRef, focusedInputIndex },
     actions: { clear, handlePress, handleTextChange },
-    forms: { setText },
-  } = useOtpInput(props);
+    forms: { setText }
+  } = useOtpInput(props)
   const {
     numberOfDigits,
-    focusColor = "#A4D0A4",
+    focusColor = '#A4D0A4',
     focusStickBlinkingDuration,
-    theme = {},
-  } = props;
+    theme = {}
+  } = props
   const {
     containerStyle,
     inputsContainerStyle,
     pinCodeContainerStyle,
     pinCodeTextStyle,
-    focusStickStyle,
-  } = theme;
+    focusStickStyle
+  } = theme
 
-  useImperativeHandle(ref, () => ({ clear, setValue: setText }));
+  useImperativeHandle(ref, () => ({ clear, setValue: setText }))
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -33,8 +33,8 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
         {Array(numberOfDigits)
           .fill(0)
           .map((_, index) => {
-            const char = text[index];
-            const isFocusedInput = index === focusedInputIndex;
+            const char = text[index]
+            const isFocusedInput = index === focusedInputIndex
 
             return (
               <Pressable
@@ -43,7 +43,7 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
                 style={[
                   styles.codeContainer,
                   isFocusedInput ? { borderColor: focusColor } : {},
-                  pinCodeContainerStyle,
+                  pinCodeContainerStyle
                 ]}
               >
                 {isFocusedInput ? (
@@ -58,7 +58,7 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
                   </Text>
                 )}
               </Pressable>
-            );
+            )
           })}
       </View>
       <TextInput
@@ -71,35 +71,35 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
         style={styles.hiddenInput}
       />
     </View>
-  );
-});
+  )
+})
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row'
   },
   inputsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between'
   },
   codeContainer: {
     borderWidth: 1,
     borderRadius: 12,
-    borderColor: "#DFDFDE",
+    borderColor: '#DFDFDE',
     height: 60,
     width: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   codeText: {
     fontSize: 28,
     lineHeight: 38,
-    color: Colors.tertiary,
+    color: Colors.tertiary
   },
   hiddenInput: {
     width: 1,
     height: 1,
-    opacity: 0,
-  },
-});
+    opacity: 0
+  }
+})

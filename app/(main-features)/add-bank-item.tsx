@@ -1,15 +1,14 @@
-import SharedLayout from "../../components/SharedLayout";
-import TextField from "../../components/TextField";
-import { Image, Keyboard, TouchableWithoutFeedback } from "react-native";
-import { NormalText, SemiText, View } from "../../components/Themed";
-import TextButton, {
-  TextButtonType,
-} from "../../components/buttons/TextButton";
-import { useState } from "react";
+import SharedLayout from '@/components/SharedLayout'
+import TextField from '@/components/TextField'
+import { NormalText, SemiText, View } from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { useState } from 'react'
+
+import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 export default function AddBankItem() {
-  const [accountId, setAccountId] = useState("001912111545484878");
-  const [accountName, setAccountName] = useState("CAO QUYNH ANH");
+  const [accountId, setAccountId] = useState('001912111545484878')
+  const [accountName, setAccountName] = useState('CAO QUYNH ANH')
 
   return (
     <SharedLayout href="/load-money" title="Agribank">
@@ -38,11 +37,11 @@ export default function AddBankItem() {
           <View className="bg-transparent">
             <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
               <Image
-                source={require("../../assets/images/tick.png")}
+                source={require('../../assets/images/tick.png')}
                 className="w-6 h-6"
               />
               <NormalText className="text-tertiary flex-1 text-xs">
-                Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{" "}
+                Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
                 <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
               </NormalText>
             </View>
@@ -56,5 +55,5 @@ export default function AddBankItem() {
         </View>
       </TouchableWithoutFeedback>
     </SharedLayout>
-  );
+  )
 }
