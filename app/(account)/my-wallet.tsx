@@ -4,11 +4,11 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 
-import { LinearGradient } from 'expo-linear-gradient'
-import React, { useRef, useState } from 'react'
-import { Animated, Image, ScrollView,Pressable } from 'react-native';
 import Colors from '@/constants/Colors'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Eye, EyeOff } from 'lucide-react-native'
+import React, { useRef, useState } from 'react'
+import { Animated, Image, Pressable, ScrollView } from 'react-native'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -127,7 +127,7 @@ const DynamicHeader = ({ value }: any) => {
 
 export default function MyWallet() {
   const scrollOffsetY = useRef(new Animated.Value(0)).current
-  const [showBalance, setShowBalance] = useState(false);
+  const [showBalance, setShowBalance] = useState(false)
 
   return (
     <View className="flex-1">
@@ -143,7 +143,7 @@ export default function MyWallet() {
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         <View>
-        <View
+          <View
             className="rounded-lg mx-4 mt-4 p-4 flex flex-row justify-between items-center"
             style={{
               shadowOffset: { width: 2, height: 4 },
@@ -154,28 +154,31 @@ export default function MyWallet() {
           >
             <View>
               <NormalText className="text-base">Số dư của bạn</NormalText>
-              <SemiText className="text-primary text-3xl">
+              <SemiText className="text-primary text-2xl mt-1">
                 {showBalance ? (
                   <>
                     20.567.000
-                    <SemiText
-                      className="underline text-xl text-primary cursor-pointer"
-                    >
+                    <SemiText className="underline text-xl text-primary cursor-pointer">
                       đ
                     </SemiText>
                     <Pressable onPress={() => setShowBalance(!showBalance)}>
-                      <EyeOff size={24} color={Colors.secondary} className='ml-1'/>
+                      <EyeOff
+                        size={24}
+                        color={Colors.secondary}
+                        className="ml-1"
+                      />
                     </Pressable>
                   </>
                 ) : (
                   <>
                     *******
-                    <SemiText
-                      className="underline text-xl text-primary cursor-pointer"
-                    >
-                    </SemiText>
+                    <SemiText className="underline text-xl text-primary cursor-pointer"></SemiText>
                     <Pressable onPress={() => setShowBalance(!showBalance)}>
-                      <Eye size={24} color={Colors.secondary} className='ml-1'/>
+                      <Eye
+                        size={24}
+                        color={Colors.secondary}
+                        className="ml-1"
+                      />
                     </Pressable>
                   </>
                 )}

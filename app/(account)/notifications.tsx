@@ -130,13 +130,13 @@ export default function Notifications() {
           className="flex-1 px-4 bg-white left-0 right-0 backdrop-blur-[4px] rounded-t-[30px] absolute -top-6"
           style={[{ maxHeight: WINDOW_HEIGHT }, contentNotifiAnimation]}
         >
-          <View className="w-full h-[24px] flex justify-start items-center left-2">
+          <View className="w-full h-[24px] flex justify-start items-center left-2 mt-5">
             <View className="w-[73px] self-stretch  h-[17px]">
-              <MediumText className="absolute w-[41px] left-0 top-3 text-center font-normal leading-[18px] text-[#3074EE]">
+              <MediumText className="absolute w-[41px] left-0 text-center font-normal leading-[18px] text-[#3074EE]">
                 Tất cả
               </MediumText>
             </View>
-            <View className="absolute bg-[#DB2A34] rounded-[4px] left-[50px] top-2">
+            <View className="absolute bg-[#DB2A34] rounded-[4px] left-[50px] -top-1">
               <Text className="w-full h-full items-center text-white p-1">
                 10
               </Text>
@@ -146,7 +146,7 @@ export default function Notifications() {
             <View className="px-2 relative">
               <FlatList
                 contentContainerStyle={{
-                  paddingBottom: (200 * (WINDOW_HEIGHT - 350)) / scrollY
+                  paddingBottom: (200 * (WINDOW_HEIGHT - 150)) / scrollY
                 }}
                 data={featuresData}
                 keyExtractor={(item) => item.id.toString()}
@@ -163,14 +163,14 @@ export default function Notifications() {
   return (
     <View className="flex-1">
       <StatusBar style="auto" />
-      <View className="h-[100px]">
+      <View className="h-[150px]">
         <LinearGradient
           colors={['#fdc83080', '#f97316bf']}
           className="absolute top-0 left-0 right-0 h-full"
         />
-        <SafeAreaView className="px-4 pt-2">
+        <SafeAreaView className="px-4 pt-6">
           <View className="w-full px-2">
-            <MediumText className="w-full flex items-center justify-center text-xl ">
+            <MediumText className="w-full flex items-center justify-center text-2xl text-secondary">
               Thông báo
             </MediumText>
           </View>

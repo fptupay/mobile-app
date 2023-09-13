@@ -1,14 +1,14 @@
-import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import IconButton from '@/components/buttons/IconButton'
 import TextButton from '@/components/buttons/TextButton'
 
 import React, { useState } from 'react'
 import {
-  FlatList,
   Image,
   Keyboard,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -37,10 +37,15 @@ export default function Home() {
     {
       id: '3',
       name: 'ACB'
+    },
+    {
+      id: '4',
+      name: 'ACB'
     }
   ]
-  const [value, setValue] = useState('')
-  const [error] = useState('')
+
+  const [amount, setAmount] = useState('')
+  const [selectedBankId, setSelectedBankId] = useState<string>('')
 
   const BankItem = ({ item, onPress }: BankItemProps) => {
     const borderColor =
@@ -52,9 +57,9 @@ export default function Home() {
         onPress={onPress}
       >
         <View className="flex-row items-center gap-x-2">
-          <CustomIcon name="Landmark" size={24} color="#0F172A" />
+          <Image source={require('../assets/images/techcombank.png')} />
           <View>
-            <MediumText>{item.name}</MediumText>
+            <MediumText className="text-secondary">{item.name}</MediumText>
             <NormalText className="text-tertiary">
               Miễn phí thanh toán
             </NormalText>
@@ -69,59 +74,65 @@ export default function Home() {
     )
   }
 
-  const [selectedBankId, setselectedBankId] = useState<string>()
-
-  const renderedBankItem = ({ item }: { item: BankProps }) => (
-    <BankItem item={item} onPress={() => setselectedBankId(item.id)} />
-  )
-
   return (
     <SharedLayout href="/(account)" title="Rút tiền">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <SemiText className="my-4">Rút tiền từ FPTUPay</SemiText>
-          <TextField
-            value={value}
-            label="Số tiền cần rút"
-            errorText={error}
-            onChangeText={(text) => setValue(text)}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-      <View className="flex-1 mt-8">
-        <SemiText className="mb-4">Đến ngân hàng</SemiText>
-        <FlatList
-          className="flex-grow-0 h-60"
-          data={banks}
-          keyExtractor={(item) => item.id}
-          renderItem={renderedBankItem}
+      <View className="py-4 bg-transparent flex flex-col justify-between">
+        <ScrollView
           showsVerticalScrollIndicator={false}
-        />
-        <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mb-4">
-          <View className="flex flex-row items-center">
-            <CustomIcon name="PlusCircle" size={24} color="#0F172A" />
-            <View className="ml-2">
-              <MediumText className="text-black">Thêm ngân hàng</MediumText>
-              <NormalText className="text-tertiary">
-                Miễn phí nạp, rút tiền
-              </NormalText>
+          contentContainerStyle={{ paddingBottom: 150 }}
+        >
+          <View className="bg-transparent">
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View className="bg-transparent">
+                <SemiText className="text-secondary mb-2">
+                  Nạp tiền vào ví FPTU Pay
+                </SemiText>
+                <TextField
+                  keyboardType="numeric"
+                  label="Số tiền cần nạp"
+                  editable={true}
+                  selectTextOnFocus={true}
+                  value={amount}
+                  onChangeText={(value) => setAmount(value)}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+
+            <View className="pt-6">
+              <SemiText className="text-secondary mb-2">Từ ngân hàng</SemiText>
+              {banks.map((item) => (
+                <BankItem
+                  key={item.id}
+                  item={item}
+                  onPress={() => setSelectedBankId(item.id)}
+                />
+              ))}
+              <IconButton
+                label="Thêm ngân hàng"
+                description="Miễn phí nạp, rút tiền"
+                href="/add-bank"
+              />
             </View>
           </View>
-          <CustomIcon name="ChevronRight" size={24} color="#000" />
+        </ScrollView>
+      </View>
+      <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
+        <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
+          <Image
+            source={require('../assets/images/tick.png')}
+            className="w-6 h-6"
+          />
+          <NormalText className="text-tertiary flex-1 text-xs">
+            Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
+            <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
+          </NormalText>
         </View>
-        <View>
-          <View className="flex flex-row gap-x-2 items-center mb-4">
-            <Image
-              source={require('@/assets/images/tick.png')}
-              className="w-6 h-6"
-            />
-            <NormalText className="text-tertiary flex-1 text-xs">
-              Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
-              <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
-            </NormalText>
-          </View>
-          <TextButton href="/" text="Rút tiền" type="primary" />
-        </View>
+        <TextButton
+          text="Thanh toán"
+          type="primary"
+          href="(main-features)/add-bank-item"
+          disable={selectedBankId == '' || amount == ''}
+        />
       </View>
     </SharedLayout>
   )

@@ -322,7 +322,7 @@ export default function Home() {
                 title="Chuyển tiền"
               />
               <MainAction
-                route="/load-money"
+                route="/withdrawal"
                 image="WalletCards"
                 title="Rút tiền"
               />

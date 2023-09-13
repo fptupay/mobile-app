@@ -37,12 +37,18 @@ export default function TransferAmountScreen() {
     const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     setAmount(formattedAmount)
 
-    const suggestions =
-      baseAmount === 0
-        ? []
-        : baseAmount > 999999
-          ? [baseAmount, baseAmount * 10]
-          : [baseAmount, baseAmount * 10, baseAmount * 100]
+    let suggestions: any[] = []
+    switch (true) {
+      case baseAmount === 0:
+        suggestions = []
+        break
+      case baseAmount > 999999:
+        suggestions = [baseAmount, baseAmount * 10]
+        break
+      default:
+        suggestions = [baseAmount, baseAmount * 10, baseAmount * 100]
+        break
+    }
     setSuggestions(suggestions.filter((suggestion) => suggestion <= 100000000))
   }
 

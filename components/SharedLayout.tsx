@@ -1,3 +1,4 @@
+import { WINDOW_HEIGHT } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { View } from 'react-native'
@@ -21,17 +22,25 @@ export default function SharedLayout({
   return (
     <View className="flex-1">
       <StatusBar style="auto" />
-      <View className="h-48">
+      <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
-          <BackButton href={href} />
-          <QuestionButton href="" />
-          <MediumText className="text-2xl text-secondary mt-9">
+          <View className="flex-row justify-between">
+            <BackButton href={href} />
+            <QuestionButton href="" />
+          </View>
+          <MediumText
+            className="text-2xl text-secondary"
+            style={{ marginTop: WINDOW_HEIGHT * 0.04 }}
+          >
             {title}
           </MediumText>
         </SafeAreaView>
       </View>
-      <View className="absolute top-36 left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-between">
+      <View
+        className="absolute left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-between"
+        style={{ top: WINDOW_HEIGHT * 0.2 }}
+      >
         {children}
       </View>
     </View>

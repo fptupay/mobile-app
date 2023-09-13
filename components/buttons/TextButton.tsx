@@ -13,29 +13,34 @@ type TextButtonProps = {
   text: string
   type: string
   onPress?: () => void
+  disable?: boolean
 }
 
 export default function TextButton({
   href,
   text,
   type,
-  onPress
+  onPress,
+  disable
 }: TextButtonProps) {
   const route = useRouter()
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress} disabled={disable}>
       <View
         className={`${
-          type == TextButtonType.PRIMARY
+          disable
+            ? 'bg-gray-300'
+            : type == TextButtonType.PRIMARY
             ? 'bg-primary'
             : 'bg-white border border-tertiary'
         } rounded-lg px-1 py-2`}
       >
         {href ? (
           <Pressable
+            disabled={disable}
             onPress={() => route.push(href)}
-            className="flex items-center py-2 w-full"
+            className="flex items-center w-full"
           >
             <MediumText
               className={`${
