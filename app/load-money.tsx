@@ -1,23 +1,23 @@
-import SharedLayout from "../components/SharedLayout";
-import TextField from "../components/TextField";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
+import { useState } from "react";
 import {
-  View,
   Image,
+  Keyboard,
   Modal,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
+  View,
 } from "react-native";
-import { MediumText, NormalText, SemiText } from "../components/Themed";
-import TextButton, { TextButtonType } from "../components/buttons/TextButton";
 import SelectField from "../components/SelectField";
+import SharedLayout from "../components/SharedLayout";
+import TextField from "../components/TextField";
+import { MediumText, NormalText, SemiText } from "../components/Themed";
 import IconButton from "../components/buttons/IconButton";
-import { useState } from "react";
-import { BlurView } from "expo-blur";
-import { useRoute, RouteProp } from "@react-navigation/native";
-import { AddBankRouteParams } from "./add-bank";
+import TextButton, { TextButtonType } from "../components/buttons/TextButton";
 import { useBankStore } from "../stores/bankStore";
+import { AddBankRouteParams } from "./add-bank";
 
 const listBank = [
   {
@@ -42,8 +42,7 @@ export default function LoadMoney() {
     useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>();
   const [amount, setAmount] = useState("");
   const setDepositSuccessful = route.params?.setDepositSuccessful || false;
-  const [depositSuccessfulVisible] =
-    useState(true);
+  const [depositSuccessfulVisible] = useState(true);
   const [, setIsModalVisible] = useState(false);
   const selectedBank = useBankStore((state) => state.selectedBank);
   const setSelectedBank = useBankStore((state) => state.setSelectedBank);
@@ -54,7 +53,7 @@ export default function LoadMoney() {
 
   return (
     <SharedLayout href="/(account)" title="Nạp tiền">
-      <View className="pt-5 py-10 bg-transparent flex flex-col justify-between">
+      <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 150 }}
@@ -86,7 +85,11 @@ export default function LoadMoney() {
             <View className="py-8 bg-transparent">
               <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
               {listBank.map((item) => (
-                <TouchableOpacity key={item.id} activeOpacity={0.8} onPress={()=>setSelectedBank(item.label)}>
+                <TouchableOpacity
+                  key={item.id}
+                  activeOpacity={0.8}
+                  onPress={() => setSelectedBank(item.label)}
+                >
                   <SelectField
                     label={item.label}
                     description={item.description}
@@ -103,7 +106,7 @@ export default function LoadMoney() {
           </View>
         </ScrollView>
       </View>
-      <View className="bg-white p-4 pb-10 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
+      <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
           <Image
             source={require("../assets/images/tick.png")}

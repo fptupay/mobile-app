@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import CustomIcon from "../components/Icon";
 import SharedLayout from "../components/SharedLayout";
 import TextField from "../components/TextField";
 import { MediumText, NormalText, SemiText } from "../components/Themed";
@@ -38,6 +37,10 @@ export default function Home() {
       id: "3",
       name: "ACB",
     },
+    {
+      id: "4",
+      name: "ACB",
+    },
   ];
 
   const [amount, setAmount] = useState("");
@@ -54,7 +57,7 @@ export default function Home() {
         onPress={onPress}
       >
         <View className="flex-row items-center gap-x-2">
-          <CustomIcon name="Landmark" size={24} color="#0F172A" />
+          <Image source={require("../assets/images/techcombank.png")} />
           <View>
             <MediumText className="text-secondary">{item.name}</MediumText>
             <NormalText className="text-tertiary">
@@ -73,10 +76,10 @@ export default function Home() {
 
   return (
     <SharedLayout href="/(account)" title="Rút tiền">
-      <View className="py-10 bg-transparent flex flex-col justify-between">
+      <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 150 }}
         >
           <View className="bg-transparent">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
