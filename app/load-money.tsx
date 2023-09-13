@@ -5,11 +5,9 @@ import {
   Image,
   Modal,
   TouchableOpacity,
-  FlatList,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  GestureResponderEvent,
 } from "react-native";
 import { MediumText, NormalText, SemiText } from "../components/Themed";
 import TextButton, { TextButtonType } from "../components/buttons/TextButton";
@@ -88,9 +86,8 @@ export default function LoadMoney() {
             <View className="py-8 bg-transparent">
               <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
               {listBank.map((item) => (
-                <TouchableOpacity activeOpacity={0.8} onPress={()=>setSelectedBank(item.label)}>
+                <TouchableOpacity key={item.id} activeOpacity={0.8} onPress={()=>setSelectedBank(item.label)}>
                   <SelectField
-                    key={item.id}
                     label={item.label}
                     description={item.description}
                     className="mb-5"
