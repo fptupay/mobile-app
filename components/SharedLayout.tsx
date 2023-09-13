@@ -25,11 +25,13 @@ export default function SharedLayout({
       <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
-          <BackButton href={href} />
-          <QuestionButton href="" />
+          <View className="flex-row justify-between">
+            <BackButton href={href} />
+            <QuestionButton href="" />
+          </View>
           <MediumText
             className="text-2xl text-secondary"
-            style={{ marginTop: WINDOW_HEIGHT * 0.07 }}
+            style={{ marginTop: WINDOW_HEIGHT * 0.04 }}
           >
             {title}
           </MediumText>
