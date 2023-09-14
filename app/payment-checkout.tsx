@@ -5,6 +5,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { IconProps } from '@/types/Icon.type'
 import { formatMoney } from '@/utils/helper'
 import { BlurView } from 'expo-blur'
+import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Modal, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -16,17 +17,20 @@ interface PaymentItemProps {
 }
 
 export default function PaymentCheckoutScreen() {
+  const router = useRouter()
+
   const [isEnabled, setIsEnabled] = useState(true)
   const [depositSuccessfulVisible, setDepositSuccessfulVisible] =
     useState(false)
   const [currentBalance] = useState(20567000)
-  const totalPayment = 30000000
+  const totalPayment = 3000000
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
 
-  const checkAndShowModal = () => {
+  const handleCheckSufficientAmount = () => {
     if (currentBalance < totalPayment) {
       setDepositSuccessfulVisible(true)
     }
+    router.push('/(main-features)/add-money-otp')
   }
 
   const paymentItems: PaymentItemProps[] = [
@@ -125,7 +129,7 @@ export default function PaymentCheckoutScreen() {
             />
           </View>
           <TextButton
-            onPress={checkAndShowModal}
+            onPress={handleCheckSufficientAmount}
             text="Thanh toán"
             type={TextButtonType.PRIMARY}
           />
