@@ -45,6 +45,7 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
                   isFocusedInput ? { borderColor: focusColor } : {},
                   pinCodeContainerStyle
                 ]}
+                accessibilityRole="button"
               >
                 {isFocusedInput ? (
                   <VerticalStick
@@ -69,6 +70,7 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
         ref={inputRef}
         autoFocus
         style={styles.hiddenInput}
+        testID="otp-input"
       />
     </View>
   )

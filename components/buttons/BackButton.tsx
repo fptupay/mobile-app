@@ -1,11 +1,13 @@
-import { Link } from 'expo-router'
+import { useRouter } from 'expo-router'
 import React from 'react'
+import { Pressable } from 'react-native'
 import CustomIcon from '../Icon'
 
 export default function BackButton({ href }: { href: any }) {
+  const router = useRouter()
   return (
-    <Link href={href} className="z-10">
+    <Pressable onPress={() => router.push(href)} className="z-10" testID="link">
       <CustomIcon name="ChevronLeft" color="gray" size={30} />
-    </Link>
+    </Pressable>
   )
 }
