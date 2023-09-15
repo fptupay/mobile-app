@@ -37,7 +37,7 @@ export default function AddMoneyOtp() {
         className="flex-1 px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 pt-16 space-y-8">
+          <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
                 Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
