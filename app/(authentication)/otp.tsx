@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function Otp() {
+export default function SignUpOtpScreen() {
   const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)

@@ -15,7 +15,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { ImageBackground, TouchableOpacity } from 'react-native'
 
-export default function FaceAuthenticator() {
+export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
   const { type } = useLocalSearchParams()
   const [faceData, setFaceData] = useState([])

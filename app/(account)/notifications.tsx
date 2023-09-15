@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function Notifications() {
+export default function NotificationsScreen() {
   const featuresData = [
     {
       id: 1,

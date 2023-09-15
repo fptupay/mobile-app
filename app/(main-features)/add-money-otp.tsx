@@ -15,7 +15,7 @@ import {
   View
 } from 'react-native'
 
-export default function AddMoneyOtp() {
+export default function AddMoneyOtpScreen() {
   const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)

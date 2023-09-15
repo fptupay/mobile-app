@@ -30,7 +30,7 @@ export type AddBankRouteParams = {
   setDepositSuccessful?: boolean
 }
 
-export default function addBank() {
+export default function AddBankScreen() {
   const featuresData = [
     {
       id: 1,

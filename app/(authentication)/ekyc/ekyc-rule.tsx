@@ -33,7 +33,7 @@ const StepCard: React.FC<StepCardProps> = ({
     </View>
   </View>
 )
-export default function EkycRule() {
+export default function EkycRuleScreen() {
   const [isAgree, setAgree] = useState(false)
 
   return (

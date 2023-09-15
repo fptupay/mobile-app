@@ -8,7 +8,7 @@ import { useColorScheme } from 'react-native'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 
-export default function RootLayoutNav() {
+export default function AuthenticationLayout() {
   const colorScheme = useColorScheme()
 
   return (

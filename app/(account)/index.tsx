@@ -144,7 +144,7 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
   )
 }
 
-export default function Home() {
+export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
 
   const toggleSearch = () => {

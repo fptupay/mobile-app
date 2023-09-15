@@ -125,7 +125,7 @@ const DynamicHeader = ({ value }: any) => {
   )
 }
 
-export default function MyWallet() {
+export default function MyWalletScreen() {
   const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
 

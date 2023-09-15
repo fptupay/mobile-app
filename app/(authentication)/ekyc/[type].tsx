@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity } from 'react-native'
 
-export default function EkycCamera() {
+export default function EkycCameraScreen() {
   const { type } = useLocalSearchParams()
 
   let camera: Camera | null

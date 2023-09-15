@@ -38,7 +38,7 @@ const listBank = [
   }
 ]
 
-export default function LoadMoney() {
+export default function LoadMoneyScreen() {
   const route =
     useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>()
   const [amount, setAmount] = useState('')

@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function ForgetPassword() {
+export default function ForgetPasswordScreen() {
   return (
     <SafeAreaView className="flex-1">
       <BackButton href="/(authentication)" />

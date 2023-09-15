@@ -24,7 +24,7 @@ interface BankItemProps {
   onPress: () => void
 }
 
-export default function Home() {
+export default function WithdrawalScreen() {
   const banks: BankProps[] = [
     {
       id: '1',

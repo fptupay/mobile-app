@@ -14,7 +14,7 @@ import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function ResetPassword() {
+export default function ResetPasswordScreen() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />

@@ -12,7 +12,7 @@ type AddBankScreenRouteParams = {
 }
 type NavigationProps = StackNavigationProp<any, 'load-money'>
 
-export default function addBankSuccess() {
+export default function AddBankSuccessScreen() {
   const navigation = useNavigation<NavigationProps>()
 
   const handleTextButtonClick = () => {

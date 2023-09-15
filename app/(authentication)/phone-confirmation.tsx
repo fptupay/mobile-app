@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function PhoneConfirmation() {
+export default function PhoneConfirmationScreen() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <KeyboardAvoidingView
