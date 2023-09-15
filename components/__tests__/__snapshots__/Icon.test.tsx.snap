@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly 1`] = `
+<RNSVGSvgView
+  align="xMidYMid"
+  bbHeight="30"
+  bbWidth="30"
+  fill="none"
+  focusable={false}
+  height={30}
+  meetOrSlice={0}
+  minX={0}
+  minY={0}
+  stroke="gray"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  strokeWidth={2}
+  style={
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+      },
+      {
+        "flex": 0,
+        "height": 30,
+        "width": 30,
+      },
+    ]
+  }
+  vbHeight={24}
+  vbWidth={24}
+  width={30}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <RNSVGGroup
+    fill={null}
+    propList={
+      [
+        "fill",
+        "stroke",
+        "strokeWidth",
+        "strokeLinecap",
+        "strokeLinejoin",
+      ]
+    }
+    stroke={
+      {
+        "payload": 4286611584,
+        "type": 0,
+      }
+    }
+    strokeLinecap={1}
+    strokeLinejoin={1}
+    strokeWidth="2"
+  >
+    <RNSVGPath
+      d="m15 18-6-6 6-6"
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    />
+  </RNSVGGroup>
+</RNSVGSvgView>
+`;
