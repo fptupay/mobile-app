@@ -202,7 +202,7 @@ export default function MyWalletScreen() {
           <View className="mx-4 my-4">
             <TextButton
               text="Đăng xuất"
-              href="/"
+              href="/(authentication)"
               type={TextButtonType.PRIMARY}
             />
           </View>
