@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar'
 import {
   Image,
   Keyboard,
@@ -8,20 +7,23 @@ import {
   View
 } from 'react-native'
 
+import { loginUser } from '@/api/authentication'
+import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { Link, useRouter } from 'expo-router'
+import { AuthenProps } from '@/types/Authen.type'
+import { saveToken } from '@/utils/helper'
+import { LoginFormSchema, loginFormSchema } from '@/utils/login-form-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   QueryClient,
   QueryClientProvider,
   useMutation
 } from '@tanstack/react-query'
+import { Link, useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { AuthenProps } from '@/types/Authen.type'
-import { loginUser } from '@/api/authentication'
-import { useState } from 'react'
-import TextField from '@/components/TextField'
-import { saveToken } from '@/utils/helper'
 
 export default function LoginScreen() {
   const queryClient = new QueryClient()
@@ -36,18 +38,25 @@ export default function LoginScreen() {
 function LoginComponent() {
   const router = useRouter()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginFormSchema>({
+    defaultValues: {
+      studentCode: '',
+      password: ''
+    },
+    resolver: zodResolver(loginFormSchema),
+    mode: 'onChange'
+  })
 
-  const handleUsername = (value: string) => {
-    setUsername(value)
+  const onSubmit = (data: LoginFormSchema) => {
+    loginMutation.mutate(data)
   }
 
-  const handlePassword = (value: string) => {
-    setPassword(value)
-  }
-
-  const loginMutation = useMutation((data: AuthenProps) => loginUser(data), {
+  const loginMutation = useMutation({
+    mutationFn: (data: AuthenProps) => loginUser(data),
     onSuccess: (data) => {
       console.log(data)
       saveToken({ key: 'access_token', value: data.data.access_token })
@@ -80,29 +89,51 @@ function LoginComponent() {
                 bạn{' '}
               </MediumText>
             </View>
+
             <View className="w-full space-y-4">
-              <TextField
-                label="Mã sinh viên"
-                value={username}
-                onChangeText={handleUsername}
-                style={{ fontFamily: 'Inter' }}
-              />
-              <TextField
-                label="Mật khẩu"
-                value={password}
-                onChangeText={handlePassword}
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
+              <View>
+                <Controller
+                  control={control}
+                  name="studentCode"
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Mã sinh viên"
+                      value={value}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                    />
+                  )}
+                />
+                {errors.studentCode && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.studentCode.message}
+                  </NormalText>
+                )}
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Mật khẩu"
+                      value={value}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.password.message}
+                  </NormalText>
+                )}
+              </View>
             </View>
+
             <View className="w-full mt-8 space-y-2">
               <TextButton
-                onPress={() =>
-                  loginMutation.mutate({
-                    username,
-                    password
-                  })
-                }
+                onPress={handleSubmit(onSubmit)}
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
                 disable={loginMutation.isLoading}
