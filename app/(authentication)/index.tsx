@@ -21,6 +21,7 @@ import { AuthenProps } from '@/types/Authen.type'
 import { loginUser } from '@/api/authentication'
 import { useState } from 'react'
 import TextField from '@/components/TextField'
+import { saveToken } from '@/utils/helper'
 
 export default function LoginScreen() {
   const queryClient = new QueryClient()
@@ -46,10 +47,12 @@ function LoginComponent() {
     setPassword(value)
   }
 
-  const login = useMutation((data: AuthenProps) => loginUser(data), {
+  const loginMutation = useMutation((data: AuthenProps) => loginUser(data), {
     onSuccess: (data) => {
       console.log(data)
-      router.push('/(account)')
+      saveToken({ key: 'access_token', value: data.data.access_token })
+        .then(() => router.push('/(account)'))
+        .catch((err) => console.log(err))
     },
     onError: (error: any) => {
       console.log(error)
@@ -95,13 +98,14 @@ function LoginComponent() {
             <View className="w-full mt-8 space-y-2">
               <TextButton
                 onPress={() =>
-                  login.mutate({
+                  loginMutation.mutate({
                     username,
                     password
                   })
                 }
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
+                disable={loginMutation.isLoading}
               />
               <Link
                 href="/(authentication)/forget-password"
