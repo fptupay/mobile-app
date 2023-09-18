@@ -1,4 +1,4 @@
 export type AuthenProps = {
-  username: string
+  studentCode: string
   password: string
 }
