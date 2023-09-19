@@ -236,6 +236,7 @@ function MyWalletComponent() {
             <TextButton
               onPress={logoutMutation.mutate}
               disable={logoutMutation.isLoading}
+              loading={logoutMutation.isLoading}
               text="Đăng xuất"
               type={TextButtonType.PRIMARY}
             />

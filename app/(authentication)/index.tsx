@@ -148,6 +148,7 @@ function LoginComponent() {
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
                 disable={loginMutation.isLoading}
+                loading={loginMutation.isLoading}
               />
               <Link
                 href="/(authentication)/forget-password"
