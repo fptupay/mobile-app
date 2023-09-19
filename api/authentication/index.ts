@@ -1,8 +1,8 @@
-import { LoginFormType } from '@/types/Authen.type'
+import { LoginFormSchema } from '@/schemas/login-schema'
 import { apiPostCall, loginConfig } from '..'
 import { getToken } from '@/utils/helper'
 
-export const loginUser = async (data: LoginFormType) => {
+export const loginUser = async (data: LoginFormSchema) => {
   const response = await apiPostCall(
     '/user/public/login',
     {

@@ -18,7 +18,8 @@ module.exports = function (api) {
             '@/hooks': './hooks',
             '@/utils': './utils',
             '@/stores': './stores',
-            '@/types': './types'
+            '@/types': './types',
+            '@/schemas': './schemas'
           }
         }
       ]
