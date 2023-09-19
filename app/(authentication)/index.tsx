@@ -11,6 +11,7 @@ import {
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
+import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
 import { saveToken } from '@/utils/helper'
@@ -22,7 +23,7 @@ import {
 } from '@tanstack/react-query'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -39,6 +40,11 @@ export default function LoginScreen() {
 function LoginComponent() {
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
+  const [toast, setToast] = useState({
+    visible: false,
+    type: 'warning',
+    label: ''
+  })
 
   const {
     control,
@@ -59,10 +65,18 @@ function LoginComponent() {
     loginMutation.mutate(data)
   }
 
+  const showToast = (type: string, label: string) => {
+    setToast({ visible: true, type, label })
+
+    setTimeout(() => {
+      setToast({ visible: false, type, label })
+    }, 3000)
+  }
+
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      console.log(data)
+      showToast('alert', 'Đăng nhập thành công')
       saveToken({ key: 'access_token', value: data.data.access_token })
         .then(() => router.push('/(account)'))
         .catch((err) => console.log(err))
@@ -73,15 +87,15 @@ function LoginComponent() {
   })
 
   return (
-    <SafeAreaView className="flex-1 px-4 bg-white">
-      <StatusBar style="auto" />
+    <SafeAreaView className="flex-1 items-center relative bg-white">
+      <StatusBar style="dark" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center justify-center space-y-8">
+          <View className="flex-1 items-center mt-20 space-y-8">
             <View className="flex items-center">
               <Image
                 source={require('@/assets/images/login-mascot.png')}
@@ -159,6 +173,8 @@ function LoginComponent() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+
+      {toast.visible && <Toast type={toast.type} label={toast.label} />}
     </SafeAreaView>
   )
 }
