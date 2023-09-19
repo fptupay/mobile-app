@@ -1,7 +1,7 @@
-import { AuthenProps } from '@/types/Authen.type'
+import { LoginFormType } from '@/types/Authen.type'
 import { apiPostCall, loginConfig } from '..'
 
-export const loginUser = async (data: AuthenProps) => {
+export const loginUser = async (data: LoginFormType) => {
   const response = await apiPostCall(
     '/user/public/login',
     {

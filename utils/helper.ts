@@ -18,6 +18,6 @@ export const saveToken = async ({
   await SecureStore.setItemAsync(key, value)
 }
 
-export const getItem = async (key: string) => {
+export const getToken = async (key: string) => {
   return await SecureStore.getItemAsync(key)
 }

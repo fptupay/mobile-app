@@ -3,11 +3,11 @@ import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import Colors from '@/constants/Colors'
 import { IconProps } from '@/types/Icon.type'
-import { WINDOW_HEIGHT, formatMoney } from '@/utils/helper'
+import { WINDOW_HEIGHT, formatMoney, getToken } from '@/utils/helper'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Animated,
   FlatList,
@@ -150,6 +150,11 @@ export default function HomeScreen() {
   const toggleSearch = () => {
     setIsSearching(!isSearching)
   }
+
+  useEffect(() => {
+    const token = getToken('access_token')
+    console.log('token secure', token)
+  })
 
   const BottomSheet = () => {
     const [scrollY, setScrollY] = useState(WINDOW_HEIGHT - 350)

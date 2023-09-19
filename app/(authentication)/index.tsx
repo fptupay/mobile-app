@@ -11,9 +11,7 @@ import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { AuthenProps } from '@/types/Authen.type'
 import { saveToken } from '@/utils/helper'
-import { LoginFormSchema, loginFormSchema } from '@/utils/login-form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   QueryClient,
@@ -24,6 +22,8 @@ import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { loginFormSchema } from '@/types/Authen.schema'
+import { LoginFormType } from '@/types/Authen.type'
 
 export default function LoginScreen() {
   const queryClient = new QueryClient()
@@ -42,21 +42,21 @@ function LoginComponent() {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm<LoginFormSchema>({
+  } = useForm<LoginFormType>({
     defaultValues: {
-      studentCode: '',
+      username: '',
       password: ''
     },
     resolver: zodResolver(loginFormSchema),
     mode: 'onChange'
   })
 
-  const onSubmit = (data: LoginFormSchema) => {
+  const onSubmit = (data: LoginFormType) => {
     loginMutation.mutate(data)
   }
 
   const loginMutation = useMutation({
-    mutationFn: (data: AuthenProps) => loginUser(data),
+    mutationFn: (data: LoginFormType) => loginUser(data),
     onSuccess: (data) => {
       console.log(data)
       saveToken({ key: 'access_token', value: data.data.access_token })
@@ -94,7 +94,7 @@ function LoginComponent() {
               <View>
                 <Controller
                   control={control}
-                  name="studentCode"
+                  name="username"
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       label="Mã sinh viên"
@@ -104,9 +104,9 @@ function LoginComponent() {
                     />
                   )}
                 />
-                {errors.studentCode && (
+                {errors.username && (
                   <NormalText className="text-red-500 mt-1">
-                    {errors.studentCode.message}
+                    {errors.username.message}
                   </NormalText>
                 )}
               </View>

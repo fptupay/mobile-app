@@ -1,9 +1,9 @@
-import * as z from 'zod'
+import { z } from 'zod'
 
 export const loginFormSchema = z.object({
-  studentCode: z
+  username: z
     .string()
-    .regex(/^[A-Z]{2}[0-9]{6}$/, {
+    .regex(/^[a-z]{2}[0-9]{6}$/, {
       message: 'Mã sinh viên không hợp lệ'
     })
     .trim(),
@@ -14,5 +14,3 @@ export const loginFormSchema = z.object({
     })
     .trim()
 })
-
-export type LoginFormSchema = z.infer<typeof loginFormSchema>
