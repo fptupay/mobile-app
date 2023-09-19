@@ -21,3 +21,7 @@ export const saveToken = async ({
 export const getToken = async (key: string) => {
   return await SecureStore.getItemAsync(key)
 }
+
+export const deleteToken = async (key: string) => {
+  return await SecureStore.deleteItemAsync(key)
+}

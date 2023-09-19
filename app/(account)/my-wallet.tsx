@@ -1,3 +1,4 @@
+import { logoutUser } from '@/api/authentication'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText, View } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
@@ -5,7 +6,14 @@ import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 
 import Colors from '@/constants/Colors'
+import { deleteToken } from '@/utils/helper'
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation
+} from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import React, { useRef, useState } from 'react'
 import { Animated, Image, Pressable, ScrollView } from 'react-native'
@@ -126,8 +134,33 @@ const DynamicHeader = ({ value }: any) => {
 }
 
 export default function MyWalletScreen() {
+  const queryClient = new QueryClient()
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MyWalletComponent />
+    </QueryClientProvider>
+  )
+}
+
+function MyWalletComponent() {
+  const router = useRouter()
+
   const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
+
+  const logoutMutation = useMutation({
+    mutationFn: () => logoutUser(),
+    onSuccess: (data) => {
+      console.log(data)
+      deleteToken('access_token')
+        .then(() => router.push('/(authentication)'))
+        .catch((err) => console.log(err))
+    },
+    onError: (error: any) => {
+      console.log(error)
+    }
+  })
 
   return (
     <View className="flex-1">
@@ -201,8 +234,9 @@ export default function MyWalletScreen() {
 
           <View className="mx-4 my-4">
             <TextButton
+              onPress={logoutMutation.mutate}
+              disable={logoutMutation.isLoading}
               text="Đăng xuất"
-              href="/(authentication)"
               type={TextButtonType.PRIMARY}
             />
           </View>

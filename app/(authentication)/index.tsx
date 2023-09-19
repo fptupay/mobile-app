@@ -118,6 +118,7 @@ function LoginComponent() {
                     <TextField
                       label="Mật khẩu"
                       value={value}
+                      secureTextEntry={true}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
                     />
