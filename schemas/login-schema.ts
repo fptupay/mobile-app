@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const loginFormSchema = z.object({
   username: z
     .string()
-    .regex(/^[a-z]{2}[0-9]{6}$/, {
+    .regex(/^[A-Za-z]{2}[0-9]{6}$/, {
       message: 'Mã sinh viên không hợp lệ'
     })
     .trim(),
@@ -14,3 +14,5 @@ export const loginFormSchema = z.object({
     })
     .trim()
 })
+
+export type LoginFormSchema = z.infer<typeof loginFormSchema>

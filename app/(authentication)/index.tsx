@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -11,6 +12,7 @@ import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
 import { saveToken } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -20,10 +22,9 @@ import {
 } from '@tanstack/react-query'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { loginFormSchema } from '@/types/Authen.schema'
-import { LoginFormType } from '@/types/Authen.type'
 
 export default function LoginScreen() {
   const queryClient = new QueryClient()
@@ -37,26 +38,29 @@ export default function LoginScreen() {
 
 function LoginComponent() {
   const router = useRouter()
+  const passwordRef = useRef<TextInput | null>(null)
 
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm<LoginFormType>({
+  } = useForm<LoginFormSchema>({
     defaultValues: {
       username: '',
       password: ''
     },
     resolver: zodResolver(loginFormSchema),
-    mode: 'onChange'
+    mode: 'onBlur'
   })
 
-  const onSubmit = (data: LoginFormType) => {
+  const onSubmit = (data: LoginFormSchema) => {
+    Keyboard.dismiss()
+    console.log(data)
     loginMutation.mutate(data)
   }
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginFormType) => loginUser(data),
+    mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
       console.log(data)
       saveToken({ key: 'access_token', value: data.data.access_token })
@@ -95,12 +99,16 @@ function LoginComponent() {
                 <Controller
                   control={control}
                   name="username"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextField
                       label="Mã sinh viên"
                       value={value}
+                      onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => passwordRef.current?.focus()}
                     />
                   )}
                 />
@@ -114,13 +122,15 @@ function LoginComponent() {
                 <Controller
                   control={control}
                   name="password"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextField
                       label="Mật khẩu"
                       value={value}
                       secureTextEntry={true}
+                      onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
+                      ref={passwordRef}
                     />
                   )}
                 />
