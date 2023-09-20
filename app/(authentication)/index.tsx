@@ -56,7 +56,7 @@ function LoginComponent() {
       password: ''
     },
     resolver: zodResolver(loginFormSchema),
-    mode: 'onChange'
+    mode: 'onBlur'
   })
 
   const showToast = (type: string, label: string) => {
