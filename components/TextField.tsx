@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react'
 import {
   Animated,
   Easing,
@@ -13,7 +19,7 @@ interface TextFieldProps extends React.ComponentProps<typeof TextInput> {
   errorText?: string | null
 }
 
-export default function TextField(props: TextFieldProps) {
+const TextField = forwardRef<TextInput | null, TextFieldProps>((props, ref) => {
   const {
     label,
     errorText,
@@ -26,7 +32,7 @@ export default function TextField(props: TextFieldProps) {
   } = props
   const [isFocused, setIsFocused] = useState(false)
 
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<TextInput | null>(null)
   const focusAnim = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -37,6 +43,8 @@ export default function TextField(props: TextFieldProps) {
       useNativeDriver: true
     }).start()
   }, [focusAnim, isFocused, value])
+
+  useImperativeHandle(ref, () => inputRef.current!)
 
   return (
     <View style={style}>
@@ -95,4 +103,6 @@ export default function TextField(props: TextFieldProps) {
       )}
     </View>
   )
-}
+})
+
+export default TextField

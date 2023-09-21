@@ -1,3 +1,4 @@
+import * as SecureStore from 'expo-secure-store'
 import { Dimensions } from 'react-native'
 
 export const formatMoney = (value: number) => {
@@ -6,3 +7,21 @@ export const formatMoney = (value: number) => {
 
 export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } =
   Dimensions.get('window')
+
+export const saveToken = async ({
+  key,
+  value
+}: {
+  key: string
+  value: string
+}) => {
+  await SecureStore.setItemAsync(key, value)
+}
+
+export const getToken = async (key: string) => {
+  return await SecureStore.getItemAsync(key)
+}
+
+export const deleteToken = async (key: string) => {
+  return await SecureStore.deleteItemAsync(key)
+}

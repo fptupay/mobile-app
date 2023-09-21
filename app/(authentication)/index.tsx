@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar'
 import {
   Image,
   Keyboard,
@@ -9,51 +8,162 @@ import {
   View
 } from 'react-native'
 
+import { loginUser } from '@/api/authentication'
+import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
+import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { Link } from 'expo-router'
+import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
+import { saveToken } from '@/utils/helper'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation
+} from '@tanstack/react-query'
+import { Link, useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { isAxiosError } from 'axios'
 
 export default function LoginScreen() {
+  const queryClient = new QueryClient()
+
   return (
-    <SafeAreaView className="flex-1 px-4">
-      <StatusBar style="auto" />
+    <QueryClientProvider client={queryClient}>
+      <LoginComponent />
+    </QueryClientProvider>
+  )
+}
+
+function LoginComponent() {
+  const router = useRouter()
+  const passwordRef = useRef<TextInput | null>(null)
+  const [toast, setToast] = useState({
+    visible: false,
+    type: 'warning',
+    label: ''
+  })
+
+  const {
+    control,
+    getValues,
+    formState: { errors }
+  } = useForm<LoginFormSchema>({
+    defaultValues: {
+      username: '',
+      password: ''
+    },
+    resolver: zodResolver(loginFormSchema),
+    mode: 'onBlur'
+  })
+
+  const showToast = (type: string, label: string) => {
+    setToast({ visible: true, type, label })
+
+    setTimeout(() => {
+      setToast({ visible: false, type, label })
+    }, 3000)
+  }
+
+  const loginMutation = useMutation({
+    mutationFn: (data: LoginFormSchema) => loginUser(data),
+    onSuccess: (data) => {
+      saveToken({ key: 'access_token', value: data.data.access_token })
+        .then(() => router.push('/(account)'))
+        .catch((err) => console.log(err))
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        showToast('alert', error.response?.data?.message)
+      }
+    }
+  })
+
+  return (
+    <SafeAreaView className="flex-1 items-center relative bg-white">
+      <StatusBar style="dark" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center justify-center space-y-8">
+          <View className="flex-1 items-center mt-20 space-y-8">
             <View className="flex items-center">
               <Image
                 source={require('@/assets/images/login-mascot.png')}
                 className="w-[172px] h-[145px]"
               />
-              <MediumText className="text-3xl tracking-tighter text-center">
+              <MediumText className="text-3xl tracking-tighter text-center text-secondary">
                 Đăng nhập tài khoản{' '}
                 <MediumText className="text-primary">FPTUPay</MediumText> của
                 bạn{' '}
               </MediumText>
             </View>
+
             <View className="w-full space-y-4">
-              <TextInput
-                className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
-                placeholder="Mã sinh viên"
-                style={{ fontFamily: 'Inter' }}
-              />
-              <TextInput
-                className="h-12 px-4 py-3 border border-gray-300 rounded-lg bg-transparent focus:border-primary"
-                placeholder="Mật khẩu"
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
+              <View>
+                <Controller
+                  control={control}
+                  name="username"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Mã sinh viên"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => passwordRef.current?.focus()}
+                    />
+                  )}
+                />
+                {errors.username && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.username.message}
+                  </NormalText>
+                )}
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Mật khẩu"
+                      value={value}
+                      secureTextEntry={true}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                      ref={passwordRef}
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.password.message}
+                  </NormalText>
+                )}
+              </View>
             </View>
+
             <View className="w-full mt-8 space-y-2">
               <TextButton
+                onPress={() =>
+                  loginMutation.mutate({
+                    username: getValues('username'),
+                    password: getValues('password')
+                  })
+                }
                 text="Đăng nhập"
-                href="/(authentication)/phone-confirmation"
                 type={TextButtonType.PRIMARY}
+                disable={loginMutation.isLoading}
+                loading={loginMutation.isLoading}
               />
               <Link
                 href="/(authentication)/forget-password"
@@ -65,6 +175,10 @@ export default function LoginScreen() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+
+      {toast.visible && (
+        <Toast type={toast.type} label={toast.label} visible={toast.visible} />
+      )}
     </SafeAreaView>
   )
 }
