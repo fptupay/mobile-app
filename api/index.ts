@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Platform } from 'react-native'
 
 axios.defaults.baseURL = 'https://gateway.fptupay.tech'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -6,8 +7,8 @@ axios.defaults.headers.common['Content-Type'] = 'application/json'
 export const loginConfig = {
   headers: {
     'x-client-device-id': 'QEIERUEWHRBWEUIEFIDUQHWWUEHE',
-    'x-client-platform-version': 'IOS17.0.1',
-    'x-client-platform': 'ios'
+    'x-client-platform-version': Platform.Version.toString(),
+    'x-client-platform': Platform.OS
   }
 }
 
