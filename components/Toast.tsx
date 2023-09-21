@@ -1,22 +1,24 @@
 import { WINDOW_HEIGHT } from '@/utils/helper'
 import React, { useEffect, useRef } from 'react'
-import { Animated, StyleSheet, Text } from 'react-native'
+import { Animated, Platform, StyleSheet, Text } from 'react-native'
 
 interface ToastProps {
   type: string
   label: string
+  visible: boolean
 }
 
-export default function Toast({ type, label }: ToastProps) {
+export default function Toast({ type, label, visible }: ToastProps) {
   const popAnim = useRef(new Animated.Value(WINDOW_HEIGHT * -1)).current
 
   useEffect(() => {
     popIn()
-  }, [])
+  }, [visible])
 
   const popIn = () => {
     Animated.timing(popAnim, {
-      toValue: WINDOW_HEIGHT * -0.96,
+      toValue:
+        Platform.OS === 'ios' ? WINDOW_HEIGHT * -0.88 : WINDOW_HEIGHT * -0.95,
       duration: 300,
       useNativeDriver: true
     }).start(popOut)
@@ -50,9 +52,9 @@ export default function Toast({ type, label }: ToastProps) {
 
 const styles = StyleSheet.create({
   toastContainer: {
-    height: 70,
+    height: 80,
     width: '100%',
-    backgroundColor: 'green',
+    backgroundColor: 'red',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {

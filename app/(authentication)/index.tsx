@@ -70,13 +70,13 @@ function LoginComponent() {
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      showToast('alert', 'Đăng nhập thành công')
       saveToken({ key: 'access_token', value: data.data.access_token })
         .then(() => router.push('/(account)'))
         .catch((err) => console.log(err))
     },
     onError: (error: any) => {
       console.log(error)
+      showToast('alert', 'Đăng nhập không thành công')
     }
   })
 
@@ -174,7 +174,9 @@ function LoginComponent() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
-      {toast.visible && <Toast type={toast.type} label={toast.label} />}
+      {toast.visible && (
+        <Toast type={toast.type} label={toast.label} visible={toast.visible} />
+      )}
     </SafeAreaView>
   )
 }
