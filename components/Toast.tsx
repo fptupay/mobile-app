@@ -36,6 +36,13 @@ export default function Toast({ type, label, visible }: ToastProps) {
 
   return (
     <Animated.View
+      className={
+        type == 'alert'
+          ? 'bg-red-600'
+          : type == 'warning'
+            ? 'bg-orange-400'
+            : 'bg-green-600'
+      }
       style={[
         styles.toastContainer,
         {
@@ -43,9 +50,7 @@ export default function Toast({ type, label, visible }: ToastProps) {
         }
       ]}
     >
-      <Text style={styles.labelText}>
-        {label} - {type}
-      </Text>
+      <Text style={styles.labelText}>{label}</Text>
     </Animated.View>
   )
 }
@@ -54,7 +59,6 @@ const styles = StyleSheet.create({
   toastContainer: {
     height: 80,
     width: '100%',
-    backgroundColor: 'red',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {

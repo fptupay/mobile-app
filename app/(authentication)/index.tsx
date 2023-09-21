@@ -26,6 +26,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { isAxiosError } from 'axios'
 
 export default function LoginScreen() {
   const queryClient = new QueryClient()
@@ -74,9 +75,10 @@ function LoginComponent() {
         .then(() => router.push('/(account)'))
         .catch((err) => console.log(err))
     },
-    onError: (error: any) => {
-      console.log(error)
-      showToast('alert', 'Đăng nhập không thành công')
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        showToast('alert', error.response?.data?.message)
+      }
     }
   })
 
