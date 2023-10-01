@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { Slot, SplashScreen } from 'expo-router'
 import React, { useEffect } from 'react'
@@ -11,6 +12,7 @@ export default function RootLayout() {
     'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
     'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf')
   })
+  const queryClient = new QueryClient()
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -27,5 +29,9 @@ export default function RootLayout() {
     return null
   }
 
-  return <Slot initialRouteName="/account" />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Slot />
+    </QueryClientProvider>
+  )
 }
