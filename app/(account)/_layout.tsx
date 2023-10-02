@@ -6,7 +6,7 @@ export default function AccountLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           tabBarLabel: 'Trang chủ',
           tabBarIcon: ({ color, size }) => (

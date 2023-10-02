@@ -24,6 +24,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import base64 from 'react-native-base64'
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -71,7 +72,7 @@ export default function LoginScreen() {
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
       saveToken({ key: 'access_token', value: data.data.access_token })
-        .then(() => router.push('/(account)'))
+        .then(() => router.push('/(account)/home'))
         .catch((err) => console.log(err))
     },
     onError: (error: Error) => {
@@ -156,7 +157,7 @@ export default function LoginScreen() {
                 onPress={() =>
                   loginMutation.mutate({
                     username: getValues('username'),
-                    password: getValues('password')
+                    password: base64.encode(getValues('password'))
                   })
                 }
                 text="Đăng nhập"
@@ -180,6 +181,6 @@ export default function LoginScreen() {
       )}
     </SafeAreaView>
   ) : (
-    <Redirect href="/(account)" />
+    <Redirect href="/(account)/home" />
   )
 }

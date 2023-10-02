@@ -154,7 +154,7 @@ function MyWalletComponent() {
     onSuccess: (data) => {
       console.log(data)
       deleteToken('access_token')
-        .then(() => router.push('/(authentication)'))
+        .then(() => router.push('/'))
         .catch((err) => console.log(err))
     },
     onError: (error: any) => {
