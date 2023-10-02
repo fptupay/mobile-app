@@ -14,7 +14,6 @@ export default function AuthenticationLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="ekyc/ekyc-rule" options={{ headerShown: false }} />
         <Stack.Screen name="ekyc/[type]" options={{ headerShown: false }} />
         <Stack.Screen

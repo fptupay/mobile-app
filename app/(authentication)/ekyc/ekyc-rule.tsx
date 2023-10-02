@@ -88,18 +88,17 @@ export default function EkycRuleScreen() {
             </NormalText>
           </View>
         </View>
-        {isAgree && (
-          <View className="mt-10">
-            <TextButton
-              href={{
-                pathname: '/ekyc/[type]',
-                params: { type: StepType.FRONT }
-              }}
-              text="Quét thẻ"
-              type={TextButtonType.PRIMARY}
-            />
-          </View>
-        )}
+        <View className="mt-10">
+          <TextButton
+            href={{
+              pathname: '/ekyc/[type]',
+              params: { type: StepType.FRONT }
+            }}
+            disable={!isAgree}
+            text="Quét thẻ"
+            type={TextButtonType.PRIMARY}
+          />
+        </View>
       </View>
     </SafeAreaView>
   )

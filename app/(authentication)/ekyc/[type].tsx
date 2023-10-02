@@ -88,7 +88,7 @@ export default function EkycCameraScreen() {
       </View>
       {capturedImage ? (
         <>
-          <View className="mt-8">
+          <View className="mt-8 mb-4">
             <TextButton
               href={{
                 pathname: `${
@@ -104,9 +104,11 @@ export default function EkycCameraScreen() {
               type={TextButtonType.PRIMARY}
             />
           </View>
-          <TouchableOpacity onPress={retakePicture} className="mt-4">
-            <TextButton text="Hủy bỏ" type={TextButtonType.SECONDARY} />
-          </TouchableOpacity>
+          <TextButton
+            onPress={retakePicture}
+            text="Hủy bỏ"
+            type={TextButtonType.SECONDARY}
+          />
         </>
       ) : (
         <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-tertiary mx-auto mt-8">
