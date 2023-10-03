@@ -1,3 +1,4 @@
+import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions } from 'react-native'
 
@@ -24,4 +25,26 @@ export const getToken = async (key: string) => {
 
 export const deleteToken = async (key: string) => {
   return await SecureStore.deleteItemAsync(key)
+}
+
+export const getLabelTextColor = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return Colors.label.pending.text
+    case 'approved':
+      return Colors.label.approved.text
+    case 'closed':
+      return Colors.label.closed.text
+  }
+}
+
+export const getLabelBackgroundColor = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return Colors.label.pending.background
+    case 'approved':
+      return Colors.label.approved.background
+    case 'closed':
+      return Colors.label.closed.background
+  }
 }
