@@ -1,3 +1,4 @@
+import { ekycFront } from '@/api/ekyc'
 import {
   MediumText,
   NormalText,
@@ -7,6 +8,8 @@ import {
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 
 import { Camera, CameraType } from 'expo-camera'
 import { useLocalSearchParams } from 'expo-router'
@@ -27,14 +30,26 @@ export default function EkycCameraScreen() {
 
   const takePicture = async () => {
     if (!camera) return
-    const photo = await camera.takePictureAsync({ skipProcessing: true })
-    console.log('photo', photo)
+    const photo = await camera.takePictureAsync()
+    console.log('photo', photo.uri)
     setCapturedImage(photo)
   }
 
   const retakePicture = () => {
     setCapturedImage(null)
   }
+
+  const ekycFrontMutation = useMutation({
+    mutationFn: (data: string) => ekycFront(data),
+    onSuccess: (data) => {
+      console.log(data)
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        console.log('alert', error.response?.data?.message)
+      }
+    }
+  })
 
   if (!permission) {
     return <NormalText>Loading...</NormalText>
@@ -90,16 +105,19 @@ export default function EkycCameraScreen() {
         <>
           <View className="mt-8 mb-4">
             <TextButton
-              href={{
-                pathname: `${
-                  type == 'front' ? '/ekyc/[type]' : '/ekyc/face-authenticator'
-                }`,
-                params: {
-                  type: `${
-                    type == StepType.FRONT ? StepType.BACK : StepType.SELFIE
-                  }`
-                }
-              }}
+              // href={{
+              //   pathname: `${
+              //     type == 'front' ? '/ekyc/[type]' : '/ekyc/face-authenticator'
+              //   }`,
+              //   params: {
+              //     type: `${
+              //       type == StepType.FRONT ? StepType.BACK : StepType.SELFIE
+              //     }`
+              //   }
+              // }}
+              onPress={() => ekycFrontMutation.mutate(capturedImage.uri)}
+              disable={ekycFrontMutation.isLoading}
+              loading={ekycFrontMutation.isLoading}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />
