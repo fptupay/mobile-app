@@ -40,7 +40,7 @@ export default function TransferListScreen() {
 
   const recentList = () => (
     <View className="mt-4">
-      <SemiText>Gần đây</SemiText>
+      <SemiText className="text-secondary">Gần đây</SemiText>
       <FlatList
         data={mockTransferList}
         renderItem={({ item }) => (
@@ -48,7 +48,7 @@ export default function TransferListScreen() {
             <View className="flex flex-row items-center">
               <View className="w-10 h-10 bg-gray-300 rounded-full" />
               <View className="ml-2">
-                <MediumText>{item.name}</MediumText>
+                <MediumText className="text-secondary">{item.name}</MediumText>
                 <NormalText className="text-tertiary">
                   {item.accountNumber}
                 </NormalText>
@@ -64,7 +64,7 @@ export default function TransferListScreen() {
 
   const savedList = () => (
     <View className="mt-4">
-      <SemiText>Đã lưu</SemiText>
+      <SemiText className="text-secondary">Đã lưu</SemiText>
       <FlatList
         data={mockTransferList}
         renderItem={({ item }) => (
@@ -72,7 +72,7 @@ export default function TransferListScreen() {
             <View className="flex flex-row items-center">
               <View className="w-10 h-10 bg-gray-300 rounded-full" />
               <View className="ml-2">
-                <MediumText>{item.name}</MediumText>
+                <MediumText className="text-secondary">{item.name}</MediumText>
                 <NormalText className="text-tertiary">
                   {item.accountNumber}
                 </NormalText>
@@ -113,14 +113,16 @@ export default function TransferListScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)" title="Chuyển tiền tới">
+    <SharedLayout href="/(account)/home" title="Chuyển tiền tới">
       <TouchableOpacity
         onPress={() => router.push('/transfer')}
         className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4"
         activeOpacity={0.8}
       >
         <CustomIcon name="UserPlus" size={24} color="#000" />
-        <MediumText className="ml-2">Người thụ hưởng mới</MediumText>
+        <MediumText className="ml-2 text-secondary">
+          Người thụ hưởng mới
+        </MediumText>
       </TouchableOpacity>
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

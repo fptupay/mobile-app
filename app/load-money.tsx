@@ -53,7 +53,7 @@ export default function LoadMoneyScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)" title="Nạp tiền">
+    <SharedLayout href="/(account)/home" title="Nạp tiền">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
