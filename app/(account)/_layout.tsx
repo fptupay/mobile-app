@@ -28,22 +28,11 @@ export default function AccountLayout() {
         }}
       />
       <Tabs.Screen
-        name="qr"
+        name="help-center"
         options={{
-          tabBarLabel: 'QR',
+          tabBarLabel: 'Hỗ trợ',
           tabBarIcon: ({ color, size }) => (
-            <CustomIcon name="QrCode" color={color} size={size} />
-          ),
-          tabBarActiveTintColor: Colors.primary,
-          headerShown: false
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarLabel: 'Thông báo',
-          tabBarIcon: ({ color, size }) => (
-            <CustomIcon name="Bell" color={color} size={size} />
+            <CustomIcon name="MessagesSquare" color={color} size={size} />
           ),
           tabBarActiveTintColor: Colors.primary,
           headerShown: false
