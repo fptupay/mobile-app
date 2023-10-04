@@ -1,5 +1,6 @@
+import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
-import { NormalText } from '@/components/Themed'
+import { Image, MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import {
@@ -21,6 +22,7 @@ export default function CreateRequestScreen() {
     { label: 'Cách sử dụng', value: 'usage' }
   ])
   const [requestError, setRequestError] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
   const {
     control,
@@ -39,6 +41,7 @@ export default function CreateRequestScreen() {
     if (value === null) {
       setRequestError('Vui lòng chọn loại yêu cầu')
     }
+    setIsModalVisible(true)
   }
 
   return (
@@ -92,6 +95,42 @@ export default function CreateRequestScreen() {
             type="primary"
           />
         </View>
+
+        <Modal isVisible={isModalVisible}>
+          <Modal.Container>
+            <View className="items-center justify-center">
+              <View className="bg-green-100 rounded-full w-28 h-28 justify-center items-center">
+                <Image
+                  source={require('../../../assets/images/icon-success.png')}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    tintColor: Colors.label.approved.text
+                  }}
+                />
+              </View>
+
+              <Modal.Header title="Gửi yêu cầu thành công!" />
+
+              <Modal.Body>
+                <MediumText className="text-center mb-6">
+                  Mã yêu cầu: 123456
+                </MediumText>
+                <NormalText className="text-center text-tertiary">
+                  Yêu cầu của bạn đã được gửi thành công. Chúng mình sẽ phản hồi
+                  trong thời gian sớm nhất.
+                </NormalText>
+                <View className="mt-6">
+                  <TextButton
+                    onPress={() => setIsModalVisible(false)}
+                    text="Đóng"
+                    type="primary"
+                  />
+                </View>
+              </Modal.Body>
+            </View>
+          </Modal.Container>
+        </Modal>
       </KeyboardAvoidingView>
     </SharedLayout>
   )
