@@ -1,10 +1,17 @@
 import CustomIcon from '@/components/Icon'
 import Colors from '@/constants/Colors'
-import { Tabs } from 'expo-router'
+import { Tabs, usePathname } from 'expo-router'
 
 export default function AccountLayout() {
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          display:
+            usePathname() === '/help-center/create-request' ? 'none' : 'flex'
+        }
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{

@@ -47,7 +47,9 @@ export default function RequestsListScreen() {
             <NormalText className="text-white"> 0 </NormalText>
           </View>
         </View>
-        <TouchableOpacity onPress={() => router.push('/create-request')}>
+        <TouchableOpacity
+          onPress={() => router.push('/help-center/create-request')}
+        >
           <CustomIcon name="Plus" size={24} color="#000" />
         </TouchableOpacity>
       </View>
@@ -65,7 +67,7 @@ export default function RequestsListScreen() {
 
 function RequestItem({ request }: { request: any }) {
   return (
-    <Link href="/(account)/home" asChild>
+    <Link href={`/help-center/${request.id}`} asChild>
       <Pressable className="border-b-gray-200 border-b flex-row items-center justify-between py-3">
         <View>
           <MediumText className="text-secondary">{request.type}</MediumText>
