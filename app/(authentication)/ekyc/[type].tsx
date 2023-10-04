@@ -30,7 +30,7 @@ export default function EkycCameraScreen() {
 
   const takePicture = async () => {
     if (!camera) return
-    const photo = await camera.takePictureAsync()
+    const photo = await camera.takePictureAsync({ base64: true, quality: 0.5 })
     console.log('photo', photo.uri)
     setCapturedImage(photo)
   }
@@ -115,7 +115,7 @@ export default function EkycCameraScreen() {
               //     }`
               //   }
               // }}
-              onPress={() => ekycFrontMutation.mutate(capturedImage.uri)}
+              onPress={() => ekycFrontMutation.mutate(capturedImage.base64)}
               disable={ekycFrontMutation.isLoading}
               loading={ekycFrontMutation.isLoading}
               text="Dùng ảnh này"
