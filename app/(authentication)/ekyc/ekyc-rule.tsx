@@ -7,7 +7,6 @@ import {
 } from '@/components/Themed'
 import QuestionButton from '@/components/buttons/QuestionButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { StepType } from '@/components/progress/StepProgress'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
 import { ImageSourcePropType } from 'react-native'
@@ -90,10 +89,7 @@ export default function EkycRuleScreen() {
         </View>
         <View className="mt-10">
           <TextButton
-            href={{
-              pathname: '/ekyc/[type]',
-              params: { type: StepType.FRONT }
-            }}
+            href="/ekyc/card-capture"
             disable={!isAgree}
             text="Quét thẻ"
             type={TextButtonType.PRIMARY}

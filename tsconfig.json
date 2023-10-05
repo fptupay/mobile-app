@@ -5,7 +5,9 @@
     // reconfigure path alias
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -14,5 +16,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "./.eslintrc.js"
-, "api/ekyc/index.js"  ]
+  ]
 }

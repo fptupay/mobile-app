@@ -6,24 +6,18 @@ import {
   View
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import StepProgress from '@/components/progress/StepProgress'
+import StepProgress, { StepType } from '@/components/progress/StepProgress'
 
 import { Camera, CameraType } from 'expo-camera'
 import * as FaceDetector from 'expo-face-detector'
-import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ImageBackground, TouchableOpacity } from 'react-native'
 
 export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
-  const { type } = useLocalSearchParams()
   const [faceData, setFaceData] = useState([])
   const [capturedImage, setCapturedImage] = useState<any>(null)
-
-  useEffect(() => {
-    setCapturedImage(null)
-  }, [type])
 
   const takePicture = async () => {
     const photo = await camera?.takePictureAsync({ skipProcessing: true })
@@ -55,7 +49,7 @@ export default function FaceAuthenticatorScreen() {
           Xác thực khuôn mặt
         </MediumText>
       </View>
-      <StepProgress type={type} />
+      <StepProgress type={StepType.SELFIE} />
 
       <View className="w-[250px] h-[250px] mx-auto bg-red-300 my-8 rounded-full overflow-hidden">
         {capturedImage ? (

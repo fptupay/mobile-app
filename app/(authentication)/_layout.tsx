@@ -15,7 +15,10 @@ export default function AuthenticationLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="ekyc/ekyc-rule" options={{ headerShown: false }} />
-        <Stack.Screen name="ekyc/[type]" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="ekyc/card-capture"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="ekyc/face-authenticator"
           options={{ headerShown: false }}
