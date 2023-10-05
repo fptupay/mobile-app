@@ -11,7 +11,7 @@ import StepProgress, { StepType } from '@/components/progress/StepProgress'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-import { Camera, CameraType } from 'expo-camera'
+import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera'
 import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -30,7 +30,7 @@ export default function EkycCameraScreen() {
 
   const takePicture = async () => {
     if (!camera) return
-    const photo = await camera.takePictureAsync({ base64: true, quality: 0.5 })
+    const photo = await camera.takePictureAsync({ quality: 0.1 })
     console.log('photo', photo.uri)
     setCapturedImage(photo)
   }
@@ -40,7 +40,7 @@ export default function EkycCameraScreen() {
   }
 
   const ekycFrontMutation = useMutation({
-    mutationFn: (data: string) => ekycFront(data),
+    mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
     onSuccess: (data) => {
       console.log(data)
     },
@@ -115,7 +115,7 @@ export default function EkycCameraScreen() {
               //     }`
               //   }
               // }}
-              onPress={() => ekycFrontMutation.mutate(capturedImage.base64)}
+              onPress={() => ekycFrontMutation.mutate(capturedImage)}
               disable={ekycFrontMutation.isLoading}
               loading={ekycFrontMutation.isLoading}
               text="Dùng ảnh này"
