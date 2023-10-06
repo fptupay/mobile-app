@@ -1,6 +1,7 @@
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, View } from '@/components/Themed'
+import { MediumText, NormalText, SemiText, View } from '@/components/Themed'
+import TextButton from '@/components/buttons/TextButton'
 import { getLabelBackgroundColor, getLabelTextColor } from '@/utils/helper'
 import { Link, useRouter } from 'expo-router'
 import React from 'react'
@@ -39,28 +40,49 @@ export default function RequestsListScreen() {
 
   return (
     <SharedLayout href="/index" title="Hỗ trợ" isTab={true}>
-      {/* Top */}
-      <View className="my-4 flex-row justify-between items-end">
-        <View className="flex-row gap-x-2 items-end">
-          <NormalText className="text-secondary">Tất cả</NormalText>
-          <View className="p-0.5 bg-red-600 rounded-md">
-            <NormalText className="text-white"> 0 </NormalText>
+      {requests.length === 0 ? (
+        <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
+          <CustomIcon name="FilePlus" size={64} color="#666" />
+          <SemiText className="mt-4 text-lg">Không có yêu cầu</SemiText>
+          <NormalText className="text-center text-tertiary">
+            Nếu có vấn đề cần trao đổi, đừng ngần ngại gửi yêu cầu hỗ trợ đến
+            chúng mình nhé!
+          </NormalText>
+
+          <View className="w-full mt-6">
+            <TextButton
+              text="Tạo yêu cầu"
+              type="primary"
+              onPress={() => router.push('/help-center/create-request')}
+            />
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => router.push('/help-center/create-request')}
-        >
-          <CustomIcon name="Plus" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <>
+          <View className="my-4 flex-row justify-between items-end">
+            <View className="flex-row gap-x-2 items-end">
+              <NormalText className="text-secondary">Tất cả</NormalText>
+              <View className="p-0.5 bg-red-600 rounded-md">
+                <NormalText className="text-white"> 0 </NormalText>
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => router.push('/help-center/create-request')}
+            >
+              <CustomIcon name="Plus" size={24} color="#000" />
+            </TouchableOpacity>
+          </View>
 
-      {/* Requests list */}
-      <FlatList
-        data={requests}
-        renderItem={({ item }) => <RequestItem request={item} />}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-      />
+          {/* Requests list */}
+          <FlatList
+            data={requests}
+            renderItem={({ item }) => <RequestItem request={item} />}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </>
+      )}
+      {/* Top */}
     </SharedLayout>
   )
 }
