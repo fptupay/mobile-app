@@ -67,7 +67,10 @@ export default function RequestsListScreen() {
 
 function RequestItem({ request }: { request: any }) {
   return (
-    <Link href={`/help-center/${request.id}`} asChild>
+    <Link
+      href={{ pathname: `/help-center/${request.id}`, params: request }}
+      asChild
+    >
       <Pressable className="border-b-gray-200 border-b flex-row items-center justify-between py-3">
         <View>
           <MediumText className="text-secondary">{request.type}</MediumText>
