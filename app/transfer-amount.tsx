@@ -5,6 +5,7 @@ import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { useModalStore } from '@/stores/modalStore'
 import { formatMoney } from '@/utils/helper'
+import { useRouter } from 'expo-router'
 
 import React, { useState } from 'react'
 import {
@@ -18,7 +19,9 @@ import {
 } from 'react-native'
 
 export default function TransferAmountScreen() {
+  const router = useRouter()
   const [amount, setAmount] = useState<string>()
+  const [rawAmount, setRawAmount] = useState<string>('')
   const [suggestions, setSuggestions] = useState<number[]>([])
   const [message, setMessage] = useState<string>('')
 
@@ -26,6 +29,7 @@ export default function TransferAmountScreen() {
   const setIsOpen = useModalStore((state) => state.setIsOpen)
 
   const handleAmountChange = (amount: string) => {
+    setRawAmount(amount)
     // amount should not start with 0
     if (amount.startsWith('0')) {
       return
@@ -61,8 +65,12 @@ export default function TransferAmountScreen() {
     setAmount(formatMoney(suggestion))
   }
 
-  const openModal = () => {
-    setIsOpen(true)
+  const handleTransfer = () => {
+    if (rawAmount >= '20') {
+      setIsOpen(true)
+    } else {
+      router.push('/transfer-confirmation')
+    }
   }
 
   return (
@@ -112,8 +120,8 @@ export default function TransferAmountScreen() {
               className="my-4"
             />
             <TextButton
-              onPress={openModal}
-              // href="/transfer-confirmation"
+              onPress={handleTransfer}
+              disable={!amount}
               text="Chuyển tiền"
               type="primary"
             />
