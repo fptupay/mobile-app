@@ -23,7 +23,7 @@ export default function RequestDetailScreen() {
     }
   }
 
-  const getImage = (status: string | string[]) => {
+  const getImagePath = (status: string | string[]) => {
     switch (status) {
       case 'pending':
         return require('../../../assets/images/icon-process.png')
@@ -64,7 +64,7 @@ export default function RequestDetailScreen() {
               )} p-1`}
             >
               <Image
-                source={getImage(request.status)}
+                source={getImagePath(request.status)}
                 className="w-full h-full"
               />
             </View>
@@ -73,7 +73,7 @@ export default function RequestDetailScreen() {
           <SemiText className="text-center text-lg">
             {getTitle(request.status)}
           </SemiText>
-          <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200"></View>
+          <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
 
           <View className="mt-4">
             <SemiText>Chi tiết giao dịch</SemiText>
@@ -82,15 +82,15 @@ export default function RequestDetailScreen() {
                 <NormalText className="text-tertiary">Loại yêu cầu</NormalText>
                 <NormalText>Lỗi giao dịch</NormalText>
               </View>
-              <View className="flex-row justify-between ">
+              <View className="flex-row justify-between">
                 <NormalText className="text-tertiary">Mã sinh viên</NormalText>
                 <NormalText>HE160005</NormalText>
               </View>
-              <View className="flex-row justify-between ">
+              <View className="flex-row justify-between">
                 <NormalText className="text-tertiary">Thời gian gửi</NormalText>
                 <NormalText>09:10 - 04/10/2023</NormalText>
               </View>
-              <View className="flex-row justify-between ">
+              <View className="flex-row justify-between">
                 <NormalText className="text-tertiary">Mã yêu cầu</NormalText>
                 <NormalText>1234567</NormalText>
               </View>
