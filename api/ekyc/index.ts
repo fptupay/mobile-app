@@ -1,28 +1,14 @@
-import { manipulateAsync } from 'expo-image-manipulator'
-import { getToken } from '@/utils/helper'
+import { compressImg, getToken } from '@/utils/helper'
 import { apiPostCall } from '..'
 import { CameraCapturedPicture } from 'expo-camera'
 
 export const ekycFront = async (data: CameraCapturedPicture) => {
   const token = await getToken('access_token')
 
-  const compressedImg = await manipulateAsync(
-    data.uri,
-    [
-      {
-        resize: {
-          width: 400,
-          height: 300
-        }
-      }
-    ],
-    {
-      compress: 0.5
-    }
-  )
+  const image = await compressImg(data)
 
   const file = {
-    uri: compressedImg.uri.replace('file://', ''),
+    uri: image.uri.replace('file://', ''),
     type: 'image/jpeg',
     name: 'front.jpg'
   }
@@ -46,23 +32,10 @@ export const ekycFront = async (data: CameraCapturedPicture) => {
 export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
   const token = await getToken('access_token')
 
-  const compressedImg = await manipulateAsync(
-    data.uri,
-    [
-      {
-        resize: {
-          width: 400,
-          height: 300
-        }
-      }
-    ],
-    {
-      compress: 0.5
-    }
-  )
+  const image = await compressImg(data)
 
   const file = {
-    uri: compressedImg.uri.replace('file://', ''),
+    uri: image.uri.replace('file://', ''),
     type: 'image/jpeg',
     name: 'back.jpg'
   }

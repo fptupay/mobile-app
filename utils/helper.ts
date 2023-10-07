@@ -1,3 +1,5 @@
+import { CameraCapturedPicture } from 'expo-camera'
+import { manipulateAsync } from 'expo-image-manipulator'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions } from 'react-native'
 
@@ -24,4 +26,21 @@ export const getToken = async (key: string) => {
 
 export const deleteToken = async (key: string) => {
   return await SecureStore.deleteItemAsync(key)
+}
+
+export const compressImg = async (data: CameraCapturedPicture) => {
+  return await manipulateAsync(
+    data.uri,
+    [
+      {
+        resize: {
+          width: 400,
+          height: 300
+        }
+      }
+    ],
+    {
+      compress: 0.5
+    }
+  )
 }
