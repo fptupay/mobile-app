@@ -36,7 +36,6 @@ export default function EkycCameraScreen() {
   const takePicture = async () => {
     if (!camera) return
     const photo = await camera.takePictureAsync({ quality: 0.1 })
-    console.log('photo', photo.uri)
     setCapturedImage(photo)
   }
 
@@ -62,7 +61,9 @@ export default function EkycCameraScreen() {
   })
 
   const ekycBackMutation = useMutation({
-    mutationFn: (data: CameraCapturedPicture) => ekycBack(data, ekycId),
+    mutationFn: (data: CameraCapturedPicture) => {
+      return ekycBack(data, ekycId)
+    },
     onSuccess: () => {
       router.push('/ekyc/face-authenticator')
     },
