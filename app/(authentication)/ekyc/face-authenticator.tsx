@@ -1,3 +1,4 @@
+import { ekycSelfie } from '@/api/ekyc'
 import {
   MediumText,
   NormalText,
@@ -7,6 +8,8 @@ import {
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import { useEkycStore } from '@/stores/ekycStore'
+import { useMutation } from '@tanstack/react-query'
 
 import { Camera, CameraType } from 'expo-camera'
 import * as FaceDetector from 'expo-face-detector'
@@ -18,6 +21,7 @@ export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
   const [faceData, setFaceData] = useState([])
   const [capturedImage, setCapturedImage] = useState<any>(null)
+  const ekycId = useEkycStore((state) => state.ekycId)
 
   const takePicture = async () => {
     const photo = await camera?.takePictureAsync({ skipProcessing: true })
@@ -40,6 +44,17 @@ export default function FaceAuthenticatorScreen() {
       )
     }
   }
+
+  const faceAuthenticationMutation = useMutation({
+    mutationFn: (data: any) => ekycSelfie(data, ekycId),
+    onSuccess: (data) => {
+      console.log('data', data)
+      // display success dialog
+    },
+    onError: (error) => {
+      console.log('error', error)
+    }
+  })
 
   return (
     <SafeAreaView className="flex-1 px-4">
@@ -88,9 +103,7 @@ export default function FaceAuthenticatorScreen() {
         <>
           <View className="mt-8">
             <TextButton
-              href={{
-                pathname: '/(account)'
-              }}
+              href={() => faceAuthenticationMutation.mutate(capturedImage)}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />
