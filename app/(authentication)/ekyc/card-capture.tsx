@@ -6,12 +6,12 @@ import {
   SemiText,
   View
 } from '@/components/Themed'
-import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
 import { useEkycStore } from '@/stores/ekycStore'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
+import Toast from 'react-native-toast-message'
 
 import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera'
 import { useRouter } from 'expo-router'
@@ -28,11 +28,6 @@ export default function EkycCameraScreen() {
   const [type, setType] = useState(StepType.FRONT)
   const [permission, requestPermission] = Camera.useCameraPermissions()
   const [capturedImage, setCapturedImage] = useState<any>(null)
-  const [toast, setToast] = useState({
-    visible: false,
-    type: 'warning',
-    label: ''
-  })
 
   useEffect(() => {
     setCapturedImage(null)
@@ -49,15 +44,6 @@ export default function EkycCameraScreen() {
     setCapturedImage(null)
   }
 
-  const showToast = (type: string, label: string) => {
-    setCapturedImage(null)
-    setToast({ visible: true, type, label })
-
-    setTimeout(() => {
-      setToast({ visible: false, type, label })
-    }, 3000)
-  }
-
   const ekycFrontMutation = useMutation({
     mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
     onSuccess: (data) => {
@@ -66,7 +52,11 @@ export default function EkycCameraScreen() {
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
-        showToast('alert', error.response?.data?.message)
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: error.response?.data?.message
+        })
       }
     }
   })
@@ -78,7 +68,11 @@ export default function EkycCameraScreen() {
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
-        showToast('alert', error.response?.data?.message)
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: error.response?.data?.message
+        })
       }
     }
   })
@@ -161,10 +155,6 @@ export default function EkycCameraScreen() {
             className="bg-tertiary w-full h-full rounded-full"
           />
         </View>
-      )}
-
-      {toast.visible && (
-        <Toast type={toast.type} label={toast.label} visible={toast.visible} />
       )}
     </SafeAreaView>
   )

@@ -11,41 +11,23 @@ import {
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
-import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
 import { saveToken } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-import * as LocalAuthentication from 'expo-local-authentication'
-import { Link, Redirect, useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import base64 from 'react-native-base64'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 export default function LoginScreen() {
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
-  const [toast, setToast] = useState({
-    visible: false,
-    type: 'warning',
-    label: ''
-  })
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  useEffect(() => {
-    const auth = LocalAuthentication.authenticateAsync()
-    auth
-      .then((res) => {
-        if (res.success) {
-          setIsAuthenticated(true)
-        }
-      })
-      .catch((err) => console.log(err))
-  }, [])
 
   const {
     control,
@@ -60,14 +42,6 @@ export default function LoginScreen() {
     mode: 'onBlur'
   })
 
-  const showToast = (type: string, label: string) => {
-    setToast({ visible: true, type, label })
-
-    setTimeout(() => {
-      setToast({ visible: false, type, label })
-    }, 3000)
-  }
-
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
@@ -77,12 +51,16 @@ export default function LoginScreen() {
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
-        showToast('alert', error.response?.data?.message)
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
       }
     }
   })
 
-  return !isAuthenticated ? (
+  return (
     <SafeAreaView className="flex-1 items-center relative bg-white">
       <StatusBar style="dark" />
 
@@ -91,7 +69,7 @@ export default function LoginScreen() {
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center mt-20 space-y-8">
+          <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
                 source={require('@/assets/images/login-mascot.png')}
@@ -175,12 +153,6 @@ export default function LoginScreen() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-
-      {toast.visible && (
-        <Toast type={toast.type} label={toast.label} visible={toast.visible} />
-      )}
     </SafeAreaView>
-  ) : (
-    <Redirect href="/(account)/home" />
   )
 }
