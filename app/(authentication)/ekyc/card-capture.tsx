@@ -9,6 +9,7 @@ import {
 import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import { useEkycStore } from '@/stores/ekycStore'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
@@ -19,11 +20,12 @@ import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity } from 'react-native'
 
 export default function EkycCameraScreen() {
-  const [type, setType] = useState(StepType.FRONT)
-  const [ekycId, setEkycId] = useState('')
   const router = useRouter()
+  const ekycId = useEkycStore((state) => state.ekycId)
+  const setEkycId = useEkycStore((state) => state.setEkycId)
 
   let camera: Camera | null
+  const [type, setType] = useState(StepType.FRONT)
   const [permission, requestPermission] = Camera.useCameraPermissions()
   const [capturedImage, setCapturedImage] = useState<any>(null)
   const [toast, setToast] = useState({
