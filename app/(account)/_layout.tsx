@@ -7,8 +7,7 @@ export default function AccountLayout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          display:
-            usePathname() === '/help-center/create-request' ? 'none' : 'flex'
+          display: usePathname().includes('/help-center/') ? 'none' : 'flex'
         }
       }}
     >
