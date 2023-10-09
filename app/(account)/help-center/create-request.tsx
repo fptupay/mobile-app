@@ -8,6 +8,7 @@ import {
   supportRequestSchema
 } from '@/schemas/request-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { KeyboardAvoidingView, Platform, TextInput, View } from 'react-native'
@@ -99,7 +100,7 @@ export default function CreateRequestScreen() {
         <Modal isVisible={isModalVisible}>
           <Modal.Container>
             <View className="items-center justify-center">
-              <View className="bg-green-100 rounded-full w-28 h-28 justify-center items-center">
+              <View className="bg-green-100 rounded-full w-28 h-28 justify-center items-center mb-4">
                 <Image
                   source={require('../../../assets/images/icon-success.png')}
                   style={{
@@ -122,8 +123,15 @@ export default function CreateRequestScreen() {
                 </NormalText>
                 <View className="mt-6">
                   <TextButton
+                    onPress={() => router.push('/help-center/433245')}
+                    text="Xem chi tiết"
+                    type="primary"
+                  />
+                </View>
+                <View className="mt-2">
+                  <TextButton
                     onPress={() => setIsModalVisible(false)}
-                    text="Đóng"
+                    text="Về trang chủ"
                     type="primary"
                   />
                 </View>
