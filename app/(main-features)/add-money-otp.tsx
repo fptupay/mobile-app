@@ -1,7 +1,7 @@
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText } from '@/components/Themed'
-import Colors from '@/constants/Colors'
+import { NormalText } from '@/components/Themed'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
 
 import { useRouter } from 'expo-router'
@@ -55,23 +55,17 @@ export default function AddMoneyOtpScreen() {
             </View>
 
             <View className="w-full mt-8 space-y-2">
-              <Pressable onPress={handleClear}>
+              <Pressable className="mb-3" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
-              <Pressable
-                disabled={isDisabled}
-                className="rounded-lg py-3 text-center w-full disabled:bg-gray-400"
-                style={{
-                  backgroundColor: isDisabled ? Colors.tertiary : Colors.primary
-                }}
+              <TextButton
+                text="Xác nhận"
+                type={TextButtonType.PRIMARY}
+                disable={isDisabled}
                 onPress={() => router.push('/add-bank-success')}
-              >
-                <MediumText className="text-white text-center">
-                  Xác nhận
-                </MediumText>
-              </Pressable>
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>
