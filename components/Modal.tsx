@@ -28,10 +28,8 @@ function ModalContainer({ children }: { children: React.ReactNode }) {
 
 function ModalHeader({ title }: { title: string }) {
   return (
-    <View className="mt-4">
-      <MediumText className="text-center text-xl text-primary">
-        {title}
-      </MediumText>
+    <View className="mb-2">
+      <MediumText className="text-xl text-primary">{title}</MediumText>
     </View>
   )
 }
