@@ -73,7 +73,7 @@ export default function TransferAmountScreen() {
           </View>
 
           {/* Entered amount */}
-          <View className="flex-1 flex-row justify-center items-center">
+          <View className="flex-1 justify-center items-center">
             <TextInput
               className="text-4xl font-semibold text-primary w-full text-center"
               placeholder="0đ"
@@ -81,7 +81,11 @@ export default function TransferAmountScreen() {
               onChangeText={handleAmountChange}
               keyboardType="numeric"
             />
+            <NormalText className="text-tertiary">
+              Số dư hiện tại: 1.000.000đ
+            </NormalText>
           </View>
+
           {/* Suggestion */}
           <View className="space-x-2 flex-row">
             {suggestions.map((suggestion) => (
@@ -101,7 +105,7 @@ export default function TransferAmountScreen() {
             className="my-4"
           />
           <TextButton
-            href="/transfer-confirmation"
+            href="/transfer-success"
             text="Chuyển tiền"
             type="primary"
           />

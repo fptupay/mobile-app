@@ -321,7 +321,7 @@ export default function HomeScreen() {
             <View className="flex-row justify-between">
               <MainAction route="/load-money" image="Plus" title="Nạp tiền" />
               <MainAction
-                route="/load-money"
+                route="/transfer-list"
                 image="ArrowRight"
                 title="Chuyển tiền"
               />
