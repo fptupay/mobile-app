@@ -2,6 +2,7 @@ import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
+import { getBackGroundColor, getImagePath, getTitle } from '@/utils/helper'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, ScrollView, View } from 'react-native'
@@ -9,45 +10,6 @@ import { Image, ScrollView, View } from 'react-native'
 export default function RequestDetailScreen() {
   const request = useLocalSearchParams()
   const [isModalVisible, setIsModalVisible] = useState(false)
-
-  const getTitle = (status: string | string[]) => {
-    switch (status) {
-      case 'pending':
-        return 'Đang xử lý'
-      case 'approved':
-        return 'Đã phê duyệt'
-      case 'closed':
-        return 'Đã đóng'
-      default:
-        return 'Đang xử lý'
-    }
-  }
-
-  const getImagePath = (status: string | string[]) => {
-    switch (status) {
-      case 'pending':
-        return require('../../../assets/images/icon-process.png')
-      case 'approved':
-        return require('../../../assets/images/icon-success.png')
-      case 'closed':
-        return require('../../../assets/images/icon-closed.png')
-      default:
-        return require('../../../assets/images/icon-process.png')
-    }
-  }
-
-  const getBackGroundColor = (status: string | string[]) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-50'
-      case 'approved':
-        return 'bg-green-50'
-      case 'closed':
-        return 'bg-red-50'
-      default:
-        return 'bg-yellow-50'
-    }
-  }
 
   const handleOpenModal = () => {
     setIsModalVisible(true)
