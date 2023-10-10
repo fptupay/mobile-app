@@ -16,8 +16,10 @@ import TextField from '@/components/TextField'
 import { Controller, useForm } from 'react-hook-form'
 import { PasswordSchema, passwordSchema } from '@/schemas/login-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 
 export default function ResetPasswordScreen() {
+  const [clicked, setClicked] = useState(false)
   const {
     control,
     formState: { errors, isValid }
@@ -52,7 +54,7 @@ export default function ResetPasswordScreen() {
                 Đặt lại mật khẩu
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Mật khẩu cần có ít nhất 8 ký tự, bao gồm cả chữ thường, chữ hoa
+                Mật khẩu cần có ít nhất 6 ký tự, bao gồm cả chữ thường, chữ hoa
                 và chữ số.
               </NormalText>
             </View>
@@ -89,6 +91,7 @@ export default function ResetPasswordScreen() {
                       value={value}
                       onBlur={onBlur}
                       onChangeText={onChange}
+                      onFocus={() => setClicked(true)}
                       style={{ fontFamily: 'Inter' }}
                       returnKeyType="done"
                       secureTextEntry={true}
@@ -101,9 +104,11 @@ export default function ResetPasswordScreen() {
                       {errors.confirmPassword.message}
                     </NormalText>
                   ) : (
-                    <NormalText className="text-red-500 mt-1">
-                      Mật khẩu không khớp
-                    </NormalText>
+                    clicked && (
+                      <NormalText className="text-red-500 mt-1">
+                        Mật khẩu không khớp
+                      </NormalText>
+                    )
                   ))}
               </View>
             </View>

@@ -4,15 +4,11 @@ export const passwordSchema = z
   .object({
     password: z
       .string()
-      .min(6, {
-        message: 'Mật khẩu phải có ít nhất 6 ký tự'
-      })
+      .regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,}$/, 'Mật khẩu không hợp lệ')
       .trim(),
     confirmPassword: z
       .string()
-      .min(6, {
-        message: 'Mật khẩu phải có ít nhất 6 ký tự'
-      })
+      .regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,}$/, 'Mật khẩu không hợp lệ')
       .trim()
   })
   .refine((data) => data.password === data.confirmPassword, {
