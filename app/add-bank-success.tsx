@@ -24,7 +24,7 @@ export default function AddBankSuccessScreen() {
           lợi rồi.
         </NormalText>
       </View>
-      <View className="mb-10">
+      <View className="mb-4">
         <TextButton
           text="Nạp tiền ngay"
           type={TextButtonType.PRIMARY}

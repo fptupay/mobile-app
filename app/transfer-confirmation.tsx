@@ -4,7 +4,7 @@ import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { WINDOW_HEIGHT } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
-import { View, Image } from 'react-native'
+import { Image, View } from 'react-native'
 
 export default function TransferConfirmationScreen() {
   const transferDetail = [
@@ -64,7 +64,7 @@ export default function TransferConfirmationScreen() {
             </View>
           ))}
         </View>
-        <View className="w-full mb-10 mt-auto" style={{ rowGap: 12 }}>
+        <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>
           <TextButton
             text="Về trang chủ"
             type={TextButtonType.PRIMARY}
