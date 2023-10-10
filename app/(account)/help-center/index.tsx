@@ -163,7 +163,7 @@ function RequestItem({ request }: { request: any }) {
           style={{ backgroundColor: getLabelBackgroundColor(request.status) }}
         >
           <MediumText style={{ color: getLabelTextColor(request.status) }}>
-            {request.status}
+            {request.label}
           </MediumText>
         </View>
       </Pressable>

@@ -18,6 +18,7 @@ export default function HelpCenterLayout() {
           headerShown: false
         }}
       />
+      <Tabs.Screen name="successful-request" options={{ headerShown: false }} />
     </Tabs>
   )
 }
