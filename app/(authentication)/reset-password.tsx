@@ -20,28 +20,31 @@ export default function ResetPasswordScreen() {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   return (
-    <SafeAreaView className="flex-1 px-4">
-      <StatusBar style="auto" />
-
-      <BackButton href="/(authentication)/forget-password" />
+    <SafeAreaView className="flex-1">
+      <View className="ml-4">
+        <BackButton href="/(authentication)/forget-password" />
+      </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 px-4"
       >
+        <StatusBar style="auto" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 mt-10 justify-start">
+          <View className="flex-1 justify-center items-start">
             <Image
               source={require('@/assets/images/reset-password.png')}
               className="w-[225px] h-[225px] mx-auto"
             />
-            <MediumText className="text-secondary text-3xl tracking-tighter text-left">
-              Đặt lại mật khẩu
-            </MediumText>
-            <NormalText className="text-tertiary mt-1">
-              Mật khẩu cần có ít nhất 8 ký tự, bao gồm cả chữ thường, chữ hoa và
-              chữ số.
-            </NormalText>
+            <View>
+              <MediumText className="text-secondary text-3xl tracking-tighter text-left">
+                Đặt lại mật khẩu
+              </MediumText>
+              <NormalText className="text-tertiary mt-1">
+                Mật khẩu cần có ít nhất 8 ký tự, bao gồm cả chữ thường, chữ hoa
+                và chữ số.
+              </NormalText>
+            </View>
             <View className="w-full mt-8">
               <TextField
                 className="w-full mb-5"
@@ -60,7 +63,7 @@ export default function ResetPasswordScreen() {
                 style={{ fontFamily: 'Inter' }}
               />
             </View>
-            <View className="w-full mt-8 space-y-2">
+            <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
                 disable={!newPassword || !confirmPassword}

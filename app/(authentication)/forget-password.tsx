@@ -29,7 +29,7 @@ export default function ForgetPasswordScreen() {
         <StatusBar style="auto" />
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 mt-20 items-center">
+          <View className="flex-1 justify-center items-center">
             <Image
               source={require('@/assets/images/forgot-mascot.png')}
               className="w-[160px] h-[145px] mx-auto"

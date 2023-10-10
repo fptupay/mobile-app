@@ -91,7 +91,7 @@ export default function LoginScreen() {
         className="flex-1 w-full px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center mt-20 space-y-8">
+          <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
                 source={require('@/assets/images/login-mascot.png')}
