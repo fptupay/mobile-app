@@ -38,7 +38,7 @@ export default function RequestDetailScreen() {
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
             <View className="my-4">
-              <SemiText>Chi tiết giao dịch</SemiText>
+              <SemiText>Chi tiết yêu cầu</SemiText>
               <View className="mt-2 flex space-y-4">
                 <View className="flex-row justify-between">
                   <NormalText className="text-tertiary">
