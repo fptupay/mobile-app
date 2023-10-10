@@ -185,39 +185,47 @@ function MyWalletComponent() {
               shadowRadius: 5
             }}
           >
-            <View>
-              <NormalText className="text-base">Số dư của bạn</NormalText>
-              <SemiText className="text-primary text-2xl mt-1">
+            <View className="flex-1 items-start">
+              <View className="flex flex-row justify-center items-center">
+                <NormalText className="text-base">Số dư của bạn</NormalText>
                 {showBalance ? (
-                  <>
-                    20.567.000
-                    <SemiText className="underline text-xl text-primary cursor-pointer">
-                      đ
-                    </SemiText>
-                    <Pressable onPress={() => setShowBalance(!showBalance)}>
-                      <EyeOff
-                        size={24}
-                        color={Colors.secondary}
-                        className="ml-1"
-                      />
-                    </Pressable>
-                  </>
+                  <Pressable onPress={() => setShowBalance(!showBalance)}>
+                    <Eye size={24} color={Colors.tertiary} className="ml-2" />
+                  </Pressable>
                 ) : (
-                  <>
-                    *******
-                    <SemiText className="underline text-xl text-primary cursor-pointer"></SemiText>
-                    <Pressable onPress={() => setShowBalance(!showBalance)}>
-                      <Eye
-                        size={24}
-                        color={Colors.secondary}
-                        className="ml-1"
-                      />
-                    </Pressable>
-                  </>
+                  <Pressable onPress={() => setShowBalance(!showBalance)}>
+                    <EyeOff
+                      size={24}
+                      color={Colors.tertiary}
+                      className="ml-2"
+                    />
+                  </Pressable>
                 )}
-              </SemiText>
+              </View>
+              <View className="relative flex justify-center">
+                <SemiText
+                  className={`text-primary text-2xl mt-2 absolute ${
+                    showBalance ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  20.567.000
+                  <SemiText className="underline text-xl text-primary">
+                    đ
+                  </SemiText>
+                </SemiText>
+                <SemiText
+                  className={`text-primary text-2xl mt-2 ${
+                    showBalance ? 'opacity-0' : 'opacity-100'
+                  }`}
+                >
+                  *******
+                </SemiText>
+              </View>
             </View>
-            <Image source={require('../../assets/images/account-mascot.png')} />
+            <Image
+              source={require('../../assets/images/account-mascot.png')}
+              className="w-[100px] h-[90px]"
+            />
           </View>
 
           <View className="mt-5">

@@ -7,8 +7,8 @@ import { useState } from 'react'
 import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 export default function AddBankItemScreen() {
-  const [accountId, setAccountId] = useState('001912111545484878')
-  const [accountName, setAccountName] = useState('CAO QUYNH ANH')
+  const [accountId, setAccountId] = useState('')
+  const [accountName, setAccountName] = useState('')
 
   return (
     <SharedLayout href="/load-money" title="Agribank">

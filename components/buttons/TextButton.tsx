@@ -12,7 +12,8 @@ import { Loader2Icon } from 'lucide-react-native'
 
 export const TextButtonType = {
   PRIMARY: 'primary',
-  SECONDARY: 'secondary'
+  SECONDARY: 'secondary',
+  OUTLINE: 'outline'
 }
 
 type TextButtonProps = {
@@ -66,7 +67,11 @@ function TextComponent({
       )}
       <MediumText
         className={`${
-          type == TextButtonType.PRIMARY ? 'text-white' : 'text-tertiary'
+          type == TextButtonType.PRIMARY
+            ? 'text-white'
+            : type == TextButtonType.SECONDARY
+              ? 'text-tertiary'
+              : 'text-primary'
         } py-2`}
       >
         {text}
@@ -93,7 +98,9 @@ export default function TextButton({
             ? 'bg-gray-300'
             : type == TextButtonType.PRIMARY
               ? 'bg-primary'
-              : 'bg-white border border-tertiary'
+              : type == TextButtonType.SECONDARY
+                ? 'bg-white border border-tertiary'
+                : 'bg-white border border-primary'
         } rounded-lg px-1 py-2`}
       >
         {href ? (

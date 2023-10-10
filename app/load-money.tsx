@@ -1,24 +1,20 @@
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
-import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import { NormalText, SemiText } from '@/components/Themed'
 import IconButton from '@/components/buttons/IconButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 
 import { useBankStore } from '@/stores/bankStore'
-import { RouteProp, useRoute } from '@react-navigation/native'
-import { BlurView } from 'expo-blur'
 import { useState } from 'react'
 import {
   Image,
   Keyboard,
-  Modal,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { AddBankRouteParams } from './add-bank'
 
 const listBank = [
   {
@@ -39,12 +35,7 @@ const listBank = [
 ]
 
 export default function LoadMoneyScreen() {
-  const route =
-    useRoute<RouteProp<Record<string, AddBankRouteParams>, string>>()
   const [amount, setAmount] = useState('')
-  const setDepositSuccessful = route.params?.setDepositSuccessful || false
-  const [depositSuccessfulVisible] = useState(true)
-  const [, setIsModalVisible] = useState(false)
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
 
@@ -119,52 +110,12 @@ export default function LoadMoneyScreen() {
           </NormalText>
         </View>
         <TextButton
-          text="Thanh toán"
+          text="Nạp tiền"
           type={TextButtonType.PRIMARY}
-          href="(main-features)/add-bank-item"
+          href="/deposit-confirmation"
           disable={selectedBank == '' || amount == ''}
         />
       </View>
-      {setDepositSuccessful && (
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={depositSuccessfulVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <BlurView
-            intensity={15}
-            style={{ flex: 1, backgroundColor: 'rgba(80, 80, 80, 0.80)' }}
-          >
-            <View className="flex-1 justify-end mb-24 px-4">
-              <View className="bg-white w-full h-[400px] rounded-lg shadow-2xl">
-                <Image
-                  source={require('@/assets/images/deposit.gif')}
-                  className="w-[220px] h-[160px] mx-auto"
-                />
-                <MediumText className="text-2xl tracking-tight text-center text-secondary">
-                  Nạp tiền thành công!
-                </MediumText>
-
-                <View className="w-full top-12 px-4">
-                  <TextButton
-                    text="Tạo giao dịch mới"
-                    type={TextButtonType.PRIMARY}
-                    href="/load-money"
-                  />
-                </View>
-                <View className="w-full top-12 mt-2 px-4 pb-4">
-                  <TextButton
-                    text="Về màn hình chính"
-                    type={TextButtonType.SECONDARY}
-                    href="/(account)"
-                  />
-                </View>
-              </View>
-            </View>
-          </BlurView>
-        </Modal>
-      )}
     </SharedLayout>
   )
 }
