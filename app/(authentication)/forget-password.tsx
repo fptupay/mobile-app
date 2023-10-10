@@ -2,8 +2,10 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
   Keyboard,
@@ -15,7 +17,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function ForgetPasswordScreen() {
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const {
+    control,
+    formState: { errors, isValid }
+  } = useForm<PhoneSchema>({
+    defaultValues: {
+      phoneNumber: ''
+    },
+    resolver: zodResolver(phoneSchema),
+    mode: 'onBlur'
+  })
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="ml-4">
@@ -43,18 +55,33 @@ export default function ForgetPasswordScreen() {
                 bạn
               </NormalText>
             </View>
-            <TextField
-              className="w-full mt-8"
-              label="Số điện thoại"
-              keyboardType="phone-pad"
-              value={phoneNumber}
-              onChangeText={(value) => setPhoneNumber(value)}
-              style={{ fontFamily: 'Inter' }}
-            />
+            <View className="w-full">
+              <Controller
+                control={control}
+                name="phoneNumber"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextField
+                    label="Số điện thoại"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    style={{ fontFamily: 'Inter' }}
+                    keyboardType="phone-pad"
+                    returnKeyType="done"
+                    className="w-full mt-8"
+                  />
+                )}
+              />
+              {errors.phoneNumber && (
+                <NormalText className="text-red-500 mt-1">
+                  {errors.phoneNumber.message}
+                </NormalText>
+              )}
+            </View>
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={phoneNumber.length != 10}
+                disable={!isValid}
                 type={TextButtonType.PRIMARY}
                 href="/(authentication)/otp"
                 previousRoute="forget-password"

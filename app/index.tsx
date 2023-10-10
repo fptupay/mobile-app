@@ -50,7 +50,7 @@ export default function LoginScreen() {
   const {
     control,
     getValues,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<LoginFormSchema>({
     defaultValues: {
       username: '',
@@ -162,7 +162,7 @@ export default function LoginScreen() {
                 }
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
-                disable={loginMutation.isLoading}
+                disable={loginMutation.isLoading || !isValid}
                 loading={loginMutation.isLoading}
               />
               <Link

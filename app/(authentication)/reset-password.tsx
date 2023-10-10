@@ -13,11 +13,22 @@ import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
-import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { PasswordSchema, passwordSchema } from '@/schemas/login-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export default function ResetPasswordScreen() {
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const {
+    control,
+    formState: { errors, isValid }
+  } = useForm<PasswordSchema>({
+    defaultValues: {
+      password: '',
+      confirmPassword: ''
+    },
+    resolver: zodResolver(passwordSchema),
+    mode: 'onBlur'
+  })
 
   return (
     <SafeAreaView className="flex-1">
@@ -45,28 +56,61 @@ export default function ResetPasswordScreen() {
                 và chữ số.
               </NormalText>
             </View>
-            <View className="w-full mt-8">
-              <TextField
-                className="w-full mb-5"
-                label="Mật khẩu mới"
-                value={newPassword}
-                onChangeText={(value) => setNewPassword(value)}
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
-              <TextField
-                className="w-full"
-                label="Xác nhận mật khẩu"
-                value={confirmPassword}
-                onChangeText={(value) => setConfirmPassword(value)}
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
+            <View className="w-full mt-8 space-y-4">
+              <View>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Mật khẩu mới"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                      returnKeyType="next"
+                      secureTextEntry={true}
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.password.message}
+                  </NormalText>
+                )}
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Xác nhận mật khẩu"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                      returnKeyType="done"
+                      secureTextEntry={true}
+                    />
+                  )}
+                />
+                {!isValid &&
+                  (errors.confirmPassword ? (
+                    <NormalText className="text-red-500 mt-1">
+                      {errors.confirmPassword.message}
+                    </NormalText>
+                  ) : (
+                    <NormalText className="text-red-500 mt-1">
+                      Mật khẩu không khớp
+                    </NormalText>
+                  ))}
+              </View>
             </View>
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={!newPassword || !confirmPassword}
+                disable={!isValid}
                 type={TextButtonType.PRIMARY}
                 href="/"
               />
