@@ -91,43 +91,46 @@ export default function TransferAmountScreen() {
               <MediumText className="text-primary">Thay đổi</MediumText>
             </View>
 
-            {/* Entered amount */}
-            <View className="flex-1 flex-row justify-center items-center">
-              <TextInput
-                className="text-4xl font-semibold text-primary w-full text-center"
-                placeholder="0đ"
-                value={amount}
-                onChangeText={handleAmountChange}
-                keyboardType="numeric"
-              />
-            </View>
-            {/* Suggestion */}
-            <View className="space-x-2 flex-row">
-              {suggestions.map((suggestion) => (
-                <TouchableOpacity
-                  key={suggestion}
-                  onPress={() => handleSuggestionPress(suggestion)}
-                  className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
-                >
-                  <MediumText>{formatMoney(suggestion)}</MediumText>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <TextField
-              value={message}
-              label="Nhắn gửi"
-              onChangeText={(text) => setMessage(text)}
-              className="my-4"
+          {/* Entered amount */}
+          <View className="flex-1 justify-center items-center">
+            <TextInput
+              className="text-4xl font-semibold text-primary w-full text-center"
+              placeholder="0đ"
+              value={amount}
+              onChangeText={handleAmountChange}
+              keyboardType="numeric"
             />
-            <TextButton
-              onPress={handleTransfer}
-              disable={!amount}
-              text="Chuyển tiền"
-              type="primary"
-            />
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </SharedLayout>
+            <NormalText className="text-tertiary">
+              Số dư hiện tại: 1.000.000đ
+            </NormalText>
+          </View>
+
+          {/* Suggestion */}
+          <View className="space-x-2 flex-row">
+            {suggestions.map((suggestion) => (
+              <TouchableOpacity
+                key={suggestion}
+                onPress={() => handleSuggestionPress(suggestion)}
+                className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+              >
+                <MediumText>{formatMoney(suggestion)}</MediumText>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TextField
+            value={message}
+            label="Nhắn gửi"
+            onChangeText={(text) => setMessage(text)}
+            className="my-4"
+          />
+          <TextButton
+            href="/transfer-success"
+            text="Chuyển tiền"
+            type="primary"
+          />
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SharedLayout>
     </>
   )
 }

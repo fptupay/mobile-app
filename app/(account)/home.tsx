@@ -152,6 +152,7 @@ export default function HomeScreen() {
   }
 
   const BottomSheet = () => {
+    const router = useRouter()
     const [scrollY, setScrollY] = useState(WINDOW_HEIGHT - 350)
     const MAX_UPWARD_TRANSLATE_Y = -WINDOW_HEIGHT * 0.25
     const MAX_DOWNWARD_TRANSLATE_Y = 0
@@ -259,7 +260,10 @@ export default function HomeScreen() {
             data={transactions}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View className="flex-row justify-between items-center py-3">
+              <TouchableOpacity
+                className="flex-row justify-between items-center py-3"
+                onPress={() => router.push('/transfer')}
+              >
                 <View className="flex-row items-center space-x-4">
                   <View className="w-10 h-10 rounded-full bg-gray-200"></View>
                   <View className="w-[200px]">
@@ -281,7 +285,7 @@ export default function HomeScreen() {
                     {formatMoney(item.amount)}
                   </NormalText>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
             showsVerticalScrollIndicator={false}
           />
