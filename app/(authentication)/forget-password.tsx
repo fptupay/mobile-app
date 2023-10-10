@@ -58,6 +58,7 @@ export default function ForgetPasswordScreen() {
                 type={TextButtonType.PRIMARY}
                 href="/(authentication)/otp"
                 previousRoute="forget-password"
+                nextRoute="reset-password"
               />
             </View>
           </View>

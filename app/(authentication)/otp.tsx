@@ -5,7 +5,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,20 +17,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function SignUpOtpScreen() {
-  const params: { previousRoute: string } = useLocalSearchParams()
+  const params: { previousRoute: string; nextRoute: string } =
+    useLocalSearchParams()
   const previousRoute = `/(authentication)/${params.previousRoute}`
+  const nextRoute: any = `/(authentication)/${params.nextRoute}`
   const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
-
-  useEffect(() => {
-    setIsDisabled(otpCode.length < 6)
-  }, [otpCode])
 
   const handleClear = () => {
     otpInputRef.current?.clear()
+    setOtpCode('')
   }
 
   return (
@@ -74,9 +72,9 @@ export default function SignUpOtpScreen() {
               </Pressable>
               <TextButton
                 text="Xác nhận"
-                type={TextButtonType.SECONDARY}
-                disable={isDisabled}
-                onPress={() => router.push('/(authentication)/ekyc/ekyc-rule')}
+                type={TextButtonType.PRIMARY}
+                disable={otpCode.length != 6}
+                onPress={() => router.push(nextRoute)}
               />
             </View>
           </View>

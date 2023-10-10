@@ -65,7 +65,7 @@ export default function ResetPasswordScreen() {
                 text="Xác nhận"
                 disable={!newPassword || !confirmPassword}
                 type={TextButtonType.PRIMARY}
-                href="/(authentication)"
+                href="/"
               />
             </View>
           </View>
