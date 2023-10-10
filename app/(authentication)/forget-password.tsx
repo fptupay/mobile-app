@@ -1,23 +1,26 @@
+import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function ForgetPasswordScreen() {
+  const [phoneNumber, setPhoneNumber] = useState('')
   return (
-    <SafeAreaView className="flex-1">
-      <BackButton href="/(authentication)" />
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="ml-4">
+        <BackButton href="/" />
+      </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -26,13 +29,13 @@ export default function ForgetPasswordScreen() {
         <StatusBar style="auto" />
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-center space-y-8">
+          <View className="flex-1 mt-20 items-center">
             <Image
               source={require('@/assets/images/forgot-mascot.png')}
-              className="w-[178px] h-[160px] mx-auto"
+              className="w-[160px] h-[145px] mx-auto"
             />
             <View>
-              <MediumText className="text-3xl text-left tracking-tighter">
+              <MediumText className="text-3xl text-left tracking-tighter text-secondary mt-8">
                 Bạn quên mật khẩu?
               </MediumText>
               <NormalText className="text-tertiary mt-1">
@@ -40,18 +43,21 @@ export default function ForgetPasswordScreen() {
                 bạn
               </NormalText>
             </View>
-            <View className="w-full space-y-4 mt-8">
-              <TextInput
-                className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
-                placeholder="Số điện thoại"
-                style={{ fontFamily: 'Inter' }}
-              />
-            </View>
-            <View className="w-full mt-8 space-y-2">
+            <TextField
+              className="w-full mt-8"
+              label="Số điện thoại"
+              keyboardType="phone-pad"
+              value={phoneNumber}
+              onChangeText={(value) => setPhoneNumber(value)}
+              style={{ fontFamily: 'Inter' }}
+            />
+            <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
+                disable={phoneNumber.length != 10}
                 type={TextButtonType.PRIMARY}
-                href="/(authentication)/reset-password"
+                href="/(authentication)/otp"
+                previousRoute="forget-password"
               />
             </View>
           </View>

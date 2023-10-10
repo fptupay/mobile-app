@@ -83,12 +83,12 @@ export default function LoginScreen() {
   })
 
   return !isAuthenticated ? (
-    <SafeAreaView className="flex-1 items-center relative bg-white">
-      <StatusBar style="dark" />
+    <SafeAreaView className="flex-1 items-center relative">
+      <StatusBar style="auto" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 w-full px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 items-center mt-20 space-y-8">
