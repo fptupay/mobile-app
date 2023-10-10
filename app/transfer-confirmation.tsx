@@ -1,4 +1,5 @@
 import GradientBackground from '@/components/GradientBackground'
+import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { WINDOW_HEIGHT } from '@/utils/helper'
@@ -38,6 +39,9 @@ export default function TransferConfirmationScreen() {
       <StatusBar style="auto" />
       <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
         <GradientBackground />
+        <View className="absolute right-6 top-16">
+          <CustomIcon name="Share" color="#000" size={24} />
+        </View>
       </View>
       <View
         className="absolute left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-start items-center"
@@ -47,7 +51,7 @@ export default function TransferConfirmationScreen() {
           source={require('../assets/images/tick-circle.png')}
           className="w-[80px] h-[80px] mx-auto mt-[-40px]"
         />
-        <SemiText className="text-secondary text-xl text-center mt-5">
+        <SemiText className="text-primary text-2xl text-center mt-5">
           Chuyển tiền thành công!
         </SemiText>
         <SemiText className="text-4xl text-secondary mt-7">-200.000 đ</SemiText>
