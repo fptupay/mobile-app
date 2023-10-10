@@ -29,7 +29,7 @@ export default function WithdrawConfirmationScreen() {
       >
         <Image
           source={require('../assets/images/tick-circle.png')}
-          className="w-[80px] h-[80px] mx-auto mt-[-40px]"
+          className="w-[150px] h-[150px] mx-auto mt-[-40px]"
         />
         <SemiText className="text-primary text-2xl text-center mt-5">
           Rút tiền thành công!
