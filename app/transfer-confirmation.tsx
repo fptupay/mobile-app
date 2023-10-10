@@ -62,13 +62,13 @@ export default function TransferConfirmationScreen() {
         </View>
         <View className="w-full mb-10 mt-auto" style={{ rowGap: 12 }}>
           <TextButton
-            text="Tạo giao dịch mới"
+            text="Về trang chủ"
             type={TextButtonType.PRIMARY}
             href="/transfer-list"
           />
           <TextButton
-            text="Về màn hình chính"
-            type={TextButtonType.SECONDARY}
+            text="Lưu bạn bè"
+            type={TextButtonType.OUTLINE}
             href="/(account)/home"
           />
         </View>
