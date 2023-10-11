@@ -44,7 +44,7 @@ export default function PaymentsScreen() {
         <PaymentItem
           title="Học phí kỳ tiếp"
           icon="GraduationCap"
-          href="semester-fee"
+          href="semester-fee-confirmation"
         />
         <PaymentItem title="Đăng ký học" icon="Book" href="subject-fee" />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
