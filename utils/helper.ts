@@ -167,3 +167,14 @@ export const convertNumberToVietnameseWords = (number: string) => {
 
   return rsString.replace(/[0-9]/g, '').replace(/ /g, ' ') + ' đồng'
 }
+
+export const convertDateFormat = (inputDate: string) => {
+  const date = new Date(inputDate)
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  })
+
+  return formattedDate
+}
