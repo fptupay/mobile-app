@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { MediumText, NormalText } from './Themed'
+import { NormalText } from './Themed'
 
 export type ListItemProp = {
   label: string
@@ -11,9 +11,9 @@ export default function DescriptionRowItem({
   description
 }: ListItemProp) {
   return (
-    <View className="flex flex-row justify-between items-center mb-3">
+    <View className="flex flex-row justify-between items-center mb-5">
       <NormalText className="text-tertiary">{label}</NormalText>
-      <MediumText className="text-secondary">{description}</MediumText>
+      <NormalText className="text-secondary">{description}</NormalText>
     </View>
   )
 }

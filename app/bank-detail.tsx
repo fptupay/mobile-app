@@ -40,7 +40,7 @@ const mockCardData = [
   }
 ]
 
-export default function BankDetail() {
+export default function BankDetailScreen() {
   const [isModalVisible, setModalVisible] = useState(false)
   const [isBalanceVisible, setBalanceVisible] = useState(false)
 
