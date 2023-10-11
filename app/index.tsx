@@ -72,7 +72,7 @@ export default function LoginScreen() {
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
       saveToken({ key: 'access_token', value: data.data.access_token })
-        .then(() => router.push('/(account)/home'))
+        .then(() => router.push('/(authentication)/phone-confirmation'))
         .catch((err) => console.log(err))
     },
     onError: (error: Error) => {
