@@ -43,11 +43,11 @@ export default function ForgetPasswordScreen() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center items-center">
             <Image
-              source={require('@/assets/images/forgot-mascot.png')}
-              className="w-[160px] h-[145px] mx-auto"
+              source={require('@/assets/images/reset-password.png')}
+              className="w-[225px] h-[225px] mx-auto"
             />
             <View>
-              <MediumText className="text-3xl text-left tracking-tighter text-secondary mt-8">
+              <MediumText className="text-3xl text-left tracking-tighter text-secondary">
                 Bạn quên mật khẩu?
               </MediumText>
               <NormalText className="text-tertiary mt-1">

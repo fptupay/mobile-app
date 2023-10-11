@@ -94,8 +94,8 @@ export default function LoginScreen() {
           <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
-                source={require('@/assets/images/login-mascot.png')}
-                className="w-[172px] h-[145px]"
+                source={require('@/assets/images/login-account.png')}
+                className="w-[215px] h-[160px]"
               />
               <MediumText className="text-3xl tracking-tighter text-center text-secondary">
                 Đăng nhập tài khoản{' '}
