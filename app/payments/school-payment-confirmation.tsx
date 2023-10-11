@@ -6,17 +6,19 @@ import { convertNumberToVietnameseWords } from '@/utils/helper'
 import React, { useState } from 'react'
 import { Image, View } from 'react-native'
 
-export default function SemesterFeeConfirmationScreen() {
+export default function SchoolPaymentConfirmationScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   return (
     <>
       <SharedLayout title="Xác nhận thông tin" href="/payments">
+        {/* Header */}
         <View className="mt-4 flex items-center">
           <NormalText className="text-tertiary">Số tiền nộp</NormalText>
           <SemiText className="text-4xl mt-2">28.500.000đ</SemiText>
         </View>
 
+        {/* Recipient info card*/}
         <View className="bg-zinc-50 rounded-lg mt-4 p-2 space-y-4 shadow-md shadow-zinc-500">
           {/* Origin */}
           <View>
@@ -55,6 +57,7 @@ export default function SemesterFeeConfirmationScreen() {
           </View>
         </View>
 
+        {/* Details */}
         <View className="my-4">
           <View className="mt-2 flex space-y-4">
             <View className="flex-row justify-between">
