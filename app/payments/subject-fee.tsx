@@ -88,7 +88,7 @@ export default function SubjectsScreen() {
   }
 
   return (
-    <SharedLayout title="Các khoản phí khác" href="/payments">
+    <SharedLayout title="Đăng ký môn học" href="/payments">
       <View className="mt-6 mb-4">
         <TextField
           label="Tìm kiếm mã môn học"
@@ -127,6 +127,7 @@ export default function SubjectsScreen() {
           text="Tiếp tục"
           type="primary"
           disable={selectedSubjects.length === 0}
+          href="/payments/school-payment-confirmation"
         />
       </View>
     </SharedLayout>

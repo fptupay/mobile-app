@@ -46,7 +46,7 @@ export default function PaymentsScreen() {
           icon="GraduationCap"
           href="school-payment-confirmation"
         />
-        <PaymentItem title="Đăng ký học" icon="Book" href="subject-fee" />
+        <PaymentItem title="Đăng ký môn học" icon="Book" href="subject-fee" />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
         <PaymentItem
           title="Các khoản phí khác"

@@ -83,6 +83,7 @@ export default function ApplicationsScreen() {
           text="Tiếp tục"
           type="primary"
           disable={!selectedApplication}
+          href="/payments/school-payment-confirmation"
         />
       </View>
     </SharedLayout>
