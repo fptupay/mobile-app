@@ -17,10 +17,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function SignUpOtpScreen() {
-  const params: { previousRoute: string; nextRoute: string } =
+  const params: { previousRoute: string; nextRoute: any } =
     useLocalSearchParams()
-  const previousRoute = `/(authentication)/${params.previousRoute}`
-  const nextRoute: any = `/(authentication)/${params.nextRoute}`
   const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)
@@ -34,7 +32,7 @@ export default function SignUpOtpScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="ml-4">
-        <BackButton href={previousRoute} />
+        <BackButton href={params.previousRoute} />
       </View>
 
       <KeyboardAvoidingView
@@ -74,7 +72,7 @@ export default function SignUpOtpScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 disable={otpCode.length != 6}
-                onPress={() => router.push(nextRoute)}
+                onPress={() => router.push(params.nextRoute)}
               />
             </View>
           </View>

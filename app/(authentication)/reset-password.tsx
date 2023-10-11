@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 
 import { MediumText, NormalText } from '@/components/Themed'
-import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
@@ -34,10 +33,6 @@ export default function ResetPasswordScreen() {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="ml-4">
-        <BackButton href="/(authentication)/forget-password" />
-      </View>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
