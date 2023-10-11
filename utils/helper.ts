@@ -87,3 +87,83 @@ export const getBackGroundColor = (status?: string | string[]) => {
       return 'bg-yellow-50'
   }
 }
+
+const defaultNumbers = ' hai ba bốn năm sáu bảy tám chín'
+
+const unitsPlace: string[] = ('1 một' + defaultNumbers).split(' ')
+const tensPlace: string[] = ('lẻ mười' + defaultNumbers).split(' ')
+const hundredsPlace: string[] = ('không một' + defaultNumbers).split(' ')
+
+function convertBlockThree(number: string) {
+  if (number === '000') return ''
+  const _a = number + ''
+
+  switch (_a.length) {
+    case 0:
+      return ''
+    case 1:
+      return unitsPlace[parseInt(_a[0])]
+    case 2:
+      return convertBlockTwo(_a)
+    case 3: {
+      let tens = ''
+      if (_a.slice(1, 3) !== '00') {
+        tens = convertBlockTwo(_a.slice(1, 3))
+      }
+      const tram = hundredsPlace[parseInt(_a[0])] + ' trăm'
+      return tram + ' ' + tens
+    }
+  }
+}
+
+function convertBlockTwo(number: string) {
+  let unit = unitsPlace[parseInt(number[1])]
+  const teens = tensPlace[parseInt(number[0])]
+  let append = ''
+
+  if (number[0] > '0' && number[1] === '5') {
+    unit = 'lăm'
+  }
+
+  if (number[0] > '1') {
+    append = ' mươi'
+    if (number[1] === '1') {
+      unit = ' mốt'
+    }
+  }
+
+  return teens + '' + append + ' ' + unit
+}
+
+export const convertNumberToVietnameseWords = (number: string) => {
+  const unitBlock = '1 nghìn triệu tỷ'.split(' ')
+  const str = parseInt(number) + ''
+  let i = 0
+  const arr = []
+  let index = str.length
+  const result = []
+  let rsString = ''
+
+  if (index === 0 || str === 'NaN') {
+    return ''
+  }
+
+  while (index >= 0) {
+    arr.push(str.substring(index, Math.max(index - 3, 0)))
+    index -= 3
+  }
+
+  for (i = arr.length - 1; i >= 0; i--) {
+    if (arr[i] !== '' && arr[i] !== '000') {
+      result.push(convertBlockThree(arr[i]))
+
+      if (unitBlock[i]) {
+        result.push(unitBlock[i])
+      }
+    }
+  }
+
+  rsString = result.join(' ')
+
+  return rsString.replace(/[0-9]/g, '').replace(/ /g, ' ') + ' đồng'
+}
