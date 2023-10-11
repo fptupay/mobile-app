@@ -1,8 +1,8 @@
-import { View, Image, Modal, ScrollView } from 'react-native'
+import { View, Image, Modal, ScrollView, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import { EyeOff } from 'lucide-react-native'
+import { EyeOff, Eye } from 'lucide-react-native'
 import Colors from '@/constants/Colors'
 import { BlurView } from 'expo-blur'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
@@ -42,6 +42,7 @@ const mockCardData = [
 
 export default function BankDetail() {
   const [isModalVisible, setModalVisible] = useState(false)
+  const [isBalanceVisible, setBalanceVisible] = useState(false)
 
   const handleTextButtonClick = () => {
     setModalVisible(true)
@@ -70,10 +71,22 @@ export default function BankDetail() {
               </MediumText>
             </View>
             <View className="absolute flex flex-row items-center right-0 p-3 bottom-0">
-              <MediumText className="tracking-tight text-white ml-3 text-lg">
-                **** **** 1234
-              </MediumText>
-              <EyeOff size={20} color={Colors.white} className="ml-2" />
+              {isBalanceVisible ? (
+                <MediumText className="tracking-tight text-white ml-3 text-lg">
+                  1903 6280 1234
+                </MediumText>
+              ) : (
+                <MediumText className="tracking-tight text-white ml-3 text-lg">
+                  **** **** 1234
+                </MediumText>
+              )}
+              <Pressable onPress={() => setBalanceVisible(!isBalanceVisible)}>
+                {isBalanceVisible ? (
+                  <Eye size={20} color={Colors.white} className="ml-2" />
+                ) : (
+                  <EyeOff size={20} color={Colors.white} className="ml-2" />
+                )}
+              </Pressable>
             </View>
           </View>
         </View>
@@ -116,12 +129,12 @@ export default function BankDetail() {
           style={{ flex: 1, backgroundColor: 'rgba(80, 80, 80, 0.80)' }}
         >
           <View className="flex-1 justify-end mb-60 px-4">
-            <View className="bg-white w-full h-[200px] rounded-lg shadow-2xl p-8">
-              <MediumText className="text-2xl tracking-tight text-secondary mb-2">
+            <View className="bg-white w-full rounded-lg shadow-2xl p-8">
+              <MediumText className="text-xl tracking-tight text-primary mb-2">
                 Huỷ liên kết
               </MediumText>
-              <NormalText>
-                Bạn có chắc muốn huỷ liên kết với ngân hàng x?
+              <NormalText className="text-tertiary mb-8">
+                Bạn có chắc chắn muốn huỷ liên kết với ngân hàng x?
               </NormalText>
               <View className="flex flex-row justify-between text-center mt-4">
                 <View className="w-[50%] mr-2">
@@ -135,7 +148,7 @@ export default function BankDetail() {
                   <TextButton
                     text="Có"
                     type={TextButtonType.PRIMARY}
-                    href="/link-information-bank"
+                    href="/(account)/my-wallet"
                   />
                 </View>
               </View>
