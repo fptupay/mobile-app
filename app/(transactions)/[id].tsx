@@ -1,13 +1,13 @@
-import React from 'react'
+import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText, SemiText, View } from '@/components/Themed'
-import CustomIcon from '@/components/Icon'
 import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
+import React from 'react'
 
 export default function TransactionDetailScreen() {
   return (
-    <SharedLayout title="Chi tiết giao dịch" href="/transactions">
+    <SharedLayout title="Chi tiết giao dịch" href="/home">
       <View className="flex flex-row justify-between mt-4">
         <SemiText>Chuyển tiền nhanh</SemiText>
         <CustomIcon name="Share" size={20} color="#000" />
@@ -27,22 +27,20 @@ export default function TransactionDetailScreen() {
             <NormalText>HE160005</NormalText>
           </View>
           <View className="flex-row flex-wrap justify-between">
-            <NormalText className="text-tertiary">
+            <NormalText className="text-tertiary flex-1">
               Nội dung giao dịch
             </NormalText>
-            <NormalText>HA GIA KINH chuyen tien sieu nhanh luon</NormalText>
+            <NormalText className="flex-1 text-right">
+              HA GIA KINH chuyen tien sieu nhanh luon
+            </NormalText>
           </View>
           <View className="flex-row justify-between">
             <NormalText className="text-tertiary">Thời gian</NormalText>
             <NormalText>09:10 - 04/10/2023</NormalText>
           </View>
-          <View>
+          <View className="flex-row justify-between">
             <NormalText className="text-tertiary">Mã giao dịch</NormalText>
             <NormalText>123456789</NormalText>
-          </View>
-          <View>
-            <NormalText className="text-tertiary">Phản hồi</NormalText>
-            <NormalText>Em đến Dịch vụ Sinh viên 102L nhé!</NormalText>
           </View>
         </View>
       </View>
