@@ -102,7 +102,7 @@ export default function SchoolPaymentConfirmationScreen() {
                 <TextButton
                   text="Hủy"
                   type="secondary"
-                  onPress={() => setIsModalVisible(false)}
+                  href="/payments/payment-success"
                 />
               </View>
               <View className="flex-1">
