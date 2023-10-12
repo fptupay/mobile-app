@@ -15,9 +15,11 @@ export const loginUser = async (data: LoginFormSchema) => {
 }
 
 export const logoutUser = async () => {
+  const token = await getToken('access_token')
+
   const logoutConfig = {
     headers: {
-      Authorization: getToken('access_token')
+      Authorization: `Bearer ${token}`
     }
   }
   const response = await apiPostCall('/user/logout', logoutConfig)

@@ -1,3 +1,4 @@
+import { ekycSelfie } from '@/api/ekyc'
 import {
   MediumText,
   NormalText,
@@ -6,28 +7,28 @@ import {
   View
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import StepProgress from '@/components/progress/StepProgress'
+import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import { useEkycStore } from '@/stores/ekycStore'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 
 import { Camera, CameraType } from 'expo-camera'
 import * as FaceDetector from 'expo-face-detector'
-import { useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ImageBackground, TouchableOpacity } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
-  const { type } = useLocalSearchParams()
   const [faceData, setFaceData] = useState([])
   const [capturedImage, setCapturedImage] = useState<any>(null)
-
-  useEffect(() => {
-    setCapturedImage(null)
-  }, [type])
+  const ekycId = useEkycStore((state) => state.ekycId)
 
   const takePicture = async () => {
-    const photo = await camera?.takePictureAsync({ skipProcessing: true })
-    console.log('photo', photo)
+    if (!camera) return
+    const photo = await camera.takePictureAsync({ quality: 0.1 })
     setCapturedImage(photo)
   }
 
@@ -47,6 +48,22 @@ export default function FaceAuthenticatorScreen() {
     }
   }
 
+  const faceAuthenticationMutation = useMutation({
+    mutationFn: (data: any) => ekycSelfie(data, ekycId),
+    onSuccess: () => {
+      router.push('/home')
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
@@ -55,7 +72,7 @@ export default function FaceAuthenticatorScreen() {
           Xác thực khuôn mặt
         </MediumText>
       </View>
-      <StepProgress type={type} />
+      <StepProgress type={StepType.SELFIE} />
 
       <View className="w-[250px] h-[250px] mx-auto bg-red-300 my-8 rounded-full overflow-hidden">
         {capturedImage ? (
@@ -94,9 +111,7 @@ export default function FaceAuthenticatorScreen() {
         <>
           <View className="mt-8">
             <TextButton
-              href={{
-                pathname: '/(account)'
-              }}
+              onPress={() => faceAuthenticationMutation.mutate(capturedImage)}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />

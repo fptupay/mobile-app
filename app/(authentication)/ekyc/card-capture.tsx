@@ -1,3 +1,4 @@
+import { ekycBack, ekycFront } from '@/api/ekyc'
 import {
   MediumText,
   NormalText,
@@ -7,17 +8,24 @@ import {
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import { useEkycStore } from '@/stores/ekycStore'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import Toast from 'react-native-toast-message'
 
-import { Camera, CameraType } from 'expo-camera'
-import { useLocalSearchParams } from 'expo-router'
+import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera'
+import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity } from 'react-native'
 
 export default function EkycCameraScreen() {
-  const { type } = useLocalSearchParams()
+  const router = useRouter()
+  const ekycId = useEkycStore((state) => state.ekycId)
+  const setEkycId = useEkycStore((state) => state.setEkycId)
 
   let camera: Camera | null
+  const [type, setType] = useState(StepType.FRONT)
   const [permission, requestPermission] = Camera.useCameraPermissions()
   const [capturedImage, setCapturedImage] = useState<any>(null)
 
@@ -27,14 +35,48 @@ export default function EkycCameraScreen() {
 
   const takePicture = async () => {
     if (!camera) return
-    const photo = await camera.takePictureAsync({ skipProcessing: true })
-    console.log('photo', photo)
+    const photo = await camera.takePictureAsync({ quality: 0.1 })
     setCapturedImage(photo)
   }
 
   const retakePicture = () => {
     setCapturedImage(null)
   }
+
+  const ekycFrontMutation = useMutation({
+    mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
+    onSuccess: (data) => {
+      setEkycId(data.data.user_ekyc_id)
+      setType(StepType.BACK)
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
+  const ekycBackMutation = useMutation({
+    mutationFn: (data: CameraCapturedPicture) => {
+      return ekycBack(data, ekycId)
+    },
+    onSuccess: () => {
+      router.push('/ekyc/face-authenticator')
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
 
   if (!permission) {
     return <NormalText>Loading...</NormalText>
@@ -88,25 +130,24 @@ export default function EkycCameraScreen() {
       </View>
       {capturedImage ? (
         <>
-          <View className="mt-8">
+          <View className="mt-8 mb-4">
             <TextButton
-              href={{
-                pathname: `${
-                  type == 'front' ? '/ekyc/[type]' : '/ekyc/face-authenticator'
-                }`,
-                params: {
-                  type: `${
-                    type == StepType.FRONT ? StepType.BACK : StepType.SELFIE
-                  }`
-                }
-              }}
+              onPress={() =>
+                type == StepType.FRONT
+                  ? ekycFrontMutation.mutate(capturedImage)
+                  : ekycBackMutation.mutate(capturedImage)
+              }
+              disable={ekycFrontMutation.isLoading}
+              loading={ekycFrontMutation.isLoading}
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />
           </View>
-          <TouchableOpacity onPress={retakePicture} className="mt-4">
-            <TextButton text="Hủy bỏ" type={TextButtonType.SECONDARY} />
-          </TouchableOpacity>
+          <TextButton
+            onPress={retakePicture}
+            text="Hủy bỏ"
+            type={TextButtonType.SECONDARY}
+          />
         </>
       ) : (
         <View className="w-[64px] h-[64px] p-[2px] rounded-full border-2 border-tertiary mx-auto mt-8">
