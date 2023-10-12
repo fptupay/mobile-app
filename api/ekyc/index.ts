@@ -1,14 +1,14 @@
 import { compressImg, getToken } from '@/utils/helper'
 import { CameraCapturedPicture } from 'expo-camera'
+import { Platform } from 'react-native'
 import { apiPostCall } from '..'
 
 export const ekycFront = async (data: CameraCapturedPicture) => {
   const token = await getToken('access_token')
-
   const image = await compressImg(data)
 
   const file = {
-    uri: image.uri.replace('file://', ''),
+    uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,
     type: 'image/jpeg',
     name: 'front.jpg'
   }
@@ -31,11 +31,10 @@ export const ekycFront = async (data: CameraCapturedPicture) => {
 
 export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
   const token = await getToken('access_token')
-
   const image = await compressImg(data)
 
   const file = {
-    uri: image.uri.replace('file://', ''),
+    uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,
     type: 'image/jpeg',
     name: 'back.jpg'
   }
@@ -63,14 +62,14 @@ export const ekycSelfie = async (data: CameraCapturedPicture, id: string) => {
   const image = await compressImg(data)
 
   const file = {
-    uri: image.uri.replace('file://', ''),
+    uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,
     type: 'image/jpeg',
     name: 'selfie.jpg'
   }
 
   const formData = new FormData()
+  formData.append('ekyc-id', id)
   formData.append('image', file as any)
-  formData.append('ekycId', id)
 
   const response = await apiPostCall('/user/ekyc/check-face', formData, {
     headers: {
