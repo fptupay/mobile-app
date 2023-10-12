@@ -32,7 +32,7 @@ export default function LoginScreen() {
   const {
     control,
     getValues,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<LoginFormSchema>({
     defaultValues: {
       username: '',
@@ -46,7 +46,7 @@ export default function LoginScreen() {
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
       saveToken({ key: 'access_token', value: data.data.access_token })
-        .then(() => router.push('/(account)/home'))
+        .then(() => router.push('/(authentication)/phone-confirmation'))
         .catch((err) => console.log(err))
     },
     onError: (error: Error) => {
@@ -61,19 +61,19 @@ export default function LoginScreen() {
   })
 
   return (
-    <SafeAreaView className="flex-1 items-center relative bg-white">
-      <StatusBar style="dark" />
+    <SafeAreaView className="flex-1 items-center relative">
+      <StatusBar style="auto" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 w-full px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
-                source={require('@/assets/images/login-mascot.png')}
-                className="w-[172px] h-[145px]"
+                source={require('@/assets/images/login-account.png')}
+                className="w-[215px] h-[160px]"
               />
               <MediumText className="text-3xl tracking-tighter text-center text-secondary">
                 Đăng nhập tài khoản{' '}
@@ -140,7 +140,7 @@ export default function LoginScreen() {
                 }
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
-                disable={loginMutation.isLoading}
+                disable={loginMutation.isLoading || !isValid}
                 loading={loginMutation.isLoading}
               />
               <Link

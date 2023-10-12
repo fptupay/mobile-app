@@ -53,13 +53,15 @@ export default function WithdrawalScreen() {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        className={`border rounded-lg px-4 py-2 flex flex-row items-center justify-between mb-4 ${borderColor}`}
+        className={`border rounded-lg p-4 flex flex-row items-center justify-between mb-5 ${borderColor}`}
         onPress={onPress}
       >
-        <View className="flex-row items-center gap-x-2">
+        <View className="flex-row items-center gap-3">
           <Image source={require('../assets/images/techcombank.png')} />
           <View>
-            <MediumText className="text-secondary">{item.name}</MediumText>
+            <MediumText className="text-secondary capitalize">
+              {item.name}
+            </MediumText>
             <NormalText className="text-tertiary">
               Miễn phí thanh toán
             </NormalText>
@@ -75,7 +77,7 @@ export default function WithdrawalScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)" title="Rút tiền">
+    <SharedLayout href="/(account)/home" title="Rút tiền">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -85,11 +87,11 @@ export default function WithdrawalScreen() {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View className="bg-transparent">
                 <SemiText className="text-secondary mb-2">
-                  Nạp tiền vào ví FPTU Pay
+                  Rút tiền từ ví FPTU Pay
                 </SemiText>
                 <TextField
                   keyboardType="numeric"
-                  label="Số tiền cần nạp"
+                  label="Số tiền cần rút"
                   editable={true}
                   selectTextOnFocus={true}
                   value={amount}
@@ -128,9 +130,9 @@ export default function WithdrawalScreen() {
           </NormalText>
         </View>
         <TextButton
-          text="Thanh toán"
+          text="Rút tiền"
           type="primary"
-          href="(main-features)/add-bank-item"
+          href="/withdraw-confirmation"
           disable={selectedBankId == '' || amount == ''}
         />
       </View>

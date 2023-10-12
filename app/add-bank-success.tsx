@@ -1,43 +1,34 @@
-import { MediumText } from '@/components/Themed'
+import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { Image, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-type AddBankScreenRouteParams = {
-  setDepositSuccessful: boolean
-}
-type NavigationProps = StackNavigationProp<any, 'load-money'>
-
 export default function AddBankSuccessScreen() {
-  const navigation = useNavigation<NavigationProps>()
-
-  const handleTextButtonClick = () => {
-    navigation.navigate('load-money', {
-      setDepositSuccessful: true
-    } as AddBankScreenRouteParams)
-  }
+  const router = useRouter()
 
   return (
     <SafeAreaView className="flex-1 px-4">
       <StatusBar style="auto" />
       <View className="flex-1 justify-center space-y-8">
         <Image
-          source={require('../assets/images/reset-mascot.png')}
-          className="w-[220px] h-[160px] mx-auto"
+          source={require('../assets/images/link-success.png')}
+          className="mx-auto"
         />
-        <MediumText className="text-2xl tracking-tight text-center text-secondary">
+        <MediumText className="text-2xl tracking-tight text-center text-primary">
           Liên kết thành công!
         </MediumText>
+        <NormalText className="text-tertiary mx-auto text-center w-3/4">
+          Bây giờ bạn có thể thực hiện các giao dịch một cách dễ dàng và tiện
+          lợi rồi.
+        </NormalText>
       </View>
-      <View className="w-full space-y-2 mb-10">
+      <View className="mb-10">
         <TextButton
           text="Nạp tiền ngay"
           type={TextButtonType.PRIMARY}
-          onPress={handleTextButtonClick}
+          onPress={() => router.push('/load-money')}
         />
       </View>
     </SafeAreaView>

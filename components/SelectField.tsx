@@ -30,7 +30,7 @@ export default function SelectField(props: SelectFieldProps) {
       <View>
         <View
           className={`w-6 h-6 rounded-full items-center justify-center ${
-            selectedBank == label ? 'bg-primary' : 'bg-tertiary'
+            selectedBank == label ? 'bg-primary' : 'bg-white'
           }`}
         >
           <View className="w-3 h-3 rounded-full bg-white" />

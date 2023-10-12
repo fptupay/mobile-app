@@ -1,11 +1,11 @@
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
-import Colors from '@/constants/Colors'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,23 +17,23 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function SignUpOtpScreen() {
+  const params: { previousRoute: string; nextRoute: any } =
+    useLocalSearchParams()
   const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
-
-  useEffect(() => {
-    setIsDisabled(otpCode.length < 6)
-  }, [otpCode])
 
   const handleClear = () => {
     otpInputRef.current?.clear()
+    setOtpCode('')
   }
 
   return (
-    <SafeAreaView className="flex-1">
-      <BackButton href="/(authentication)/phone-confirmation" />
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="ml-4">
+        <BackButton href={params.previousRoute} />
+      </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -42,9 +42,9 @@ export default function SignUpOtpScreen() {
         <StatusBar style="auto" />
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 pt-16 space-y-8">
+          <View className="flex-1 pt-10 space-y-8">
             <View>
-              <MediumText className="text-3xl text-left tracking-tighter">
+              <MediumText className="text-3xl text-left tracking-tighter text-secondary">
                 Nhập mã OTP
               </MediumText>
               <NormalText className="text-tertiary mt-1">
@@ -63,23 +63,17 @@ export default function SignUpOtpScreen() {
             </View>
 
             <View className="w-full mt-8 space-y-2">
-              <Pressable onPress={handleClear}>
+              <Pressable className="mb-5" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
-              <Pressable
-                disabled={isDisabled}
-                className="rounded-lg py-3 text-center w-full disabled:bg-gray-400"
-                style={{
-                  backgroundColor: isDisabled ? Colors.tertiary : Colors.primary
-                }}
-                onPress={() => router.push('/(authentication)/ekyc/ekyc-rule')}
-              >
-                <MediumText className="text-white text-center">
-                  Xác nhận
-                </MediumText>
-              </Pressable>
+              <TextButton
+                text="Xác nhận"
+                type={TextButtonType.PRIMARY}
+                disable={otpCode.length != 6}
+                onPress={() => router.push(params.nextRoute)}
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>
