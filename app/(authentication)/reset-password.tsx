@@ -16,8 +16,12 @@ import { Controller, useForm } from 'react-hook-form'
 import { PasswordSchema, passwordSchema } from '@/schemas/login-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useLocalSearchParams } from 'expo-router'
 
 export default function ResetPasswordScreen() {
+  const params: { previousRoute: string; nextRoute: any } =
+    useLocalSearchParams()
+
   const [clicked, setClicked] = useState(false)
   const {
     control,
@@ -112,7 +116,7 @@ export default function ResetPasswordScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/"
+                href={params.nextRoute}
               />
             </View>
           </View>

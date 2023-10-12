@@ -3,7 +3,7 @@ import { MediumText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
@@ -19,7 +19,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export default function SignUpOtpScreen() {
   const params: { previousRoute: string; nextRoute: any } =
     useLocalSearchParams()
-  const router = useRouter()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
@@ -72,7 +71,13 @@ export default function SignUpOtpScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 disable={otpCode.length != 6}
-                onPress={() => router.push(params.nextRoute)}
+                href={params.nextRoute}
+                previousRoute="/"
+                nextRoute={
+                  params.nextRoute == '/(authentication)/reset-password'
+                    ? '/'
+                    : '/(authentication)/ekyc/ekyc-rule'
+                }
               />
             </View>
           </View>
