@@ -15,6 +15,7 @@ export default function List({
         {data.map((item, index) => (
           <ListItem
             key={index}
+            href={item.href}
             leftIcon={item.leftIcon}
             title={item.title}
             description={item.description}
