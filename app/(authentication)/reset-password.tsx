@@ -4,55 +4,119 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
 
-import { MediumText } from '@/components/Themed'
-import BackButton from '@/components/buttons/BackButton'
+import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import TextField from '@/components/TextField'
+import { Controller, useForm } from 'react-hook-form'
+import { PasswordSchema, passwordSchema } from '@/schemas/login-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useLocalSearchParams } from 'expo-router'
 
 export default function ResetPasswordScreen() {
+  const params: { previousRoute: string; nextRoute: any } =
+    useLocalSearchParams()
+
+  const [clicked, setClicked] = useState(false)
+  const {
+    control,
+    formState: { errors, isValid }
+  } = useForm<PasswordSchema>({
+    defaultValues: {
+      password: '',
+      confirmPassword: ''
+    },
+    resolver: zodResolver(passwordSchema),
+    mode: 'onBlur'
+  })
+
   return (
-    <SafeAreaView className="flex-1 px-4">
-      <StatusBar style="auto" />
-
-      <BackButton href="/(authentication)/forget-password" />
-
+    <SafeAreaView className="flex-1">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 px-4"
       >
+        <StatusBar style="auto" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-center space-y-8">
+          <View className="flex-1 justify-center items-start">
             <Image
-              source={require('@/assets/images/reset-mascot.png')}
-              className="w-[198px] h-[145px] mx-auto"
+              source={require('@/assets/images/reset-password.png')}
+              className="w-[225px] h-[225px] mx-auto"
             />
-            <MediumText className="text-3xl tracking-tighter text-left">
-              Đặt lại mật khẩu
-            </MediumText>
-            <View className="w-full space-y-4">
-              <TextInput
-                className="h-12 px-4 py-3 border border-gray-300 rounded-lg  focus:border-primary"
-                placeholder="Mật khẩu mới"
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
-              <TextInput
-                className="h-12 px-4 py-3 border border-gray-300 rounded-lg bg-transparent focus:border-primary"
-                placeholder="Xác nhận mật khẩu"
-                secureTextEntry={true}
-                style={{ fontFamily: 'Inter' }}
-              />
+            <View>
+              <MediumText className="text-secondary text-3xl tracking-tighter text-left">
+                Đặt lại mật khẩu
+              </MediumText>
+              <NormalText className="text-tertiary mt-1">
+                Mật khẩu cần có ít nhất 6 ký tự, bao gồm cả chữ thường, chữ hoa
+                và chữ số.
+              </NormalText>
             </View>
-            <View className="w-full mt-8 space-y-2">
+            <View className="w-full mt-8 space-y-4">
+              <View>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Mật khẩu mới"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      style={{ fontFamily: 'Inter' }}
+                      returnKeyType="next"
+                      secureTextEntry={true}
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <NormalText className="text-red-500 mt-1">
+                    {errors.password.message}
+                  </NormalText>
+                )}
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextField
+                      label="Xác nhận mật khẩu"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      onFocus={() => setClicked(true)}
+                      style={{ fontFamily: 'Inter' }}
+                      returnKeyType="done"
+                      secureTextEntry={true}
+                    />
+                  )}
+                />
+                {!isValid &&
+                  (errors.confirmPassword ? (
+                    <NormalText className="text-red-500 mt-1">
+                      {errors.confirmPassword.message}
+                    </NormalText>
+                  ) : (
+                    clicked && (
+                      <NormalText className="text-red-500 mt-1">
+                        Mật khẩu không khớp
+                      </NormalText>
+                    )
+                  ))}
+              </View>
+            </View>
+            <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
+                disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/(authentication)"
+                href={params.nextRoute}
               />
             </View>
           </View>

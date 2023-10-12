@@ -11,46 +11,41 @@ import {
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
-import Toast from '@/components/Toast'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
-import { saveToken } from '@/utils/helper'
+import { getToken, saveToken } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-import * as LocalAuthentication from 'expo-local-authentication'
-import { Link, Redirect, useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import base64 from 'react-native-base64'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 export default function LoginScreen() {
+  const [isFirstLogin, setIsFirstLogin] = useState<string | null>(null)
+
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
-  const [toast, setToast] = useState({
-    visible: false,
-    type: 'warning',
-    label: ''
-  })
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    const auth = LocalAuthentication.authenticateAsync()
-    auth
-      .then((res) => {
-        if (res.success) {
-          setIsAuthenticated(true)
-        }
-      })
+    const checkFirstLogin = async () => {
+      // await deleteToken('first_login')
+      return await getToken('first_login')
+    }
+
+    checkFirstLogin()
+      .then((res) => setIsFirstLogin(res))
       .catch((err) => console.log(err))
   }, [])
 
   const {
     control,
     getValues,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<LoginFormSchema>({
     defaultValues: {
       username: '',
@@ -60,42 +55,56 @@ export default function LoginScreen() {
     mode: 'onBlur'
   })
 
-  const showToast = (type: string, label: string) => {
-    setToast({ visible: true, type, label })
-
-    setTimeout(() => {
-      setToast({ visible: false, type, label })
-    }, 3000)
-  }
-
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      saveToken({ key: 'access_token', value: data.data.access_token })
-        .then(() => router.push('/(account)/home'))
-        .catch((err) => console.log(err))
+      if (!isFirstLogin) {
+        saveToken({ key: 'first_login', value: 'true' })
+          .then(() => {
+            return saveToken({
+              key: 'access_token',
+              value: data.data.access_token
+            })
+          })
+          .then(() => router.push('/(authentication)/phone-confirmation'))
+          .catch((err) => console.log(err))
+      } else {
+        saveToken({ key: 'first_login', value: 'false' })
+          .then(() => {
+            return saveToken({
+              key: 'access_token',
+              value: data.data.access_token
+            })
+          })
+          .then(() => router.push('/(account)/home'))
+          .catch((err) => console.log(err))
+      }
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
-        showToast('alert', error.response?.data?.message)
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
       }
     }
   })
 
-  return !isAuthenticated ? (
-    <SafeAreaView className="flex-1 items-center relative bg-white">
-      <StatusBar style="dark" />
+  return (
+    <SafeAreaView className="flex-1 items-center relative">
+      <StatusBar style="auto" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 w-full px-4"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 items-center mt-20 space-y-8">
+          <View className="flex-1 items-center justify-center space-y-8">
             <View className="flex items-center">
               <Image
-                source={require('@/assets/images/login-mascot.png')}
-                className="w-[172px] h-[145px]"
+                source={require('@/assets/images/login-account.png')}
+                className="w-[215px] h-[160px]"
               />
               <MediumText className="text-3xl tracking-tighter text-center text-secondary">
                 Đăng nhập tài khoản{' '}
@@ -162,7 +171,7 @@ export default function LoginScreen() {
                 }
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
-                disable={loginMutation.isLoading}
+                disable={loginMutation.isLoading || !isValid}
                 loading={loginMutation.isLoading}
               />
               <Link
@@ -175,12 +184,6 @@ export default function LoginScreen() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-
-      {toast.visible && (
-        <Toast type={toast.type} label={toast.label} visible={toast.visible} />
-      )}
     </SafeAreaView>
-  ) : (
-    <Redirect href="/(account)/home" />
   )
 }
