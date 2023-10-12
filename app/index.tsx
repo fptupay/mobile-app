@@ -13,21 +13,34 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
-import { saveToken } from '@/utils/helper'
+import { getToken, saveToken } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import base64 from 'react-native-base64'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 
 export default function LoginScreen() {
+  const [isFirstLogin, setIsFirstLogin] = useState<string | null>(null)
+
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
+
+  useEffect(() => {
+    const checkFirstLogin = async () => {
+      // await deleteToken('first_login')
+      return await getToken('first_login')
+    }
+
+    checkFirstLogin()
+      .then((res) => setIsFirstLogin(res))
+      .catch((err) => console.log(err))
+  }, [])
 
   const {
     control,
@@ -45,9 +58,27 @@ export default function LoginScreen() {
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      saveToken({ key: 'access_token', value: data.data.access_token })
-        .then(() => router.push('/(authentication)/phone-confirmation'))
-        .catch((err) => console.log(err))
+      if (!isFirstLogin) {
+        saveToken({ key: 'first_login', value: 'true' })
+          .then(() => {
+            return saveToken({
+              key: 'access_token',
+              value: data.data.access_token
+            })
+          })
+          .then(() => router.push('/(authentication)/phone-confirmation'))
+          .catch((err) => console.log(err))
+      } else {
+        saveToken({ key: 'first_login', value: 'false' })
+          .then(() => {
+            return saveToken({
+              key: 'access_token',
+              value: data.data.access_token
+            })
+          })
+          .then(() => router.push('/(account)/home'))
+          .catch((err) => console.log(err))
+      }
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
