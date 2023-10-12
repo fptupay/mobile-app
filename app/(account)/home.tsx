@@ -209,13 +209,16 @@ export default function HomeScreen() {
                 Hôm nay
               </NormalText>
               <View className="flex-row">
-                <View className="mr-4">
+                <TouchableOpacity
+                  className="mr-4"
+                  onPress={() => router.push('/statistics/')}
+                >
                   <CustomIcon
                     name="BarChart"
                     size={24}
                     color={Colors.tertiary}
                   />
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={toggleSearch}>
                   <CustomIcon name="Search" size={24} color={Colors.tertiary} />
                 </TouchableOpacity>
@@ -262,7 +265,12 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity
                 className="flex-row justify-between items-center py-3"
-                onPress={() => router.push('/transfer')}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(transactions)/[id]',
+                    params: { id: item.id }
+                  } as any)
+                }
               >
                 <View className="flex-row items-center space-x-4">
                   <View className="w-10 h-10 rounded-full bg-gray-200"></View>

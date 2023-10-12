@@ -4,40 +4,37 @@ import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { WINDOW_HEIGHT } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
+import React from 'react'
 import { Image, View } from 'react-native'
 
-export default function TransferConfirmationScreen() {
+export default function PaymentSuccessScreen() {
   const transferDetail = [
     {
       title: 'Loại thanh toán',
-      content: 'Chuyển nhanh'
+      content: 'Học phí theo kỳ'
     },
     {
-      title: 'Người nhận',
-      content: 'HA GIA KINH'
+      title: 'Kỳ học',
+      content: 'Summer 2023'
     },
     {
-      title: 'MSSV',
-      content: 'HE150111'
-    },
-    {
-      title: 'Nội dung giao dịch',
-      content: 'Cam on nha'
+      title: 'Mã sinh viên',
+      content: 'HE160005'
     },
     {
       title: 'Thời gian giao dịch',
-      content: '19:44 - 01/01/2022'
+      content: '19:44 - 20/10/2023'
     },
     {
       title: 'Mã giao dịch',
-      content: '12345678904'
+      content: '123456789'
     }
   ]
 
   return (
     <View className="flex-1">
       <StatusBar style="auto" />
-      <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
+      <View style={{ height: WINDOW_HEIGHT * 0.2 }}>
         <GradientBackground />
         <View className="absolute right-6 top-16">
           <CustomIcon name="Share" color="#000" size={24} />
@@ -45,17 +42,17 @@ export default function TransferConfirmationScreen() {
       </View>
       <View
         className="absolute left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-start items-center"
-        style={{ top: WINDOW_HEIGHT * 0.2 }}
+        style={{ top: WINDOW_HEIGHT * 0.17 }}
       >
         <Image
-          source={require('../assets/images/tick-circle.png')}
+          source={require('../../assets/images/tick-circle.png')}
           className="w-[80px] h-[80px] mx-auto mt-[-40px]"
         />
-        <SemiText className="text-primary text-2xl text-center mt-5">
-          Chuyển tiền thành công!
+        <SemiText className="text-primary text-2xl text-center mt-4">
+          Giao dịch thành công!
         </SemiText>
-        <SemiText className="text-4xl text-secondary mt-7">-200.000 đ</SemiText>
-        <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
+        <SemiText className="text-4xl text-secondary mt-4">-200.000 đ</SemiText>
+        <View className="w-full h-px bg-gray-200 mt-5"></View>
         <View className="mt-5 w-full">
           {transferDetail.map((item, index) => (
             <View key={index} className="flex flex-row justify-between mb-4">
@@ -68,12 +65,7 @@ export default function TransferConfirmationScreen() {
           <TextButton
             text="Về trang chủ"
             type={TextButtonType.PRIMARY}
-            href="/transfer-list"
-          />
-          <TextButton
-            text="Lưu bạn bè"
-            type={TextButtonType.OUTLINE}
-            href="/(account)/home"
+            href="/home"
           />
         </View>
       </View>
