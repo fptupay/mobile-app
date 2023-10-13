@@ -2,34 +2,57 @@ import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { NormalText, SemiText, View } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { useState } from 'react'
+import { BankAccountSchema, bankAccountSchema } from '@/schemas/bank-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 export default function AddBankItemScreen() {
-  const [accountId, setAccountId] = useState('')
-  const [accountName, setAccountName] = useState('')
+  const {
+    control,
+    formState: { errors, isValid }
+  } = useForm<BankAccountSchema>({
+    defaultValues: {
+      accountNumber: ''
+    },
+    resolver: zodResolver(bankAccountSchema),
+    mode: 'onBlur'
+  })
 
   return (
-    <SharedLayout href="/load-money" title="Agribank">
+    <SharedLayout href="/add-bank" title="Agribank">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="pt-5 py-10 bg-transparent h-full flex flex-col justify-between">
+        <View className="py-5 bg-transparent h-full flex flex-col justify-between">
           <View className="bg-transparent">
             <View className="bg-transparent">
               <SemiText className="text-secondary">Thông tin liên kết</SemiText>
-              <TextField
-                label="Số thẻ/tài khoản"
-                className="my-5"
-                keyboardType="numeric"
-                value={accountId}
-                editable={true}
-                onChangeText={(text) => setAccountId(text)}
+              <Controller
+                control={control}
+                name="accountNumber"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextField
+                    label="Số thẻ/tài khoản"
+                    className="mt-5 mb-1"
+                    keyboardType="numeric"
+                    value={value}
+                    editable={true}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                  />
+                )}
               />
+              {errors.accountNumber && (
+                <NormalText className="text-red-500">
+                  {errors.accountNumber.message}
+                </NormalText>
+              )}
               <TextField
                 label="Chủ thẻ"
-                value={accountName}
-                editable={true}
-                onChangeText={(text) => setAccountName(text)}
+                value="CAO QUYNH ANH"
+                editable={false}
+                className="mt-5"
+                selectTextOnFocus={false}
               />
             </View>
           </View>
@@ -46,10 +69,10 @@ export default function AddBankItemScreen() {
               </NormalText>
             </View>
             <TextButton
-              href="/add-money-otp"
+              href="/(main-features)/add-money-otp"
               text="Liên kết ngay"
               type={TextButtonType.PRIMARY}
-              disable={accountId.length === 0 || accountName.length === 0}
+              disable={!isValid}
             />
           </View>
         </View>

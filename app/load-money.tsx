@@ -93,6 +93,7 @@ export default function LoadMoneyScreen() {
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
                 href="/add-bank"
+                previousRoute="/load-money"
               />
             </View>
           </View>
