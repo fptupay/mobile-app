@@ -9,11 +9,12 @@ interface IconButtonProps extends React.ComponentProps<typeof TextInput> {
   label: string
   href: any
   description?: string | null
+  previousRoute?: string
 }
 
 export default function IconButton(props: IconButtonProps) {
-  const { label, description, href, style, ...otherProps } = props
-  const router = useRouter()
+  const { label, description, href, style, previousRoute, ...otherProps } = props
+  const route = useRouter()
 
   return (
     <View
@@ -28,7 +29,18 @@ export default function IconButton(props: IconButtonProps) {
           <NormalText className="text-tertiary">{description}</NormalText>
         </View>
       </View>
-      <Pressable onPress={() => router.push(href)}>
+      <Pressable
+        onPress={() =>
+          previousRoute
+            ? route.push({
+              pathname: href,
+              params: {
+                previousRoute: previousRoute
+              }
+            })
+            : route.push(href)
+        }
+      >
         <ChevronRight size={24} color={Colors.secondary} />
       </Pressable>
     </View>

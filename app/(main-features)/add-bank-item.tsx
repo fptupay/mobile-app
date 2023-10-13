@@ -21,7 +21,7 @@ export default function AddBankItemScreen() {
   })
 
   return (
-    <SharedLayout href="/load-money" title="Agribank">
+    <SharedLayout href="/add-bank" title="Agribank">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="py-5 bg-transparent h-full flex flex-col justify-between">
           <View className="bg-transparent">
