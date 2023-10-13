@@ -5,7 +5,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
 
 import { useRouter } from 'expo-router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -20,14 +20,10 @@ export default function AddMoneyOtpScreen() {
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
-
-  useEffect(() => {
-    setIsDisabled(otpCode.length < 6)
-  }, [otpCode])
 
   const handleClear = () => {
     otpInputRef.current?.clear()
+    setOtpCode('')
   }
 
   return (
@@ -63,7 +59,7 @@ export default function AddMoneyOtpScreen() {
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
-                disable={isDisabled}
+                disable={otpCode.length != 6}
                 onPress={() => router.push('/add-bank-success')}
               />
             </View>
