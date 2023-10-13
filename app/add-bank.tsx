@@ -86,6 +86,10 @@ export default function AddBankScreen() {
   const [searchValue, setSearchValue] = useState('')
   const router = useRouter()
 
+  const filteredBankData = mockBankData.filter((item) =>
+    item.bank.toLowerCase().includes(searchValue.toLowerCase())
+  )
+
   const clearSearchValue = () => {
     setSearchValue('')
   }
@@ -116,17 +120,24 @@ export default function AddBankScreen() {
     return (
       <View className="w-full mt-5">
         <View className="px-4">
-          <FlatList
-            contentContainerStyle={{
-              paddingBottom: 180
-            }}
-            data={mockBankData.filter((item) =>
-              item.bank.toLowerCase().includes(searchValue.toLowerCase())
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            showsVerticalScrollIndicator={false}
-          />
+          {filteredBankData.length == 0 ? (
+            <View className="mt-10 flex justify-center items-center space-y-4">
+              <CustomIcon name="SearchX" color={Colors.tertiary} size={64} />
+              <SemiText className="text-lg text-tertiary">
+                Không tìm thấy kết quả nào
+              </SemiText>
+            </View>
+          ) : (
+            <FlatList
+              contentContainerStyle={{
+                paddingBottom: 180
+              }}
+              data={filteredBankData}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
       </View>
     )
