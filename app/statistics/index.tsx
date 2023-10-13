@@ -1,10 +1,16 @@
+import BottomSheet from '@/components/BottomSheet'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import Colors from '@/constants/Colors'
-import { WINDOW_WIDTH, convertDateFormat, formatMoney } from '@/utils/helper'
-import React, { useState } from 'react'
-import { FlatList, View } from 'react-native'
+import {
+  WINDOW_HEIGHT,
+  WINDOW_WIDTH,
+  convertDateFormat,
+  formatMoney
+} from '@/utils/helper'
+import React, { useRef, useState } from 'react'
+import { Animated, FlatList, Pressable, StyleSheet, View } from 'react-native'
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
 
 const expenses = [
@@ -158,8 +164,37 @@ export default function StatisticsScreen() {
     { key: 'first', title: 'Tổng chi' },
     { key: 'second', title: 'Tổng thu' }
   ])
+  const [isOpen, setIsOpen] = useState(false)
+  const offset = useRef(new Animated.Value(WINDOW_HEIGHT)).current
+
+  const toggleBottomSheet = () => {
+    setIsOpen(!isOpen)
+
+    if (isOpen) {
+      // Exiting animation
+      Animated.timing(offset, {
+        toValue: WINDOW_HEIGHT,
+        duration: 800,
+        useNativeDriver: true
+      }).start()
+    } else {
+      // Entering animation
+      Animated.timing(offset, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true
+      }).start()
+    }
+  }
+
   return (
     <SharedLayout title="Thống kê chi tiêu" href="/home">
+      <Pressable
+        className="text-tertiary uppercase"
+        onPress={toggleBottomSheet}
+      >
+        <NormalText>Lọc theo khoảng</NormalText>
+      </Pressable>
       <TabView
         navigationState={{ index, routes }}
         renderTabBar={renderedTabBar}
@@ -167,6 +202,21 @@ export default function StatisticsScreen() {
         onIndexChange={setIndex}
         initialLayout={{ width: WINDOW_WIDTH }}
       />
+      <Animated.View
+        className="bg-white absolute bottom-0 left-0 z-10 p-4 h-64 shadow-xl shadow-gray-600"
+        style={[styles.bottomSheet, { transform: [{ translateY: offset }] }]}
+      >
+        <BottomSheet onPick={() => toggleBottomSheet()} />
+      </Animated.View>
     </SharedLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  bottomSheet: {
+    width: WINDOW_WIDTH,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    elevation: 10
+  }
+})
