@@ -24,6 +24,7 @@ const walletFunctions: ListItemProps[] = [
     color: '#000000',
     title: 'Nạp tiền',
     description: 'Từ ngân hàng vào FPTU Pay',
+    href: '/load-money',
     rightIcon: 'ChevronRight'
   },
   {
@@ -31,6 +32,7 @@ const walletFunctions: ListItemProps[] = [
     title: 'Chuyển tiền',
     color: '#000000',
     description: 'Từ FPTU Pay tới FPT Academy',
+    href: '/transfer-list',
     rightIcon: 'ChevronRight'
   }
 ]
@@ -39,21 +41,13 @@ const accountDetail: ListItemProps[] = [
   {
     leftIcon: 'User',
     color: '#F97316',
-    title: 'Cao Quynh Anh'
-  },
-  {
-    leftIcon: 'Phone',
-    color: '#EF5A20',
-    title: '+84 87259892'
-  },
-  {
-    leftIcon: 'AtSign',
-    color: '#8095A8',
-    title: 'caoquynhanh@gmail.com'
+    href: '/personal-info',
+    title: 'Thông tin cá nhân'
   },
   {
     leftIcon: 'Landmark',
     color: '#3074E3',
+    href: '/bank',
     title: 'Ngân hàng đã liên kết'
   }
 ]
@@ -62,16 +56,19 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'Lock',
     color: '#A983FC',
+    href: '/(authentication)/reset-password',
     title: 'Đổi mật khẩu'
   },
   {
     leftIcon: 'MessageSquare',
     color: '#35CC9F',
+    href: '/(account)/help-center',
     title: 'Hỗ trợ'
   },
   {
     leftIcon: 'Settings',
     color: '#CCA967',
+    href: '/load-money',
     title: 'Cài đặt'
   }
 ]

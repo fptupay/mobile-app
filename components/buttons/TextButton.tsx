@@ -23,6 +23,8 @@ type TextButtonProps = {
   onPress?: () => void
   disable?: boolean
   loading?: boolean
+  previousRoute?: string
+  nextRoute?: string
 }
 
 function TextComponent({
@@ -86,6 +88,8 @@ export default function TextButton({
   type,
   onPress,
   disable,
+  previousRoute,
+  nextRoute,
   loading
 }: TextButtonProps) {
   const route = useRouter()
@@ -106,7 +110,17 @@ export default function TextButton({
         {href ? (
           <Pressable
             disabled={disable}
-            onPress={() => route.push(href)}
+            onPress={() =>
+              previousRoute && nextRoute
+                ? route.push({
+                  pathname: href,
+                  params: {
+                    previousRoute: previousRoute,
+                    nextRoute: nextRoute
+                  }
+                })
+                : route.push(href)
+            }
             className="flex items-center w-full"
           >
             <TextComponent text={text} type={type} loading={loading} />

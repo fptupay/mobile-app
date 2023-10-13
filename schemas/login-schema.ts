@@ -1,5 +1,20 @@
 import { z } from 'zod'
 
+export const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,}$/, 'Mật khẩu không hợp lệ')
+      .trim(),
+    confirmPassword: z
+      .string()
+      .regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,}$/, 'Mật khẩu không hợp lệ')
+      .trim()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Mật khẩu không khớp'
+  })
+
 export const loginFormSchema = z.object({
   username: z
     .string()
@@ -16,3 +31,4 @@ export const loginFormSchema = z.object({
 })
 
 export type LoginFormSchema = z.infer<typeof loginFormSchema>
+export type PasswordSchema = z.infer<typeof passwordSchema>
