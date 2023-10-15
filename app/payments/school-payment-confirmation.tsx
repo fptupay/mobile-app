@@ -11,7 +11,7 @@ export default function SchoolPaymentConfirmationScreen() {
 
   return (
     <>
-      <SharedLayout title="Xác nhận thông tin" href="/payments">
+      <SharedLayout title="Xác nhận thông tin" href="/account/payments">
         {/* Header */}
         <View className="mt-4 flex items-center">
           <NormalText className="text-tertiary">Số tiền nộp</NormalText>
@@ -106,7 +106,11 @@ export default function SchoolPaymentConfirmationScreen() {
                 />
               </View>
               <View className="flex-1">
-                <TextButton text="Nạp tiền" type="primary" href="/load-money" />
+                <TextButton
+                  text="Nạp tiền"
+                  type="primary"
+                  href="/main-features/(deposit)/load-money"
+                />
               </View>
             </View>
           </Modal.Body>

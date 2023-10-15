@@ -31,59 +31,58 @@ type BankItemProp = {
 const mockBankData: BankItemProp[] = [
   {
     id: 1,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 2,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 3,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 4,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 5,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 6,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 7,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 8,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 9,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   },
   {
     id: 10,
-    icon: require('../assets/images/tick.png'),
+    icon: require('@/assets/images/tick.png'),
     bank: 'Agribank'
   }
 ]
 
 export default function AddBankScreen() {
   const params: { previousRoute: string } = useLocalSearchParams()
-  console.log(params)
   const [searchValue, setSearchValue] = useState('')
   const router = useRouter()
 
@@ -108,7 +107,14 @@ export default function AddBankScreen() {
         </View>
         <View>
           <Pressable
-            onPress={() => router.push('/(main-features)/add-bank-item')}
+            onPress={() =>
+              router.push({
+                pathname: '/main-features/(bank)/add-bank-item',
+                params: {
+                  previousRoute: params.previousRoute
+                }
+              })
+            }
           >
             <ChevronRight size={24} color={Colors.secondary} />
           </Pressable>
@@ -146,7 +152,7 @@ export default function AddBankScreen() {
 
   return (
     <SharedLayout
-      href={params.previousRoute || '/(account)/home'}
+      href={params.previousRoute || '/account/home'}
       title="Liên kết ngân hàng"
     >
       <View className="py-4 flex-1 flex-col justify-start gap-y-5">

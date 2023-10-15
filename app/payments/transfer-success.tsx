@@ -53,10 +53,14 @@ export default function TransferSuccessScreen() {
 
       {/* Buttons */}
       <View className="mt-auto">
-        <TextButton text="Về trang chủ" type="primary" href="/transfer" />
+        <TextButton text="Về trang chủ" type="primary" href="/account/home" />
       </View>
       <View className="mt-2 mb-4">
-        <TextButton text="Lưu bạn bè" type="secondary" href="/(account)" />
+        <TextButton
+          text="Lưu bạn bè"
+          type="secondary"
+          href="/transfer/transfer-list"
+        />
       </View>
     </SharedLayout>
   )

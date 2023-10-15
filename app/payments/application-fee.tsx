@@ -44,7 +44,7 @@ export default function ApplicationsScreen() {
   }
 
   return (
-    <SharedLayout title="Các khoản phí khác" href="/payments">
+    <SharedLayout title="Các khoản phí khác" href="/account/payments">
       <View className="mt-6 mb-4">
         <TextField
           label="Tìm kiếm loại đơn"

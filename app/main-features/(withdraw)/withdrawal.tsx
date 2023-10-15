@@ -57,7 +57,7 @@ export default function WithdrawalScreen() {
         onPress={onPress}
       >
         <View className="flex-row items-center gap-3">
-          <Image source={require('../assets/images/techcombank.png')} />
+          <Image source={require('@/assets/images/techcombank.png')} />
           <View>
             <MediumText className="text-secondary capitalize">
               {item.name}
@@ -77,7 +77,7 @@ export default function WithdrawalScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)/home" title="Rút tiền">
+    <SharedLayout href="/account/home" title="Rút tiền">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -112,8 +112,8 @@ export default function WithdrawalScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/add-bank"
-                previousRoute="/withdrawal"
+                href="/main-features/(bank)/add-bank"
+                previousRoute="/main-features/(withdraw)/withdrawal"
               />
             </View>
           </View>
@@ -122,7 +122,7 @@ export default function WithdrawalScreen() {
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
           <Image
-            source={require('../assets/images/tick.png')}
+            source={require('@/assets/images/tick.png')}
             className="w-6 h-6"
           />
           <NormalText className="text-tertiary flex-1 text-xs">
@@ -133,7 +133,7 @@ export default function WithdrawalScreen() {
         <TextButton
           text="Rút tiền"
           type="primary"
-          href="/withdraw-confirmation"
+          href="/main-features/(withdraw)/withdraw-confirmation"
           disable={selectedBankId == '' || amount == ''}
         />
       </View>

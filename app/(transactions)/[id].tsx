@@ -50,7 +50,7 @@ export default function TransactionDetailScreen() {
           text="Trợ giúp"
           type="primary"
           onPress={() => {
-            router.push('/help-center/create-request')
+            router.push('/account/help-center/create-request')
           }}
         />
       </View>

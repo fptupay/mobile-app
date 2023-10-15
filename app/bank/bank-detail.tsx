@@ -57,13 +57,13 @@ export default function BankDetailScreen() {
   }
 
   return (
-    <SharedLayout href="/bank" title="Thông tin liên kết">
+    <SharedLayout href="/bank/bank-list" title="Thông tin liên kết">
       <View className="py-4 bg-transparent flex-1 flex-col justify-between">
         <View className="bg-transparent">
           <View className=" w-full h-[225px] bg-[#FF8E3A] relative p-3 rounded-lg">
             <View className="absolute flex flex-row justify-between items-center p-3">
               <Image
-                source={require('../assets/images/techcombank.png')}
+                source={require('@/assets/images/techcombank.png')}
                 className=" h-10 w-10 mx-auto"
               />
               <MediumText className="tracking-tight text-center text-white ml-3 text-xl">
@@ -148,7 +148,7 @@ export default function BankDetailScreen() {
                   <TextButton
                     text="Có"
                     type={TextButtonType.PRIMARY}
-                    href="/(account)/my-wallet"
+                    href="/account/my-wallet"
                   />
                 </View>
               </View>

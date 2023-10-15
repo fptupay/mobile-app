@@ -45,7 +45,7 @@ export default function PaymentSuccessScreen() {
         style={{ top: WINDOW_HEIGHT * 0.17 }}
       >
         <Image
-          source={require('../../assets/images/tick-circle.png')}
+          source={require('@/assets/images/tick-circle.png')}
           className="w-[80px] h-[80px] mx-auto mt-[-40px]"
         />
         <SemiText className="text-primary text-2xl text-center mt-4">
@@ -65,7 +65,7 @@ export default function PaymentSuccessScreen() {
           <TextButton
             text="Về trang chủ"
             type={TextButtonType.PRIMARY}
-            href="/home"
+            href="/account/home"
           />
         </View>
       </View>

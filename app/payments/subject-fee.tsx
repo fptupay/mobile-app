@@ -88,7 +88,7 @@ export default function SubjectsScreen() {
   }
 
   return (
-    <SharedLayout title="Đăng ký môn học" href="/payments">
+    <SharedLayout title="Đăng ký môn học" href="/account/payments">
       <View className="mt-6 mb-4">
         <TextField
           label="Tìm kiếm mã môn học"

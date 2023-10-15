@@ -21,7 +21,7 @@ export default function AddBankItemScreen() {
   })
 
   return (
-    <SharedLayout href="/add-bank" title="Agribank">
+    <SharedLayout href="/main-features/(bank)/add-bank" title="Agribank">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="py-5 bg-transparent h-full flex flex-col justify-between">
           <View className="bg-transparent">
@@ -60,7 +60,7 @@ export default function AddBankItemScreen() {
           <View className="bg-transparent">
             <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
               <Image
-                source={require('../../assets/images/tick.png')}
+                source={require('@/assets/images/tick.png')}
                 className="w-6 h-6"
               />
               <NormalText className="text-tertiary flex-1 text-xs">
@@ -69,10 +69,12 @@ export default function AddBankItemScreen() {
               </NormalText>
             </View>
             <TextButton
-              href="/(main-features)/add-money-otp"
+              href="/main-features/otp"
               text="Liên kết ngay"
               type={TextButtonType.PRIMARY}
               disable={!isValid}
+              previousRoute="/main-features/(deposit)/load-money"
+              nextRoute="/main-features/(bank)/add-bank-success"
             />
           </View>
         </View>

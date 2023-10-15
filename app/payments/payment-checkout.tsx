@@ -30,7 +30,7 @@ export default function PaymentCheckoutScreen() {
     if (currentBalance < totalPayment) {
       setDepositSuccessfulVisible(true)
     }
-    router.push('/(main-features)/add-money-otp')
+    router.push('/main-features/otp')
   }
 
   const paymentItems: PaymentItemProps[] = [
@@ -92,7 +92,7 @@ export default function PaymentCheckoutScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)" title="Thanh toán">
+    <SharedLayout href="/account" title="Thanh toán">
       <View className="py-5 h-full flex flex-col justify-between">
         <View className="flex flex-row justify-between items-baseline border-b border-gray-300 pb-4">
           <NormalText className="text-secondary">
@@ -154,7 +154,7 @@ export default function PaymentCheckoutScreen() {
                   <TextButton
                     text="Huỷ"
                     type={TextButtonType.SECONDARY}
-                    href="/(account)/payments"
+                    href="/account/payments"
                   />
                 </View>
                 <View className="flex-1 ml-4">

@@ -4,7 +4,7 @@ import { WINDOW_HEIGHT } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { Image, View } from 'react-native'
 
-export default function WithdrawConfirmationScreen() {
+export default function DepositConfirmationScreen() {
   const transferDetail = [
     {
       title: 'Số dư ví',
@@ -28,14 +28,14 @@ export default function WithdrawConfirmationScreen() {
         style={{ top: WINDOW_HEIGHT * 0.2 }}
       >
         <Image
-          source={require('../assets/images/tick-circle.png')}
+          source={require('@/assets/images/tick-circle.png')}
           className="w-[150px] h-[150px] mx-auto mt-[-40px]"
         />
         <SemiText className="text-primary text-2xl text-center mt-5">
-          Rút tiền thành công!
+          Nạp tiền thành công!
         </SemiText>
         <NormalText className="text-tertiary mt-4 text-center">
-          Bạn đã chuyển thành công 100.000đ về tài khoản ngân hàng Techcombank
+          Bạn đã nạp thành công 100.000đ vào ví FPTUPay
         </NormalText>
         <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
         <View className="mt-5 w-full">
@@ -50,7 +50,7 @@ export default function WithdrawConfirmationScreen() {
           <TextButton
             text="Về trang chủ"
             type={TextButtonType.PRIMARY}
-            href="/(account)/home"
+            href="/account/home"
           />
         </View>
       </View>

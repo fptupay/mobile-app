@@ -51,7 +51,7 @@ export default function FaceAuthenticatorScreen() {
   const faceAuthenticationMutation = useMutation({
     mutationFn: (data: any) => ekycSelfie(data, ekycId),
     onSuccess: () => {
-      router.push('/(account)/home')
+      router.push('/account/home')
     },
     onError: (error) => {
       if (isAxiosError(error)) {

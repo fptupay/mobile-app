@@ -1,10 +1,10 @@
 import { OtpInput } from '@/components/OtpInput'
-import { MediumText, NormalText } from '@/components/Themed'
-import BackButton from '@/components/buttons/BackButton'
+import SharedLayout from '@/components/SharedLayout'
+import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useLocalSearchParams } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import {
   Keyboard,
@@ -14,11 +14,10 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function SignUpOtpScreen() {
-  const params: { previousRoute: string; nextRoute: any } =
-    useLocalSearchParams()
+export default function OtpScreen() {
+  const router = useRouter()
+  const params: { nextRoute: any } = useLocalSearchParams()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
@@ -29,23 +28,14 @@ export default function SignUpOtpScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="ml-4">
-        <BackButton href={params.previousRoute} />
-      </View>
-
+    <SharedLayout href="/account/home" title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
       >
-        <StatusBar style="auto" />
-
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 pt-10 space-y-8">
+          <View className="flex-1 pt-8 space-y-8">
             <View>
-              <MediumText className="text-3xl text-left tracking-tighter text-secondary">
-                Nhập mã OTP
-              </MediumText>
               <NormalText className="text-tertiary mt-1">
                 Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
               </NormalText>
@@ -62,7 +52,7 @@ export default function SignUpOtpScreen() {
             </View>
 
             <View className="w-full mt-8 space-y-2">
-              <Pressable className="mb-5" onPress={handleClear}>
+              <Pressable className="mb-3" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
@@ -71,18 +61,12 @@ export default function SignUpOtpScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 disable={otpCode.length != 6}
-                href={params.nextRoute}
-                previousRoute="/"
-                nextRoute={
-                  params.nextRoute == '/(authentication)/reset-password'
-                    ? '/'
-                    : '/(authentication)/ekyc/ekyc-rule'
-                }
+                onPress={() => router.push(params.nextRoute)}
               />
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </SharedLayout>
   )
 }

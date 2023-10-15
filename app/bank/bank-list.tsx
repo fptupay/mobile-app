@@ -8,31 +8,31 @@ const bankList = [
     id: '1',
     label: 'Agribank',
     description: '1,900,000 VNĐ',
-    href: '/bank-detail'
+    href: '/bank/bank-detail'
   },
   {
     id: '2',
     label: 'Agribank',
     description: '1,900,000 VNĐ',
-    href: '/bank-detail'
+    href: '/bank/bank-detail'
   },
   {
     id: '3',
     label: 'Agribank',
     description: '1,900,000 VNĐ',
-    href: '/bank-detail'
+    href: '/bank/bank-detail'
   },
   {
     id: '4',
     label: 'Agribank',
     description: '1,900,000 VNĐ',
-    href: '/bank-detail'
+    href: '/bank/bank-detail'
   }
 ]
 
-export default function BankScreen() {
+export default function BankListScreen() {
   return (
-    <SharedLayout href="/(account)/my-wallet" title="Danh sách liên kết">
+    <SharedLayout href="/account/my-wallet" title="Danh sách liên kết">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <View className="bg-transparent">
           <FlatList
@@ -40,7 +40,7 @@ export default function BankScreen() {
             keyExtractor={(item) => item.id}
             renderItem={(item) => (
               <BankButton
-                image={require('../assets/images/techcombank.png')}
+                image={require('@/assets/images/techcombank.png')}
                 label={item.item.label}
                 description={item.item.description}
                 href={item.item.href}
@@ -48,9 +48,9 @@ export default function BankScreen() {
             )}
           />
           <BankButton
-            image={require('../assets/images/add-bank.png')}
+            image={require('@/assets/images/add-bank.png')}
             label="Thêm ngân hàng"
-            href="/add-bank"
+            href="/main-features/(bank)/add-bank"
           />
         </View>
       </View>

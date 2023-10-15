@@ -30,7 +30,7 @@ export default function DormitoryFeeScreen() {
   }
 
   return (
-    <SharedLayout title="Ký túc xá" href="/payments">
+    <SharedLayout title="Ký túc xá" href="/account/payments">
       <View className="mt-4">
         <MediumText>Lựa chọn loại phòng</MediumText>
 

@@ -79,7 +79,7 @@ export default function PhoneConfirmationScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/(authentication)/otp"
+                href="/authentication/otp"
                 previousRoute="phone-confirmation"
                 nextRoute="reset-password"
               />

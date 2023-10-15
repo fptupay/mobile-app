@@ -48,7 +48,7 @@ export default function TransferConfirmationScreen() {
         style={{ top: WINDOW_HEIGHT * 0.2 }}
       >
         <Image
-          source={require('../assets/images/tick-circle.png')}
+          source={require('@/assets/images/tick-circle.png')}
           className="w-[80px] h-[80px] mx-auto mt-[-40px]"
         />
         <SemiText className="text-primary text-2xl text-center mt-5">
@@ -68,12 +68,12 @@ export default function TransferConfirmationScreen() {
           <TextButton
             text="Về trang chủ"
             type={TextButtonType.PRIMARY}
-            href="/transfer-list"
+            href="/account/home"
           />
           <TextButton
             text="Lưu bạn bè"
             type={TextButtonType.OUTLINE}
-            href="/(account)/home"
+            href="/transfer/transfer-list"
           />
         </View>
       </View>

@@ -66,7 +66,7 @@ export default function LoginScreen() {
               value: data.data.access_token
             })
           })
-          .then(() => router.push('/(authentication)/phone-confirmation'))
+          .then(() => router.push('/authentication/phone-confirmation'))
           .catch((err) => console.log(err))
       } else {
         saveToken({ key: 'first_login', value: 'false' })
@@ -76,7 +76,7 @@ export default function LoginScreen() {
               value: data.data.access_token
             })
           })
-          .then(() => router.push('/(account)/home'))
+          .then(() => router.push('/account/home'))
           .catch((err) => console.log(err))
       }
     },
@@ -175,7 +175,7 @@ export default function LoginScreen() {
                 loading={loginMutation.isLoading}
               />
               <Link
-                href="/(authentication)/forget-password"
+                href="/authentication/forget-password"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

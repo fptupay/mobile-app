@@ -24,7 +24,7 @@ const walletFunctions: ListItemProps[] = [
     color: '#000000',
     title: 'Nạp tiền',
     description: 'Từ ngân hàng vào FPTU Pay',
-    href: '/load-money',
+    href: '/main-features/(deposit)/load-money',
     rightIcon: 'ChevronRight'
   },
   {
@@ -32,7 +32,7 @@ const walletFunctions: ListItemProps[] = [
     title: 'Chuyển tiền',
     color: '#000000',
     description: 'Từ FPTU Pay tới FPT Academy',
-    href: '/transfer-list',
+    href: '/transfer/transfer-list',
     rightIcon: 'ChevronRight'
   }
 ]
@@ -47,7 +47,7 @@ const accountDetail: ListItemProps[] = [
   {
     leftIcon: 'Landmark',
     color: '#3074E3',
-    href: '/bank',
+    href: '/bank/bank-list',
     title: 'Ngân hàng đã liên kết'
   }
 ]
@@ -56,19 +56,19 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'Lock',
     color: '#A983FC',
-    href: '/(authentication)/reset-password',
+    href: '/authentication/reset-password',
     title: 'Đổi mật khẩu'
   },
   {
     leftIcon: 'MessageSquare',
     color: '#35CC9F',
-    href: '/(account)/help-center',
+    href: '/account/help-center',
     title: 'Hỗ trợ'
   },
   {
     leftIcon: 'Settings',
     color: '#CCA967',
-    href: '/load-money',
+    href: '/main-features/(deposit)/load-money',
     title: 'Cài đặt'
   }
 ]
@@ -116,7 +116,7 @@ const DynamicHeader = ({ value }: any) => {
         >
           <Image
             className="rounded-full w-[72px] h-[72px] bg-black"
-            source={require('../../assets/images/account-mascot.png')}
+            source={require('@/assets/images/account-mascot.png')}
           />
           <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
             <CustomIcon name="Pencil" color="black" size={16} />

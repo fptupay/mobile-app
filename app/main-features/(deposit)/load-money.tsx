@@ -44,7 +44,7 @@ export default function LoadMoneyScreen() {
   }
 
   return (
-    <SharedLayout href="/(account)/home" title="Nạp tiền">
+    <SharedLayout href="/account/home" title="Nạp tiền">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -92,8 +92,8 @@ export default function LoadMoneyScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/add-bank"
-                previousRoute="/load-money"
+                href="/main-features/(bank)/add-bank"
+                previousRoute="/main-features/(deposit)/load-money"
               />
             </View>
           </View>
@@ -102,7 +102,7 @@ export default function LoadMoneyScreen() {
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
           <Image
-            source={require('../assets/images/tick.png')}
+            source={require('@/assets/images/tick.png')}
             className="w-6 h-6"
           />
           <NormalText className="text-tertiary flex-1 text-xs">
@@ -113,7 +113,7 @@ export default function LoadMoneyScreen() {
         <TextButton
           text="Nạp tiền"
           type={TextButtonType.PRIMARY}
-          href="/deposit-confirmation"
+          href="/main-features/(deposit)/deposit-confirmation"
           disable={selectedBank == '' || amount == ''}
         />
       </View>

@@ -83,9 +83,9 @@ export default function ForgetPasswordScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/(authentication)/otp"
-                previousRoute="/(authentication)/forget-password"
-                nextRoute="/(authentication)/reset-password"
+                href="/authentication/otp"
+                previousRoute="/authentication/forget-password"
+                nextRoute="/authentication/reset-password"
               />
             </View>
           </View>
