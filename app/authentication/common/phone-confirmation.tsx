@@ -79,9 +79,9 @@ export default function PhoneConfirmationScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/authentication/otp"
-                previousRoute="phone-confirmation"
-                nextRoute="reset-password"
+                href="/authentication/common/otp"
+                previousRoute="/authentication/common/phone-confirmation"
+                nextRoute="/authentication/init/ekyc/ekyc-rule"
               />
             </View>
           </View>

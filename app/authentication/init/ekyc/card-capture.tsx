@@ -65,7 +65,7 @@ export default function EkycCameraScreen() {
       return ekycBack(data, ekycId)
     },
     onSuccess: () => {
-      router.push('/ekyc/face-authenticator')
+      router.push('/authentication/(init)/ekyc/face-authenticator')
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {

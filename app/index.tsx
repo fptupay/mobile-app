@@ -12,7 +12,7 @@ import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
+import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
 import { getToken, saveToken } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
@@ -33,7 +33,6 @@ export default function LoginScreen() {
 
   useEffect(() => {
     const checkFirstLogin = async () => {
-      // await deleteToken('first_login')
       return await getToken('first_login')
     }
 
@@ -58,7 +57,7 @@ export default function LoginScreen() {
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      if (!isFirstLogin) {
+      if (isFirstLogin) {
         saveToken({ key: 'first_login', value: 'true' })
           .then(() => {
             return saveToken({
@@ -66,7 +65,12 @@ export default function LoginScreen() {
               value: data.data.access_token
             })
           })
-          .then(() => router.push('/authentication/phone-confirmation'))
+          .then(() =>
+            router.push({
+              pathname: '/authentication/init/change-password',
+              params: { username: getValues('username') }
+            })
+          )
           .catch((err) => console.log(err))
       } else {
         saveToken({ key: 'first_login', value: 'false' })
@@ -175,7 +179,7 @@ export default function LoginScreen() {
                 loading={loginMutation.isLoading}
               />
               <Link
-                href="/authentication/forget-password"
+                href="/authentication/forget-password/forget-password"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

@@ -13,10 +13,11 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
 import { Controller, useForm } from 'react-hook-form'
-import { PasswordSchema, passwordSchema } from '@/schemas/login-schema'
+import { PasswordSchema, passwordSchema } from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useLocalSearchParams } from 'expo-router'
+import BackButton from '@/components/buttons/BackButton'
 
 export default function ResetPasswordScreen() {
   const params: { previousRoute: string; nextRoute: any } =
@@ -37,6 +38,10 @@ export default function ResetPasswordScreen() {
 
   return (
     <SafeAreaView className="flex-1">
+      <View className="ml-4">
+        <BackButton />
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
