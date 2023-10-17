@@ -21,7 +21,6 @@ import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import base64 from 'react-native-base64'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 
@@ -170,7 +169,7 @@ export default function LoginScreen() {
                 onPress={() =>
                   loginMutation.mutate({
                     username: getValues('username'),
-                    password: base64.encode(getValues('password'))
+                    password: getValues('password')
                   })
                 }
                 text="Đăng nhập"

@@ -20,7 +20,6 @@ import { useMutation } from '@tanstack/react-query'
 import { changePasswordInit } from '@/api/authentication'
 import { isAxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
-import base64 from 'react-native-base64'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { validResponseStatus } from '@/utils/helper'
 
@@ -154,8 +153,8 @@ export default function ChangePasswordScreen() {
                 onPress={() =>
                   passwordMutation.mutate({
                     username: getValues().username,
-                    old_password: base64.encode(getValues().old_password),
-                    new_password: base64.encode(getValues().new_password)
+                    old_password: getValues().old_password,
+                    new_password: getValues().new_password
                   })
                 }
               />
