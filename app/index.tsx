@@ -77,6 +77,12 @@ export default function LoginScreen() {
                 value: data.data.access_token
               })
             })
+            .then(() => {
+              return saveToken({
+                key: 'refresh_token',
+                value: data.data.refresh_token
+              })
+            })
             .then(() =>
               router.push({
                 pathname: '/authentication/init/change-password',
@@ -90,6 +96,12 @@ export default function LoginScreen() {
               return saveToken({
                 key: 'access_token',
                 value: data.data.access_token
+              })
+            })
+            .then(() => {
+              return saveToken({
+                key: 'refresh_token',
+                value: data.data.refresh_token
               })
             })
             .then(() => router.push('/account/home'))
