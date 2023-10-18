@@ -70,26 +70,26 @@ export default function LoginScreen() {
           })
           .then(() => {
             switch (data.data.user_status) {
-              case 'INIT':
+              case 'INIT': //0
                 router.push({
                   pathname: '/authentication/init/change-password',
                   params: { username: getValues('username') }
                 })
                 break
-              case 'ACTIVE':
+              case 'ACTIVE': //1
                 router.push('/account/home')
                 break
-              case 'INACTIVE':
+              case 'INACTIVE': //2
                 Toast.show({
                   type: 'error',
                   text1: 'Đã có lỗi xảy ra',
                   text2: 'Tài khoản của bạn hiện chưa được kích hoạt'
                 })
                 break
-              case 'PENDING_CONFIRM_PHONE':
+              case 'PENDING_CONFIRM_PHONE': //3
                 router.push('/authentication/common/phone-confirmation')
                 break
-              case 'PENDING_EKYC':
+              case 'PENDING_EKYC': //4
                 router.push('/authentication/init/ekyc/ekyc-rule')
                 break
               default:
