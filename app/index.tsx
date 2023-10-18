@@ -41,67 +41,63 @@ export default function LoginScreen() {
     mode: 'onBlur'
   })
 
-  const loginMutation = useMutation({
-    mutationFn: (data: LoginFormSchema) => loginUser(data),
-    onSuccess: (data) => {
-      if (!successResponseStatus(data)) {
-        console.log('fail', data)
+  const navigateBasedOnStatus = (status: string, username: string) => {
+    switch (status) {
+      case 'INIT': //0
+        router.push({
+          pathname: '/authentication/init/change-password',
+          params: { username }
+        })
+        break
+      case 'ACTIVE': //1
+        router.push('/account/home')
+        break
+      case 'INACTIVE': //2
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
-          text2: data.message
+          text2: 'Tài khoản của bạn hiện chưa được kích hoạt'
         })
-      } else {
+        break
+      case 'PENDING_CONFIRM_PHONE': //3
+        router.push('/authentication/common/phone-confirmation')
+        break
+      case 'PENDING_EKYC': //4
+        router.push('/authentication/init/ekyc/ekyc-rule')
+        break
+      default:
         Toast.show({
-          type: 'success',
-          text1: 'Thành công',
-          text2: 'Đăng nhập thành công'
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: 'Xin vui lòng thử lại sau'
         })
+        break
+    }
+  }
 
-        saveToken({
-          key: 'access_token',
-          value: data.data.access_token
-        })
-          .then(() => {
-            return saveToken({
-              key: 'refresh_token',
-              value: data.data.refresh_token
-            })
+  const loginMutation = useMutation({
+    mutationFn: (data: LoginFormSchema) => loginUser(data),
+    onSuccess: async (data) => {
+      try {
+        if (successResponseStatus(data)) {
+          await saveToken({
+            key: 'access_token',
+            value: data.data.access_token
           })
-          .then(() => {
-            switch (data.data.user_status) {
-              case 'INIT': //0
-                router.push({
-                  pathname: '/authentication/init/change-password',
-                  params: { username: getValues('username') }
-                })
-                break
-              case 'ACTIVE': //1
-                router.push('/account/home')
-                break
-              case 'INACTIVE': //2
-                Toast.show({
-                  type: 'error',
-                  text1: 'Đã có lỗi xảy ra',
-                  text2: 'Tài khoản của bạn hiện chưa được kích hoạt'
-                })
-                break
-              case 'PENDING_CONFIRM_PHONE': //3
-                router.push('/authentication/common/phone-confirmation')
-                break
-              case 'PENDING_EKYC': //4
-                router.push('/authentication/init/ekyc/ekyc-rule')
-                break
-              default:
-                Toast.show({
-                  type: 'error',
-                  text1: 'Đã có lỗi xảy ra',
-                  text2: 'Xin vui lòng thử lại sau'
-                })
-                break
-            }
+          await saveToken({
+            key: 'refresh_token',
+            value: data.data.refresh_token
           })
-          .catch((err) => console.log(err))
+          navigateBasedOnStatus(data.data.user_status, getValues('username'))
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: data.message
+          })
+        }
+      } catch (error) {
+        console.error(error)
       }
     },
     onError: (error: Error) => {
