@@ -21,7 +21,7 @@ import { changePasswordInit } from '@/api/authentication'
 import { isAxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { validResponseStatus } from '@/utils/helper'
+import { successResponseStatus } from '@/utils/helper'
 
 export default function ChangePasswordScreen() {
   const router = useRouter()
@@ -43,12 +43,11 @@ export default function ChangePasswordScreen() {
   const passwordMutation = useMutation({
     mutationFn: (data: PasswordInitSchema) => changePasswordInit(data),
     onSuccess: (data) => {
-      console.log('success', getValues())
-      if (!validResponseStatus(data)) {
+      if (!successResponseStatus(data)) {
         console.log('data', data)
         Toast.show({
           type: 'error',
-          text1: 'Lỗi',
+          text1: 'Đã có lỗi xảy ra',
           text2: data.message
         })
       } else {
@@ -61,7 +60,6 @@ export default function ChangePasswordScreen() {
       }
     },
     onError: (error: Error) => {
-      console.log('fail', getValues())
       if (isAxiosError(error)) {
         Toast.show({
           type: 'error',

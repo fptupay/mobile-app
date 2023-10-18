@@ -198,7 +198,7 @@ export const convertDateFormat = (inputDate: string) => {
   return formattedDate
 }
 
-export const validResponseStatus = (status: any) => {
+export const successResponseStatus = (status: any) => {
   if (!status.success || status.error) {
     return false
   }

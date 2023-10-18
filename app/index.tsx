@@ -13,7 +13,7 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
-import { getToken, saveToken } from '@/utils/helper'
+import { getToken, saveToken, successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
@@ -56,31 +56,45 @@ export default function LoginScreen() {
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
     onSuccess: (data) => {
-      if (isFirstLogin) {
-        saveToken({ key: 'first_login', value: 'true' })
-          .then(() => {
-            return saveToken({
-              key: 'access_token',
-              value: data.data.access_token
-            })
-          })
-          .then(() =>
-            router.push({
-              pathname: '/authentication/init/change-password',
-              params: { username: getValues('username') }
-            })
-          )
-          .catch((err) => console.log(err))
+      if (!successResponseStatus(data)) {
+        console.log('fail', data)
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
       } else {
-        saveToken({ key: 'first_login', value: 'false' })
-          .then(() => {
-            return saveToken({
-              key: 'access_token',
-              value: data.data.access_token
+        Toast.show({
+          type: 'success',
+          text1: 'Thành công',
+          text2: 'Đăng nhập thành công'
+        })
+        if (isFirstLogin) {
+          saveToken({ key: 'first_login', value: 'true' })
+            .then(() => {
+              return saveToken({
+                key: 'access_token',
+                value: data.data.access_token
+              })
             })
-          })
-          .then(() => router.push('/account/home'))
-          .catch((err) => console.log(err))
+            .then(() =>
+              router.push({
+                pathname: '/authentication/init/change-password',
+                params: { username: getValues('username') }
+              })
+            )
+            .catch((err) => console.log(err))
+        } else {
+          saveToken({ key: 'first_login', value: 'false' })
+            .then(() => {
+              return saveToken({
+                key: 'access_token',
+                value: data.data.access_token
+              })
+            })
+            .then(() => router.push('/account/home'))
+            .catch((err) => console.log(err))
+        }
       }
     },
     onError: (error: Error) => {
