@@ -12,35 +12,22 @@ import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { LoginFormSchema, loginFormSchema } from '@/schemas/login-schema'
-import { getToken, saveToken } from '@/utils/helper'
+import UserStatus from '@/constants/statuses'
+import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
+import { saveToken, successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import base64 from 'react-native-base64'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 
 export default function LoginScreen() {
-  const [isFirstLogin, setIsFirstLogin] = useState<string | null>(null)
-
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
-
-  useEffect(() => {
-    const checkFirstLogin = async () => {
-      // await deleteToken('first_login')
-      return await getToken('first_login')
-    }
-
-    checkFirstLogin()
-      .then((res) => setIsFirstLogin(res))
-      .catch((err) => console.log(err))
-  }, [])
 
   const {
     control,
@@ -55,29 +42,63 @@ export default function LoginScreen() {
     mode: 'onBlur'
   })
 
+  const navigateBasedOnStatus = (status: string, username: string) => {
+    switch (status) {
+      case UserStatus.INIT:
+        router.push({
+          pathname: '/authentication/init/change-password',
+          params: { username }
+        })
+        break
+      case UserStatus.ACTIVE:
+        router.push('/account/home')
+        break
+      case UserStatus.INACTIVE:
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: 'Tài khoản của bạn hiện chưa được kích hoạt.'
+        })
+        break
+      case UserStatus.PENDING_CONFIRM_PHONE:
+        router.push('/authentication/common/phone-confirmation')
+        break
+      case UserStatus.PENDING_EKYC:
+        router.push('/authentication/init/ekyc/ekyc-rule')
+        break
+      default:
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: 'Vui lòng liên hệ đội ngũ quản trị viên.'
+        })
+        break
+    }
+  }
+
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormSchema) => loginUser(data),
-    onSuccess: (data) => {
-      if (!isFirstLogin) {
-        saveToken({ key: 'first_login', value: 'true' })
-          .then(() => {
-            return saveToken({
-              key: 'access_token',
-              value: data.data.access_token
-            })
+    onSuccess: async (data) => {
+      try {
+        if (successResponseStatus(data)) {
+          await saveToken({
+            key: 'access_token',
+            value: data.data.access_token
           })
-          .then(() => router.push('/authentication/phone-confirmation'))
-          .catch((err) => console.log(err))
-      } else {
-        saveToken({ key: 'first_login', value: 'false' })
-          .then(() => {
-            return saveToken({
-              key: 'access_token',
-              value: data.data.access_token
-            })
+          await saveToken({
+            key: 'refresh_token',
+            value: data.data.refresh_token
           })
-          .then(() => router.push('/account/home'))
-          .catch((err) => console.log(err))
+          navigateBasedOnStatus(data.data.user_status, getValues('username'))
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: data.message
+          })
+        }
+      } catch (error) {
+        console.error(error)
       }
     },
     onError: (error: Error) => {
@@ -166,7 +187,7 @@ export default function LoginScreen() {
                 onPress={() =>
                   loginMutation.mutate({
                     username: getValues('username'),
-                    password: base64.encode(getValues('password'))
+                    password: getValues('password')
                   })
                 }
                 text="Đăng nhập"
@@ -175,7 +196,7 @@ export default function LoginScreen() {
                 loading={loginMutation.isLoading}
               />
               <Link
-                href="/authentication/forget-password"
+                href="/authentication/forget-password/forget-password"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

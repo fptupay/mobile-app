@@ -73,11 +73,7 @@ export default function SignUpOtpScreen() {
                 disable={otpCode.length != 6}
                 href={params.nextRoute}
                 previousRoute="/"
-                nextRoute={
-                  params.nextRoute == '/authentication/reset-password'
-                    ? '/'
-                    : '/authentication/ekyc/ekyc-rule'
-                }
+                nextRoute={params.nextRoute}
               />
             </View>
           </View>

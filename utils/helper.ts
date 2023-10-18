@@ -84,13 +84,13 @@ export const getTitle = (status: string | string[]) => {
 export const getImagePath = (status?: string | string[]) => {
   switch (status) {
     case 'pending':
-      return require('../assets/images/icon-process.png')
+      return require('@/assets/images/icon-process.png')
     case 'approved':
-      return require('../assets/images/icon-success.png')
+      return require('@/assets/images/icon-success.png')
     case 'closed':
-      return require('../assets/images/icon-closed.png')
+      return require('@/assets/images/icon-closed.png')
     default:
-      return require('../assets/images/icon-process.png')
+      return require('@/assets/images/icon-process.png')
   }
 }
 
@@ -196,4 +196,11 @@ export const convertDateFormat = (inputDate: string) => {
   })
 
   return formattedDate
+}
+
+export const successResponseStatus = (status: any) => {
+  if (!status.success || status.error) {
+    return false
+  }
+  return true
 }
