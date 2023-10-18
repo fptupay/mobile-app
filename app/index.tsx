@@ -12,6 +12,7 @@ import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import UserStatus from '@/constants/statuses'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
 import { saveToken, successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -43,33 +44,33 @@ export default function LoginScreen() {
 
   const navigateBasedOnStatus = (status: string, username: string) => {
     switch (status) {
-      case 'INIT': //0
+      case UserStatus.INIT:
         router.push({
           pathname: '/authentication/init/change-password',
           params: { username }
         })
         break
-      case 'ACTIVE': //1
+      case UserStatus.ACTIVE:
         router.push('/account/home')
         break
-      case 'INACTIVE': //2
+      case UserStatus.INACTIVE:
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
-          text2: 'Tài khoản của bạn hiện chưa được kích hoạt'
+          text2: 'Tài khoản của bạn hiện chưa được kích hoạt.'
         })
         break
-      case 'PENDING_CONFIRM_PHONE': //3
+      case UserStatus.PENDING_CONFIRM_PHONE:
         router.push('/authentication/common/phone-confirmation')
         break
-      case 'PENDING_EKYC': //4
+      case UserStatus.PENDING_EKYC:
         router.push('/authentication/init/ekyc/ekyc-rule')
         break
       default:
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
-          text2: 'Xin vui lòng thử lại sau'
+          text2: 'Vui lòng liên hệ đội ngũ quản trị viên.'
         })
         break
     }
