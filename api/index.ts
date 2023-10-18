@@ -1,6 +1,14 @@
 import { getToken, saveToken } from '@/utils/helper'
 import axios from 'axios'
-import { refreshAccessToken } from './authentication'
+
+export const refreshAccessToken = async () => {
+  const token = await getToken('refresh_token')
+
+  const response = await axios.post('/user/public/auth/token/refresh', {
+    refresh_token: token
+  })
+  return response.data
+}
 
 export const axiosPrivate = axios.create({
   baseURL: 'https://gateway.fptupay.tech',

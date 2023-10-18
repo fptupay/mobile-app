@@ -13,32 +13,20 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
-import { getToken, saveToken, successResponseStatus } from '@/utils/helper'
+import { saveToken, successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { Link, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 
 export default function LoginScreen() {
-  const [isFirstLogin, setIsFirstLogin] = useState<string | null>(null)
-
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
-
-  useEffect(() => {
-    const checkFirstLogin = async () => {
-      return await getToken('first_login')
-    }
-
-    checkFirstLogin()
-      .then((res) => setIsFirstLogin(res))
-      .catch((err) => console.log(err))
-  }, [])
 
   const {
     control,
@@ -69,44 +57,51 @@ export default function LoginScreen() {
           text1: 'Thành công',
           text2: 'Đăng nhập thành công'
         })
-        if (isFirstLogin) {
-          saveToken({ key: 'first_login', value: 'true' })
-            .then(() => {
-              return saveToken({
-                key: 'access_token',
-                value: data.data.access_token
-              })
+
+        saveToken({
+          key: 'access_token',
+          value: data.data.access_token
+        })
+          .then(() => {
+            return saveToken({
+              key: 'refresh_token',
+              value: data.data.refresh_token
             })
-            .then(() => {
-              return saveToken({
-                key: 'refresh_token',
-                value: data.data.refresh_token
-              })
-            })
-            .then(() =>
-              router.push({
-                pathname: '/authentication/init/change-password',
-                params: { username: getValues('username') }
-              })
-            )
-            .catch((err) => console.log(err))
-        } else {
-          saveToken({ key: 'first_login', value: 'false' })
-            .then(() => {
-              return saveToken({
-                key: 'access_token',
-                value: data.data.access_token
-              })
-            })
-            .then(() => {
-              return saveToken({
-                key: 'refresh_token',
-                value: data.data.refresh_token
-              })
-            })
-            .then(() => router.push('/account/home'))
-            .catch((err) => console.log(err))
-        }
+          })
+          .then(() => {
+            switch (data.data.user_status) {
+              case 'INIT':
+                router.push({
+                  pathname: '/authentication/init/change-password',
+                  params: { username: getValues('username') }
+                })
+                break
+              case 'ACTIVE':
+                router.push('/account/home')
+                break
+              case 'INACTIVE':
+                Toast.show({
+                  type: 'error',
+                  text1: 'Đã có lỗi xảy ra',
+                  text2: 'Tài khoản của bạn hiện chưa được kích hoạt'
+                })
+                break
+              case 'PENDING_CONFIRM_PHONE':
+                router.push('/authentication/common/phone-confirmation')
+                break
+              case 'PENDING_EKYC':
+                router.push('/authentication/init/ekyc/ekyc-rule')
+                break
+              default:
+                Toast.show({
+                  type: 'error',
+                  text1: 'Đã có lỗi xảy ra',
+                  text2: 'Xin vui lòng thử lại sau'
+                })
+                break
+            }
+          })
+          .catch((err) => console.log(err))
       }
     },
     onError: (error: Error) => {

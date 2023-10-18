@@ -1,17 +1,7 @@
 import { LoginFormSchema, PasswordInitSchema } from '@/schemas/auth-schema'
 import { apiPostCall } from '..'
 import { getToken } from '@/utils/helper'
-import axios from 'axios'
 import { Platform } from 'react-native'
-
-export const refreshAccessToken = async () => {
-  const token = await getToken('refresh_token')
-
-  const response = await axios.post('/user/public/auth/token/refresh', {
-    refresh_token: token
-  })
-  return response.data
-}
 
 export const loginUser = async (data: LoginFormSchema) => {
   const loginConfig = {
