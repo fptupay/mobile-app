@@ -14,9 +14,18 @@ export default function AuthenLayout() {
       <Stack.Screen name="forget-password/forget-password" />
       <Stack.Screen name="forget-password/reset-password" />
       <Stack.Screen name="init/change-password" />
-      <Stack.Screen name="init/ekyc/ekyc-rule" />
-      <Stack.Screen name="init/ekyc/card-capture" />
-      <Stack.Screen name="init/ekyc/face-authenticator" />
+      <Stack.Screen
+        name="init/ekyc/ekyc-rule"
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="init/ekyc/card-capture"
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="init/ekyc/face-authenticator"
+        options={{ gestureEnabled: false }}
+      />
     </Stack>
   )
 }
