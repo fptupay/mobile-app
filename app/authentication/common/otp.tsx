@@ -1,6 +1,5 @@
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
-import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { useLocalSearchParams } from 'expo-router'
@@ -30,10 +29,6 @@ export default function SignUpOtpScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="ml-4">
-        <BackButton href={params.previousRoute} />
-      </View>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"

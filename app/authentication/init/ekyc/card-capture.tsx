@@ -3,8 +3,7 @@ import {
   MediumText,
   NormalText,
   SafeAreaView,
-  SemiText,
-  View
+  SemiText
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import StepProgress, { StepType } from '@/components/progress/StepProgress'
@@ -17,7 +16,7 @@ import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
-import { Button, ImageBackground, TouchableOpacity } from 'react-native'
+import { Button, ImageBackground, TouchableOpacity, View } from 'react-native'
 
 export default function EkycCameraScreen() {
   const router = useRouter()
@@ -65,7 +64,7 @@ export default function EkycCameraScreen() {
       return ekycBack(data, ekycId)
     },
     onSuccess: () => {
-      router.push('/authentication/(init)/ekyc/face-authenticator')
+      router.push('/authentication/init/ekyc/face-authenticator')
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
@@ -94,10 +93,12 @@ export default function EkycCameraScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <StatusBar style="auto" />
       <View className="mt-10 mb-8">
-        <MediumText className="text-3xl">Chụp thẻ căn cước</MediumText>
+        <MediumText className="text-3xl text-secondary">
+          Chụp thẻ căn cước
+        </MediumText>
       </View>
       <StepProgress type={type} />
       <View className="w-full h-1/3 my-8">
@@ -122,7 +123,7 @@ export default function EkycCameraScreen() {
       </View>
       <View>
         <NormalText className="text-tertiary text-justify">
-          <SemiText>Lưu ý:&nbsp;</SemiText>
+          <SemiText className="text-secondary">Lưu ý:&nbsp;</SemiText>
           Đảm bảo ảnh rõ nét, đầy đủ thông tin, ảnh đúng định dạng. Không chụp
           ảnh từ màn hình thiết bị, ảnh photo, ảnh mất góc, ảnh bị chói sáng
           hoặc ảnh quá tối
