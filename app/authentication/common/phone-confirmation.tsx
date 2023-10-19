@@ -1,8 +1,14 @@
+import {
+  confirmPhoneNumber,
+  getRegisteredPhoneNumber
+} from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { router } from 'expo-router'
 
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
@@ -20,13 +26,29 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export default function PhoneConfirmationScreen() {
   const {
     control,
+    getValues,
     formState: { errors, isValid }
   } = useForm<PhoneSchema>({
     defaultValues: {
-      phoneNumber: ''
+      phone_number: ''
     },
     resolver: zodResolver(phoneSchema),
     mode: 'onBlur'
+  })
+
+  const phoneNumberQuery = useQuery({
+    queryKey: ['phoneNumber'],
+    queryFn: getRegisteredPhoneNumber
+  })
+
+  const phoneNumberMutation = useMutation({
+    mutationFn: (data: PhoneSchema) => confirmPhoneNumber(data),
+    onSuccess: () => {
+      router.push('/authentication/common/otp')
+    },
+    onError: (error) => {
+      console.log('error', error)
+    }
   })
 
   return (
@@ -47,6 +69,9 @@ export default function PhoneConfirmationScreen() {
               <MediumText className="text-3xl tracking-tight text-secondary">
                 Xác nhận số điện thoại
               </MediumText>
+              <NormalText className="text-black mt-1">
+                {phoneNumberQuery.data.data}
+              </NormalText>
               <NormalText className="text-tertiary mt-1">
                 Nhập số điện thoại của bạn
               </NormalText>
@@ -54,7 +79,7 @@ export default function PhoneConfirmationScreen() {
             <View className="w-full">
               <Controller
                 control={control}
-                name="phoneNumber"
+                name="phone_number"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextField
                     label="Số điện thoại"
@@ -68,9 +93,9 @@ export default function PhoneConfirmationScreen() {
                   />
                 )}
               />
-              {errors.phoneNumber && (
+              {errors.phone_number && (
                 <NormalText className="text-red-500 mt-1">
-                  {errors.phoneNumber.message}
+                  {errors.phone_number.message}
                 </NormalText>
               )}
             </View>
@@ -79,9 +104,13 @@ export default function PhoneConfirmationScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/authentication/common/otp"
                 previousRoute="/authentication/common/phone-confirmation"
                 nextRoute="/authentication/init/ekyc/ekyc-rule"
+                onPress={() =>
+                  phoneNumberMutation.mutate({
+                    phone_number: getValues().phone_number
+                  })
+                }
               />
             </View>
           </View>
