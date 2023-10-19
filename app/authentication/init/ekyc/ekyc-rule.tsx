@@ -1,15 +1,8 @@
-import {
-  Image,
-  MediumText,
-  NormalText,
-  SafeAreaView,
-  View
-} from '@/components/Themed'
-import QuestionButton from '@/components/buttons/QuestionButton'
+import { MediumText, NormalText, SafeAreaView } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { ImageSourcePropType } from 'react-native'
+import { ImageSourcePropType, View, Image } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 interface StepCardProps {
@@ -26,7 +19,9 @@ const StepCard: React.FC<StepCardProps> = ({
     <View className="w-[45px] h-[40px] items-center">
       <Image source={imageSource} className="left-8 top-2" />
     </View>
-    <NormalText className="text-center mt-4 wd:w-[30%]">{title}</NormalText>
+    <NormalText className="text-center mt-4 wd:w-[30%] text-secondary">
+      {title}
+    </NormalText>
     <View className="bg-orange-500 rounded-full absolute w-5 h-5 left-7 top-0 justify-center">
       <NormalText className="text-center">{stepNumber}</NormalText>
     </View>
@@ -36,12 +31,13 @@ export default function EkycRuleScreen() {
   const [isAgree, setAgree] = useState(false)
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <StatusBar style="auto" />
-      <QuestionButton href="index" />
       <View className="mt-10 mb-8">
         <View>
-          <MediumText className="text-3xl">Xác minh danh tính</MediumText>
+          <MediumText className="text-3xl text-secondary">
+            Xác minh danh tính
+          </MediumText>
           <MediumText className="mt-2 text-justify text-tertiary">
             Bắt đầu xác minh danh tính sau khi hiểu rõ các quy định khi xác minh
             qua các bước dưới đây
@@ -89,7 +85,7 @@ export default function EkycRuleScreen() {
         </View>
         <View className="mt-10">
           <TextButton
-            href="/ekyc/card-capture"
+            href="/authentication/init/ekyc/card-capture"
             disable={!isAgree}
             text="Quét thẻ"
             type={TextButtonType.PRIMARY}
