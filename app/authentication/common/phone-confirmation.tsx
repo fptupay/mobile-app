@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
@@ -45,14 +45,21 @@ export default function PhoneConfirmationScreen() {
   const {
     control,
     getValues,
+    setValue,
     formState: { errors, isValid }
   } = useForm<PhoneSchema>({
     defaultValues: {
-      phone_number: isFetched ? phone?.data.phone_number : ''
+      phone_number: ''
     },
     resolver: zodResolver(phoneSchema),
     mode: 'onBlur'
   })
+
+  useEffect(() => {
+    if (isFetched) {
+      setValue('phone_number', phone?.data.phone_number)
+    }
+  }, [isFetched, phone])
 
   return (
     <SafeAreaView className="flex-1 px-4">
