@@ -24,19 +24,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PhoneConfirmationScreen() {
-  const {
-    control,
-    getValues,
-    formState: { errors, isValid }
-  } = useForm<PhoneSchema>({
-    defaultValues: {
-      phone_number: ''
-    },
-    resolver: zodResolver(phoneSchema),
-    mode: 'onBlur'
-  })
-
-  const phoneNumberQuery = useQuery({
+  const { data: phone, isFetched } = useQuery({
     queryKey: ['phoneNumber'],
     queryFn: getRegisteredPhoneNumber
   })
@@ -49,6 +37,18 @@ export default function PhoneConfirmationScreen() {
     onError: (error) => {
       console.log('error', error)
     }
+  })
+
+  const {
+    control,
+    getValues,
+    formState: { errors, isValid }
+  } = useForm<PhoneSchema>({
+    defaultValues: {
+      phone_number: isFetched ? phone?.data.phone_number : ''
+    },
+    resolver: zodResolver(phoneSchema),
+    mode: 'onBlur'
   })
 
   return (
@@ -69,18 +69,15 @@ export default function PhoneConfirmationScreen() {
               <MediumText className="text-3xl tracking-tight text-secondary">
                 Xác nhận số điện thoại
               </MediumText>
-              <NormalText className="text-black mt-1">
-                {phoneNumberQuery.data.data}
-              </NormalText>
               <NormalText className="text-tertiary mt-1">
-                Nhập số điện thoại của bạn
+                Vui lòng xác nhận số điện thoại của bạn để gửi mã OTP
               </NormalText>
             </View>
             <View className="w-full">
               <Controller
                 control={control}
                 name="phone_number"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field: { onBlur, value, onChange } }) => (
                   <TextField
                     label="Số điện thoại"
                     value={value}
