@@ -109,10 +109,8 @@ export default function AddBankScreen() {
           <Pressable
             onPress={() =>
               router.push({
-                pathname: '/main-features/(bank)/add-bank-item',
-                params: {
-                  previousRoute: params.previousRoute
-                }
+                pathname: '/main-features/bank/[add-bank-item]',
+                params: { bank_code: 'vcb' }
               })
             }
           >

@@ -112,7 +112,7 @@ export default function WithdrawalScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/(bank)/add-bank"
+                href="/main-features/bank/add-bank"
                 previousRoute="/main-features/(withdraw)/withdrawal"
               />
             </View>

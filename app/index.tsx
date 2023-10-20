@@ -81,6 +81,7 @@ export default function LoginScreen() {
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {
+          console.log(data)
           await saveToken({
             key: 'access_token',
             value: data.data.access_token

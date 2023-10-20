@@ -50,7 +50,7 @@ export default function BankListScreen() {
           <BankButton
             image={require('@/assets/images/add-bank.png')}
             label="Thêm ngân hàng"
-            href="/main-features/(bank)/add-bank"
+            href="/main-features/bank/add-bank"
           />
         </View>
       </View>

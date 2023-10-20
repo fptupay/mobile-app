@@ -92,7 +92,7 @@ export default function LoadMoneyScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/(bank)/add-bank"
+                href="/main-features/bank/add-bank"
                 previousRoute="/main-features/(deposit)/load-money"
               />
             </View>

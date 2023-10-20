@@ -4,11 +4,15 @@ import { NormalText, SemiText, View } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { BankAccountSchema, bankAccountSchema } from '@/schemas/bank-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useLocalSearchParams } from 'expo-router'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 export default function AddBankItemScreen() {
+  const { bank_code } = useLocalSearchParams()
+  console.log(bank_code)
+
   const {
     control,
     formState: { errors, isValid }
