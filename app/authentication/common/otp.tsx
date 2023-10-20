@@ -1,8 +1,11 @@
+import { verifyOtp } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useLocalSearchParams } from 'expo-router'
+import { successResponseStatus } from '@/utils/helper'
+import { useMutation } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
@@ -14,11 +17,9 @@ import {
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 export default function SignUpOtpScreen() {
-  const params: { previousRoute: string; nextRoute: any } =
-    useLocalSearchParams()
-
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
 
@@ -26,6 +27,24 @@ export default function SignUpOtpScreen() {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: (data: { otp: string }) => verifyOtp(data),
+    onSuccess: (data) => {
+      if (!successResponseStatus) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      } else {
+        router.push('/authentication/init/ekyc/ekyc-rule')
+      }
+    },
+    onError: (error: Error) => {
+      console.log('error', error)
+    }
+  })
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -66,9 +85,7 @@ export default function SignUpOtpScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 disable={otpCode.length != 6}
-                href={params.nextRoute}
-                previousRoute="/"
-                nextRoute={params.nextRoute}
+                onPress={() => verifyOtpMutation.mutate({ otp: otpCode })}
               />
             </View>
           </View>

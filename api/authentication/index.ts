@@ -78,3 +78,15 @@ export const confirmPhoneNumber = async (data: PhoneSchema) => {
   )
   return response.data
 }
+
+export const verifyOtp = async (data: { otp: string }) => {
+  const token = await getToken('access_token')
+
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+  const response = await apiPostCall('/user/profile/verify-otp', data, config)
+  return response.data
+}
