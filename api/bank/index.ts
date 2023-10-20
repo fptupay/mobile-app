@@ -1,4 +1,3 @@
-import { getToken } from '@/utils/helper'
 import { Platform } from 'react-native'
 import { apiPostCall } from '..'
 import {
@@ -8,7 +7,6 @@ import {
 
 const bankConfig = {
   headers: {
-    Authorization: '',
     'x-client-device-id': 'QEIERUEWHRBWEUIEFIDUQHWWUEHE',
     'x-client-platform': Platform.OS,
     'x-client-platform-version': Platform.Version.toString(),
@@ -17,9 +15,6 @@ const bankConfig = {
 }
 
 export const bankLinkVerify = async (data: BankLinkVerifySchema) => {
-  const token = (await getToken('access_token')) || ''
-
-  bankConfig.headers.Authorization = token
   const config = bankConfig
   const response = await apiPostCall(
     '/finance/partner/bank/link/verify',
@@ -30,9 +25,6 @@ export const bankLinkVerify = async (data: BankLinkVerifySchema) => {
 }
 
 export const bankLinkConfirm = async (data: BankLinkConfirmSchema) => {
-  const token = (await getToken('access_token')) || ''
-
-  bankConfig.headers.Authorization = token
   const config = bankConfig
   const response = await apiPostCall(
     '/finance/partner/bank/link/confirm',

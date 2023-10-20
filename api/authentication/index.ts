@@ -1,6 +1,5 @@
 import { LoginFormSchema, PasswordInitSchema } from '@/schemas/auth-schema'
 import { apiPostCall } from '..'
-import { getToken } from '@/utils/helper'
 import { Platform } from 'react-native'
 
 export const loginUser = async (data: LoginFormSchema) => {
@@ -24,29 +23,11 @@ export const loginUser = async (data: LoginFormSchema) => {
 }
 
 export const logoutUser = async () => {
-  const token = await getToken('access_token')
-
-  const config = {
-    headers: {
-      Authorization: token
-    }
-  }
-  const response = await apiPostCall('/user/logout', config)
+  const response = await apiPostCall('/user/logout')
   return response.data
 }
 
 export const changePasswordInit = async (data: PasswordInitSchema) => {
-  const token = await getToken('access_token')
-
-  const config = {
-    headers: {
-      Authorization: token
-    }
-  }
-  const response = await apiPostCall(
-    '/user/profile/change-password-init',
-    data,
-    config
-  )
+  const response = await apiPostCall('/user/profile/change-password-init', data)
   return response.data
 }

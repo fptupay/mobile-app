@@ -1,10 +1,9 @@
-import { compressImg, getToken } from '@/utils/helper'
+import { compressImg } from '@/utils/helper'
 import { CameraCapturedPicture } from 'expo-camera'
 import { Platform } from 'react-native'
 import { apiPostCall } from '..'
 
 export const ekycFront = async (data: CameraCapturedPicture) => {
-  const token = await getToken('access_token')
   const image = await compressImg(data)
 
   const file = {
@@ -21,8 +20,7 @@ export const ekycFront = async (data: CameraCapturedPicture) => {
     formData,
     {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: token
+        'Content-Type': 'multipart/form-data'
       }
     }
   )
@@ -30,7 +28,6 @@ export const ekycFront = async (data: CameraCapturedPicture) => {
 }
 
 export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
-  const token = await getToken('access_token')
   const image = await compressImg(data)
 
   const file = {
@@ -48,8 +45,7 @@ export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
     formData,
     {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: token
+        'Content-Type': 'multipart/form-data'
       }
     }
   )
@@ -57,8 +53,6 @@ export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
 }
 
 export const ekycSelfie = async (data: CameraCapturedPicture, id: string) => {
-  const token = await getToken('access_token')
-
   const image = await compressImg(data)
 
   const file = {
@@ -73,8 +67,7 @@ export const ekycSelfie = async (data: CameraCapturedPicture, id: string) => {
 
   const response = await apiPostCall('/user/ekyc/check-face', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: token
+      'Content-Type': 'multipart/form-data'
     }
   })
   return response.data
