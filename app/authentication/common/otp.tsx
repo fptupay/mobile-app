@@ -4,7 +4,9 @@ import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { usePhoneStore } from '@/stores/phoneStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
+import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
@@ -31,14 +33,14 @@ export default function SignUpOtpScreen() {
   const verifyOtpMutation = useMutation({
     mutationFn: (data: { otp: string }) => verifyOtp(data),
     onSuccess: (data) => {
-      /*  if (!successResponseStatus) {
+      if (!successResponseStatus) {
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
           text2: data.message
         })
-      } */
-      console.log(data)
+      }
+      router.push('/authentication/init/ekyc/ekyc-rule')
     },
     onError: (error: Error) => {
       Toast.show({
