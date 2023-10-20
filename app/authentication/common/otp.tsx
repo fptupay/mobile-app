@@ -2,10 +2,9 @@ import { verifyOtp } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { usePhoneStore } from '@/stores/phoneStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
-import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
@@ -22,6 +21,7 @@ import Toast from 'react-native-toast-message'
 export default function SignUpOtpScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
+  const { phone } = usePhoneStore()
 
   const handleClear = () => {
     otpInputRef.current?.clear()
@@ -31,18 +31,21 @@ export default function SignUpOtpScreen() {
   const verifyOtpMutation = useMutation({
     mutationFn: (data: { otp: string }) => verifyOtp(data),
     onSuccess: (data) => {
-      if (!successResponseStatus) {
+      /*  if (!successResponseStatus) {
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
           text2: data.message
         })
-      } else {
-        router.push('/authentication/init/ekyc/ekyc-rule')
-      }
+      } */
+      console.log(data)
     },
     onError: (error: Error) => {
-      console.log('error', error)
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
     }
   })
 
@@ -61,7 +64,7 @@ export default function SignUpOtpScreen() {
                 Nhập mã OTP
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại {phone}
               </NormalText>
             </View>
 

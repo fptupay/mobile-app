@@ -6,6 +6,7 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
+import { usePhoneStore } from '@/stores/phoneStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
@@ -24,6 +25,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PhoneConfirmationScreen() {
+  const { setPhone } = usePhoneStore()
+
   const { data: phone, isFetched } = useQuery({
     queryKey: ['phoneNumber'],
     queryFn: getRegisteredPhoneNumber
@@ -103,11 +106,12 @@ export default function PhoneConfirmationScreen() {
                 type={TextButtonType.PRIMARY}
                 previousRoute="/authentication/common/phone-confirmation"
                 nextRoute="/authentication/init/ekyc/ekyc-rule"
-                onPress={() =>
+                onPress={() => {
                   phoneNumberMutation.mutate({
                     phone_number: getValues().phone_number
                   })
-                }
+                  setPhone(getValues().phone_number)
+                }}
               />
             </View>
           </View>
