@@ -127,7 +127,7 @@ export default function LoginScreen() {
                 source={require('@/assets/images/login-account.png')}
                 className="w-[215px] h-[160px]"
               />
-              <MediumText className="text-3xl tracking-tighter text-center text-secondary">
+              <MediumText className="text-3xl tracking-tighter text-secondary">
                 Đăng nhập tài khoản{' '}
                 <MediumText className="text-primary">FPTUPay</MediumText> của
                 bạn{' '}
