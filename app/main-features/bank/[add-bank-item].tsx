@@ -11,7 +11,7 @@ import { successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
@@ -19,6 +19,7 @@ import Toast from 'react-native-toast-message'
 
 export default function AddBankItemScreen() {
   const { bank_code } = useLocalSearchParams()
+  const router = useRouter()
 
   const {
     control,
@@ -42,17 +43,15 @@ export default function AddBankItemScreen() {
     mutationFn: (data: BankLinkVerifySchema) => bankLinkVerify(data),
     onSuccess: (data) => {
       if (!successResponseStatus(data)) {
-        console.log('data', data)
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
           text2: data.message
         })
       } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Thành công',
-          text2: 'Liên kết ngân hàng mới thành công'
+        router.push({
+          pathname: '/main-features/bank/otp',
+          params: { trans_id: data.data, bank_code: bank_code as string }
         })
       }
     },
@@ -151,7 +150,8 @@ export default function AddBankItemScreen() {
               onPress={() => bankLinkMutation.mutate(getValues())}
               text="Liên kết ngay"
               type={TextButtonType.PRIMARY}
-              disable={!isValid}
+              loading={bankLinkMutation.isLoading}
+              disable={!isValid || bankLinkMutation.isLoading}
               previousRoute="/main-features/(deposit)/load-money"
               nextRoute="/main-features/(bank)/add-bank-success"
             />

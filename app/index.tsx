@@ -58,7 +58,6 @@ export default function LoginScreen() {
             props: JSON.stringify({ ...getValues() })
           }
         })
-        // router.push('/account/home')
         break
       case UserStatus.INACTIVE:
         Toast.show({
