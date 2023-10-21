@@ -53,6 +53,13 @@ export const loginFormSchema = z.object({
     .trim()
 })
 
+export const loginOtpFormSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+  otp: z.string()
+})
+
 export type LoginFormSchema = z.infer<typeof loginFormSchema>
+export type LoginOtpFormSchema = z.infer<typeof loginOtpFormSchema>
 export type PasswordSchema = z.infer<typeof passwordSchema>
 export type PasswordInitSchema = z.infer<typeof passwordInitSchema>

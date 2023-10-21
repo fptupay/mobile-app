@@ -1,21 +1,38 @@
-import { LoginFormSchema, PasswordInitSchema } from '@/schemas/auth-schema'
+import {
+  LoginFormSchema,
+  LoginOtpFormSchema,
+  PasswordInitSchema
+} from '@/schemas/auth-schema'
 import { apiPostCall } from '..'
 import { Platform } from 'react-native'
 
-export const loginUser = async (data: LoginFormSchema) => {
-  const loginConfig = {
-    headers: {
-      'x-client-device-id': 'QEIERUEWHRBWEUIEFIDUQHWWUEHE',
-      'x-client-platform-version': Platform.Version.toString(),
-      'x-client-platform': Platform.OS
-    }
+const loginConfig = {
+  headers: {
+    'x-client-device-id': 'QEIERUEWHRBWEUIEFIDUQHWWUEHE',
+    'x-client-platform-version': Platform.Version.toString(),
+    'x-client-platform': Platform.OS
   }
+}
 
+export const loginUser = async (data: LoginFormSchema) => {
   const response = await apiPostCall(
     '/user/public/login',
     {
       username: data.username,
       password: data.password
+    },
+    loginConfig
+  )
+  return response.data
+}
+
+export const loginOtpUser = async (data: LoginOtpFormSchema) => {
+  const response = await apiPostCall(
+    '/user/public/login',
+    {
+      username: data.username,
+      password: data.password,
+      otp: data.otp
     },
     loginConfig
   )
