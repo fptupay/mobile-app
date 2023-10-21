@@ -1,8 +1,12 @@
+import { verifyOtp } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { usePhoneStore } from '@/stores/phoneStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useLocalSearchParams } from 'expo-router'
+import { successResponseStatus } from '@/utils/helper'
+import { useMutation } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
@@ -14,18 +18,38 @@ import {
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 export default function SignUpOtpScreen() {
-  const params: { previousRoute: string; nextRoute: any } =
-    useLocalSearchParams()
-
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
+  const { phone } = usePhoneStore()
 
   const handleClear = () => {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: (data: { otp: string }) => verifyOtp(data),
+    onSuccess: (data) => {
+      if (!successResponseStatus) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+      router.push('/authentication/init/ekyc/ekyc-rule')
+    },
+    onError: (error: Error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -42,7 +66,7 @@ export default function SignUpOtpScreen() {
                 Nhập mã OTP
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại {phone}
               </NormalText>
             </View>
 
@@ -66,9 +90,7 @@ export default function SignUpOtpScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 disable={otpCode.length != 6}
-                href={params.nextRoute}
-                previousRoute="/"
-                nextRoute={params.nextRoute}
+                onPress={() => verifyOtpMutation.mutate({ otp: otpCode })}
               />
             </View>
           </View>
