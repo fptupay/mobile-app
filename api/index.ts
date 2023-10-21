@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const refreshAccessToken = async () => {
   const token = await getToken('refresh_token')
-
+  console.log('refresh token', token)
   const response = await axios.post('/user/public/auth/token/refresh', {
     refresh_token: token
   })

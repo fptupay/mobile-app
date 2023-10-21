@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-export const bankAccountSchema = z.object({
-  accountNumber: z.string().min(1, 'Số tài khoản không được để trống').trim()
-})
-
 export const bankLinkVerifySchema = z.object({
   bank_code: z.string(),
   card_no: z.string(),
@@ -21,6 +17,5 @@ export const bankLinkConfirmSchema = z.object({
   otp: z.string()
 })
 
-export type BankAccountSchema = z.infer<typeof bankAccountSchema>
 export type BankLinkVerifySchema = z.infer<typeof bankLinkVerifySchema>
 export type BankLinkConfirmSchema = z.infer<typeof bankLinkConfirmSchema>

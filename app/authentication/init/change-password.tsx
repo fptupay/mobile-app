@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'

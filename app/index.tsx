@@ -61,7 +61,8 @@ export default function LoginScreen() {
         })
         break
       case UserStatus.PENDING_CONFIRM_PHONE:
-        router.push('/authentication/common/phone-confirmation')
+        // router.push('/authentication/common/phone-confirmation')
+        router.push('/account/home')
         break
       case UserStatus.PENDING_EKYC:
         router.push('/authentication/init/ekyc/ekyc-rule')
