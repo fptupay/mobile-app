@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { apiPostCall } from '..'
+import { apiGetCall, apiPostCall } from '..'
 import {
   BankLinkVerifySchema,
   BankLinkConfirmSchema
@@ -31,5 +31,11 @@ export const bankLinkConfirm = async (data: BankLinkConfirmSchema) => {
     data,
     config
   )
+  return response.data
+}
+
+export const getLinkedBanks = async () => {
+  const config = bankConfig
+  const response = await apiGetCall('/finance/account/link', config)
   return response.data
 }

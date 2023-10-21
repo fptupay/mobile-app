@@ -45,6 +45,11 @@ axiosPrivate.interceptors.response.use(
   }
 )
 
+export const apiGetCall = async (url: string, config?: any) => {
+  const response = await axiosPrivate.get(url, config)
+  return response
+}
+
 export const apiPostCall = async (
   url: string,
   data?: unknown,

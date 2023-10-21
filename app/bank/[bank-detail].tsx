@@ -9,6 +9,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import DescriptionRowItem, {
   ListItemProp
 } from '@/components/DescriptionRowItem'
+import { useLocalSearchParams } from 'expo-router'
 
 const mockPersonalData: ListItemProp[] = [
   {
@@ -41,6 +42,8 @@ const mockCardData = [
 ]
 
 export default function BankDetailScreen() {
+  const params: { bankItem: any } = useLocalSearchParams()
+  console.log(params.bankItem)
   const [isModalVisible, setModalVisible] = useState(false)
   const [isBalanceVisible, setBalanceVisible] = useState(false)
 
