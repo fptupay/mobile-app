@@ -19,7 +19,11 @@ export default function AuthenLayout() {
         options={{ gestureEnabled: false }}
       />
       <Stack.Screen
-        name="init/ekyc/card-capture"
+        name="init/ekyc/[card]"
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="init/ekyc/ekyc-result"
         options={{ gestureEnabled: false }}
       />
       <Stack.Screen

@@ -6,31 +6,32 @@ import {
   SemiText
 } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import StepProgress, { StepType } from '@/components/progress/StepProgress'
+import StepProgress from '@/components/progress/StepProgress'
 import { useEkycStore } from '@/stores/ekycStore'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 
 import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity, View } from 'react-native'
 
 export default function EkycCameraScreen() {
   const router = useRouter()
+  const { card } = useLocalSearchParams()
   const ekycId = useEkycStore((state) => state.ekycId)
   const setEkycId = useEkycStore((state) => state.setEkycId)
+  const setFrontCardDetails = useEkycStore((state) => state.setFrontCardDetails)
 
   let camera: Camera | null
-  const [type, setType] = useState(StepType.FRONT)
   const [permission, requestPermission] = Camera.useCameraPermissions()
   const [capturedImage, setCapturedImage] = useState<any>(null)
 
   useEffect(() => {
     setCapturedImage(null)
-  }, [type])
+  }, [card])
 
   const takePicture = async () => {
     if (!camera) return
@@ -46,7 +47,8 @@ export default function EkycCameraScreen() {
     mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
     onSuccess: (data) => {
       setEkycId(data.data.user_ekyc_id)
-      setType(StepType.BACK)
+      setFrontCardDetails(data?.data)
+      router.push('/authentication/init/ekyc/ekyc-result')
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
@@ -100,10 +102,10 @@ export default function EkycCameraScreen() {
           Chụp thẻ căn cước
         </MediumText>
       </View>
-      <StepProgress type={type} />
+      <StepProgress type={card} />
       <View className="w-full h-1/3 my-8">
         <NormalText className="text-center text-primary mb-2">
-          Mặt {type == StepType.FRONT ? 'trước' : 'sau'}
+          Mặt {card === 'front' ? 'trước' : 'sau'}
         </NormalText>
         <View className="overflow-hidden rounded-xl mb-5">
           {capturedImage ? (
@@ -134,7 +136,7 @@ export default function EkycCameraScreen() {
           <View className="mt-8 mb-4">
             <TextButton
               onPress={() =>
-                type == StepType.FRONT
+                card === 'front'
                   ? ekycFrontMutation.mutate(capturedImage)
                   : ekycBackMutation.mutate(capturedImage)
               }
