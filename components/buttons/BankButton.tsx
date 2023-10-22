@@ -20,7 +20,7 @@ export default function BankButton(props: BankButtonProps) {
       <View className="flex flex-row gap-3 items-center">
         <Image source={image} className="w-[40px] h-[32px]" />
         <View className="pl-3">
-          <SemiText className="text-secondary capitalize">{label}</SemiText>
+          <SemiText className="text-secondary">{label}</SemiText>
           <NormalText className="text-tertiary">{description}</NormalText>
         </View>
       </View>

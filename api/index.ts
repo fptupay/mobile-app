@@ -31,9 +31,8 @@ axiosPrivate.interceptors.response.use(
     return response
   },
   async (error) => {
-    const prevReq = error?.config
-    if (error?.response?.status == 401 && !prevReq.sent) {
-      prevReq.sent = true
+    const prevReq = error?.path
+    if (error?.httpStatus == 401) {
       const newToken = await refreshAccessToken().then((res) => {
         return res.access_token
       })

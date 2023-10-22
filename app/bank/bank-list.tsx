@@ -8,9 +8,11 @@ import { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 import { NormalText } from '@/components/Themed'
 import { useRouter } from 'expo-router'
+import { getBankName } from '@/utils/helper'
 
 export default function BankListScreen() {
   const router = useRouter()
+
   const banksLinkedQuery = useQuery({
     queryKey: ['getLinkedBanks'],
     queryFn: () => getLinkedBanks(),
@@ -23,37 +25,36 @@ export default function BankListScreen() {
     }
   })
 
-  if (banksLinkedQuery.isLoading)
-    return (
-      <View>
-        <NormalText>Loading...</NormalText>
-      </View>
-    )
+  console.log(banksLinkedQuery.data)
 
   return (
     <SharedLayout href="/account/my-wallet" title="Danh sách liên kết">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <View className="bg-transparent">
-          <FlatList
-            data={banksLinkedQuery.data?.data}
-            keyExtractor={(item) => item.id}
-            renderItem={(item) => (
-              <Pressable
-                onPress={() =>
-                  router.push({
-                    pathname: '/bank/[bank-detail]',
-                    params: { bankItem: item.item }
-                  })
-                }
-              >
-                <BankButton
-                  image={require('@/assets/images/techcombank.png')}
-                  label={item.item.bank_code}
-                  description={item.item.bank_acc_hide}
-                />
-              </Pressable>
-            )}
-          />
+          {banksLinkedQuery.isLoading ? (
+            <NormalText className="text-secondary">Loading...</NormalText>
+          ) : (
+            <FlatList
+              data={banksLinkedQuery.data?.data}
+              keyExtractor={(item) => item.id}
+              renderItem={(item) => (
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: '/bank/[bank-detail]',
+                      params: { bankId: item.item.id }
+                    })
+                  }
+                >
+                  <BankButton
+                    image={require('@/assets/images/techcombank.png')}
+                    label={getBankName(item.item.bank_code) || 'Ngân hàng'}
+                    description={item.item.bank_acc_hide}
+                  />
+                </Pressable>
+              )}
+            />
+          )}
           <Pressable
             onPress={() => router.push('/main-features/bank/add-bank')}
           >

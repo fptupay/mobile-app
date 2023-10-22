@@ -9,7 +9,12 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import DescriptionRowItem, {
   ListItemProp
 } from '@/components/DescriptionRowItem'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { unlinkBank } from '@/api/bank'
+import { successResponseStatus } from '@/utils/helper'
+import Toast from 'react-native-toast-message'
+import { isAxiosError } from 'axios'
 
 const mockPersonalData: ListItemProp[] = [
   {
@@ -42,8 +47,10 @@ const mockCardData = [
 ]
 
 export default function BankDetailScreen() {
-  const params: { bankItem: any } = useLocalSearchParams()
-  console.log(params.bankItem)
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  const params: { bankId: any } = useLocalSearchParams()
   const [isModalVisible, setModalVisible] = useState(false)
   const [isBalanceVisible, setBalanceVisible] = useState(false)
 
@@ -59,11 +66,42 @@ export default function BankDetailScreen() {
     setModalVisible(false)
   }
 
+  const bankLinkMutation = useMutation({
+    mutationFn: (data: string) => unlinkBank(data),
+    onSuccess: async (data) => {
+      if (!successResponseStatus(data)) {
+        closeModal()
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Thành công',
+          text2: 'Hủy liên kết ngân hàng thành công!'
+        })
+        await queryClient.invalidateQueries(['getLinkedBanks'])
+        router.back()
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
   return (
     <SharedLayout href="/bank/bank-list" title="Thông tin liên kết">
       <View className="py-4 bg-transparent flex-1 flex-col justify-between">
         <View className="bg-transparent">
-          <View className=" w-full h-[225px] bg-[#FF8E3A] relative p-3 rounded-lg">
+          <View className=" w-full h-[225px] bg-primary relative p-3 rounded-lg">
             <View className="absolute flex flex-row justify-between items-center p-3">
               <Image
                 source={require('@/assets/images/techcombank.png')}
@@ -131,27 +169,29 @@ export default function BankDetailScreen() {
           intensity={15}
           style={{ flex: 1, backgroundColor: 'rgba(80, 80, 80, 0.80)' }}
         >
-          <View className="flex-1 justify-end mb-60 px-4">
-            <View className="bg-white w-full rounded-lg shadow-2xl p-8">
+          <View className="flex-1 justify-center px-4">
+            <View className="bg-white rounded-lg shadow-2xl p-4">
               <MediumText className="text-xl tracking-tight text-primary mb-2">
                 Huỷ liên kết
               </MediumText>
               <NormalText className="text-tertiary mb-8">
-                Bạn có chắc chắn muốn huỷ liên kết với ngân hàng x?
+                Bạn có chắc chắn muốn huỷ liên kết với ngân hàng này?
               </NormalText>
-              <View className="flex flex-row justify-between text-center mt-4">
-                <View className="w-[50%] mr-2">
+              <View className="flex flex-row gap-x-2 justify-between text-center">
+                <View className="flex-1">
                   <TextButton
                     text="Không"
                     type={TextButtonType.SECONDARY}
                     onPress={handleCancelLink}
                   />
                 </View>
-                <View className="w-[50%] mr-2">
+                <View className="flex-1">
                   <TextButton
                     text="Có"
                     type={TextButtonType.PRIMARY}
-                    href="/account/my-wallet"
+                    loading={bankLinkMutation.isLoading}
+                    disable={bankLinkMutation.isLoading}
+                    onPress={() => bankLinkMutation.mutate(params.bankId)}
                   />
                 </View>
               </View>

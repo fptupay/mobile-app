@@ -4,6 +4,7 @@ import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions } from 'react-native'
 import { useRouter } from 'expo-router'
+import Banks from '@/constants/Banks'
 
 export const formatMoney = (value: number) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -209,4 +210,8 @@ export const successResponseStatus = (status: any) => {
     return false
   }
   return true
+}
+
+export const getBankName = (bankCode: string) => {
+  return Banks.find((item) => item.bank_code === bankCode)?.bank_name
 }

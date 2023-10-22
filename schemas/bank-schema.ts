@@ -17,5 +17,18 @@ export const bankLinkConfirmSchema = z.object({
   otp: z.string()
 })
 
+export const bankAccountSchema = z.object({
+  id: z.string(),
+  user_id: z.string(),
+  bank_acc_hide: z.string(),
+  bank_code: z.string(),
+  phone_number: z.string(),
+  is_default: z.boolean().nullable(),
+  status: z.enum(['ACTIVE', 'INACTIVE']),
+  created_at: z.string(),
+  updated_at: z.string()
+})
+
 export type BankLinkVerifySchema = z.infer<typeof bankLinkVerifySchema>
 export type BankLinkConfirmSchema = z.infer<typeof bankLinkConfirmSchema>
+export type BankAccountSchema = z.infer<typeof bankAccountSchema>

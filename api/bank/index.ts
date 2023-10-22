@@ -34,6 +34,15 @@ export const bankLinkConfirm = async (data: BankLinkConfirmSchema) => {
   return response.data
 }
 
+export const unlinkBank = async (data: string) => {
+  const config = bankConfig
+  const response = await apiPostCall(
+    `/finance/partner/bank/${data}/unlink`,
+    config
+  )
+  return response.data
+}
+
 export const getLinkedBanks = async () => {
   const config = bankConfig
   const response = await apiGetCall('/finance/account/link', config)
