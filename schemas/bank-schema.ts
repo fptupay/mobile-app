@@ -29,6 +29,20 @@ export const bankAccountSchema = z.object({
   updated_at: z.string()
 })
 
+export const moneyVerifySchema = z.object({
+  link_account_id: z.string(),
+  amount: z.number(),
+  content: z.string()
+})
+
+export const moneyConfirmSchema = z.object({
+  link_account_id: z.string(),
+  trans_id: z.string(),
+  otp: z.string()
+})
+
 export type BankLinkVerifySchema = z.infer<typeof bankLinkVerifySchema>
 export type BankLinkConfirmSchema = z.infer<typeof bankLinkConfirmSchema>
 export type BankAccountSchema = z.infer<typeof bankAccountSchema>
+export type MoneyVerifySchema = z.infer<typeof moneyVerifySchema>
+export type MoneyConfirmSchema = z.infer<typeof moneyConfirmSchema>
