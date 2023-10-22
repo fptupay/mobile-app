@@ -159,6 +159,8 @@ export default function FaceAuthenticatorScreen() {
                 text="Đến trang chủ"
                 type="primary"
                 onPress={() => router.push('/account/home')}
+                loading={faceAuthenticationMutation.isLoading}
+                disable={faceAuthenticationMutation.isLoading}
               />
             </View>
           </Modal.Body>

@@ -1,8 +1,9 @@
 import { MediumText, NormalText, SafeAreaView } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { ImageSourcePropType, View, Image } from 'react-native'
+import { Image, ImageSourcePropType, View } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 interface StepCardProps {
@@ -85,7 +86,12 @@ export default function EkycRuleScreen() {
         </View>
         <View className="mt-10">
           <TextButton
-            href="/authentication/init/ekyc/card-capture"
+            onPress={() =>
+              router.push({
+                pathname: 'authentication/init/ekyc/[card]',
+                params: { card: 'front' }
+              } as any)
+            }
             disable={!isAgree}
             text="Quét thẻ"
             type={TextButtonType.PRIMARY}
