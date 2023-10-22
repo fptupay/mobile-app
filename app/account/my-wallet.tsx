@@ -23,7 +23,7 @@ const walletFunctions: ListItemProps[] = [
     color: '#000000',
     title: 'Nạp tiền',
     description: 'Từ ngân hàng vào FPTU Pay',
-    href: '/main-features/(deposit)/load-money',
+    href: '/main-features/deposit/load-money',
     rightIcon: 'ChevronRight'
   },
   {
@@ -67,7 +67,7 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'Settings',
     color: '#CCA967',
-    href: '/main-features/(deposit)/load-money',
+    href: '/main-features/deposit/load-money',
     title: 'Cài đặt'
   }
 ]

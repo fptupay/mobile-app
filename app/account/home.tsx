@@ -328,7 +328,7 @@ export default function HomeScreen() {
           <View className="mt-6">
             <View className="flex-row justify-between">
               <MainAction
-                route="/main-features/(deposit)/load-money"
+                route="/main-features/deposit/load-money"
                 image="Plus"
                 title="Nạp tiền"
               />
@@ -338,7 +338,7 @@ export default function HomeScreen() {
                 title="Chuyển tiền"
               />
               <MainAction
-                route="/main-features/(withdraw)/withdrawal"
+                route="/main-features/withdraw/withdrawal"
                 image="WalletCards"
                 title="Rút tiền"
               />

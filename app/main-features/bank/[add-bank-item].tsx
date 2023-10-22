@@ -152,8 +152,8 @@ export default function AddBankItemScreen() {
               type={TextButtonType.PRIMARY}
               loading={bankLinkMutation.isLoading}
               disable={!isValid || bankLinkMutation.isLoading}
-              previousRoute="/main-features/(deposit)/load-money"
-              nextRoute="/main-features/(bank)/add-bank-success"
+              previousRoute="/main-features/deposit/load-money"
+              nextRoute="/main-features/bank/add-bank-success"
             />
           </View>
         </View>
