@@ -138,8 +138,12 @@ export default function EkycCameraScreen() {
                   ? ekycFrontMutation.mutate(capturedImage)
                   : ekycBackMutation.mutate(capturedImage)
               }
-              disable={ekycFrontMutation.isLoading}
-              loading={ekycFrontMutation.isLoading}
+              disable={
+                ekycFrontMutation.isLoading || ekycBackMutation.isLoading
+              }
+              loading={
+                ekycFrontMutation.isLoading || ekycBackMutation.isLoading
+              }
               text="Dùng ảnh này"
               type={TextButtonType.PRIMARY}
             />
