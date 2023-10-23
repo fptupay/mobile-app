@@ -120,6 +120,8 @@ export default function FaceAuthenticatorScreen() {
                 onPress={() => faceAuthenticationMutation.mutate(capturedImage)}
                 text="Dùng ảnh này"
                 type={TextButtonType.PRIMARY}
+                loading={faceAuthenticationMutation.isLoading}
+                disable={faceAuthenticationMutation.isLoading}
               />
             </View>
             <TouchableOpacity onPress={retakePicture} className="mt-4">
@@ -159,8 +161,6 @@ export default function FaceAuthenticatorScreen() {
                 text="Đến trang chủ"
                 type="primary"
                 onPress={() => router.push('/account/home')}
-                loading={faceAuthenticationMutation.isLoading}
-                disable={faceAuthenticationMutation.isLoading}
               />
             </View>
           </Modal.Body>
