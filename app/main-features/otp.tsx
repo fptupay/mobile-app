@@ -114,7 +114,11 @@ export default function OtpScreen() {
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
-                disable={otpCode.length != 6}
+                disable={
+                  otpCode.length != 6 ||
+                  topupMutation.isLoading ||
+                  withdrawMutation.isLoading
+                }
                 loading={topupMutation.isLoading || withdrawMutation.isLoading}
                 onPress={() => {
                   params.type == 'deposit'
