@@ -64,7 +64,7 @@ export default function WithdrawalScreen() {
           params: {
             type: 'withdraw',
             link_account_id: selectedBank,
-            trans_id: data.data.trans_id
+            trans_id: data.data
           }
         })
       }
