@@ -3,8 +3,9 @@ import {
   LoginOtpFormSchema,
   PasswordInitSchema
 } from '@/schemas/auth-schema'
-import { apiPostCall } from '..'
 import { Platform } from 'react-native'
+import { apiGetCall, apiPostCall } from '..'
+import { PhoneSchema } from '@/schemas/phone-schema'
 
 const loginConfig = {
   headers: {
@@ -46,5 +47,20 @@ export const logoutUser = async () => {
 
 export const changePasswordInit = async (data: PasswordInitSchema) => {
   const response = await apiPostCall('/user/profile/change-password-init', data)
+  return response.data
+}
+
+export const getRegisteredPhoneNumber = async () => {
+  const response = await apiGetCall('/user/profile/phone-number')
+  return response.data
+}
+
+export const confirmPhoneNumber = async (data: PhoneSchema) => {
+  const response = await apiPostCall('/user/profile/confirm-phone-number', data)
+  return response.data
+}
+
+export const verifyOtp = async (data: { otp: string }) => {
+  const response = await apiPostCall('/user/profile/verify-otp', data)
   return response.data
 }

@@ -31,11 +31,7 @@ export const passwordInitSchema = z.object({
       message: 'Mật khẩu cũ không được để trống'
     })
     .trim(),
-  new_password: z
-    .string()
-    .min(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' })
-    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).+$/, 'Mật khẩu không hợp lệ')
-    .trim()
+  new_password: z.string().trim()
 })
 
 export const loginFormSchema = z.object({

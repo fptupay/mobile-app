@@ -7,20 +7,20 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { MediumText, NormalText } from '@/components/Themed'
-import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TextField from '@/components/TextField'
-import { Controller, useForm } from 'react-hook-form'
-import { PasswordInitSchema, passwordInitSchema } from '@/schemas/auth-schema'
-import { zodResolver } from '@hookform/resolvers/zod'
-import BackButton from '@/components/buttons/BackButton'
-import { useMutation } from '@tanstack/react-query'
 import { changePasswordInit } from '@/api/authentication'
-import { isAxiosError } from 'axios'
-import Toast from 'react-native-toast-message'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import TextField from '@/components/TextField'
+import { MediumText, NormalText } from '@/components/Themed'
+import BackButton from '@/components/buttons/BackButton'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { PasswordInitSchema, passwordInitSchema } from '@/schemas/auth-schema'
 import { successResponseStatus } from '@/utils/helper'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { Controller, useForm } from 'react-hook-form'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 export default function ChangePasswordScreen() {
   const router = useRouter()
@@ -28,7 +28,8 @@ export default function ChangePasswordScreen() {
   const {
     control,
     getValues,
-    formState: { errors, isValid }
+    watch,
+    formState: { errors }
   } = useForm<PasswordInitSchema>({
     defaultValues: {
       username: params.username,
@@ -39,11 +40,31 @@ export default function ChangePasswordScreen() {
     mode: 'onBlur'
   })
 
+  const passwordConditions = [
+    {
+      isSatisfied: watch('new_password').length >= 6,
+      label: 'Ít nhất 6 ký tự'
+    },
+    {
+      isSatisfied: /[A-Za-z]/.test(watch('new_password')),
+      label: 'Ít nhất có 1 chữ cái'
+    },
+    {
+      isSatisfied: /[0-9]/.test(watch('new_password')),
+      label: 'Ít nhất có 1 chữ số'
+    },
+    {
+      isSatisfied: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(
+        watch('new_password')
+      ),
+      label: 'At least có 1 ký tự đặc biệt'
+    }
+  ]
+
   const passwordMutation = useMutation({
     mutationFn: (data: PasswordInitSchema) => changePasswordInit(data),
     onSuccess: (data) => {
       if (!successResponseStatus(data)) {
-        console.log('data', data)
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
@@ -91,10 +112,20 @@ export default function ChangePasswordScreen() {
                 Đặt mật khẩu mới
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Mật khẩu mới cần có ít nhất 6 ký tự, bao gồm cả chữ thường, chữ
-                hoa, chữ số và ký tự đặc biệt (@, #, $, %, ^, &, +, =, !)
+                Mật khẩu mới cần thỏa mãn những điều kiện sau:
               </NormalText>
+              {passwordConditions.map((policy, index) => (
+                <NormalText
+                  key={index}
+                  className={`text-tertiary mt-1 ${
+                    policy.isSatisfied ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {policy.label}
+                </NormalText>
+              ))}
             </View>
+
             <View className="w-full mt-8 space-y-4">
               <View>
                 <Controller
@@ -134,17 +165,12 @@ export default function ChangePasswordScreen() {
                     />
                   )}
                 />
-                {errors.new_password && (
-                  <NormalText className="text-red-500 mt-1">
-                    {errors.new_password.message}
-                  </NormalText>
-                )}
               </View>
             </View>
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={!isValid || passwordMutation.isLoading}
+                disable={passwordMutation.isLoading}
                 loading={passwordMutation.isLoading}
                 type={TextButtonType.PRIMARY}
                 onPress={() =>
