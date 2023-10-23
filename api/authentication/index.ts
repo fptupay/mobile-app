@@ -6,28 +6,44 @@ import {
 import { Platform } from 'react-native'
 import { apiGetCall, apiPostCall } from '..'
 import { PhoneSchema } from '@/schemas/phone-schema'
+import { getDeviceId } from '@/utils/helper'
 
 const loginConfig = {
   headers: {
-    'x-client-device-id': 'QEIERUEWHRBWEUIEFIDUQHWWUEHE',
+    'x-client-device-id': '',
     'x-client-platform-version': Platform.Version.toString(),
     'x-client-platform': Platform.OS
   }
 }
 
 export const loginUser = async (data: LoginFormSchema) => {
+  const deviceId = await getDeviceId()
+  const config = {
+    headers: {
+      ...loginConfig.headers,
+      'x-client-device-id': deviceId
+    }
+  }
+  console.log('login config', config)
   const response = await apiPostCall(
     '/user/public/login',
     {
       username: data.username,
       password: data.password
     },
-    loginConfig
+    config
   )
   return response.data
 }
 
 export const loginOtpUser = async (data: LoginOtpFormSchema) => {
+  const deviceId = await getDeviceId()
+  const config = {
+    headers: {
+      ...loginConfig.headers,
+      'x-client-device-id': deviceId
+    }
+  }
   const response = await apiPostCall(
     '/user/public/login',
     {
@@ -35,7 +51,7 @@ export const loginOtpUser = async (data: LoginOtpFormSchema) => {
       password: data.password,
       otp: data.otp
     },
-    loginConfig
+    config
   )
   return response.data
 }
