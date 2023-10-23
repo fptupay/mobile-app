@@ -1,21 +1,25 @@
 import { logoutUser } from '@/api/authentication'
+import { getAccountBalance } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
-import { deleteToken } from '@/utils/helper'
+import { deleteToken, successResponseStatus } from '@/utils/helper'
 import {
   QueryClient,
   QueryClientProvider,
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useRef, useState } from 'react'
 import { Animated, Image, Pressable, ScrollView, View } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -145,6 +149,27 @@ function MyWalletComponent() {
   const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
 
+  const accountBalanceQuery = useQuery({
+    queryKey: ['getAccountBalance'],
+    queryFn: () => getAccountBalance(),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
+
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
     onSuccess: (data) => {
@@ -206,7 +231,9 @@ function MyWalletComponent() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  20.567.000
+                  {accountBalanceQuery.isLoading
+                    ? 'Loading...'
+                    : accountBalanceQuery.data?.data.balance}
                   <SemiText className="underline text-xl text-primary">
                     đ
                   </SemiText>

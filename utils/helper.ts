@@ -205,8 +205,12 @@ export const successResponseStatus = (status: any) => {
 
   if (!status.success || status.error) {
     if (status.httpStatus == 401) {
-      router.push('/')
-      return false
+      deleteToken('access_token')
+        .then(() => router.push('/'))
+        .then(() => {
+          return false
+        })
+        .catch((err) => console.log(err))
     }
     return false
   }

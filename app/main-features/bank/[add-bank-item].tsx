@@ -51,7 +51,10 @@ export default function AddBankItemScreen() {
       } else {
         router.push({
           pathname: '/main-features/bank/otp',
-          params: { trans_id: data.data, bank_code: bank_code as string }
+          params: {
+            trans_id: data.data.trans_id,
+            bank_code: bank_code as string
+          }
         })
       }
     },

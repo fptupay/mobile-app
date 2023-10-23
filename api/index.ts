@@ -3,7 +3,6 @@ import axios from 'axios'
 
 export const refreshAccessToken = async () => {
   const token = await getToken('refresh_token')
-  console.log('refresh token', token)
   const response = await axios.post('/user/public/auth/token/refresh', {
     refresh_token: token
   })
@@ -27,12 +26,13 @@ axiosPrivate.interceptors.request.use(
 )
 
 axiosPrivate.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    const prevReq = error?.path
-    if (error?.httpStatus == 401) {
+  async (response) => {
+    if (
+      response.data?.data?.httpStatus &&
+      response.data.data.httpStatus == '401'
+    ) {
+      console.log('axios response', response.data.data.httpStatus)
+      const prevReq = response.config
       const newToken = await refreshAccessToken().then((res) => {
         return res.access_token
       })
@@ -40,6 +40,10 @@ axiosPrivate.interceptors.response.use(
       prevReq.headers.Authorization = newToken
       return axiosPrivate(prevReq)
     }
+    return response
+  },
+  async (error) => {
+    console.log('axios interceptor', error)
     return Promise.reject(error)
   }
 )

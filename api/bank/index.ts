@@ -88,3 +88,9 @@ export const withdrawConfirm = async (data: MoneyConfirmSchema) => {
   )
   return response.data
 }
+
+export const getAccountBalance = async () => {
+  const config = bankConfig
+  const response = await apiGetCall('/finance/account/balance', config)
+  return response.data
+}

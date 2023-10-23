@@ -24,7 +24,6 @@ import Toast from 'react-native-toast-message'
 export default function OtpScreen() {
   const router = useRouter()
   const params: { trans_id: string; bank_code: string } = useLocalSearchParams()
-  console.log(params)
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')

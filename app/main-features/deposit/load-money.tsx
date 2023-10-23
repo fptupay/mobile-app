@@ -36,6 +36,15 @@ export default function LoadMoneyScreen() {
   const banksLinkedQuery = useQuery({
     queryKey: ['getLinkedBanks'],
     queryFn: () => getLinkedBanks(),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
     onError: (error: AxiosError) => {
       Toast.show({
         type: 'error',

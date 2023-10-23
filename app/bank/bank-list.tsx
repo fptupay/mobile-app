@@ -8,7 +8,7 @@ import { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 import { NormalText } from '@/components/Themed'
 import { useRouter } from 'expo-router'
-import { getBankName } from '@/utils/helper'
+import { getBankName, successResponseStatus } from '@/utils/helper'
 
 export default function BankListScreen() {
   const router = useRouter()
@@ -16,6 +16,15 @@ export default function BankListScreen() {
   const banksLinkedQuery = useQuery({
     queryKey: ['getLinkedBanks'],
     queryFn: () => getLinkedBanks(),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
     onError: (error: AxiosError) => {
       Toast.show({
         type: 'error',
