@@ -1,22 +1,25 @@
 import { logoutUser } from '@/api/authentication'
+import { getAccountBalance } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
-import { NormalText, SemiText, View } from '@/components/Themed'
+import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
-
 import Colors from '@/constants/Colors'
-import { deleteToken } from '@/utils/helper'
+import { deleteToken, successResponseStatus } from '@/utils/helper'
 import {
   QueryClient,
   QueryClientProvider,
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
-import React, { useRef, useState } from 'react'
-import { Animated, Image, Pressable, ScrollView } from 'react-native'
+import { useRef, useState } from 'react'
+import { Animated, Image, Pressable, ScrollView, View } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -24,7 +27,7 @@ const walletFunctions: ListItemProps[] = [
     color: '#000000',
     title: 'Nạp tiền',
     description: 'Từ ngân hàng vào FPTU Pay',
-    href: '/main-features/(deposit)/load-money',
+    href: '/main-features/deposit/load-money',
     rightIcon: 'ChevronRight'
   },
   {
@@ -68,7 +71,7 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'Settings',
     color: '#CCA967',
-    href: '/main-features/(deposit)/load-money',
+    href: '/main-features/deposit/load-money',
     title: 'Cài đặt'
   }
 ]
@@ -146,6 +149,27 @@ function MyWalletComponent() {
   const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
 
+  const accountBalanceQuery = useQuery({
+    queryKey: ['getAccountBalance'],
+    queryFn: () => getAccountBalance(),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
+
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
     onSuccess: (data) => {
@@ -160,7 +184,7 @@ function MyWalletComponent() {
   })
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <DynamicHeader value={scrollOffsetY} />
       <ScrollView
         scrollEventThrottle={5}
@@ -174,7 +198,7 @@ function MyWalletComponent() {
       >
         <View>
           <View
-            className="rounded-lg mx-4 mt-4 p-4 flex flex-row justify-between items-center"
+            className="rounded-lg mx-4 mt-4 p-4 flex flex-row justify-between items-center bg-[#FAFAFA]"
             style={{
               shadowOffset: { width: 2, height: 4 },
               shadowOpacity: 0.4,
@@ -184,7 +208,9 @@ function MyWalletComponent() {
           >
             <View className="flex-1 items-start">
               <View className="flex flex-row justify-center items-center">
-                <NormalText className="text-base">Số dư của bạn</NormalText>
+                <NormalText className="text-base text-secondary">
+                  Số dư của bạn
+                </NormalText>
                 {showBalance ? (
                   <Pressable onPress={() => setShowBalance(!showBalance)}>
                     <Eye size={24} color={Colors.tertiary} className="ml-2" />
@@ -205,7 +231,9 @@ function MyWalletComponent() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  20.567.000
+                  {accountBalanceQuery.isLoading
+                    ? 'Loading...'
+                    : accountBalanceQuery.data?.data.balance}
                   <SemiText className="underline text-xl text-primary">
                     đ
                   </SemiText>
@@ -220,7 +248,7 @@ function MyWalletComponent() {
               </View>
             </View>
             <Image
-              source={require('../../assets/images/account-mascot.png')}
+              source={require('@/assets/images/account-mascot.png')}
               className="w-[100px] h-[90px]"
             />
           </View>

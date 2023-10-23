@@ -4,12 +4,13 @@ import { Image, TextInput, View } from 'react-native'
 import { NormalText, SemiText } from './Themed'
 
 interface SelectFieldProps extends React.ComponentProps<typeof TextInput> {
+  id: string
   label: string
   description?: string | null
 }
 
 export default function SelectField(props: SelectFieldProps) {
-  const { label, description, style, ...otherProps } = props
+  const { id, label, description, style, ...otherProps } = props
   const selectedBank = useBankStore((state) => state.selectedBank)
 
   return (
@@ -17,7 +18,7 @@ export default function SelectField(props: SelectFieldProps) {
       {...otherProps}
       style={style}
       className={`p-4 rounded-lg flex flex-row items-center justify-between border ${
-        selectedBank == label ? 'border-primary' : 'border-gray-300'
+        selectedBank == id ? 'border-primary' : 'border-gray-300'
       }`}
     >
       <View className="flex flex-row gap-3 items-center">
@@ -30,7 +31,7 @@ export default function SelectField(props: SelectFieldProps) {
       <View>
         <View
           className={`w-6 h-6 rounded-full items-center justify-center ${
-            selectedBank == label ? 'bg-primary' : 'bg-white'
+            selectedBank == id ? 'bg-primary' : 'bg-white'
           }`}
         >
           <View className="w-3 h-3 rounded-full bg-white" />

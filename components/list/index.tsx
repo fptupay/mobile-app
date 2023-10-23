@@ -1,4 +1,5 @@
-import { SemiText, View } from '../Themed'
+import { View } from 'react-native'
+import { SemiText } from '../Themed'
 import ListItem, { ListItemProps } from './ListItem'
 
 export default function List({
@@ -10,7 +11,9 @@ export default function List({
 }) {
   return (
     <View className="mx-4">
-      {title && <SemiText className="text-sm mb-3">{title}</SemiText>}
+      {title && (
+        <SemiText className="text-sm mb-3 text-secondary">{title}</SemiText>
+      )}
       <View className="bg-[#FAFAFA] rounded-lg">
         {data.map((item, index) => (
           <ListItem

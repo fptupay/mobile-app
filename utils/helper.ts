@@ -2,7 +2,10 @@ import { CameraCapturedPicture } from 'expo-camera'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
+import { useRouter } from 'expo-router'
+import Banks from '@/constants/Banks'
+import * as Application from 'expo-application'
 
 export const formatMoney = (value: number) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -199,8 +202,29 @@ export const convertDateFormat = (inputDate: string) => {
 }
 
 export const successResponseStatus = (status: any) => {
+  const router = useRouter()
+
   if (!status.success || status.error) {
+    if (status.httpStatus == 401) {
+      deleteToken('access_token')
+        .then(() => router.push('/'))
+        .then(() => {
+          return false
+        })
+        .catch((err) => console.log(err))
+    }
     return false
   }
   return true
+}
+
+export const getBankName = (bankCode: string) => {
+  return Banks.find((item) => item.bank_code === bankCode)?.bank_name
+}
+
+export const getDeviceId = async () => {
+  if (Platform.OS === 'ios') {
+    return await Application.getIosIdForVendorAsync()
+  }
+  return Application.androidId
 }

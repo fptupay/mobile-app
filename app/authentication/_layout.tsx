@@ -13,7 +13,10 @@ export default function AuthenLayout() {
       <Stack.Screen name="common/phone-confirmation" />
       <Stack.Screen name="forget-password/forget-password" />
       <Stack.Screen name="forget-password/reset-password" />
-      <Stack.Screen name="init/change-password" />
+      <Stack.Screen
+        name="init/change-password"
+        options={{ gestureEnabled: false }}
+      />
       <Stack.Screen
         name="init/ekyc/ekyc-rule"
         options={{ gestureEnabled: false }}

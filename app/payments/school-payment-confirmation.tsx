@@ -109,7 +109,7 @@ export default function SchoolPaymentConfirmationScreen() {
                 <TextButton
                   text="Nạp tiền"
                   type="primary"
-                  href="/main-features/(deposit)/load-money"
+                  href="/main-features/deposit/load-money"
                 />
               </View>
             </View>

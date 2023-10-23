@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
 import { changePasswordInit } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
