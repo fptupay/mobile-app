@@ -46,6 +46,14 @@ export default function EkycCameraScreen() {
   const ekycFrontMutation = useMutation({
     mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
     onSuccess: (data) => {
+      if (data.success === false) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: data.message
+        })
+        return
+      }
       setEkycId(data.data.user_ekyc_id)
       setFrontCardDetails(data?.data)
       router.push('/authentication/init/ekyc/ekyc-result')
@@ -65,7 +73,15 @@ export default function EkycCameraScreen() {
     mutationFn: (data: CameraCapturedPicture) => {
       return ekycBack(data, ekycId)
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.success === 'false') {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: data.message
+        })
+        return
+      }
       router.push('/authentication/init/ekyc/face-authenticator')
     },
     onError: (error: Error) => {

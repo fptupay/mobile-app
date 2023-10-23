@@ -52,7 +52,15 @@ export default function FaceAuthenticatorScreen() {
 
   const faceAuthenticationMutation = useMutation({
     mutationFn: (data: any) => ekycSelfie(data, ekycId),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.success === false) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi xác thực',
+          text2: data.message
+        })
+        return
+      }
       setIsVisible(true)
     },
     onError: (error) => {
