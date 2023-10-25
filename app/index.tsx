@@ -54,7 +54,6 @@ export default function LoginScreen() {
         router.push({
           pathname: '/authentication/common/[otp-type]',
           params: {
-            type: 'otp-login',
             props: JSON.stringify({ ...getValues() })
           }
         })

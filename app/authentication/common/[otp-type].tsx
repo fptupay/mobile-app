@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message'
 
 export default function SignUpOtpScreen() {
   const router = useRouter()
-  const params: { type: string; props: any } = useLocalSearchParams()
+  const params: { props: any } = useLocalSearchParams()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
