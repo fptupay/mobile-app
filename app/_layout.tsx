@@ -1,51 +1,58 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useFonts } from 'expo-font'
+import { Slot, SplashScreen } from 'expo-router'
+import React, { useEffect } from 'react'
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message'
+export { ErrorBoundary } from 'expo-router'
 
-export { ErrorBoundary } from "expo-router";
+SplashScreen.preventAutoHideAsync()
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const toastConfig = {
+  success: (props: any) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: '#22c55e', backgroundColor: '#f0fdf4' }}
+      text1Style={{ fontSize: 16, fontWeight: 'semibold' }}
+      text2Style={{ fontSize: 14 }}
+    />
+  ),
+  error: (props: any) => (
+    <ErrorToast
+      {...props}
+      style={{ borderLeftColor: '#ef4444', backgroundColor: '#fef2f2' }}
+      text1Style={{ fontSize: 16, fontWeight: 'semibold' }}
+      text2Style={{ fontSize: 14 }}
+    />
+  )
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Inter: require("../assets/fonts/Inter-Regular.ttf"),
-    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
-    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
-  });
+    Inter: require('../assets/fonts/Inter-Regular.ttf'),
+    'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
+    'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf')
+  })
+  const queryClient = new QueryClient()
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+    if (error) throw error
+  }, [error])
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ presentation: "modal" }} />
-      </Stack>
-    </ThemeProvider>
-  );
+    <QueryClientProvider client={queryClient}>
+      <Slot />
+      <Toast config={toastConfig} />
+    </QueryClientProvider>
+  )
 }
