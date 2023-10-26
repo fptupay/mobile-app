@@ -83,6 +83,18 @@ export const unlinkBank = async (data: string) => {
   return response.data
 }
 
+export const getAllBanks = async () => {
+  const deviceId = await getDeviceId()
+  const config = {
+    headers: {
+      ...bankConfig.headers,
+      'x-client-device-id': deviceId
+    }
+  }
+  const response = await apiGetCall('/finance/bank', config)
+  return response.data
+}
+
 export const getLinkedBanks = async () => {
   const deviceId = await getDeviceId()
   const config = {
