@@ -1,11 +1,11 @@
-import { bankLinkVerify } from '@/api/bank'
+import { bankLinkAccountVerify } from '@/api/bank'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { NormalText, SemiText, View } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import {
-  BankLinkVerifySchema,
-  bankLinkVerifySchema
+  BankLinkAccountVerifySchema,
+  bankLinkAccountVerifySchema
 } from '@/schemas/bank-schema'
 import { successResponseStatus } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,22 +25,19 @@ export default function AddBankItemScreen() {
     control,
     getValues,
     formState: { errors, isValid }
-  } = useForm<BankLinkVerifySchema>({
+  } = useForm<BankLinkAccountVerifySchema>({
     defaultValues: {
       bank_code: bank_code as string,
       card_no: '',
-      holder_name: '',
-      identity: '',
-      phone_number: '0972141556',
-      identity_type: 'CCCD',
       link_type: 'ACCOUNT'
     },
-    resolver: zodResolver(bankLinkVerifySchema),
+    resolver: zodResolver(bankLinkAccountVerifySchema),
     mode: 'onBlur'
   })
 
-  const bankLinkMutation = useMutation({
-    mutationFn: (data: BankLinkVerifySchema) => bankLinkVerify(data),
+  const bankLinkAccountMutation = useMutation({
+    mutationFn: (data: BankLinkAccountVerifySchema) =>
+      bankLinkAccountVerify(data),
     onSuccess: (data) => {
       if (!successResponseStatus(data)) {
         Toast.show({
@@ -96,45 +93,6 @@ export default function AddBankItemScreen() {
                   {errors.card_no.message}
                 </NormalText>
               )}
-              <Controller
-                control={control}
-                name="holder_name"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextField
-                    label="Họ tên chủ thẻ"
-                    className="mt-5 mb-1"
-                    value={value}
-                    editable={true}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                  />
-                )}
-              />
-              {errors.holder_name && (
-                <NormalText className="text-red-500">
-                  {errors.holder_name.message}
-                </NormalText>
-              )}
-              <Controller
-                control={control}
-                name="identity"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextField
-                    label="Số CCCD/CMND"
-                    className="mt-5 mb-1"
-                    keyboardType="numeric"
-                    value={value}
-                    editable={true}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                  />
-                )}
-              />
-              {errors.identity && (
-                <NormalText className="text-red-500">
-                  {errors.identity.message}
-                </NormalText>
-              )}
             </View>
           </View>
 
@@ -150,11 +108,11 @@ export default function AddBankItemScreen() {
               </NormalText>
             </View>
             <TextButton
-              onPress={() => bankLinkMutation.mutate(getValues())}
+              onPress={() => bankLinkAccountMutation.mutate(getValues())}
               text="Liên kết ngay"
               type={TextButtonType.PRIMARY}
-              loading={bankLinkMutation.isLoading}
-              disable={!isValid || bankLinkMutation.isLoading}
+              loading={bankLinkAccountMutation.isLoading}
+              disable={!isValid || bankLinkAccountMutation.isLoading}
               previousRoute="/main-features/deposit/load-money"
               nextRoute="/main-features/bank/add-bank-success"
             />
