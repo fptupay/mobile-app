@@ -2,13 +2,20 @@ import { z } from 'zod'
 
 export const bankLinkAccountVerifySchema = z.object({
   bank_code: z.string(),
-  card_no: z.string(),
+  card_no: z.string().min(1, { message: 'Số thẻ không được để trống' }),
   link_type: z.string()
 })
 
 export const bankLinkCardVerifySchema = z
   .object({
-    issue_date: z.string()
+    issue_date: z
+      .string()
+      .refine((val) => val.split('/')[0] <= '12', {
+        message: 'Tháng không hợp lệ'
+      })
+      .refine((val) => val.split('/')[1] >= '23', {
+        message: 'Năm không hợp lệ'
+      })
   })
   .merge(bankLinkAccountVerifySchema)
 
