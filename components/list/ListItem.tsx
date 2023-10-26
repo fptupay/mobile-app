@@ -38,7 +38,9 @@ export default function ListItem({
         <View className="ml-4 bg-[#FAFAFA] flex justify-center">
           <NormalText className="text-secondary">{title}</NormalText>
           {description && (
-            <NormalText className="text-tertiary">{description}</NormalText>
+            <NormalText className="text-tertiary w-full">
+              {description}
+            </NormalText>
           )}
         </View>
       </View>

@@ -18,7 +18,7 @@ import { Image, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 export default function AddBankItemScreen() {
-  const { bank_code } = useLocalSearchParams()
+  const { code, type, name } = useLocalSearchParams()
   const router = useRouter()
 
   const {
@@ -27,9 +27,9 @@ export default function AddBankItemScreen() {
     formState: { errors, isValid }
   } = useForm<BankLinkAccountVerifySchema>({
     defaultValues: {
-      bank_code: bank_code as string,
+      bank_code: code as string,
       card_no: '',
-      link_type: 'ACCOUNT'
+      link_type: type as string
     },
     resolver: zodResolver(bankLinkAccountVerifySchema),
     mode: 'onBlur'
@@ -50,7 +50,7 @@ export default function AddBankItemScreen() {
           pathname: '/main-features/bank/otp',
           params: {
             trans_id: data.data.trans_id,
-            bank_code: bank_code as string
+            bank_code: code as string
           }
         })
       }
@@ -67,7 +67,7 @@ export default function AddBankItemScreen() {
   })
 
   return (
-    <SharedLayout href="/main-features/(bank)/add-bank" title="Agribank">
+    <SharedLayout href="/main-features/bank/add-bank" title={name as string}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="py-5 bg-transparent h-full flex flex-col justify-between">
           <View className="bg-transparent">

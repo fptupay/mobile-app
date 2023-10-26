@@ -2,8 +2,9 @@ import { getAllBanks } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
 import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import TextButton from '@/components/buttons/TextButton'
+import { NormalText, SemiText } from '@/components/Themed'
+import IconButton from '@/components/buttons/IconButton'
+import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { successResponseStatus } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
@@ -45,6 +46,11 @@ type BankItemProp = {
 export default function AddBankScreen() {
   const params: { previousRoute: string } = useLocalSearchParams()
   const [searchValue, setSearchValue] = useState('')
+  const [bank, setBank] = useState({
+    bankCode: '',
+    bankName: ''
+  })
+  const [isVisible, setVisible] = useState(false)
   const router = useRouter()
 
   const banksQuery = useQuery({
@@ -103,12 +109,13 @@ export default function AddBankScreen() {
         </View>
         <View>
           <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/main-features/bank/[add-bank-item]',
-                params: { bank_code: item.code }
+            onPress={() => {
+              setVisible(true)
+              setBank({
+                bankCode: item.code,
+                bankName: item.short_name
               })
-            }
+            }}
           >
             <ChevronRight size={24} color={Colors.secondary} />
           </Pressable>
@@ -119,25 +126,54 @@ export default function AddBankScreen() {
 
   const BankTypeModal = () => {
     return (
-      <Modal isVisible={false}>
+      <Modal isVisible={isVisible}>
         <Modal.Container>
           <View className="flex items-center">
-            <Modal.Header title="" />
+            <Modal.Header title="Phương thức liên kết" />
           </View>
           <Modal.Body>
-            <MediumText className="text-secondary text-center mb-2">
-              Xác thực tài khoản hoàn tất
-            </MediumText>
             <NormalText className="text-tertiary text-center">
-              Bây giờ bạn đã có thể thoải mái trải nghiệm các dịch vụ của ví
-              điện tử FPTUPay!
+              Bạn có thể liên kết ví FPTUPay với thẻ hoặc tài khoản ngân hàng
             </NormalText>
 
-            <View className="mt-6 w-full">
+            <View className="bg-[#FAFAFA] rounded-lg mt-3">
+              <IconButton
+                label="Thẻ ngân hàng"
+                onPress={() =>
+                  router.push({
+                    pathname: '/main-features/bank/[code]',
+                    params: {
+                      code: bank.bankCode,
+                      type: 'CARD',
+                      name: bank.bankName
+                    }
+                  })
+                }
+                description="Liên kết bằng số thẻ ngân hàng"
+              />
+              <View className="mt-2">
+                <IconButton
+                  label="Tài khoản ngân hàng"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/main-features/bank/[code]',
+                      params: {
+                        code: bank.bankCode,
+                        type: 'ACCOUNT',
+                        name: bank.bankName
+                      }
+                    })
+                  }
+                  description="Liên kết bằng số tài khoản ngân hàng"
+                />
+              </View>
+            </View>
+
+            <View className="mt-3 w-full">
               <TextButton
-                text="Đến trang chủ"
-                type="primary"
-                onPress={() => router.push('/account/home')}
+                text="Liên kết sau"
+                type={TextButtonType.SECONDARY}
+                onPress={() => setVisible(false)}
               />
             </View>
           </Modal.Body>
@@ -152,6 +188,8 @@ export default function AddBankScreen() {
         <View className="px-4">
           {banksQuery.isLoading ? (
             <Text>Loading...</Text>
+          ) : filteredBankData.length == 0 ? (
+            <Text className="text-secondary">No banks</Text>
           ) : (
             <FlatList
               contentContainerStyle={{
@@ -163,24 +201,6 @@ export default function AddBankScreen() {
               showsVerticalScrollIndicator={false}
             />
           )}
-          {/* {filteredBankData.length == 0 ? (
-            <View className="mt-10 flex justify-center items-center space-y-4">
-              <CustomIcon name="SearchX" color={Colors.tertiary} size={64} />
-              <SemiText className="text-lg text-tertiary">
-                Không tìm thấy kết quả nào
-              </SemiText>
-            </View>
-          ) : (
-            <FlatList
-              contentContainerStyle={{
-                paddingBottom: 180
-              }}
-              data={filteredBankData}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderItem}
-              showsVerticalScrollIndicator={false}
-            />
-          )} */}
         </View>
       </View>
     )

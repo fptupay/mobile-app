@@ -50,7 +50,7 @@ export default function BankListScreen() {
                 <Pressable
                   onPress={() =>
                     router.push({
-                      pathname: '/bank/[bank-detail]',
+                      pathname: '/bank/[bankId]',
                       params: { bankId: item.item.id }
                     })
                   }

@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const bankLinkAccountVerifySchema = z.object({
   bank_code: z.string(),
   card_no: z.string(),
-  link_type: z.enum(['ACCOUNT', 'CARD'])
+  link_type: z.string()
 })
 
 export const bankLinkCardVerifySchema = z
