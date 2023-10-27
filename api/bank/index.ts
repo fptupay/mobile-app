@@ -1,7 +1,8 @@
 import { Platform } from 'react-native'
 import { apiGetCall, apiPostCall } from '..'
 import {
-  BankLinkVerifySchema,
+  BankLinkAccountVerifySchema,
+  BankLinkCardVerifySchema,
   BankLinkConfirmSchema,
   MoneyVerifySchema,
   MoneyConfirmSchema
@@ -17,7 +18,25 @@ const bankConfig = {
   }
 }
 
-export const bankLinkVerify = async (data: BankLinkVerifySchema) => {
+export const bankLinkAccountVerify = async (
+  data: BankLinkAccountVerifySchema
+) => {
+  const deviceId = await getDeviceId()
+  const config = {
+    headers: {
+      ...bankConfig.headers,
+      'x-client-device-id': deviceId
+    }
+  }
+  const response = await apiPostCall(
+    '/finance/partner/bank/link/verify',
+    data,
+    config
+  )
+  return response.data
+}
+
+export const bankLinkCardVerify = async (data: BankLinkCardVerifySchema) => {
   const deviceId = await getDeviceId()
   const config = {
     headers: {
@@ -61,6 +80,18 @@ export const unlinkBank = async (data: string) => {
     `/finance/partner/bank/${data}/unlink`,
     config
   )
+  return response.data
+}
+
+export const getAllBanks = async () => {
+  const deviceId = await getDeviceId()
+  const config = {
+    headers: {
+      ...bankConfig.headers,
+      'x-client-device-id': deviceId
+    }
+  }
+  const response = await apiGetCall('/finance/bank', config)
   return response.data
 }
 

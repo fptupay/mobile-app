@@ -231,7 +231,7 @@ function MyWalletComponent() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  {accountBalanceQuery.isLoading
+                  {accountBalanceQuery.isLoading || !accountBalanceQuery.data
                     ? 'Loading...'
                     : accountBalanceQuery.data?.data.balance}
                   <SemiText className="underline text-xl text-primary">

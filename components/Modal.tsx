@@ -28,14 +28,14 @@ function ModalContainer({ children }: { children: React.ReactNode }) {
 
 function ModalHeader({ title }: { title: string }) {
   return (
-    <View className="mb-2">
+    <View className="mb-2 bg-transparent">
       <MediumText className="text-xl text-primary">{title}</MediumText>
     </View>
   )
 }
 
 function ModalBody({ children }: { children: React.ReactNode }) {
-  return <View>{children}</View>
+  return <View className="bg-transparent">{children}</View>
 }
 
 Modal.Container = ModalContainer
