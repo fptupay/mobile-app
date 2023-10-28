@@ -57,6 +57,12 @@ const accountDetail: ListItemProps[] = [
 
 const otherFunctions: ListItemProps[] = [
   {
+    leftIcon: 'Shield',
+    color: '#f43f5e',
+    href: '/smart-otp',
+    title: 'Cài đặt Smart OTP'
+  },
+  {
     leftIcon: 'Lock',
     color: '#A983FC',
     href: '/authentication/reset-password',
