@@ -1,4 +1,5 @@
 import { CameraCapturedPicture } from 'expo-camera'
+import * as Crypto from 'expo-crypto'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
@@ -229,10 +230,21 @@ export const getDeviceId = async () => {
   return Application.androidId
 }
 
-export const generateKey = () => {
-  const array = new Uint8Array(32)
-  window.crypto.getRandomValues(array)
-  return Array.from(array, (byte) => ('0' + byte.toString(16)).slice(-2)).join(
-    ''
+export const generateSharedKey = async (
+  otpPin: string,
+  deviceId: string | null
+) => {
+  const message = otpPin + deviceId
+  const key = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message,
+    {
+      encoding: Crypto.CryptoEncoding.BASE64
+    }
   )
+  return key
+}
+
+export const generateTransactionId = () => {
+  return Math.floor(Math.random() * 1000000000000000000).toString()
 }
