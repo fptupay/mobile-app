@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { MediumText, NormalText, SafeAreaView } from '@/components/Themed'
+import { MediumText, NormalText, SafeAreaView, View } from '@/components/Themed'
 import { OtpInput } from '@/components/OtpInput'
 import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message'
 import { Pressable } from 'react-native'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { generateOTP } from '@/api/otp'
+import Colors from '@/constants/Colors'
 
 export default function RegisterPINScreen() {
   const [pin, setPin] = useState<string>('')
@@ -48,25 +49,35 @@ export default function RegisterPINScreen() {
   }
 
   return (
-    <SafeAreaView>
-      <MediumText>Thiết lập mã PIN</MediumText>
-      <NormalText>Vui lòng cài đặt PIN cho Smart OTP</NormalText>
+    <SafeAreaView className="flex-1 px-4">
+      <View className="pt-8">
+        <MediumText className="text-3xl tracking-tight text-secondary">
+          Xác nhận số điện thoại
+        </MediumText>
+        <NormalText className="text-tertiary mt-1">
+          Vui lòng xác nhận số điện thoại của bạn để gửi mã OTP
+        </NormalText>
+      </View>
 
-      <NormalText>Nhập mã PIN</NormalText>
+      <NormalText className="text-center mb-2">Nhập mã PIN</NormalText>
       <OtpInput
         ref={otpRef}
         numberOfDigits={6}
         onTextChange={(text) => setPin(text)}
+        focusColor={Colors.primary}
+        type="covered"
       />
       <Pressable className="mb-5" onPress={handleClearPIN}>
         <NormalText className="text-primary text-center">Xóa</NormalText>
       </Pressable>
 
-      <NormalText>Nhập lại mã PIN</NormalText>
+      <NormalText className="text-center mb-2">Nhập lại mã PIN</NormalText>
       <OtpInput
         ref={confirmedOtpRef}
         numberOfDigits={6}
         onTextChange={(text) => setConfirmedPin(text)}
+        focusColor={Colors.primary}
+        type="covered"
       />
       <Pressable className="mb-5" onPress={handleClearConfirmedPIN}>
         <NormalText className="text-primary text-center">Xóa</NormalText>
