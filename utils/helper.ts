@@ -4,7 +4,7 @@ import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions, Platform } from 'react-native'
-import { useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import Banks from '@/constants/Banks'
 import * as Application from 'expo-application'
 
@@ -203,8 +203,6 @@ export const convertDateFormat = (inputDate: string) => {
 }
 
 export const successResponseStatus = (status: any) => {
-  const router = useRouter()
-
   if (!status.success || status.error) {
     if (status.httpStatus == 401) {
       deleteToken('access_token')
