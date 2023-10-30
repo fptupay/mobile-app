@@ -15,7 +15,8 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
     numberOfDigits,
     focusColor = '#A4D0A4',
     focusStickBlinkingDuration,
-    theme = {}
+    theme = {},
+    type = 'uncovered'
   } = props
   const {
     containerStyle,
@@ -34,14 +35,16 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
           .fill(0)
           .map((_, index) => {
             const char = text[index]
-            const isFocusedInput = index === focusedInputIndex
+            const isFocusedInput = focusedInputIndex === index
 
             return (
               <Pressable
                 key={`${char}-${index}`}
                 onPress={handlePress}
                 style={[
-                  styles.codeContainer,
+                  type === 'covered'
+                    ? styles.codeContainerCovered
+                    : styles.codeContainer,
                   isFocusedInput ? { borderColor: focusColor } : {},
                   pinCodeContainerStyle
                 ]}
@@ -54,8 +57,9 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
                     focusStickBlinkingDuration={focusStickBlinkingDuration}
                   />
                 ) : (
+                  // display * if there is a char, otherwise display nothing
                   <Text style={[styles.codeText, pinCodeTextStyle]}>
-                    {char}
+                    {char ? (type === 'covered' ? '*' : char) : ''}
                   </Text>
                 )}
               </Pressable>
@@ -68,7 +72,6 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
         maxLength={numberOfDigits}
         inputMode="numeric"
         ref={inputRef}
-        autoFocus
         style={styles.hiddenInput}
         testID="otp-input"
       />
@@ -88,6 +91,14 @@ const styles = StyleSheet.create({
   codeContainer: {
     borderWidth: 1,
     borderRadius: 12,
+    borderColor: '#DFDFDE',
+    height: 60,
+    width: 44,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  codeContainerCovered: {
+    borderBottomWidth: 1,
     borderColor: '#DFDFDE',
     height: 60,
     width: 44,

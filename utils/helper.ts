@@ -1,9 +1,10 @@
 import { CameraCapturedPicture } from 'expo-camera'
+import * as Crypto from 'expo-crypto'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions, Platform } from 'react-native'
-import { useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import Banks from '@/constants/Banks'
 import * as Application from 'expo-application'
 
@@ -202,8 +203,6 @@ export const convertDateFormat = (inputDate: string) => {
 }
 
 export const successResponseStatus = (status: any) => {
-  const router = useRouter()
-
   if (!status.success || status.error) {
     if (status.httpStatus == 401) {
       deleteToken('access_token')
@@ -227,4 +226,23 @@ export const getDeviceId = async () => {
     return await Application.getIosIdForVendorAsync()
   }
   return Application.androidId
+}
+
+export const generateSharedKey = async (
+  otpPin: string,
+  deviceId: string | null
+) => {
+  const message = otpPin + deviceId
+  const key = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message,
+    {
+      encoding: Crypto.CryptoEncoding.BASE64
+    }
+  )
+  return key
+}
+
+export const generateTransactionId = () => {
+  return Math.floor(Math.random() * 1000000000000000000).toString()
 }
