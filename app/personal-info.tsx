@@ -3,11 +3,13 @@ import DescriptionRowItem, {
   ListItemProp
 } from '@/components/DescriptionRowItem'
 import SharedLayout from '@/components/SharedLayout'
+import { NormalText, View } from '@/components/Themed'
+import Colors from '@/constants/Colors'
 import { useQuery } from '@tanstack/react-query'
-import { ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
 
 export default function PersonalInfoScreen() {
-  const { data: profile } = useQuery({
+  const { data: profile, isLoading } = useQuery({
     queryKey: ['user-details'],
     queryFn: getUserDetails
   })
@@ -55,15 +57,24 @@ export default function PersonalInfoScreen() {
 
   return (
     <SharedLayout href="/account/my-wallet" title="Thông tin cá nhân">
-      <ScrollView className="mt-10">
-        {mockPersonalData.map((item) => (
-          <DescriptionRowItem
-            key={item.label}
-            label={item.label}
-            description={item.description}
-          />
-        ))}
-      </ScrollView>
+      {isLoading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color={Colors.tertiary} />
+          <NormalText className="mt-2 text-tertiary">
+            Đang tải dữ liệu
+          </NormalText>
+        </View>
+      ) : (
+        <ScrollView className="mt-10">
+          {mockPersonalData.map((item) => (
+            <DescriptionRowItem
+              key={item.label}
+              label={item.label}
+              description={item.description}
+            />
+          ))}
+        </ScrollView>
+      )}
     </SharedLayout>
   )
 }

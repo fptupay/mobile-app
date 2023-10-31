@@ -17,8 +17,8 @@ import { AxiosError } from 'axios'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
-import { useRef, useState } from 'react'
-import { Animated, Image, Pressable, ScrollView, View } from 'react-native'
+import { useState } from 'react'
+import { Image, Pressable, ScrollView, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 const walletFunctions: ListItemProps[] = [
@@ -82,63 +82,6 @@ const otherFunctions: ListItemProps[] = [
   }
 ]
 
-const Header_Max = 215
-const Header_Min = 120
-const Scroll_Distance = Header_Max - Header_Min
-
-const DynamicHeader = ({ value }: any) => {
-  const heightAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [Header_Max, Header_Min],
-    extrapolate: 'clamp'
-  })
-
-  const opacityAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [1, 0],
-    extrapolate: 'clamp'
-  })
-
-  const sizeAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [72, 0],
-    extrapolate: 'clamp'
-  })
-
-  return (
-    <Animated.View
-      style={{ height: heightAnimation }}
-      className="h-[215px] bg-white rounded-bl-[30px] rounded-br-[30px] relative flex justify-center items-center"
-    >
-      <LinearGradient
-        className="w-full h-full rounded-bl-[30px] rounded-br-[30px]"
-        colors={['#fdc83080', '#f97316bf']}
-      />
-      <View className="absolute bg-transparent pt-8 flex items-center">
-        <Animated.View
-          style={{
-            opacity: opacityAnimation,
-            width: sizeAnimation,
-            height: sizeAnimation
-          }}
-          className="w-[72px] h-[72px] rounded-full relative"
-        >
-          <Image
-            className="rounded-full w-[72px] h-[72px] bg-black"
-            source={require('@/assets/images/account-mascot.png')}
-          />
-          <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
-            <CustomIcon name="Pencil" color="black" size={16} />
-          </View>
-        </Animated.View>
-        <SemiText className="text-center text-secondary mt-5">
-          Cao Quynh Anh
-        </SemiText>
-      </View>
-    </Animated.View>
-  )
-}
-
 export default function MyWalletScreen() {
   const queryClient = new QueryClient()
 
@@ -152,7 +95,6 @@ export default function MyWalletScreen() {
 function MyWalletComponent() {
   const router = useRouter()
 
-  const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
 
   const accountBalanceQuery = useQuery({
@@ -191,17 +133,27 @@ function MyWalletComponent() {
 
   return (
     <View className="flex-1 bg-white">
-      <DynamicHeader value={scrollOffsetY} />
-      <ScrollView
-        scrollEventThrottle={5}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          {
-            useNativeDriver: false
-          }
-        )}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
+      <View className="h-[215px] bg-white rounded-bl-[30px] rounded-br-[30px] relative flex justify-center items-center">
+        <LinearGradient
+          className="w-full h-full rounded-bl-[30px] rounded-br-[30px]"
+          colors={['#fdc83080', '#f97316bf']}
+        />
+        <View className="absolute bg-transparent pt-8 flex items-center">
+          <View className="w-[72px] h-[72px] rounded-full relative">
+            <Image
+              className="rounded-full w-[72px] h-[72px] bg-black"
+              source={require('@/assets/images/account-mascot.png')}
+            />
+            <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
+              <CustomIcon name="Pencil" color="black" size={16} />
+            </View>
+          </View>
+          <SemiText className="text-center text-secondary mt-5">
+            Cao Quynh Anh
+          </SemiText>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <View>
           <View
             className="rounded-lg mx-4 mt-4 p-4 flex flex-row justify-between items-center bg-[#FAFAFA]"
