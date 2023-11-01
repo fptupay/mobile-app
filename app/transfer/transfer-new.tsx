@@ -21,6 +21,7 @@ export default function TransferMoneyScreen() {
             label="Mã sinh viên"
             errorText={error}
             onChangeText={(text) => setStudentCode(text)}
+            onSubmitEditing={() => console.log('submit')}
           />
           <TextField
             value={owner}
@@ -30,11 +31,12 @@ export default function TransferMoneyScreen() {
           />
         </View>
       </TouchableWithoutFeedback>
-      <View className="mt-auto">
+      <View className="mt-auto mb-4">
         <TextButton
           href="/transfer/transfer-amount"
           text="Tiếp tục"
           type="primary"
+          disable={!studentCode}
         />
       </View>
     </SharedLayout>

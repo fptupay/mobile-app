@@ -3,6 +3,7 @@ import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
+import { useAccountStore } from '@/stores/accountStore'
 import { useModalStore } from '@/stores/modalStore'
 import { formatMoney } from '@/utils/helper'
 import { useRouter } from 'expo-router'
@@ -27,14 +28,15 @@ export default function TransferAmountScreen() {
 
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
+  const balance = useAccountStore((state) => state.balance)
 
   const handleAmountChange = (amount: string) => {
-    setRawAmount(amount)
     // amount should not start with 0
     if (amount.startsWith('0')) {
       return
     }
     const numericValue = amount.replace(/\D/g, '')
+    setRawAmount(numericValue)
 
     const baseAmount = parseInt(numericValue) || 0
     // prevent user from entering more than 100 million
@@ -66,9 +68,10 @@ export default function TransferAmountScreen() {
   }
 
   const handleTransfer = () => {
-    if (rawAmount >= '20') {
+    if (rawAmount > balance) {
       setIsOpen(true)
     } else {
+      setIsOpen(false)
       router.push('/transfer/transfer-confirmation')
     }
   }
@@ -79,7 +82,7 @@ export default function TransferAmountScreen() {
       <SharedLayout href="/transfer/transfer-new" title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            className="flex-1"
+            className="h-full"
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             {/* Recipient info */}
@@ -99,35 +102,41 @@ export default function TransferAmountScreen() {
                 value={amount}
                 onChangeText={handleAmountChange}
                 keyboardType="numeric"
+                autoFocus
               />
               <NormalText className="text-tertiary">
-                Số dư hiện tại: 1.000.000đ
+                Số dư hiện tại: {balance}đ
               </NormalText>
             </View>
 
             {/* Suggestion */}
-            <View className="space-x-2 flex-row">
-              {suggestions.map((suggestion) => (
-                <TouchableOpacity
-                  key={suggestion}
-                  onPress={() => handleSuggestionPress(suggestion)}
-                  className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
-                >
-                  <MediumText>{formatMoney(suggestion)}</MediumText>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {
+              <View className="space-x-2 flex-row">
+                {suggestions.map((suggestion) => (
+                  <TouchableOpacity
+                    key={suggestion}
+                    onPress={() => handleSuggestionPress(suggestion)}
+                    className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+                  >
+                    <MediumText>{formatMoney(suggestion)}</MediumText>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            }
             <TextField
               value={message}
               label="Nhắn gửi"
               onChangeText={(text) => setMessage(text)}
               className="my-4"
             />
-            <TextButton
-              onPress={handleTransfer}
-              text="Chuyển tiền"
-              type="primary"
-            />
+            <View className="mb-4">
+              <TextButton
+                onPress={handleTransfer}
+                text="Chuyển tiền"
+                type="primary"
+                disable={!amount}
+              />
+            </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </SharedLayout>
