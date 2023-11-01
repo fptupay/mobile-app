@@ -333,7 +333,7 @@ export default function HomeScreen() {
                 title="Nạp tiền"
               />
               <MainAction
-                route="/transfer/transfer-list"
+                route="/transfer"
                 image="ArrowRight"
                 title="Chuyển tiền"
               />

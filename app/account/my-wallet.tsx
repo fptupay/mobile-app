@@ -6,6 +6,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
+import { useAccountStore } from '@/stores/accountStore'
 import { deleteToken, successResponseStatus } from '@/utils/helper'
 import {
   QueryClient,
@@ -96,11 +97,13 @@ function MyWalletComponent() {
   const router = useRouter()
 
   const [showBalance, setShowBalance] = useState(false)
+  const setBalance = useAccountStore((state) => state.setBalance)
 
   const accountBalanceQuery = useQuery({
     queryKey: ['getAccountBalance'],
-    queryFn: () => getAccountBalance(),
+    queryFn: getAccountBalance,
     onSuccess: (data) => {
+      setBalance(data.data.balance)
       if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
