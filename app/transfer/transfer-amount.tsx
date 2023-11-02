@@ -23,13 +23,12 @@ import {
 export default function TransferAmountScreen() {
   const router = useRouter()
   const { studentCode, owner } = useLocalSearchParams()
+  const { full_name } = useAccountStore((state) => state.details)
 
   const [amount, setAmount] = useState<string>()
   const [rawAmount, setRawAmount] = useState<string>('')
   const [suggestions, setSuggestions] = useState<number[]>([])
-  const [message, setMessage] = useState<string>(
-    `${owner as string} chuyển tiền`
-  )
+  const [message, setMessage] = useState<string>(`${full_name} chuyển tiền`)
 
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
