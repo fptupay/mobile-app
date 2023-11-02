@@ -2,6 +2,7 @@ import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import Colors from '@/constants/Colors'
+import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
 import { WINDOW_HEIGHT, formatMoney } from '@/utils/helper'
 import { useRouter } from 'expo-router'
@@ -146,6 +147,7 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
+  const balance = useAccountStore((state) => state.balance)
 
   const toggleSearch = () => {
     setIsSearching(!isSearching)
@@ -321,7 +323,7 @@ export default function HomeScreen() {
               Số dư của bạn
             </NormalText>
             <SemiText className="text-3xl text-secondary">
-              {formatMoney(100000000)}đ
+              {formatMoney(balance)}đ
             </SemiText>
           </View>
 

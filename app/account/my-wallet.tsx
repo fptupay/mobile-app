@@ -8,12 +8,7 @@ import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { deleteToken, successResponseStatus } from '@/utils/helper'
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery
-} from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
@@ -84,23 +79,13 @@ const otherFunctions: ListItemProps[] = [
 ]
 
 export default function MyWalletScreen() {
-  const queryClient = new QueryClient()
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MyWalletComponent />
-    </QueryClientProvider>
-  )
-}
-
-function MyWalletComponent() {
   const router = useRouter()
 
   const [showBalance, setShowBalance] = useState(false)
   const setBalance = useAccountStore((state) => state.setBalance)
 
   const accountBalanceQuery = useQuery({
-    queryKey: ['getAccountBalance'],
+    queryKey: ['account-balance'],
     queryFn: getAccountBalance,
     onSuccess: (data) => {
       setBalance(data.data.balance)
