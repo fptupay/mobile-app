@@ -5,13 +5,19 @@ import DescriptionRowItem, {
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText, View } from '@/components/Themed'
 import Colors from '@/constants/Colors'
+import { useAccountStore } from '@/stores/accountStore'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityIndicator, ScrollView } from 'react-native'
 
 export default function PersonalInfoScreen() {
+  const setDetails = useAccountStore((state) => state.setDetails)
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ['user-details'],
-    queryFn: getUserDetails
+    queryFn: getUserDetails,
+    onSuccess: (data) => {
+      setDetails(data.data)
+    }
   })
 
   const mockPersonalData: ListItemProp[] = [
