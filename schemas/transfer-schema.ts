@@ -6,4 +6,10 @@ export const transferVerifySchema = z.object({
   content: z.string()
 })
 
+export const transferConfirmSchema = z.object({
+  fund_transfer_id: z.string(),
+  otp: z.string()
+})
+
 export type TransferVerifySchema = z.infer<typeof transferVerifySchema>
+export type TransferConfirmSchema = z.infer<typeof transferConfirmSchema>

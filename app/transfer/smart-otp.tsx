@@ -1,0 +1,97 @@
+import { View } from 'react-native'
+import SharedLayout from '@/components/SharedLayout'
+import { MediumText, NormalText } from '@/components/Themed'
+import { useEffect, useState } from 'react'
+import {
+  generateOTPPin,
+  generateSharedKey,
+  getDeviceId,
+  successResponseStatus
+} from '@/utils/helper'
+import * as SecureStore from 'expo-secure-store'
+import TextButton from '@/components/buttons/TextButton'
+import { useMutation } from '@tanstack/react-query'
+import { confirmTransfer } from '@/api/transfer'
+import { TransferConfirmSchema } from '@/schemas/transfer-schema'
+import { useTransactionStore } from '@/stores/bankStore'
+import Toast from 'react-native-toast-message'
+
+export default function TransactionOTPScreen() {
+  const [smartOTP, setSmartOTP] = useState('')
+  const transactionId = useTransactionStore((state) => state.transactionId)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const savedPin = (await SecureStore.getItemAsync('pin')) as string
+      const deviceId = await getDeviceId()
+      const sharedKey = await generateSharedKey(savedPin, deviceId)
+      const generatedSmartOTP = await generateOTPPin(sharedKey)
+      setSmartOTP(generatedSmartOTP)
+    }
+
+    fetchData().catch((error) => {
+      console.log(error)
+    })
+  }, [])
+
+  const confirmTransferMutation = useMutation({
+    mutationFn: (data: TransferConfirmSchema) => confirmTransfer(data),
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        console.log('success')
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    }
+  })
+
+  const handleConfirmTransfer = () => {
+    confirmTransferMutation.mutate({
+      fund_transfer_id: transactionId,
+      otp: smartOTP
+    })
+  }
+
+  const handleCopyOTP = () => {
+    console.log('hello')
+  }
+
+  return (
+    <SharedLayout href="/account/home" title="Nhập mã OTP">
+      <View className="flex-1 pt-8 space-y-8">
+        <View>
+          <NormalText className="text-tertiary mt-1">
+            Mã xác thực giao dịch (OTP) có hiệu lực trong vòng 30 giây
+          </NormalText>
+        </View>
+
+        {/* OTP 6 digits */}
+        <View className="bg-zinc-100 rounded-md py-2 mb-4">
+          <MediumText className="text-primary text-2xl text-center tracking-[8px]">
+            {smartOTP}
+          </MediumText>
+        </View>
+        <TextButton text="Nhập OTP" type="primary" onPress={handleCopyOTP} />
+
+        <View className="bg-zinc-100 rounded-md py-2 mt-2">
+          <MediumText className="text-primary text-2xl text-center tracking-[8px]">
+            {smartOTP}
+          </MediumText>
+        </View>
+      </View>
+      <View className="mt-auto mb-4">
+        <TextButton
+          text="Xác nhận"
+          type="primary"
+          onPress={handleConfirmTransfer}
+          disable={confirmTransferMutation.isLoading}
+          loading={confirmTransferMutation.isLoading}
+        />
+      </View>
+    </SharedLayout>
+  )
+}
