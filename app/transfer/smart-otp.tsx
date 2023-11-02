@@ -15,9 +15,11 @@ import { confirmTransfer } from '@/api/transfer'
 import { TransferConfirmSchema } from '@/schemas/transfer-schema'
 import { useTransactionStore } from '@/stores/bankStore'
 import Toast from 'react-native-toast-message'
+import * as Clipboard from 'expo-clipboard'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
+  const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
   const transactionId = useTransactionStore((state) => state.transactionId)
 
   useEffect(() => {
@@ -56,8 +58,10 @@ export default function TransactionOTPScreen() {
     })
   }
 
-  const handleCopyOTP = () => {
-    console.log('hello')
+  const handleCopyOTP = async () => {
+    await Clipboard.setStringAsync(smartOTP)
+    const text = await Clipboard.getStringAsync()
+    setCopiedSmartOTP(text)
   }
 
   return (
@@ -70,16 +74,16 @@ export default function TransactionOTPScreen() {
         </View>
 
         {/* OTP 6 digits */}
-        <View className="bg-zinc-100 rounded-md py-2 mb-4">
+        <View className="bg-zinc-100 rounded-md py-3 mb-4">
           <MediumText className="text-primary text-2xl text-center tracking-[8px]">
             {smartOTP}
           </MediumText>
         </View>
-        <TextButton text="Nhập OTP" type="primary" onPress={handleCopyOTP} />
+        <TextButton text="Nhập OTP" type="outline" onPress={handleCopyOTP} />
 
-        <View className="bg-zinc-100 rounded-md py-2 mt-2">
+        <View className="bg-zinc-100 rounded-md py-3 mt-2">
           <MediumText className="text-primary text-2xl text-center tracking-[8px]">
-            {smartOTP}
+            {copiedSmartOTP}
           </MediumText>
         </View>
       </View>
@@ -88,7 +92,7 @@ export default function TransactionOTPScreen() {
           text="Xác nhận"
           type="primary"
           onPress={handleConfirmTransfer}
-          disable={confirmTransferMutation.isLoading}
+          disable={confirmTransferMutation.isLoading || !copiedSmartOTP}
           loading={confirmTransferMutation.isLoading}
         />
       </View>
