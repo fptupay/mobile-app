@@ -6,13 +6,14 @@ import TextButton from '@/components/buttons/TextButton'
 import { useAccountStore } from '@/stores/accountStore'
 import { useModalStore } from '@/stores/modalStore'
 import { formatMoney } from '@/utils/helper'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 import React, { useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -29,6 +30,8 @@ export default function TransferAmountScreen() {
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
   const balance = useAccountStore((state) => state.balance)
+
+  const { studentCode, owner } = useLocalSearchParams()
 
   const handleAmountChange = (amount: string) => {
     // amount should not start with 0
@@ -88,10 +91,12 @@ export default function TransferAmountScreen() {
             {/* Recipient info */}
             <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
               <View>
-                <MediumText className="text-black">Phạm Quang Hưng</MediumText>
-                <NormalText className="text-tertiary">HE160005</NormalText>
+                <MediumText className="text-black">{owner}</MediumText>
+                <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
-              <MediumText className="text-primary">Thay đổi</MediumText>
+              <Pressable onPress={() => router.back()}>
+                <MediumText className="text-primary">Thay đổi</MediumText>
+              </Pressable>
             </View>
 
             {/* Entered amount */}

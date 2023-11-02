@@ -54,7 +54,10 @@ export default function TransferMoneyScreen() {
     if (owner === full_name) {
       setIsVisible(true)
     } else {
-      router.push('/transfer/transfer-amount')
+      router.push({
+        pathname: '/transfer/transfer-amount',
+        params: { studentCode: studentCode, owner: owner }
+      } as any)
     }
   }
 

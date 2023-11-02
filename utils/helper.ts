@@ -8,7 +8,7 @@ import { router } from 'expo-router'
 import Banks from '@/constants/Banks'
 import * as Application from 'expo-application'
 
-export const formatMoney = (value: number) => {
+export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
