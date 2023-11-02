@@ -240,9 +240,23 @@ export const generateSharedKey = async (
       encoding: Crypto.CryptoEncoding.BASE64
     }
   )
+
   return key
 }
 
 export const generateTransactionId = () => {
   return Math.floor(Math.random() * 1000000000000000000).toString()
+}
+
+export const generateOTPPin = async (sharedKey: string) => {
+  const time = Math.floor(Date.now() / 30000)
+  const message = time + sharedKey
+  const hmac = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message
+  )
+  const lastSixCharacters = hmac.slice(-6)
+  const otp = parseInt(lastSixCharacters, 16)
+
+  return otp.toString().padStart(8, '0')
 }
