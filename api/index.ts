@@ -1,7 +1,9 @@
-import { getToken, saveToken } from '@/utils/helper'
+import { getDeviceId, getToken, saveToken } from '@/utils/helper'
 import axios from 'axios'
+import { Platform } from 'react-native'
 
 export const refreshAccessToken = async () => {
+  const deviceId = await getDeviceId()
   const token = await getToken('refresh_token')
   const response = await axios.post(
     '/user/public/auth/token/refresh',
@@ -11,7 +13,11 @@ export const refreshAccessToken = async () => {
     {
       baseURL: 'https://gateway.fptupay.tech',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-client-device-id': deviceId,
+        'x-client-platform': Platform.OS,
+        'x-client-platform-version': Platform.Version.toString(),
+        'x-client-source-app': 'fptupay'
       }
     }
   )
