@@ -26,6 +26,9 @@ export default function TransactionOTPScreen() {
   const setTransactionId = useTransactionStore(
     (state) => state.setTransactionId
   )
+  const setTransactionDetails = useTransactionStore(
+    (state) => state.setTransactionDetails
+  )
   const { secondsLeft, start } = useCountdown()
 
   useEffect(() => {
@@ -48,12 +51,8 @@ export default function TransactionOTPScreen() {
     mutationFn: (data: TransferConfirmSchema) => confirmTransfer(data),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        router.push({
-          pathname: '/transfer/transfer-successful',
-          params: {
-            response: data
-          }
-        })
+        router.push('/transfer/transfer-successful')
+        setTransactionDetails(data.data)
       } else {
         Toast.show({
           type: 'error',

@@ -12,6 +12,14 @@ export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
+export const formatDateTime = (value: string) => {
+  // original string: 2023-11-30 00:00:00
+  const parts = value.split(' ')
+  const dateParts = parts[0].split('-')
+  const outputDate = dateParts.reverse().join('/')
+  return outputDate + ' ' + parts[1]
+}
+
 export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } =
   Dimensions.get('window')
 

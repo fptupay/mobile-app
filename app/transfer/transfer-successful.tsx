@@ -2,12 +2,15 @@ import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { WINDOW_HEIGHT } from '@/utils/helper'
-import { useLocalSearchParams } from 'expo-router'
+import { useTransactionStore } from '@/stores/bankStore'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { Image, View } from 'react-native'
 
 export default function TransferSuccessfulScreen() {
+  const transactionDetails = useTransactionStore(
+    (state) => state.transactionDetails
+  )
   const {
     balance,
     sender_name,
@@ -15,7 +18,7 @@ export default function TransferSuccessfulScreen() {
     content,
     transaction_time,
     transaction_id
-  } = useLocalSearchParams()
+  } = transactionDetails
 
   const transferDetail = [
     {
@@ -24,15 +27,15 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Người nhận',
-      content: sender_name
-    },
-    {
-      title: 'Tài khoản nguồn',
       content: receiver_name
     },
     {
+      title: 'Tài khoản nguồn',
+      content: sender_name
+    },
+    {
       title: 'Số dư khả dụng',
-      content: balance
+      content: formatMoney(balance) + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -40,7 +43,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Thời gian giao dịch',
-      content: transaction_time
+      content: formatDateTime(transaction_time)
     },
     {
       title: 'Mã giao dịch',
@@ -65,16 +68,20 @@ export default function TransferSuccessfulScreen() {
           source={require('@/assets/images/tick-circle.png')}
           className="w-[80px] h-[80px] mx-auto mt-[-40px]"
         />
-        <SemiText className="text-primary text-2xl text-center mt-5">
+        <SemiText className="text-primary text-2xl text-center mt-4">
           Chuyển tiền thành công!
         </SemiText>
-        <SemiText className="text-4xl text-secondary mt-7">-200.000 đ</SemiText>
-        <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
-        <View className="mt-5 w-full">
+        <SemiText className="text-4xl text-secondary mt-4">-200.000 đ</SemiText>
+        <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
+        <View className="mt-4 w-full">
           {transferDetail.map((item, index) => (
             <View key={index} className="flex flex-row justify-between mb-4">
-              <NormalText className="text-tertiary">{item.title}</NormalText>
-              <NormalText className="text-secondary">{item.content}</NormalText>
+              <NormalText className="text-tertiary flex-1">
+                {item.title}
+              </NormalText>
+              <NormalText className="text-secondary flex-1 text-right">
+                {item.content}
+              </NormalText>
             </View>
           ))}
         </View>

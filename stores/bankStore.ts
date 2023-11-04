@@ -7,7 +7,9 @@ interface BankProps {
 
 interface TransactionProps {
   transactionId: string
+  transactionDetails: any
   setTransactionId: (transactionId: string) => void
+  setTransactionDetails: (transactionDetails: any) => void
 }
 
 export const useBankStore = create<BankProps>((set) => ({
@@ -17,6 +19,9 @@ export const useBankStore = create<BankProps>((set) => ({
 
 export const useTransactionStore = create<TransactionProps>((set) => ({
   transactionId: '',
+  transactionDetails: {},
   setTransactionId: (transactionId: string) =>
-    set({ transactionId: transactionId })
+    set({ transactionId: transactionId }),
+  setTransactionDetails: (transactionDetails: any) =>
+    set({ transactionDetails: transactionDetails })
 }))
