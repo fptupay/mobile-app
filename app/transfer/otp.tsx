@@ -73,7 +73,7 @@ export default function TransactionOTPScreen() {
                 </NormalText>
               </Pressable>
               <TextButton
-                text="Xác nhận"
+                text="Lấy mã OTP"
                 type="primary"
                 onPress={handleVerifyOTP}
               />
