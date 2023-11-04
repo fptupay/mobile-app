@@ -249,12 +249,15 @@ export const generateTransactionId = () => {
 }
 
 export const generateOTPPin = async (sharedKey: string) => {
-  const time = Math.floor(Date.now() / 30000)
-  const message = time + sharedKey
+  const currentTime = new Date().getTime()
+  const timestamp = Math.floor(currentTime / 30000) * 30000
+
+  const message = timestamp + sharedKey
   const hmac = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     message
   )
+
   const lastSixCharacters = hmac.slice(-6)
   const otp = parseInt(lastSixCharacters, 16)
 

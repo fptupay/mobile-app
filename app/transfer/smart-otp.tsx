@@ -16,17 +16,21 @@ import { TransferConfirmSchema } from '@/schemas/transfer-schema'
 import { useTransactionStore } from '@/stores/bankStore'
 import Toast from 'react-native-toast-message'
 import * as Clipboard from 'expo-clipboard'
+import useCountdown from '@/hooks/useCountdown'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
   const transactionId = useTransactionStore((state) => state.transactionId)
+  const { secondsLeft, start } = useCountdown()
 
   useEffect(() => {
     const fetchData = async () => {
       const savedPin = (await SecureStore.getItemAsync('pin')) as string
       const deviceId = await getDeviceId()
       const sharedKey = await generateSharedKey(savedPin, deviceId)
+
+      console.log(sharedKey)
       const generatedSmartOTP = await generateOTPPin(sharedKey)
       setSmartOTP(generatedSmartOTP)
     }
@@ -34,11 +38,13 @@ export default function TransactionOTPScreen() {
     fetchData().catch((error) => {
       console.log(error)
     })
+    start(30)
   }, [])
 
   const confirmTransferMutation = useMutation({
     mutationFn: (data: TransferConfirmSchema) => confirmTransfer(data),
     onSuccess: (data) => {
+      console.log(data)
       if (successResponseStatus(data)) {
         console.log('success')
       } else {
@@ -54,7 +60,7 @@ export default function TransactionOTPScreen() {
   const handleConfirmTransfer = () => {
     confirmTransferMutation.mutate({
       fund_transfer_id: transactionId,
-      otp: smartOTP
+      otp: copiedSmartOTP
     })
   }
 
@@ -69,7 +75,8 @@ export default function TransactionOTPScreen() {
       <View className="flex-1 pt-8 space-y-8">
         <View>
           <NormalText className="text-tertiary mt-1">
-            Mã xác thực giao dịch (OTP) có hiệu lực trong vòng 30 giây
+            Mã xác thực giao dịch (OTP) có hiệu lực trong vòng {secondsLeft}{' '}
+            giây
           </NormalText>
         </View>
 
