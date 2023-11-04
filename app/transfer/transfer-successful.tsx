@@ -3,10 +3,20 @@ import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { WINDOW_HEIGHT } from '@/utils/helper'
+import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { Image, View } from 'react-native'
 
 export default function TransferSuccessfulScreen() {
+  const {
+    balance,
+    sender_name,
+    receiver_name,
+    content,
+    transaction_time,
+    transaction_id
+  } = useLocalSearchParams()
+
   const transferDetail = [
     {
       title: 'Loại thanh toán',
@@ -14,23 +24,27 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Người nhận',
-      content: 'HA GIA KINH'
+      content: sender_name
     },
     {
-      title: 'MSSV',
-      content: 'HE150111'
+      title: 'Tài khoản nguồn',
+      content: receiver_name
+    },
+    {
+      title: 'Số dư khả dụng',
+      content: balance
     },
     {
       title: 'Nội dung giao dịch',
-      content: 'Cam on nha'
+      content: content
     },
     {
       title: 'Thời gian giao dịch',
-      content: '19:44 - 01/01/2022'
+      content: transaction_time
     },
     {
       title: 'Mã giao dịch',
-      content: '12345678904'
+      content: transaction_id
     }
   ]
 

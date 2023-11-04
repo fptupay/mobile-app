@@ -17,11 +17,15 @@ import { useTransactionStore } from '@/stores/bankStore'
 import Toast from 'react-native-toast-message'
 import * as Clipboard from 'expo-clipboard'
 import useCountdown from '@/hooks/useCountdown'
+import { router } from 'expo-router'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
   const transactionId = useTransactionStore((state) => state.transactionId)
+  const setTransactionId = useTransactionStore(
+    (state) => state.setTransactionId
+  )
   const { secondsLeft, start } = useCountdown()
 
   useEffect(() => {
@@ -30,7 +34,6 @@ export default function TransactionOTPScreen() {
       const deviceId = await getDeviceId()
       const sharedKey = await generateSharedKey(savedPin, deviceId)
 
-      console.log(sharedKey)
       const generatedSmartOTP = await generateOTPPin(sharedKey)
       setSmartOTP(generatedSmartOTP)
     }
@@ -44,9 +47,13 @@ export default function TransactionOTPScreen() {
   const confirmTransferMutation = useMutation({
     mutationFn: (data: TransferConfirmSchema) => confirmTransfer(data),
     onSuccess: (data) => {
-      console.log(data)
       if (successResponseStatus(data)) {
-        console.log('success')
+        router.push({
+          pathname: '/transfer/transfer-successful',
+          params: {
+            response: data
+          }
+        })
       } else {
         Toast.show({
           type: 'error',
@@ -62,6 +69,7 @@ export default function TransactionOTPScreen() {
       fund_transfer_id: transactionId,
       otp: copiedSmartOTP
     })
+    setTransactionId('')
   }
 
   const handleCopyOTP = async () => {
