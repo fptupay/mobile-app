@@ -5,7 +5,9 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { useTransactionStore } from '@/stores/bankStore'
 import { WINDOW_HEIGHT, formatDateTime } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
-import { Image, View } from 'react-native'
+import { printToFileAsync } from 'expo-print'
+import { shareAsync } from 'expo-sharing'
+import { Image, Pressable, View } from 'react-native'
 
 export default function TransferSuccessfulScreen() {
   const transactionDetails = useTransactionStore(
@@ -35,6 +37,14 @@ export default function TransferSuccessfulScreen() {
       content: sender_name
     },
     {
+      title: 'Số tiền',
+      content: amount
+    },
+    {
+      title: 'Tài khoản nguồn',
+      content: sender_name
+    },
+    {
       title: 'Số dư khả dụng',
       content: balance + ' đ'
     },
@@ -52,13 +62,46 @@ export default function TransferSuccessfulScreen() {
     }
   ]
 
+  const transactionItemsHtml = transferDetail
+    .filter((_, index) => index !== 4)
+    .map(
+      (item: any) => `
+  <div style="display: flex; justify-content: space-between; margin-bottom: 16px">
+    <h3 style="color: #808080; flex: 1 1 0%">
+      ${item.title}
+    </h3>
+    <p style="color: black; flex: 1 1 0%; text-align: right">
+      ${item.content}
+    </p>
+  </div>
+`
+    )
+    .join('')
+
+  // include transaction details in html
+  const html = `
+   <html>
+      <body style="background-color: #f1f5f9; padding: 2rem">
+        <h1> Hoá đơn chuyển tiền </h1>
+        ${transactionItemsHtml}
+      </body>
+    </html>
+    `
+
+  const handleShareBill = async () => {
+    const file = await printToFileAsync({ html: html, base64: false })
+    await shareAsync(file.uri)
+  }
+
   return (
     <View className="flex-1">
       <StatusBar style="auto" />
       <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
         <GradientBackground />
         <View className="absolute right-6 top-16">
-          <CustomIcon name="Share" color="#000" size={24} />
+          <Pressable onPress={handleShareBill}>
+            <CustomIcon name="Share" color="#000" size={24} />
+          </Pressable>
         </View>
       </View>
       <View
@@ -77,16 +120,18 @@ export default function TransferSuccessfulScreen() {
         </SemiText>
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
         <View className="mt-4 w-full">
-          {transferDetail.map((item, index) => (
-            <View key={index} className="flex flex-row justify-between mb-4">
-              <NormalText className="text-tertiary flex-1">
-                {item.title}
-              </NormalText>
-              <NormalText className="text-secondary flex-1 text-right">
-                {item.content}
-              </NormalText>
-            </View>
-          ))}
+          {transferDetail
+            .filter((_, index) => index !== 3)
+            .map((item, index) => (
+              <View key={index} className="flex flex-row justify-between mb-4">
+                <NormalText className="text-tertiary flex-1">
+                  {item.title}
+                </NormalText>
+                <NormalText className="text-secondary flex-1 text-right">
+                  {item.content}
+                </NormalText>
+              </View>
+            ))}
         </View>
         <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>
           <TextButton
