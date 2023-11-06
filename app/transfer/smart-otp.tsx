@@ -26,6 +26,9 @@ export default function TransactionOTPScreen() {
   const setTransactionId = useTransactionStore(
     (state) => state.setTransactionId
   )
+  const smartOTPTransactionId = useTransactionStore(
+    (state) => state.smartOTPTransactionId
+  )
   const setTransactionDetails = useTransactionStore(
     (state) => state.setTransactionDetails
   )
@@ -48,7 +51,8 @@ export default function TransactionOTPScreen() {
   }, [])
 
   const confirmTransferMutation = useMutation({
-    mutationFn: (data: TransferConfirmSchema) => confirmTransfer(data),
+    mutationFn: (data: TransferConfirmSchema) =>
+      confirmTransfer(data, smartOTPTransactionId),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')

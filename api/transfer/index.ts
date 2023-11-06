@@ -19,15 +19,19 @@ export const verifyTransfer = async (data: any) => {
   return response.data
 }
 
-export const confirmTransfer = async (data: any) => {
+export const confirmTransfer = async (
+  data: any,
+  smartOTPTransactionId: string
+) => {
   const deviceId = await getDeviceId()
+
   const response = await apiPostCall('/finance/fund-transfer/confirm', data, {
     headers: {
       ...headerConfig,
       'x-client-device-id': deviceId,
       'Content-Type': 'application/json',
       'x-sotp-device-id': deviceId,
-      'x-sotp-transaction-id': '946904560410782700'
+      'x-sotp-transaction-id': smartOTPTransactionId ?? '946904560410782700'
     }
   })
   return response.data

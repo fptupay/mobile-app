@@ -3,7 +3,7 @@ import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { useTransactionStore } from '@/stores/bankStore'
-import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
+import { WINDOW_HEIGHT, formatDateTime } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { Image, View } from 'react-native'
 
@@ -12,6 +12,7 @@ export default function TransferSuccessfulScreen() {
     (state) => state.transactionDetails
   )
   const {
+    amount,
     balance,
     sender_name,
     receiver_name,
@@ -35,7 +36,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      content: formatMoney(balance) + ' đ'
+      content: balance + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -71,7 +72,9 @@ export default function TransferSuccessfulScreen() {
         <SemiText className="text-primary text-2xl text-center mt-4">
           Chuyển tiền thành công!
         </SemiText>
-        <SemiText className="text-4xl text-secondary mt-4">-200.000 đ</SemiText>
+        <SemiText className="text-4xl text-secondary mt-4">
+          -{amount} đ
+        </SemiText>
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
         <View className="mt-4 w-full">
           {transferDetail.map((item, index) => (
