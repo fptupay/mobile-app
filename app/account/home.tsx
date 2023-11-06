@@ -1,10 +1,18 @@
+import { getAccountBalance } from '@/api/bank'
+import { getUserDetails } from '@/api/profile'
 import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
-import { WINDOW_HEIGHT, formatMoney } from '@/utils/helper'
+import {
+  WINDOW_HEIGHT,
+  formatMoney,
+  successResponseStatus
+} from '@/utils/helper'
+import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 
@@ -23,6 +31,7 @@ import {
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -147,7 +156,40 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
-  const balance = useAccountStore((state) => state.balance)
+  const [showBalance, setShowBalance] = useState(false)
+
+  const setBalance = useAccountStore((state) => state.setBalance)
+  const setDetails = useAccountStore((state) => state.setDetails)
+
+  const accountBalanceQuery = useQuery({
+    queryKey: ['account-balance'],
+    queryFn: getAccountBalance,
+    onSuccess: (data) => {
+      setBalance(data.data.balance)
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
+
+  const { data: profile } = useQuery({
+    queryKey: ['user-details'],
+    queryFn: getUserDetails,
+    onSuccess: (data) => {
+      setDetails(data.data)
+    }
+  })
 
   const toggleSearch = () => {
     setIsSearching(!isSearching)
@@ -314,16 +356,31 @@ export default function HomeScreen() {
             <View className="w-9 h-9 rounded-full bg-gray-200"></View>
             <View>
               <NormalText className="text-secondary">Xin chào</NormalText>
-              <SemiText className="text-secondary">Phạm Quang Hưng</SemiText>
+              <SemiText className="text-secondary">
+                {profile?.data.full_name}
+              </SemiText>
             </View>
           </View>
 
           <View className="mt-6">
-            <NormalText className="text-base text-secondary">
-              Số dư của bạn
-            </NormalText>
-            <SemiText className="text-3xl text-secondary">
-              {formatMoney(balance)}đ
+            <View className="flex flex-row items-center space-x-2">
+              <NormalText className="text-base text-secondary">
+                Số dư của bạn
+              </NormalText>
+              {showBalance ? (
+                <Pressable onPress={() => setShowBalance(!showBalance)}>
+                  <CustomIcon name="Eye" color={Colors.tertiary} size={24} />
+                </Pressable>
+              ) : (
+                <Pressable onPress={() => setShowBalance(!showBalance)}>
+                  <CustomIcon name="EyeOff" color={Colors.tertiary} size={24} />
+                </Pressable>
+              )}
+            </View>
+            <SemiText className="text-3xl text-secondary mt-1">
+              {showBalance
+                ? `${accountBalanceQuery.data?.data.balance}đ`
+                : '*******'}
             </SemiText>
           </View>
 
