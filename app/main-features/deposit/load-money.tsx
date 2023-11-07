@@ -6,9 +6,10 @@ import { NormalText, SemiText } from '@/components/Themed'
 import IconButton from '@/components/buttons/IconButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { BankAccountSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
+import { useAccountStore } from '@/stores/accountStore'
 
 import { useBankStore } from '@/stores/bankStore'
-import { getBankName, successResponseStatus } from '@/utils/helper'
+import { formatMoney, getBankName, successResponseStatus } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
@@ -28,6 +29,7 @@ export default function LoadMoneyScreen() {
   const [amount, setAmount] = useState('')
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
+  const balance = useAccountStore((state) => state.balance).toString()
 
   const handleAmountInput = (value: string) => {
     setAmount(value)
@@ -98,13 +100,16 @@ export default function LoadMoneyScreen() {
                 <SemiText className="text-secondary">
                   Nạp tiền vào ví FPTU Pay
                 </SemiText>
-                <TextField
-                  label="Số tiền trong ví"
-                  className="my-5"
-                  value="20.567.000đ"
-                  editable={false}
-                  selectTextOnFocus={false}
-                />
+
+                <View className="bg-white rounded-lg my-4 px-4 py-2 shadow-md shadow-neutral-400">
+                  <NormalText className="text-tertiary">
+                    Tài khoản nguồn
+                  </NormalText>
+                  <SemiText className="text-2xl">
+                    {formatMoney(balance)}đ
+                  </SemiText>
+                </View>
+
                 <TextField
                   keyboardType="numeric"
                   label="Số tiền cần nạp"
