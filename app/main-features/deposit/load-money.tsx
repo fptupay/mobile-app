@@ -29,7 +29,7 @@ export default function LoadMoneyScreen() {
   const [amount, setAmount] = useState('')
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
-  const balance = useAccountStore((state) => state.balance).toString()
+  const balance = useAccountStore((state) => state.balance)
 
   const handleAmountInput = (value: string) => {
     setAmount(value)

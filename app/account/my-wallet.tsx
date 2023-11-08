@@ -6,7 +6,7 @@ import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
-import { deleteToken } from '@/utils/helper'
+import { deleteToken, formatMoney } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
@@ -153,10 +153,7 @@ export default function MyWalletScreen() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  {balance}
-                  <SemiText className="underline text-xl text-primary">
-                    đ
-                  </SemiText>
+                  {formatMoney(balance)}đ
                 </SemiText>
                 <SemiText
                   className={`text-primary text-2xl mt-2 ${

@@ -379,7 +379,7 @@ export default function HomeScreen() {
             </View>
             <SemiText className="text-3xl text-secondary mt-1">
               {showBalance
-                ? `${accountBalanceQuery.data?.data.balance}đ`
+                ? `${formatMoney(accountBalanceQuery.data?.data.balance)}đ`
                 : '*******'}
             </SemiText>
           </View>
