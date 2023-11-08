@@ -14,7 +14,7 @@ export default function TransferLayout() {
       <Stack.Screen name="transfer-new" />
       <Stack.Screen name="transfer-amount" />
       <Stack.Screen name="otp" />
-      <Stack.Screen name="smart-otp" />
+      <Stack.Screen name="transaction-otp" />
       <Stack.Screen name="transfer-confirmation" />
       <Stack.Screen name="transfer-successful" />
     </Stack>

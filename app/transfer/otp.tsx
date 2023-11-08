@@ -30,7 +30,7 @@ export default function TransactionOTPScreen() {
   const handleVerifyOTP = async () => {
     const savedOTP = await SecureStore.getItemAsync('pin')
     if (enteredOTP === savedOTP) {
-      router.push('/transfer/smart-otp')
+      router.push('/transfer/transaction-otp')
     } else {
       Toast.show({
         type: 'error',
