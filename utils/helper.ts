@@ -12,6 +12,14 @@ export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
+export const formatDateTime = (value: string) => {
+  // original string: 2023-11-30 00:00:00
+  const parts = value.split(' ')
+  const dateParts = parts[0].split('-')
+  const outputDate = dateParts.reverse().join('/')
+  return outputDate + ' ' + parts[1]
+}
+
 export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } =
   Dimensions.get('window')
 
@@ -240,9 +248,26 @@ export const generateSharedKey = async (
       encoding: Crypto.CryptoEncoding.BASE64
     }
   )
+
   return key
 }
 
 export const generateTransactionId = () => {
   return Math.floor(Math.random() * 1000000000000000000).toString()
+}
+
+export const generateOTPPin = async (sharedKey: string) => {
+  const currentTime = new Date().getTime()
+  const timestamp = Math.floor(currentTime / 30000) * 30000
+
+  const message = timestamp + sharedKey
+  const hmac = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message
+  )
+
+  const lastSixCharacters = hmac.slice(-6)
+  const otp = parseInt(lastSixCharacters, 16)
+
+  return otp.toString().padStart(8, '0')
 }

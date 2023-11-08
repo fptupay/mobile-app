@@ -160,15 +160,14 @@ export default function FaceAuthenticatorScreen() {
               Xác thực tài khoản hoàn tất
             </MediumText>
             <NormalText className="text-tertiary text-center">
-              Bây giờ bạn đã có thể thoải mái trải nghiệm các dịch vụ của ví
-              điện tử FPTUPay!
+              Vui lòng đăng nhập lại để tiếp tục sử dụng.
             </NormalText>
 
             <View className="mt-6 w-full">
               <TextButton
                 text="Đến trang chủ"
                 type="primary"
-                onPress={() => router.push('/account/home')}
+                onPress={() => router.push('/index')}
               />
             </View>
           </Modal.Body>

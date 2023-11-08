@@ -22,16 +22,17 @@ import {
 
 export default function TransferAmountScreen() {
   const router = useRouter()
+  const { studentCode, owner } = useLocalSearchParams()
+  const { full_name } = useAccountStore((state) => state.details)
+
   const [amount, setAmount] = useState<string>()
   const [rawAmount, setRawAmount] = useState<string>('')
   const [suggestions, setSuggestions] = useState<number[]>([])
-  const [message, setMessage] = useState<string>('')
+  const [message, setMessage] = useState<string>(`${full_name} chuyển tiền`)
 
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
   const balance = useAccountStore((state) => state.balance)
-
-  const { studentCode, owner } = useLocalSearchParams()
 
   const handleAmountChange = (amount: string) => {
     // amount should not start with 0
@@ -75,7 +76,10 @@ export default function TransferAmountScreen() {
       setIsOpen(true)
     } else {
       setIsOpen(false)
-      router.push('/transfer/transfer-confirmation')
+      router.push({
+        pathname: '/transfer/transfer-confirmation',
+        params: { amount: rawAmount, message, studentCode, owner }
+      })
     }
   }
 
@@ -115,29 +119,29 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Suggestion */}
-            {
-              <View className="space-x-2 flex-row">
-                {suggestions.map((suggestion) => (
-                  <TouchableOpacity
-                    key={suggestion}
-                    onPress={() => handleSuggestionPress(suggestion)}
-                    className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
-                  >
-                    <MediumText>{formatMoney(suggestion)}</MediumText>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            }
+            <View className="space-x-2 flex-row">
+              {suggestions.map((suggestion) => (
+                <TouchableOpacity
+                  key={suggestion}
+                  onPress={() => handleSuggestionPress(suggestion)}
+                  className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+                >
+                  <MediumText>{formatMoney(suggestion)}</MediumText>
+                </TouchableOpacity>
+              ))}
+            </View>
+
             <TextField
               value={message}
               label="Nhắn gửi"
               onChangeText={(text) => setMessage(text)}
               className="my-4"
             />
+
             <View className="mb-4">
               <TextButton
                 onPress={handleTransfer}
-                text="Chuyển tiền"
+                text="Tiếp tục"
                 type="primary"
                 disable={!amount}
               />

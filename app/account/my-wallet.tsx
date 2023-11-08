@@ -1,5 +1,4 @@
 import { logoutUser } from '@/api/authentication'
-import { getAccountBalance } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
@@ -7,15 +6,13 @@ import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
-import { deleteToken, successResponseStatus } from '@/utils/helper'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { deleteToken, formatMoney } from '@/utils/helper'
+import { useMutation } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useState } from 'react'
 import { Image, Pressable, ScrollView, View } from 'react-native'
-import Toast from 'react-native-toast-message'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -82,34 +79,14 @@ export default function MyWalletScreen() {
   const router = useRouter()
 
   const [showBalance, setShowBalance] = useState(false)
-  const setBalance = useAccountStore((state) => state.setBalance)
-
-  const accountBalanceQuery = useQuery({
-    queryKey: ['account-balance'],
-    queryFn: getAccountBalance,
-    onSuccess: (data) => {
-      setBalance(data.data.balance)
-      if (!successResponseStatus(data)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Đã có lỗi xảy ra',
-          text2: data.message
-        })
-      }
-    },
-    onError: (error: AxiosError) => {
-      Toast.show({
-        type: 'error',
-        text1: 'Đã có lỗi xảy ra',
-        text2: error.message
-      })
-    }
-  })
+  const balance = useAccountStore((state) => state.balance)
+  const details = useAccountStore((state) => state.details)
+  const setDetails = useAccountStore((state) => state.setDetails)
 
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: () => {
+      setDetails({})
       deleteToken('access_token')
         .then(() => router.push('/'))
         .catch((err) => console.log(err))
@@ -137,7 +114,7 @@ export default function MyWalletScreen() {
             </View>
           </View>
           <SemiText className="text-center text-secondary mt-5">
-            Cao Quynh Anh
+            {details.full_name}
           </SemiText>
         </View>
       </View>
@@ -177,12 +154,7 @@ export default function MyWalletScreen() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  {accountBalanceQuery.isLoading || !accountBalanceQuery.data
-                    ? 'Loading...'
-                    : accountBalanceQuery.data?.data.balance}
-                  <SemiText className="underline text-xl text-primary">
-                    đ
-                  </SemiText>
+                  {formatMoney(balance)}đ
                 </SemiText>
                 <SemiText
                   className={`text-primary text-2xl mt-2 ${

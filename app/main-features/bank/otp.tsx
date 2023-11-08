@@ -1,3 +1,4 @@
+import { getRegisteredPhoneNumber } from '@/api/authentication'
 import { bankLinkConfirm } from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
@@ -6,7 +7,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { BankLinkConfirmSchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { successResponseStatus } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -32,6 +33,11 @@ export default function OtpScreen() {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  const { data: phone } = useQuery({
+    queryKey: ['phoneNumber'],
+    queryFn: getRegisteredPhoneNumber
+  })
 
   const bankLinkMutation = useMutation({
     mutationFn: (data: BankLinkConfirmSchema) => bankLinkConfirm(data),
@@ -72,7 +78,8 @@ export default function OtpScreen() {
           <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại{' '}
+                {phone?.data.phone_number}
               </NormalText>
             </View>
 

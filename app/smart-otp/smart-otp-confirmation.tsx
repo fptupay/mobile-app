@@ -25,11 +25,19 @@ import {
 } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
+import { useTransactionStore } from '@/stores/bankStore'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function SmartOTPConfirmationScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
   const [isVisible, setIsVisible] = useState(false)
+
+  const { username } = useAccountStore((state) => state.details)
+
+  const setSmartOTPTransactionId = useTransactionStore(
+    (state) => state.setSmartOTPTransactionId
+  )
 
   const handleClear = () => {
     otpInputRef.current?.clear()
@@ -60,7 +68,9 @@ export default function SmartOTPConfirmationScreen() {
 
   const handleVerifyOTP = async () => {
     const deviceId = await getDeviceId()
-    const savedPin = await SecureStore.getItemAsync('pin')
+    const savedPin = (await SecureStore.getItemAsync(username)) as string
+    const sharedKey = await generateSharedKey(savedPin, deviceId)
+    const transId = generateTransactionId()
 
     if (savedPin !== null) {
       registerOTPMutation.mutate({
@@ -69,9 +79,11 @@ export default function SmartOTPConfirmationScreen() {
         device_id: deviceId,
         app_code: 'fptupay',
         version: Platform.Version.toString(),
-        shared_key: await generateSharedKey(savedPin, deviceId),
-        trans_id: generateTransactionId()
+        shared_key: sharedKey,
+        trans_id: transId
       })
+
+      setSmartOTPTransactionId(transId)
     }
   }
 

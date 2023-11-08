@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import Colors from '@/constants/Colors'
 import { useRouter } from 'expo-router'
 import { ChevronRight, PlusSquare } from 'lucide-react-native'
@@ -30,7 +31,7 @@ export default function IconButton(props: IconButtonProps) {
       <View
         {...otherProps}
         style={style}
-        className="p-4 rounded-lg flex flex-row items-center justify-between border border-gray-300"
+        className="px-4 py-2 rounded-lg flex flex-row items-center justify-between border border-gray-300"
       >
         <View className="flex flex-row gap-3 items-center w-full pr-10">
           <PlusSquare size={24} color={Colors.secondary} />
@@ -45,11 +46,11 @@ export default function IconButton(props: IconButtonProps) {
           onPress={() =>
             previousRoute
               ? route.push({
-                pathname: href,
-                params: {
-                  previousRoute: previousRoute
-                }
-              })
+                  pathname: href,
+                  params: {
+                    previousRoute: previousRoute
+                  }
+                })
               : route.push(href)
           }
         >

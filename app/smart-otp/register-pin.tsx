@@ -9,12 +9,15 @@ import { Pressable } from 'react-native'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { generateOTP } from '@/api/otp'
 import Colors from '@/constants/Colors'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function RegisterPINScreen() {
   const [pin, setPin] = useState<string>('')
   const [confirmedPin, setConfirmedPin] = useState<string>('')
   const otpRef = useRef<OtpInputRef>(null)
   const confirmedOtpRef = useRef<OtpInputRef>(null)
+
+  const { username } = useAccountStore((state) => state.details)
 
   const handleClearPIN = () => {
     otpRef.current?.clear()
@@ -36,7 +39,7 @@ export default function RegisterPINScreen() {
       return
     }
     // save this pin to local storage
-    await SecureStore.setItemAsync('pin', pin)
+    await SecureStore.setItemAsync(username, pin)
     await generateOTP()
     router.push('/smart-otp/smart-otp-confirmation')
   }
