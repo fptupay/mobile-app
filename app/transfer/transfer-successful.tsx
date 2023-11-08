@@ -3,7 +3,7 @@ import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { useTransactionStore } from '@/stores/bankStore'
-import { WINDOW_HEIGHT, formatDateTime } from '@/utils/helper'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
@@ -33,10 +33,6 @@ export default function TransferSuccessfulScreen() {
       content: receiver_name
     },
     {
-      title: 'Tài khoản nguồn',
-      content: sender_name
-    },
-    {
       title: 'Số tiền',
       content: amount
     },
@@ -46,7 +42,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      content: balance + ' đ'
+      content: formatMoney(balance) + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -104,6 +100,7 @@ export default function TransferSuccessfulScreen() {
           </Pressable>
         </View>
       </View>
+
       <View
         className="absolute left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-start items-center"
         style={{ top: WINDOW_HEIGHT * 0.2 }}
@@ -116,9 +113,11 @@ export default function TransferSuccessfulScreen() {
           Chuyển tiền thành công!
         </SemiText>
         <SemiText className="text-4xl text-secondary mt-4">
-          -{amount} đ
+          {formatMoney(amount)} đ
         </SemiText>
+
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
+
         <View className="mt-4 w-full">
           {transferDetail
             .filter((_, index) => index !== 3)
@@ -133,6 +132,7 @@ export default function TransferSuccessfulScreen() {
               </View>
             ))}
         </View>
+
         <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>
           <TextButton
             text="Về trang chủ"
