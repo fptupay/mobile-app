@@ -80,12 +80,13 @@ export default function MyWalletScreen() {
 
   const [showBalance, setShowBalance] = useState(false)
   const balance = useAccountStore((state) => state.balance)
-  const { full_name } = useAccountStore((state) => state.details)
+  const details = useAccountStore((state) => state.details)
+  const setDetails = useAccountStore((state) => state.setDetails)
 
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: () => {
+      setDetails({})
       deleteToken('access_token')
         .then(() => router.push('/'))
         .catch((err) => console.log(err))
@@ -113,7 +114,7 @@ export default function MyWalletScreen() {
             </View>
           </View>
           <SemiText className="text-center text-secondary mt-5">
-            {full_name}
+            {details.full_name}
           </SemiText>
         </View>
       </View>
