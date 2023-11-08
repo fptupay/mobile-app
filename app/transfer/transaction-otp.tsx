@@ -18,10 +18,12 @@ import Toast from 'react-native-toast-message'
 import * as Clipboard from 'expo-clipboard'
 import useCountdown from '@/hooks/useCountdown'
 import { router } from 'expo-router'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
+
   const transactionId = useTransactionStore((state) => state.transactionId)
   const setTransactionId = useTransactionStore(
     (state) => state.setTransactionId
@@ -32,11 +34,12 @@ export default function TransactionOTPScreen() {
   const setTransactionDetails = useTransactionStore(
     (state) => state.setTransactionDetails
   )
+  const { username } = useAccountStore((state) => state.details)
   const { secondsLeft, start } = useCountdown()
 
   useEffect(() => {
     const fetchData = async () => {
-      const savedPin = (await SecureStore.getItemAsync('pin')) as string
+      const savedPin = (await SecureStore.getItemAsync(username)) as string
       const deviceId = await getDeviceId()
       const sharedKey = await generateSharedKey(savedPin, deviceId)
 

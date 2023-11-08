@@ -26,11 +26,14 @@ import {
 import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
 import { useTransactionStore } from '@/stores/bankStore'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function SmartOTPConfirmationScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
   const [isVisible, setIsVisible] = useState(false)
+
+  const { username } = useAccountStore((state) => state.details)
 
   const setSmartOTPTransactionId = useTransactionStore(
     (state) => state.setSmartOTPTransactionId
@@ -65,7 +68,7 @@ export default function SmartOTPConfirmationScreen() {
 
   const handleVerifyOTP = async () => {
     const deviceId = await getDeviceId()
-    const savedPin = (await SecureStore.getItemAsync('pin')) as string
+    const savedPin = (await SecureStore.getItemAsync(username)) as string
     const sharedKey = await generateSharedKey(savedPin, deviceId)
     const transId = generateTransactionId()
 

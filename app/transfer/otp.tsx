@@ -16,19 +16,21 @@ import { useTransactionStore } from '@/stores/bankStore'
 import * as SecureStore from 'expo-secure-store'
 import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function TransactionOTPScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [enteredOTP, setEnteredOTP] = useState('')
 
   const transactionId = useTransactionStore((state) => state.transactionId)
+  const { username } = useAccountStore((state) => state.details)
 
   const handleClear = () => {
     otpInputRef.current?.clear()
   }
 
   const handleVerifyOTP = async () => {
-    const savedOTP = await SecureStore.getItemAsync('pin')
+    const savedOTP = await SecureStore.getItemAsync(username)
     if (enteredOTP === savedOTP) {
       router.push('/transfer/transaction-otp')
     } else {
