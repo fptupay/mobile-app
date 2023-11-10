@@ -222,46 +222,48 @@ export default function HomeScreen() {
               </NormalText>
             </View>
           ) : (
-            <FlatList
-              contentContainerStyle={{
-                paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
-              }}
-              data={transactions}
-              keyExtractor={(item) => item.transaction_id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  className="flex-row justify-between items-center py-3"
-                  onPress={() =>
-                    router.push({
-                      pathname: '/(transactions)/[id]',
-                      params: { id: item.transaction_id }
-                    } as any)
-                  }
-                >
-                  <View className="flex-row items-center space-x-4">
-                    <View className="w-10 h-10 rounded-full bg-gray-200"></View>
-                    <View className="w-[200px]">
-                      <MediumText className="text-secondary">
-                        {item.content}
-                      </MediumText>
-                      <NormalText className="text-ellipsis text-tertiary">
-                        {item.description}
+            <>
+              <FlatList
+                contentContainerStyle={{
+                  paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
+                }}
+                data={transactions}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="flex-row justify-between items-center py-3"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/transactions/[id]',
+                        params: { id: item.id }
+                      } as any)
+                    }
+                  >
+                    <View className="flex-row items-center space-x-4">
+                      <View className="w-10 h-10 rounded-full bg-gray-200"></View>
+                      <View className="w-[200px]">
+                        <MediumText className="text-secondary">
+                          {item.content}
+                        </MediumText>
+                        <NormalText className="text-ellipsis text-tertiary">
+                          {item.description}
+                        </NormalText>
+                      </View>
+                    </View>
+                    <View>
+                      <NormalText
+                        className={
+                          +item.amount < 0 ? 'text-red-500' : 'text-green-500'
+                        }
+                      >
+                        {formatMoney(item.amount)}
                       </NormalText>
                     </View>
-                  </View>
-                  <View>
-                    <NormalText
-                      className={
-                        +item.amount < 0 ? 'text-red-500' : 'text-green-500'
-                      }
-                    >
-                      {formatMoney(item.amount)}
-                    </NormalText>
-                  </View>
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-            />
+                  </TouchableOpacity>
+                )}
+              />
+            </>
           )}
         </Animated.View>
       </View>
