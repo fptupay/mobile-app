@@ -12,8 +12,8 @@ import { ActivityIndicator } from 'react-native'
 
 export default function TransactionDetailScreen() {
   const params: { id: string } = useLocalSearchParams()
-  console.log(params.id)
-  const { data, isLoading } = useQuery({
+
+  const { data, isLoading, isFetched } = useQuery({
     queryKey: ['transaction-detail', params.id],
     queryFn: () => getTransactionDetails(params.id)
   })
@@ -33,7 +33,7 @@ export default function TransactionDetailScreen() {
     },
     {
       title: 'Thời gian',
-      value: formatDateTime(data?.data.created_at)
+      value: isFetched && formatDateTime(data?.data.created_at)
     },
     {
       title: 'Mã giao dịch',
@@ -46,12 +46,12 @@ export default function TransactionDetailScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      value: formatMoney(data?.data.close_balance)
+      value: isFetched && formatMoney(data?.data.close_balance)
     }
   ]
 
   return (
-    <SharedLayout title="Chi tiết giao dịch" href="/home">
+    <SharedLayout title="Chi tiết giao dịch">
       {isLoading ? (
         <View className="flex justify-center items-center mt-8 h-full">
           <ActivityIndicator size="large" color={Colors.tertiary} />

@@ -7,7 +7,11 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
-import { WINDOW_HEIGHT, formatMoney } from '@/utils/helper'
+import {
+  extractDateStringFromCurrentDate,
+  getCurrentYearTime
+} from '@/utils/datetime'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'expo-router'
@@ -73,12 +77,14 @@ export default function HomeScreen() {
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
     queryFn: getAccountBalance,
+    notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
+      console.log('refetch')
       setBalance(data.data.balance)
       getTransactionsMutation.mutate({
         account_no: data?.data.account_no,
-        from_date: '2023-10-01',
-        to_date: '2023-12-01'
+        from_date: getCurrentYearTime(),
+        to_date: extractDateStringFromCurrentDate(new Date())
       })
     },
     onError: (error: AxiosError) => {
@@ -244,10 +250,10 @@ export default function HomeScreen() {
                       <View className="w-10 h-10 rounded-full bg-gray-200"></View>
                       <View className="w-[200px]">
                         <MediumText className="text-secondary">
-                          {item.content}
-                        </MediumText>
-                        <NormalText className="text-ellipsis text-tertiary">
                           {item.description}
+                        </MediumText>
+                        <NormalText className="text-ellipsis text-xs text-tertiary">
+                          {formatDateTime(item.created_at)}
                         </NormalText>
                       </View>
                     </View>
@@ -257,7 +263,7 @@ export default function HomeScreen() {
                           +item.amount < 0 ? 'text-red-500' : 'text-green-500'
                         }
                       >
-                        {formatMoney(item.amount)}
+                        {formatMoney(item.amount)} đ
                       </NormalText>
                     </View>
                   </TouchableOpacity>
