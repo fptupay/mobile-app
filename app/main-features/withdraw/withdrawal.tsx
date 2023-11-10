@@ -8,7 +8,12 @@ import TextButton from '@/components/buttons/TextButton'
 import { BankAccountSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
 import { useAccountStore } from '@/stores/accountStore'
 import { useBankStore } from '@/stores/bankStore'
-import { formatMoney, getBankName, successResponseStatus } from '@/utils/helper'
+import {
+  formatInputMoney,
+  formatMoney,
+  getBankName,
+  successResponseStatus
+} from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
@@ -96,11 +101,11 @@ export default function WithdrawalScreen() {
                   Rút tiền từ ví FPTU Pay
                 </SemiText>
 
-                <View className="bg-white rounded-lg my-4 px-4 py-2 shadow-md shadow-neutral-400">
+                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
                   <NormalText className="text-tertiary">
                     Tài khoản nguồn
                   </NormalText>
-                  <SemiText className="text-2xl">
+                  <SemiText className="text-2xl text-secondary">
                     {formatMoney(balance)}đ
                   </SemiText>
                 </View>
@@ -110,7 +115,7 @@ export default function WithdrawalScreen() {
                   label="Số tiền cần rút"
                   editable={true}
                   selectTextOnFocus={true}
-                  value={amount}
+                  value={formatInputMoney(amount)}
                   onChangeText={(value) => setAmount(value)}
                 />
               </View>
@@ -163,7 +168,7 @@ export default function WithdrawalScreen() {
           onPress={() =>
             withdrawMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount),
+              amount: parseInt(amount.replace('.', '')),
               content: 'Rút tiền từ ví FPTU Pay'
             })
           }
