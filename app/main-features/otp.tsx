@@ -26,7 +26,6 @@ export default function OtpScreen() {
   const router = useRouter()
   const params: { type: string; link_account_id: string; trans_id: string } =
     useLocalSearchParams()
-  console.log(params)
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
 

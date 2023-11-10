@@ -35,8 +35,7 @@ export default function CreateRequestScreen() {
     mode: 'onBlur'
   })
 
-  const onSubmit = (data: SupportRequestSchema) => {
-    console.log(data)
+  const onSubmit = () => {
     if (value === null) {
       setRequestError('Vui lòng chọn loại yêu cầu')
     }

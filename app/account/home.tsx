@@ -79,7 +79,6 @@ export default function HomeScreen() {
     queryFn: getAccountBalance,
     notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
-      console.log('refetch')
       setBalance(data.data.balance)
       getTransactionsMutation.mutate({
         account_no: data?.data.account_no,
@@ -238,17 +237,26 @@ export default function HomeScreen() {
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    className="flex-row justify-between items-center py-3"
+                    className="flex flex-row py-3 items-center"
                     onPress={() =>
                       router.push({
                         pathname: '/transactions/[id]',
-                        params: { id: item.id }
+                        params: { id: item.transaction_id }
                       } as any)
                     }
                   >
-                    <View className="flex-row items-center space-x-4">
-                      <View className="w-10 h-10 rounded-full bg-gray-200"></View>
-                      <View className="w-[200px]">
+                    <View className="flex flex-row items-center space-x-4 w-3/5">
+                      <View className="w-10 h-10 rounded-full bg-gray-100 flex justify-center items-center">
+                        <CustomIcon
+                          name={
+                            +item.amount < 0 ? 'ArrowUpRight' : 'ArrowDownLeft'
+                          }
+                          size={24}
+                          color={+item.amount < 0 ? '#ef4444' : '#22c55e'}
+                        />
+                      </View>
+
+                      <View>
                         <MediumText className="text-secondary">
                           {item.description}
                         </MediumText>
@@ -257,11 +265,11 @@ export default function HomeScreen() {
                         </NormalText>
                       </View>
                     </View>
-                    <View>
+                    <View className="w-2/5">
                       <NormalText
-                        className={
+                        className={`text-right ${
                           +item.amount < 0 ? 'text-red-500' : 'text-green-500'
-                        }
+                        }`}
                       >
                         {formatMoney(item.amount)} đ
                       </NormalText>
