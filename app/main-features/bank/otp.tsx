@@ -6,7 +6,7 @@ import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { BankLinkConfirmSchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { successResponseStatus } from '@/utils/helper'
+import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
@@ -79,7 +79,7 @@ export default function OtpScreen() {
             <View>
               <NormalText className="text-tertiary mt-1">
                 Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại{' '}
-                {phone?.data.phone_number}
+                {formatPhoneNumber(phone?.data.phone_number || '')}
               </NormalText>
             </View>
 

@@ -12,6 +12,15 @@ export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
+export const formatInputMoney = (value: number | string) => {
+  const cleanValue = value.toString().replace(/[^\d]/g, '')
+  return cleanValue.replace(/(?<=\d)(?=(\d{3})+(?!\d))/g, '.')
+}
+
+export const formatPhoneNumber = (value: string) => {
+  return value.replace(/\d(?=\d{4})/g, '*')
+}
+
 export const formatDateTime = (value: string) => {
   // original string: 2023-11-30 00:00:00
   const parts = value.split(' ')

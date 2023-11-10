@@ -51,6 +51,7 @@ export default function AddBankScreen() {
     bankName: ''
   })
   const [isVisible, setVisible] = useState(false)
+  const [bankCreateType, setBankCreateType] = useState('')
   const router = useRouter()
 
   const banksQuery = useQuery({
@@ -110,11 +111,12 @@ export default function AddBankScreen() {
         <View>
           <Pressable
             onPress={() => {
-              setVisible(true)
+              setBankCreateType(item.create_link || '')
               setBank({
                 bankCode: item.code,
                 bankName: item.short_name
               })
+              setVisible(true)
             }}
           >
             <ChevronRight size={24} color={Colors.secondary} />
@@ -133,24 +135,26 @@ export default function AddBankScreen() {
           </View>
           <Modal.Body>
             <NormalText className="text-tertiary text-center">
-              Bạn có thể liên kết ví FPTUPay với thẻ hoặc tài khoản ngân hàng
+              Chọn phương thức liên kết ví FPTUPay với ngân hàng của bạn
             </NormalText>
 
             <View className="bg-[#FAFAFA] rounded-lg mt-3">
-              <IconButton
-                label="Thẻ ngân hàng"
-                onPress={() =>
-                  router.push({
-                    pathname: '/main-features/bank/[code]',
-                    params: {
-                      code: bank.bankCode,
-                      type: 'CARD',
-                      name: bank.bankName
-                    }
-                  })
-                }
-                description="Liên kết bằng số thẻ ngân hàng"
-              />
+              {bankCreateType.includes('issue_date') && (
+                <IconButton
+                  label="Thẻ ngân hàng"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/main-features/bank/[code]',
+                      params: {
+                        code: bank.bankCode,
+                        type: 'CARD',
+                        name: bank.bankName
+                      }
+                    })
+                  }
+                  description="Liên kết bằng số thẻ ngân hàng"
+                />
+              )}
               <View className="mt-2">
                 <IconButton
                   label="Tài khoản ngân hàng"
