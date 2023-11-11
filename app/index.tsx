@@ -51,13 +51,7 @@ export default function LoginScreen() {
         })
         break
       case UserStatus.ACTIVE:
-        router.push({
-          pathname: '/authentication/common/[otp-type]',
-          params: {
-            type: 'otp-login',
-            props: JSON.stringify({ ...getValues() })
-          }
-        })
+        router.push('/account/home')
         break
       case UserStatus.INACTIVE:
         Toast.show({
@@ -87,16 +81,23 @@ export default function LoginScreen() {
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {
-          if (data.data.user_status !== UserStatus.ACTIVE) {
-            await saveToken({
-              key: 'access_token',
-              value: data.data.access_token
+          if (data.data.verify_otp) {
+            router.push({
+              pathname: '/authentication/common/[otp-type]',
+              params: {
+                props: JSON.stringify({ ...getValues() })
+              }
             })
-            await saveToken({
-              key: 'refresh_token',
-              value: data.data.refresh_token
-            })
+            return
           }
+          await saveToken({
+            key: 'access_token',
+            value: data.data.access_token
+          })
+          await saveToken({
+            key: 'refresh_token',
+            value: data.data.refresh_token
+          })
           navigateBasedOnStatus(data.data.user_status, getValues('username'))
         } else {
           Toast.show({

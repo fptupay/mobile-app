@@ -2,44 +2,50 @@ import DescriptionRowItem, {
   ListItemProp
 } from '@/components/DescriptionRowItem'
 import SharedLayout from '@/components/SharedLayout'
+import { useAccountStore } from '@/stores/accountStore'
+
 import { ScrollView } from 'react-native'
 
-const mockPersonalData: ListItemProp[] = [
-  {
-    label: 'Họ và tên',
-    description: 'Phạm Quang Hưng'
-  },
-  {
-    label: 'Mã sinh viên',
-    description: 'HE111111'
-  },
-  {
-    label: 'Email',
-    description: 'email@gmail.com'
-  },
-  {
-    label: 'Số điện thoại',
-    description: '0123456789'
-  },
-  {
-    label: 'Cơ sở',
-    description: 'Hòa Lạc'
-  },
-  {
-    label: 'Trạng thái tài khoản',
-    description: 'Đã kích hoạt'
-  },
-  {
-    label: 'Thời gian kích hoạt',
-    description: '01:01 - 01/01/2023'
-  },
-  {
-    label: 'Loại tài khoản',
-    description: 'Sinh viên'
-  }
-]
-
 export default function PersonalInfoScreen() {
+  const userDetails = useAccountStore((state) => state.details)
+
+  const mockPersonalData: ListItemProp[] = [
+    {
+      label: 'Họ và tên',
+      description: userDetails.full_name
+    },
+    {
+      label: 'Mã sinh viên',
+      description: userDetails.username
+    },
+    {
+      label: 'Email',
+      description: userDetails.email
+    },
+    {
+      label: 'Số điện thoại',
+      description: userDetails.mobile
+    },
+    {
+      label: 'Cơ sở',
+      description: userDetails.campus
+    },
+    {
+      label: 'Trạng thái tài khoản',
+      description:
+        userDetails.status === 'ACTIVE' ? 'Đã kích hoạt' : 'Chưa kích hoạt'
+    },
+    {
+      label: 'Thời gian kích hoạt',
+      description: '01:01 - 01/01/2023'
+    },
+    {
+      label: 'Loại tài khoản',
+      description:
+        userDetails.user_type === 'STUDENT' ? 'Sinh viên' : 'Giảng viên'
+    }
+  ]
+
   return (
     <SharedLayout href="/account/my-wallet" title="Thông tin cá nhân">
       <ScrollView className="mt-10">

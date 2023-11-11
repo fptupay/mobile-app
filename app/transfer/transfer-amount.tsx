@@ -3,15 +3,17 @@ import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
+import { useAccountStore } from '@/stores/accountStore'
 import { useModalStore } from '@/stores/modalStore'
 import { formatMoney } from '@/utils/helper'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 import React, { useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -20,21 +22,25 @@ import {
 
 export default function TransferAmountScreen() {
   const router = useRouter()
+  const { studentCode, owner } = useLocalSearchParams()
+  const { full_name } = useAccountStore((state) => state.details)
+
   const [amount, setAmount] = useState<string>()
   const [rawAmount, setRawAmount] = useState<string>('')
   const [suggestions, setSuggestions] = useState<number[]>([])
-  const [message, setMessage] = useState<string>('')
+  const [message, setMessage] = useState<string>(`${full_name} chuyển tiền`)
 
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
+  const balance = useAccountStore((state) => state.balance)
 
   const handleAmountChange = (amount: string) => {
-    setRawAmount(amount)
     // amount should not start with 0
     if (amount.startsWith('0')) {
       return
     }
     const numericValue = amount.replace(/\D/g, '')
+    setRawAmount(numericValue)
 
     const baseAmount = parseInt(numericValue) || 0
     // prevent user from entering more than 100 million
@@ -66,10 +72,14 @@ export default function TransferAmountScreen() {
   }
 
   const handleTransfer = () => {
-    if (rawAmount >= '20') {
+    if (rawAmount > balance) {
       setIsOpen(true)
     } else {
-      router.push('/transfer/transfer-confirmation')
+      setIsOpen(false)
+      router.push({
+        pathname: '/transfer/transfer-confirmation',
+        params: { amount: rawAmount, message, studentCode, owner }
+      })
     }
   }
 
@@ -79,16 +89,18 @@ export default function TransferAmountScreen() {
       <SharedLayout href="/transfer/transfer-new" title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            className="flex-1"
+            className="h-full"
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             {/* Recipient info */}
             <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
               <View>
-                <MediumText className="text-black">Phạm Quang Hưng</MediumText>
-                <NormalText className="text-tertiary">HE160005</NormalText>
+                <MediumText className="text-black">{owner}</MediumText>
+                <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
-              <MediumText className="text-primary">Thay đổi</MediumText>
+              <Pressable onPress={() => router.back()}>
+                <MediumText className="text-primary">Thay đổi</MediumText>
+              </Pressable>
             </View>
 
             {/* Entered amount */}
@@ -99,9 +111,10 @@ export default function TransferAmountScreen() {
                 value={amount}
                 onChangeText={handleAmountChange}
                 keyboardType="numeric"
+                autoFocus
               />
               <NormalText className="text-tertiary">
-                Số dư hiện tại: 1.000.000đ
+                Số dư hiện tại: {balance}đ
               </NormalText>
             </View>
 
@@ -117,17 +130,22 @@ export default function TransferAmountScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+
             <TextField
               value={message}
               label="Nhắn gửi"
               onChangeText={(text) => setMessage(text)}
               className="my-4"
             />
-            <TextButton
-              onPress={handleTransfer}
-              text="Chuyển tiền"
-              type="primary"
-            />
+
+            <View className="mb-4">
+              <TextButton
+                onPress={handleTransfer}
+                text="Tiếp tục"
+                type="primary"
+                disable={!amount}
+              />
+            </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </SharedLayout>

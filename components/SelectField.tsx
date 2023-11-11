@@ -17,7 +17,7 @@ export default function SelectField(props: SelectFieldProps) {
     <View
       {...otherProps}
       style={style}
-      className={`p-4 rounded-lg flex flex-row items-center justify-between border ${
+      className={`px-4 py-2 rounded-lg flex flex-row items-center justify-between border ${
         selectedBank == id ? 'border-primary' : 'border-gray-300'
       }`}
     >

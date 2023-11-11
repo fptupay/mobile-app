@@ -6,6 +6,7 @@ export interface OtpInputProps {
   onTextChange?: (text: string) => void
   focusStickBlinkingDuration?: number
   theme?: Theme
+  type?: 'uncovered' | 'covered'
 }
 
 export interface OtpInputRef {

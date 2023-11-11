@@ -1,25 +1,18 @@
 import { logoutUser } from '@/api/authentication'
-import { getAccountBalance } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
-import { deleteToken, successResponseStatus } from '@/utils/helper'
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery
-} from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { useAccountStore } from '@/stores/accountStore'
+import { deleteToken, formatMoney } from '@/utils/helper'
+import { useMutation } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
-import { useRef, useState } from 'react'
-import { Animated, Image, Pressable, ScrollView, View } from 'react-native'
-import Toast from 'react-native-toast-message'
+import { useState } from 'react'
+import { Image, Pressable, ScrollView, View } from 'react-native'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -57,6 +50,12 @@ const accountDetail: ListItemProps[] = [
 
 const otherFunctions: ListItemProps[] = [
   {
+    leftIcon: 'Shield',
+    color: '#f43f5e',
+    href: '/smart-otp',
+    title: 'Cài đặt Smart OTP'
+  },
+  {
     leftIcon: 'Lock',
     color: '#A983FC',
     href: '/authentication/reset-password',
@@ -76,104 +75,18 @@ const otherFunctions: ListItemProps[] = [
   }
 ]
 
-const Header_Max = 215
-const Header_Min = 120
-const Scroll_Distance = Header_Max - Header_Min
-
-const DynamicHeader = ({ value }: any) => {
-  const heightAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [Header_Max, Header_Min],
-    extrapolate: 'clamp'
-  })
-
-  const opacityAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [1, 0],
-    extrapolate: 'clamp'
-  })
-
-  const sizeAnimation = value.interpolate({
-    inputRange: [0, Scroll_Distance],
-    outputRange: [72, 0],
-    extrapolate: 'clamp'
-  })
-
-  return (
-    <Animated.View
-      style={{ height: heightAnimation }}
-      className="h-[215px] bg-white rounded-bl-[30px] rounded-br-[30px] relative flex justify-center items-center"
-    >
-      <LinearGradient
-        className="w-full h-full rounded-bl-[30px] rounded-br-[30px]"
-        colors={['#fdc83080', '#f97316bf']}
-      />
-      <View className="absolute bg-transparent pt-8 flex items-center">
-        <Animated.View
-          style={{
-            opacity: opacityAnimation,
-            width: sizeAnimation,
-            height: sizeAnimation
-          }}
-          className="w-[72px] h-[72px] rounded-full relative"
-        >
-          <Image
-            className="rounded-full w-[72px] h-[72px] bg-black"
-            source={require('@/assets/images/account-mascot.png')}
-          />
-          <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
-            <CustomIcon name="Pencil" color="black" size={16} />
-          </View>
-        </Animated.View>
-        <SemiText className="text-center text-secondary mt-5">
-          Cao Quynh Anh
-        </SemiText>
-      </View>
-    </Animated.View>
-  )
-}
-
 export default function MyWalletScreen() {
-  const queryClient = new QueryClient()
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MyWalletComponent />
-    </QueryClientProvider>
-  )
-}
-
-function MyWalletComponent() {
   const router = useRouter()
 
-  const scrollOffsetY = useRef(new Animated.Value(0)).current
   const [showBalance, setShowBalance] = useState(false)
-
-  const accountBalanceQuery = useQuery({
-    queryKey: ['getAccountBalance'],
-    queryFn: () => getAccountBalance(),
-    onSuccess: (data) => {
-      if (!successResponseStatus(data)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Đã có lỗi xảy ra',
-          text2: data.message
-        })
-      }
-    },
-    onError: (error: AxiosError) => {
-      Toast.show({
-        type: 'error',
-        text1: 'Đã có lỗi xảy ra',
-        text2: error.message
-      })
-    }
-  })
+  const balance = useAccountStore((state) => state.balance)
+  const details = useAccountStore((state) => state.details)
+  const setDetails = useAccountStore((state) => state.setDetails)
 
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: () => {
+      setDetails({})
       deleteToken('access_token')
         .then(() => router.push('/'))
         .catch((err) => console.log(err))
@@ -185,17 +98,27 @@ function MyWalletComponent() {
 
   return (
     <View className="flex-1 bg-white">
-      <DynamicHeader value={scrollOffsetY} />
-      <ScrollView
-        scrollEventThrottle={5}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          {
-            useNativeDriver: false
-          }
-        )}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
+      <View className="h-[215px] bg-white rounded-bl-[30px] rounded-br-[30px] relative flex justify-center items-center">
+        <LinearGradient
+          className="w-full h-full rounded-bl-[30px] rounded-br-[30px]"
+          colors={['#fdc83080', '#f97316bf']}
+        />
+        <View className="absolute bg-transparent pt-8 flex items-center">
+          <View className="w-[72px] h-[72px] rounded-full relative">
+            <Image
+              className="rounded-full w-[72px] h-[72px] bg-black"
+              source={require('@/assets/images/account-mascot.png')}
+            />
+            <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
+              <CustomIcon name="Pencil" color="black" size={16} />
+            </View>
+          </View>
+          <SemiText className="text-center text-secondary mt-5">
+            {details.full_name}
+          </SemiText>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <View>
           <View
             className="rounded-lg mx-4 mt-4 p-4 flex flex-row justify-between items-center bg-[#FAFAFA]"
@@ -231,12 +154,7 @@ function MyWalletComponent() {
                     showBalance ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  {accountBalanceQuery.isLoading
-                    ? 'Loading...'
-                    : accountBalanceQuery.data?.data.balance}
-                  <SemiText className="underline text-xl text-primary">
-                    đ
-                  </SemiText>
+                  {formatMoney(balance)}đ
                 </SemiText>
                 <SemiText
                   className={`text-primary text-2xl mt-2 ${

@@ -24,7 +24,6 @@ export const loginUser = async (data: LoginFormSchema) => {
       'x-client-device-id': deviceId
     }
   }
-  console.log('login config', config)
   const response = await apiPostCall(
     '/user/public/login',
     {

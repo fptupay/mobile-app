@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message'
 
 export default function SignUpOtpScreen() {
   const router = useRouter()
-  const params: { type: string; props: any } = useLocalSearchParams()
+  const params: { props: any } = useLocalSearchParams()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
@@ -84,7 +84,7 @@ export default function SignUpOtpScreen() {
                 Nhập mã OTP
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại đã đăng ký
               </NormalText>
             </View>
 
