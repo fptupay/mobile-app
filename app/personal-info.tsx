@@ -40,10 +40,6 @@ export default function PersonalInfoScreen() {
       description: '01:01 - 01/01/2023'
     },
     {
-      label: 'Ngân hàng liên kết',
-      description: userDetails.linked_bank
-    },
-    {
       label: 'Loại tài khoản',
       description:
         userDetails.user_type === 'STUDENT' ? 'Sinh viên' : 'Giảng viên'

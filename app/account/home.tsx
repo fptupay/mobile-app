@@ -1,5 +1,6 @@
 import { getAccountBalance } from '@/api/bank'
 import { getUserDetails } from '@/api/profile'
+import { getTransactionsByAccountNumber } from '@/api/transaction'
 import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
@@ -7,17 +8,18 @@ import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
 import {
-  WINDOW_HEIGHT,
-  formatMoney,
-  successResponseStatus
-} from '@/utils/helper'
-import { useQuery } from '@tanstack/react-query'
+  extractDateStringFromCurrentDate,
+  getCurrentYearTime
+} from '@/utils/datetime'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Animated,
   FlatList,
   Keyboard,
@@ -39,99 +41,9 @@ interface MainActionProps {
   route: any
 }
 
-const transactions = [
-  {
-    id: 1,
-    recipient: 'Nguyễn Văn A',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 2,
-    recipient: 'Nguyễn Văn B',
-    name: 'Học phí',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 3,
-    recipient: 'Nguyễn Văn C',
-    name: 'Lương tháng 9',
-    amount: 100000,
-    type: 'income',
-    message: 'Công ty X chuyển tiền lương tháng 9',
-    date: '2021-09-01'
-  },
-  {
-    id: 4,
-    recipient: 'Nguyễn Văn D',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 5,
-    recipient: 'Nguyễn Văn E',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'income',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 6,
-    recipient: 'Nguyễn Văn F',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 7,
-    recipient: 'Nguyễn Lan Anh',
-    name: 'Chuyển tiền ăn',
-    amount: 100000,
-    type: 'income',
-    message: 'Nguyễn Lan Anh chuyển tiền',
-    date: '2021-09-01'
-  },
-  // there are 2 types: income and expense, with varied amount
-  {
-    id: 8,
-    recipient: 'Nguyễn Văn H',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 9,
-    recipient: 'Nguyễn Văn I',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'expense',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  },
-  {
-    id: 10,
-    recipient: 'Nguyễn Văn K',
-    name: 'Mua sắm',
-    amount: 100000,
-    type: 'income',
-    message: 'Mua sắm tạp hoá',
-    date: '2021-09-01'
-  }
-]
+interface Transaction {
+  [key: string]: string
+}
 
 const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
   const router = useRouter()
@@ -157,6 +69,7 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
+  const [transactions, setTransactions] = useState<Transaction[]>([])
 
   const setBalance = useAccountStore((state) => state.setBalance)
   const setDetails = useAccountStore((state) => state.setDetails)
@@ -164,15 +77,14 @@ export default function HomeScreen() {
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
     queryFn: getAccountBalance,
+    notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
       setBalance(data.data.balance)
-      if (!successResponseStatus(data)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Đã có lỗi xảy ra',
-          text2: data.message
-        })
-      }
+      getTransactionsMutation.mutate({
+        account_no: data?.data.account_no,
+        from_date: getCurrentYearTime(),
+        to_date: extractDateStringFromCurrentDate(new Date())
+      })
     },
     onError: (error: AxiosError) => {
       Toast.show({
@@ -189,6 +101,12 @@ export default function HomeScreen() {
     onSuccess: (data) => {
       setDetails(data.data)
     }
+  })
+
+  const getTransactionsMutation = useMutation({
+    mutationKey: ['transactions'],
+    mutationFn: getTransactionsByAccountNumber,
+    onSuccess: (data) => setTransactions(data.data)
   })
 
   const toggleSearch = () => {
@@ -239,7 +157,7 @@ export default function HomeScreen() {
       <View className="flex-1 bg-black">
         <Animated.View
           className="absolute flex-1 left-0 right-0 -top-8 bg-white px-4 rounded-t-[30px]"
-          style={[{ maxHeight: WINDOW_HEIGHT }, bottomSheetAnimation]}
+          style={[{ height: WINDOW_HEIGHT }, bottomSheetAnimation]}
         >
           <View
             className="w-48 h-10 pt-2 justify-start items-center mx-auto"
@@ -247,10 +165,11 @@ export default function HomeScreen() {
           >
             <View className="w-28 h-1 rounded-xl bg-tertiary"></View>
           </View>
+
           {!isSearching ? (
             <View className="mt-1 flex-row items-center justify-between">
               <NormalText className="text-tertiary uppercase">
-                Hôm nay
+                Lịch sử giao dịch
               </NormalText>
               <View className="flex-row">
                 <TouchableOpacity
@@ -300,47 +219,66 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <FlatList
-            contentContainerStyle={{
-              paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
-            }}
-            data={transactions}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                className="flex-row justify-between items-center py-3"
-                onPress={() =>
-                  router.push({
-                    pathname: '/(transactions)/[id]',
-                    params: { id: item.id }
-                  } as any)
-                }
-              >
-                <View className="flex-row items-center space-x-4">
-                  <View className="w-10 h-10 rounded-full bg-gray-200"></View>
-                  <View className="w-[200px]">
-                    <MediumText className="text-secondary">
-                      {item.name}
-                    </MediumText>
-                    <NormalText className="text-ellipsis text-tertiary">
-                      {item.message}
-                    </NormalText>
-                  </View>
-                </View>
-                <View>
-                  <NormalText
-                    className={
-                      item.type === 'income' ? 'text-green-500' : 'text-red-500'
+          {getTransactionsMutation.isLoading ? (
+            <View className="flex flex-col mt-8 space-y-2 items-center">
+              <ActivityIndicator color={Colors.tertiary} />
+              <NormalText className="text-tertiary">
+                Đang tải dữ liệu
+              </NormalText>
+            </View>
+          ) : (
+            <>
+              <FlatList
+                contentContainerStyle={{
+                  paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
+                }}
+                data={transactions}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="flex flex-row py-3 items-center"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/transactions/[id]',
+                        params: { id: item.transaction_id }
+                      } as any)
                     }
                   >
-                    {item.type === 'income' ? '+' : '-'}
-                    {formatMoney(item.amount)}
-                  </NormalText>
-                </View>
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-          />
+                    <View className="flex flex-row items-center space-x-4 w-3/5">
+                      <View className="w-10 h-10 rounded-full bg-gray-100 flex justify-center items-center">
+                        <CustomIcon
+                          name={
+                            +item.amount < 0 ? 'ArrowUpRight' : 'ArrowDownLeft'
+                          }
+                          size={24}
+                          color={+item.amount < 0 ? '#ef4444' : '#22c55e'}
+                        />
+                      </View>
+
+                      <View>
+                        <MediumText className="text-secondary">
+                          {item.description}
+                        </MediumText>
+                        <NormalText className="text-ellipsis text-xs text-tertiary">
+                          {formatDateTime(item.created_at)}
+                        </NormalText>
+                      </View>
+                    </View>
+                    <View className="w-2/5">
+                      <NormalText
+                        className={`text-right ${
+                          +item.amount < 0 ? 'text-red-500' : 'text-green-500'
+                        }`}
+                      >
+                        {formatMoney(item.amount)} đ
+                      </NormalText>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </>
+          )}
         </Animated.View>
       </View>
     )
