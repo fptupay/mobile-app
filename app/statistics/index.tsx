@@ -1,3 +1,4 @@
+import { getTransactionReport } from '@/api/transaction'
 import BottomSheet from '@/components/BottomSheet'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
@@ -9,154 +10,18 @@ import {
   convertDateFormat,
   formatMoney
 } from '@/utils/helper'
-import React, { useRef, useState } from 'react'
-import { Animated, FlatList, Pressable, StyleSheet, View } from 'react-native'
+import { useMutation } from '@tanstack/react-query'
+import { router } from 'expo-router'
+import React, { useEffect, useRef, useState } from 'react'
+import {
+  Animated,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
-
-const expenses = [
-  {
-    id: 1,
-    name: 'Học phí kỳ tiếp',
-    amount: 10000000,
-    date: '2023-09-25'
-  },
-  {
-    id: 2,
-    name: 'Đơn phúc tra',
-    amount: 200000,
-    date: '2023-07-25'
-  },
-  {
-    id: 3,
-    name: 'Đơn phúc tra',
-    amount: 200000,
-    date: '2023-07-22'
-  }
-]
-
-const incomes = [
-  {
-    id: 1,
-    name: 'PQH huyen tien',
-    amount: 10000000,
-    date: '2023-09-25'
-  },
-  {
-    id: 2,
-    name: 'DTT chuyen tien',
-    amount: 200000,
-    date: '2023-07-25'
-  },
-  {
-    id: 3,
-    name: 'HGK chuyen tien',
-    amount: 200000,
-    date: '2023-07-22'
-  }
-]
-
-const FirstTab = () => (
-  <>
-    {/* Expenses */}
-    <View className="flex flex-row justify-between items-baseline mt-4">
-      <SemiText className="text-primary text-2xl">
-        {formatMoney(10500000)}đ
-      </SemiText>
-      <View className="flex flex-row">
-        <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
-        <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
-      </View>
-    </View>
-
-    <FlatList
-      data={expenses}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View className="flex flex-row justify-between items-center mt-4">
-          <View className="flex flex-row items-center">
-            <View>
-              <MediumText>{item.name}</MediumText>
-              <NormalText className="text-tertiary">
-                {convertDateFormat(item.date)}
-              </NormalText>
-            </View>
-          </View>
-          <View>
-            <MediumText className="text-primary">
-              {formatMoney(item.amount)}đ
-            </MediumText>
-          </View>
-        </View>
-      )}
-      showsVerticalScrollIndicator={false}
-    />
-
-    {/* Sort by list or graph */}
-    <View className="flex flex-row mt-auto py-4 shadow-sm shadow-tertiary">
-      <View className="flex-1 items-center">
-        <MediumText>Danh sách</MediumText>
-      </View>
-      <View className="flex-1 items-center">
-        <MediumText className="text-tertiary">Biểu đồ</MediumText>
-      </View>
-    </View>
-  </>
-)
-
-const SecondTab = () => (
-  <>
-    <View className="flex flex-row justify-between items-baseline mt-4">
-      <SemiText className="text-primary text-2xl">
-        {formatMoney(200000)}đ
-      </SemiText>
-      <View className="flex flex-row">
-        <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
-        <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
-      </View>
-    </View>
-
-    <FlatList
-      data={incomes}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View className="flex flex-row justify-between items-center mt-4">
-          <View className="flex flex-row items-center">
-            <View>
-              <MediumText>{item.name}</MediumText>
-              <NormalText className="text-tertiary">
-                {convertDateFormat(item.date)}
-              </NormalText>
-            </View>
-          </View>
-          <View>
-            <MediumText className="text-primary">
-              {formatMoney(item.amount)}đ
-            </MediumText>
-          </View>
-        </View>
-      )}
-      showsVerticalScrollIndicator={false}
-    />
-  </>
-)
-
-const renderedTab = SceneMap({
-  first: FirstTab,
-  second: SecondTab
-})
-
-const renderedTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: Colors.primary }}
-    style={{ backgroundColor: 'white', marginTop: 10, elevation: 0 }}
-    renderLabel={({ route, focused }) => (
-      <MediumText style={{ color: focused ? Colors.primary : Colors.tertiary }}>
-        {route.title}
-      </MediumText>
-    )}
-  />
-)
 
 export default function StatisticsScreen() {
   const [index, setIndex] = useState(0)
@@ -165,8 +30,30 @@ export default function StatisticsScreen() {
     { key: 'second', title: 'Tổng thu' }
   ])
   const [isOpen, setIsOpen] = useState(false)
-  const offset = useRef(new Animated.Value(WINDOW_HEIGHT)).current
+  const [totalExpenditure, setTotalExpenditure] = useState(0)
+  const [expenditures, setExpenditures] = useState([])
+  const [totalRevenue, setTotalRevenue] = useState(0)
+  const [revenues, setRevenues] = useState([])
 
+  const { mutate } = useMutation({
+    mutationFn: getTransactionReport,
+    onSuccess: (data) => {
+      setTotalExpenditure(data.data.total_out)
+      setTotalRevenue(data.data.total_in)
+      setExpenditures(data.data.list_out)
+      setRevenues(data.data.list_in)
+    }
+  })
+
+  useEffect(() => {
+    mutate({
+      account_no: '000000000005',
+      from_date: '2023-09-25',
+      to_date: '2023-12-01'
+    })
+  }, [mutate])
+
+  const offset = useRef(new Animated.Value(WINDOW_HEIGHT)).current
   const toggleBottomSheet = () => {
     setIsOpen(!isOpen)
 
@@ -186,6 +73,126 @@ export default function StatisticsScreen() {
       }).start()
     }
   }
+
+  /* Expenditures  */
+  const FirstTab = () => (
+    <>
+      <View className="flex flex-row justify-between items-baseline mt-4">
+        <SemiText className="text-primary text-2xl">
+          {formatMoney(totalExpenditure)}đ
+        </SemiText>
+        <View className="flex flex-row">
+          <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
+          <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
+        </View>
+      </View>
+
+      <FlatList
+        data={expenditures}
+        keyExtractor={(item: any) => item.transaction_id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            className="flex flex-row items-center mt-4"
+            onPress={() =>
+              router.push({
+                pathname: '/transactions/[id]',
+                params: { id: item.transaction_id }
+              } as any)
+            }
+          >
+            <View className="w-3/5">
+              <MediumText>{item.description}</MediumText>
+              <NormalText className="text-tertiary">
+                {convertDateFormat(item.date)}
+              </NormalText>
+            </View>
+            <View className="w-2/5">
+              <MediumText className="text-primary text-right">
+                {formatMoney(item.amount)}đ
+              </MediumText>
+            </View>
+          </TouchableOpacity>
+        )}
+        showsVerticalScrollIndicator={false}
+      />
+
+      {/* Sort by list or graph */}
+      <View className="flex flex-row mt-auto py-4 shadow-sm shadow-tertiary">
+        <View className="flex-1 items-center">
+          <MediumText>Danh sách</MediumText>
+        </View>
+        <View className="flex-1 items-center">
+          <MediumText className="text-tertiary">Biểu đồ</MediumText>
+        </View>
+      </View>
+    </>
+  )
+
+  /* Revenue */
+  const SecondTab = () => (
+    <>
+      <View className="flex flex-row justify-between items-baseline mt-4">
+        <SemiText className="text-primary text-2xl">
+          {formatMoney(totalRevenue)}đ
+        </SemiText>
+        <View className="flex flex-row">
+          <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
+          <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
+        </View>
+      </View>
+
+      <FlatList
+        data={revenues}
+        keyExtractor={(item: any) => item.transaction_id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            className="flex flex-row items-center mt-4"
+            onPress={() =>
+              router.push({
+                pathname: '/transactions/[id]',
+                params: { id: item.transaction_id }
+              } as any)
+            }
+          >
+            <View className="w-3/5">
+              <MediumText>{item.description}</MediumText>
+              <NormalText className="text-tertiary">
+                {convertDateFormat(item.date)}
+              </NormalText>
+            </View>
+            <View className="w-2/5">
+              <MediumText className="text-primary text-right">
+                {formatMoney(item.amount)}đ
+              </MediumText>
+            </View>
+          </TouchableOpacity>
+        )}
+        showsVerticalScrollIndicator={false}
+      />
+    </>
+  )
+
+  const renderedTab = SceneMap({
+    first: FirstTab,
+    second: SecondTab
+  })
+
+  const renderedTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: Colors.primary }}
+      style={{ backgroundColor: 'white', marginTop: 10, elevation: 0 }}
+      renderLabel={({ route, focused }) => (
+        <MediumText
+          style={{ color: focused ? Colors.primary : Colors.tertiary }}
+        >
+          {route.title}
+        </MediumText>
+      )}
+    />
+  )
 
   return (
     <SharedLayout title="Thống kê chi tiêu" href="/home">
