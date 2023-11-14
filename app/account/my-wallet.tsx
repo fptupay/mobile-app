@@ -64,8 +64,8 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'MessageSquare',
     color: '#35CC9F',
-    href: '/account/help-center',
-    title: 'Hỗ trợ'
+    href: '/settings/change-phone',
+    title: 'Đổi số điện thoại'
   },
   {
     leftIcon: 'Settings',
