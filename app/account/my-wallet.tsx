@@ -58,7 +58,7 @@ const otherFunctions: ListItemProps[] = [
   {
     leftIcon: 'Lock',
     color: '#A983FC',
-    href: '/authentication/reset-password',
+    href: '/settings/change-password',
     title: 'Đổi mật khẩu'
   },
   {
