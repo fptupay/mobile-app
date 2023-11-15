@@ -1,4 +1,5 @@
 import { getLinkedBanks, withdrawVerify } from '@/api/bank'
+import LoadingSpin from '@/components/LoadingSpin'
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
@@ -122,9 +123,9 @@ export default function WithdrawalScreen() {
             </TouchableWithoutFeedback>
 
             <View className="pt-6">
-              <SemiText className="text-secondary mb-2">Từ ngân hàng</SemiText>
+              <SemiText className="text-secondary mb-2">Về ngân hàng</SemiText>
               {banksLinkedQuery.isLoading ? (
-                <NormalText className="text-secondary">Loading...</NormalText>
+                <LoadingSpin />
               ) : (
                 banksLinkedQuery.data.data.map((item: BankAccountSchema) => (
                   <TouchableOpacity

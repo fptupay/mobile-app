@@ -155,6 +155,7 @@ export default function LoginScreen() {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
+                      textContentType="oneTimeCode"
                       returnKeyType="next"
                       blurOnSubmit={false}
                       onSubmitEditing={() => passwordRef.current?.focus()}
@@ -178,6 +179,7 @@ export default function LoginScreen() {
                       secureTextEntry={true}
                       onBlur={onBlur}
                       onChangeText={onChange}
+                      textContentType="oneTimeCode"
                       style={{ fontFamily: 'Inter' }}
                       ref={passwordRef}
                     />

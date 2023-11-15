@@ -1,4 +1,5 @@
 import { getLinkedBanks, topupVerify } from '@/api/bank'
+import LoadingSpin from '@/components/LoadingSpin'
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
@@ -129,7 +130,7 @@ export default function LoadMoneyScreen() {
             <View className="py-8 bg-transparent">
               <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
               {banksLinkedQuery.isLoading ? (
-                <NormalText className="text-secondary">Loading...</NormalText>
+                <LoadingSpin />
               ) : (
                 banksLinkedQuery.data.data.map((item: BankAccountSchema) => (
                   <TouchableOpacity
@@ -149,8 +150,7 @@ export default function LoadMoneyScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/bank/add-bank"
-                previousRoute="/main-features/deposit/load-money"
+                onPress={() => router.push('/main-features/bank/add-bank')}
               />
             </View>
           </View>
