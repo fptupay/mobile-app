@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useOtpInput } from '../hooks/useOtpInput'
 import { OtpInputProps, OtpInputRef } from '../types/OtpInput.type'
-import { VerticalStick } from './VerticalStick'
 
 export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
   const {
@@ -14,7 +13,6 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
   const {
     numberOfDigits,
     focusColor = '#A4D0A4',
-    focusStickBlinkingDuration,
     theme = {},
     type = 'uncovered'
   } = props
@@ -22,8 +20,7 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
     containerStyle,
     inputsContainerStyle,
     pinCodeContainerStyle,
-    pinCodeTextStyle,
-    focusStickStyle
+    pinCodeTextStyle
   } = theme
 
   useImperativeHandle(ref, () => ({ clear, setValue: setText }))
@@ -50,18 +47,9 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
                 ]}
                 accessibilityRole="button"
               >
-                {isFocusedInput ? (
-                  <VerticalStick
-                    focusColor={focusColor}
-                    style={focusStickStyle}
-                    focusStickBlinkingDuration={focusStickBlinkingDuration}
-                  />
-                ) : (
-                  // display * if there is a char, otherwise display nothing
-                  <Text style={[styles.codeText, pinCodeTextStyle]}>
-                    {char ? (type === 'covered' ? '*' : char) : ''}
-                  </Text>
-                )}
+                <Text style={[styles.codeText, pinCodeTextStyle]}>
+                  {char ? (type === 'covered' ? '*' : char) : ''}
+                </Text>
               </Pressable>
             )
           })}
