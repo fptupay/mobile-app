@@ -16,7 +16,6 @@ export default function TransferSuccessfulScreen() {
   const {
     amount,
     balance,
-    sender_name,
     receiver_name,
     content,
     transaction_time,
@@ -33,16 +32,8 @@ export default function TransferSuccessfulScreen() {
       content: receiver_name
     },
     {
-      title: 'Số tiền',
-      content: amount
-    },
-    {
-      title: 'Tài khoản nguồn',
-      content: sender_name
-    },
-    {
       title: 'Số dư khả dụng',
-      content: formatMoney(balance) + ' đ'
+      content: balance + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -59,7 +50,7 @@ export default function TransferSuccessfulScreen() {
   ]
 
   const transactionItemsHtml = transferDetail
-    .filter((_, index) => index !== 4)
+    .filter((_, index) => index !== 3)
     .map(
       (item: any) => `
   <div style="display: flex; justify-content: space-between; margin-bottom: 16px">
@@ -119,18 +110,16 @@ export default function TransferSuccessfulScreen() {
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
 
         <View className="mt-4 w-full">
-          {transferDetail
-            .filter((_, index) => index !== 3)
-            .map((item, index) => (
-              <View key={index} className="flex flex-row justify-between mb-4">
-                <NormalText className="text-tertiary flex-1">
-                  {item.title}
-                </NormalText>
-                <NormalText className="text-secondary flex-1 text-right">
-                  {item.content}
-                </NormalText>
-              </View>
-            ))}
+          {transferDetail.map((item, index) => (
+            <View key={index} className="flex flex-row justify-between mb-4">
+              <NormalText className="text-tertiary flex-1">
+                {item.title}
+              </NormalText>
+              <NormalText className="text-secondary flex-1 text-right">
+                {item.content}
+              </NormalText>
+            </View>
+          ))}
         </View>
 
         <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>

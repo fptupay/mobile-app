@@ -1,7 +1,7 @@
 import { getTransactionDetails } from '@/api/transaction'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
-import { NormalText, SemiText, View } from '@/components/Themed'
+import { MediumText, NormalText, SemiText, View } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { formatDateTime, formatMoney } from '@/utils/helper'
@@ -21,15 +21,15 @@ export default function TransactionDetailScreen() {
   const details = [
     {
       title: 'Người nhận',
-      value: data?.data.fund_transfer_detail.receiver_name
+      value: data?.data.fund_transfer_detail?.receiver_name ?? 'Không có'
     },
     {
       title: 'Mã sinh viên',
-      value: data?.data.fund_transfer_detail.destination
+      value: data?.data.fund_transfer_detail?.destination ?? 'Không có'
     },
     {
       title: 'Nội dung giao dịch',
-      value: data?.data.fund_transfer_detail.description
+      value: data?.data.fund_transfer_detail?.description ?? 'Không có'
     },
     {
       title: 'Thời gian',
@@ -41,14 +41,15 @@ export default function TransactionDetailScreen() {
     },
     {
       title: 'Trạng thái',
-      value:
-        data?.data.fund_transfer_detail.status === 'SUCCESS' && 'Thành công'
+      value: 'Thành công'
     },
     {
       title: 'Số dư khả dụng',
-      value: isFetched && formatMoney(data?.data.close_balance)
+      value: isFetched && `${formatMoney(data?.data.close_balance)} đ`
     }
   ]
+
+  const filteredDetails = details.filter((item) => item.value !== 'Không có')
 
   return (
     <SharedLayout title="Chi tiết giao dịch">
@@ -62,7 +63,11 @@ export default function TransactionDetailScreen() {
       ) : (
         <>
           <View className="flex flex-row justify-between mt-4">
-            <SemiText>Chuyển tiền nhanh</SemiText>
+            <MediumText>
+              {data?.data.trans_code === 'TRANSFER'
+                ? 'Chuyển tiền nhanh'
+                : 'Hoàn tiền'}
+            </MediumText>
             <CustomIcon name="Share" size={20} color="#000" />
           </View>
 
@@ -74,12 +79,14 @@ export default function TransactionDetailScreen() {
 
           <View className="mt-4">
             <View className="mt-2 flex space-y-4">
-              {details.map((item) => (
+              {filteredDetails.map((item) => (
                 <View className="flex-row justify-between" key={item.title}>
                   <NormalText className="text-tertiary">
                     {item.title}
                   </NormalText>
-                  <NormalText>{item.value}</NormalText>
+                  <NormalText className="flex-1 text-right">
+                    {item.value}
+                  </NormalText>
                 </View>
               ))}
             </View>
