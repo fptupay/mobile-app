@@ -37,21 +37,35 @@ export default function TransactionOTPScreen() {
   const { username } = useAccountStore((state) => state.details)
   const { secondsLeft, start } = useCountdown()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const savedPin = (await SecureStore.getItemAsync(username)) as string
-      const deviceId = await getDeviceId()
-      const sharedKey = await generateSharedKey(savedPin, deviceId)
+  const fetchData = async () => {
+    const savedPin = (await SecureStore.getItemAsync(username)) as string
+    const deviceId = await getDeviceId()
+    const sharedKey = await generateSharedKey(savedPin, deviceId)
 
-      const generatedSmartOTP = await generateOTPPin(sharedKey)
-      setSmartOTP(generatedSmartOTP)
+    const generatedSmartOTP = await generateOTPPin(sharedKey)
+    setSmartOTP(generatedSmartOTP)
+  }
+
+  useEffect(() => {
+    const fetchAndStartTimer = async () => {
+      await fetchData()
+      start(30)
     }
 
-    fetchData().catch((error) => {
-      console.log(error)
+    fetchAndStartTimer().catch((error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
     })
-    start(30)
-  }, [])
+
+    const intervalId = setInterval(async () => {
+      await fetchAndStartTimer()
+    }, 30000)
+
+    return () => clearInterval(intervalId)
+  }, [username])
 
   const confirmTransferMutation = useMutation({
     mutationFn: (data: TransferConfirmSchema) =>

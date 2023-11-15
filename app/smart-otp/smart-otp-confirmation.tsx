@@ -126,7 +126,8 @@ export default function SmartOTPConfirmationScreen() {
                 <TextButton
                   text="Xác nhận"
                   type={TextButtonType.PRIMARY}
-                  disable={otpCode.length != 6}
+                  disable={otpCode.length != 6 || registerOTPMutation.isLoading}
+                  loading={registerOTPMutation.isLoading}
                   onPress={() => handleVerifyOTP()}
                 />
               </View>
