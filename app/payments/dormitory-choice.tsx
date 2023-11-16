@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import React, { useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import Colors from '@/constants/Colors'
 import DropDownPicker from 'react-native-dropdown-picker'
 import TextButton from '@/components/buttons/TextButton'
@@ -47,7 +47,7 @@ export default function DormitoryChoiceScreen() {
     mutationFn: bookDomRoom,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        console.log(data.data)
+        router.push('/payments/payment-bill')
       } else {
         Toast.show({
           type: 'error',
