@@ -34,8 +34,6 @@ export default function BankListScreen() {
     }
   })
 
-  console.log(banksLinkedQuery.data)
-
   return (
     <SharedLayout href="/account/my-wallet" title="Danh sách liên kết">
       <View className="py-4 bg-transparent flex flex-col justify-between">
@@ -56,7 +54,7 @@ export default function BankListScreen() {
                   }
                 >
                   <BankButton
-                    image={require('@/assets/images/techcombank.png')}
+                    image={{ uri: item.item.logo }}
                     label={getBankName(item.item.bank_code) || 'Ngân hàng'}
                     description={item.item.bank_acc_hide}
                   />

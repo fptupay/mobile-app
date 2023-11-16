@@ -134,6 +134,7 @@ export default function WithdrawalScreen() {
                     onPress={() => setSelectedBank(item.id)}
                   >
                     <SelectField
+                      image={{ uri: item.logo }}
                       id={item.id}
                       label={getBankName(item.bank_code) || 'Ngân hàng'}
                       description={item.bank_acc_hide}
@@ -145,8 +146,7 @@ export default function WithdrawalScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/bank/add-bank"
-                previousRoute="/main-features/withdraw/withdrawal"
+                onPress={() => router.push('/main-features/bank/add-bank')}
               />
             </View>
           </View>

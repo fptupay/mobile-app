@@ -139,6 +139,7 @@ export default function LoadMoneyScreen() {
                     onPress={() => setSelectedBank(item.id)}
                   >
                     <SelectField
+                      image={{ uri: item.logo }}
                       id={item.id}
                       label={getBankName(item.bank_code) || 'Ngân hàng'}
                       description={item.bank_acc_hide}
