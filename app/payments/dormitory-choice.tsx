@@ -140,7 +140,7 @@ export default function DormitoryChoiceScreen() {
           text="Tiếp tục"
           type="primary"
           onPress={handleBookRoom}
-          disable={bookRoomMutation.isLoading}
+          disable={bookRoomMutation.isLoading || !value || !value1 || !value2}
           loading={bookRoomMutation.isLoading}
         />
       </View>
