@@ -12,8 +12,10 @@ export default function DescriptionRowItem({
 }: ListItemProp) {
   return (
     <View className="flex flex-row justify-between items-center mb-5">
-      <NormalText className="text-tertiary">{label}</NormalText>
-      <NormalText className="text-secondary">{description}</NormalText>
+      <NormalText className="text-tertiary flex-1">{label}</NormalText>
+      <NormalText className="text-secondary flex-1 text-right">
+        {description}
+      </NormalText>
     </View>
   )
 }
