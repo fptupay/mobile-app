@@ -1,13 +1,12 @@
 import {
-  Image,
   Keyboard,
+  Image,
   KeyboardAvoidingView,
   Platform,
   TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'

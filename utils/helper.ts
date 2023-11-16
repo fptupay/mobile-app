@@ -1,4 +1,3 @@
-import { CameraCapturedPicture } from 'expo-camera'
 import * as Crypto from 'expo-crypto'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
@@ -50,9 +49,9 @@ export const deleteToken = async (key: string) => {
   return await SecureStore.deleteItemAsync(key)
 }
 
-export const compressImg = async (data: CameraCapturedPicture) => {
+export const compressImg = async (data: string) => {
   return await manipulateAsync(
-    data.uri,
+    data,
     [
       {
         resize: {

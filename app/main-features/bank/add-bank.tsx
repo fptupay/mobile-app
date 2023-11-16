@@ -15,7 +15,6 @@ import { ChevronRight } from 'lucide-react-native'
 import { useState } from 'react'
 import {
   FlatList,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -26,7 +25,9 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
+import { blurHash } from '@/constants/Hash'
 
 export type AddBankRouteParams = {
   setDepositSuccessful?: boolean
@@ -103,10 +104,11 @@ export default function AddBankScreen() {
           <View className="flex-row items-center space-x-4">
             <View className="w-[48px] h-[48px] rounded-full">
               <Image
-                defaultSource={require('@/assets/images/fpt.png')}
                 source={{
                   uri: item.logo
                 }}
+                transition={200}
+                placeholder={blurHash}
                 className="w-full h-full rounded-full"
               />
             </View>

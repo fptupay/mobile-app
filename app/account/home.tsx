@@ -1,5 +1,5 @@
 import { getAccountBalance } from '@/api/bank'
-import { getUserDetails } from '@/api/profile'
+import { getUserAvatar, getUserDetails } from '@/api/profile'
 import { getTransactionsByAccountNumber } from '@/api/transaction'
 import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
@@ -16,8 +16,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Animated,
@@ -32,8 +31,10 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
+import { blurHash } from '@/constants/Hash'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -73,6 +74,7 @@ export default function HomeScreen() {
 
   const setBalance = useAccountStore((state) => state.setBalance)
   const setDetails = useAccountStore((state) => state.setDetails)
+  const setAvatar = useAccountStore((state) => state.setAvatar)
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
@@ -100,6 +102,14 @@ export default function HomeScreen() {
     queryFn: getUserDetails,
     onSuccess: (data) => {
       setDetails(data.data)
+    }
+  })
+
+  const { data: avatar } = useQuery({
+    queryKey: ['user-avatar'],
+    queryFn: getUserAvatar,
+    onSuccess: (data) => {
+      setAvatar(data.data.avatar)
     }
   })
 
@@ -291,7 +301,14 @@ export default function HomeScreen() {
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex flex-row space-x-2 items-center">
-            <View className="w-9 h-9 rounded-full bg-gray-200"></View>
+            <Image
+              source={{
+                uri: avatar?.data.avatar
+              }}
+              transition={200}
+              placeholder={blurHash}
+              className="w-9 h-9 rounded-full"
+            />
             <View>
               <NormalText className="text-secondary">Xin chào</NormalText>
               <SemiText className="text-secondary">
