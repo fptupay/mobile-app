@@ -49,7 +49,10 @@ export default function OtpScreen() {
           text2: data.message
         })
       } else {
-        router.push('/main-features/deposit/deposit-confirmation')
+        router.push({
+          pathname: '/main-features/deposit/deposit-confirmation',
+          params: { transId: data.data.trans_id }
+        })
       }
     },
     onError: (error: Error) => {
@@ -73,7 +76,10 @@ export default function OtpScreen() {
           text2: data.message
         })
       } else {
-        router.push('/main-features/withdraw/withdraw-confirmation')
+        router.push({
+          pathname: '/main-features/withdraw/withdraw-confirmation',
+          params: { transId: data.data.trans_id }
+        })
       }
     },
     onError: (error: Error) => {
