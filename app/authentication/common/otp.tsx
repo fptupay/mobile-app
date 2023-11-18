@@ -10,7 +10,7 @@ import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Keyboard,
   KeyboardAvoidingView,

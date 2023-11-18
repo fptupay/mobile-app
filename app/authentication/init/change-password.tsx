@@ -57,7 +57,7 @@ export default function ChangePasswordScreen() {
       isSatisfied: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(
         watch('new_password')
       ),
-      label: 'At least có 1 ký tự đặc biệt'
+      label: 'Ít nhất có 1 ký tự đặc biệt'
     }
   ]
 

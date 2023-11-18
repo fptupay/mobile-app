@@ -3,8 +3,7 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { ImageSourcePropType, View } from 'react-native'
-import { Image } from 'expo-image'
+import { ImageSourcePropType, View, Image } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 interface StepCardProps {

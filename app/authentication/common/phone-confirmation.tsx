@@ -109,10 +109,9 @@ export default function PhoneConfirmationScreen() {
             <View className="w-full mt-8 space-y-2">
               <TextButton
                 text="Xác nhận"
-                disable={!isValid}
+                disable={!isValid || phoneNumberMutation.isLoading}
                 type={TextButtonType.PRIMARY}
-                previousRoute="/authentication/common/phone-confirmation"
-                nextRoute="/authentication/init/ekyc/ekyc-rule"
+                loading={phoneNumberMutation.isLoading}
                 onPress={() => {
                   phoneNumberMutation.mutate({
                     phone_number: getValues().phone_number
