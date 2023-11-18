@@ -15,13 +15,13 @@ import { StatusBar } from 'expo-status-bar'
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PhoneConfirmationScreen() {

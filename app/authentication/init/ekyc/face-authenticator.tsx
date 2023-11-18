@@ -18,7 +18,8 @@ import * as FaceDetector from 'expo-face-detector'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
-import { Image, ImageBackground, TouchableOpacity } from 'react-native'
+import { ImageBackground, TouchableOpacity } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function FaceAuthenticatorScreen() {
@@ -167,7 +168,7 @@ export default function FaceAuthenticatorScreen() {
               <TextButton
                 text="Đến trang chủ"
                 type="primary"
-                onPress={() => router.push('/index')}
+                onPress={() => router.push('/')}
               />
             </View>
           </Modal.Body>

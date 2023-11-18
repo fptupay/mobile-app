@@ -20,13 +20,13 @@ import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
-  Image,
   Keyboard,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function WithdrawalScreen() {

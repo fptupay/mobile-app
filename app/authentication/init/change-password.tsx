@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { changePasswordInit } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'

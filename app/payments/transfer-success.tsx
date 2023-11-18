@@ -3,7 +3,8 @@ import { NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { getImagePath } from '@/utils/helper'
 import React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function TransferSuccessScreen() {
   return (

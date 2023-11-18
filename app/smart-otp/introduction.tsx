@@ -8,7 +8,7 @@ import {
 } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
-import { Image } from 'react-native'
+import { Image } from 'expo-image'
 import BackButton from '@/components/buttons/BackButton'
 
 const advantages = [

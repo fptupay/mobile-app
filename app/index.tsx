@@ -1,12 +1,12 @@
 import {
   Keyboard,
-  Image,
   KeyboardAvoidingView,
   Platform,
   TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'

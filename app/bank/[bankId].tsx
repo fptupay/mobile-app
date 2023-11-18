@@ -1,4 +1,5 @@
-import { View, Image, Modal, ScrollView, Pressable } from 'react-native'
+import { View, Modal, ScrollView, Pressable } from 'react-native'
+import { Image } from 'expo-image'
 import React, { useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
