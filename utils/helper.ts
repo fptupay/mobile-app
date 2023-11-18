@@ -234,7 +234,8 @@ export const successResponseStatus = (status: any) => {
 }
 
 export const getBankName = (bankCode: string) => {
-  return Banks.find((item) => item.bank_code === bankCode)?.bank_name
+  return Banks.find((item) => item.bank_code === bankCode.toLowerCase())
+    ?.bank_name
 }
 
 export const getDeviceId = async () => {

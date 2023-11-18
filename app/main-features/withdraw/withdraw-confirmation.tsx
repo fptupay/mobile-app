@@ -2,7 +2,12 @@ import { getTransactionDetails } from '@/api/transaction'
 import LoadingSpin from '@/components/LoadingSpin'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { WINDOW_HEIGHT } from '@/utils/helper'
+import {
+  WINDOW_HEIGHT,
+  formatDateTime,
+  formatMoney,
+  getBankName
+} from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -11,30 +16,24 @@ import { Image } from 'expo-image'
 
 export default function WithdrawConfirmationScreen() {
   const params: { transId: string } = useLocalSearchParams()
-  console.log('withdraw trans id ', params.transId)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetched } = useQuery({
     queryKey: ['transaction-detail', params.transId],
     queryFn: () => getTransactionDetails(params.transId)
   })
 
-  console.log('withdraw data ', data)
-
   const transferDetail = [
     {
       title: 'Số dư khả dụng',
-      value: ''
-      // value: isFetched && `${formatMoney(data?.data.close_balance)} đ`
+      value: isFetched && `${formatMoney(data?.data.close_balance)} đ`
     },
     {
       title: 'Thời gian giao dịch',
-      value: ''
-      // value: isFetched && formatDateTime(data?.data.created_at)
+      value: isFetched && formatDateTime(data?.data.created_at)
     },
     {
       title: 'Mã giao dịch',
-      value: ''
-      // value: data?.data.transaction_id
+      value: data?.data.transaction_id
     }
   ]
 
@@ -57,7 +56,8 @@ export default function WithdrawConfirmationScreen() {
             Rút tiền thành công!
           </SemiText>
           <NormalText className="text-tertiary mt-4 text-center">
-            Bạn đã chuyển thành công 100.000đ về tài khoản ngân hàng Techcombank
+            Bạn đã chuyển thành công {formatMoney(data?.data.amount).slice(1)}đ
+            về tài khoản ngân hàng {getBankName(data?.data.sub_trans_code)}
           </NormalText>
           <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
           <View className="mt-5 w-full">

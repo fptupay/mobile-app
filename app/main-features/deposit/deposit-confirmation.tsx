@@ -2,7 +2,7 @@ import { getTransactionDetails } from '@/api/transaction'
 import LoadingSpin from '@/components/LoadingSpin'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { WINDOW_HEIGHT } from '@/utils/helper'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -11,30 +11,24 @@ import { Image } from 'expo-image'
 
 export default function DepositConfirmationScreen() {
   const params: { transId: string } = useLocalSearchParams()
-  console.log('deposit trans id ', params.transId)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetched } = useQuery({
     queryKey: ['transaction-detail', params.transId],
     queryFn: () => getTransactionDetails(params.transId)
   })
 
-  console.log('deposit data ', data)
-
   const transferDetail = [
     {
       title: 'Số dư khả dụng',
-      value: ''
-      // value: isFetched && `${formatMoney(data?.data.close_balance)} đ`
+      value: isFetched && `${formatMoney(data?.data.close_balance)} đ`
     },
     {
       title: 'Thời gian giao dịch',
-      value: ''
-      // value: isFetched && formatDateTime(data?.data.created_at)
+      value: isFetched && formatDateTime(data?.data.created_at)
     },
     {
       title: 'Mã giao dịch',
-      value: ''
-      // value: data?.data.transaction_id
+      value: data?.data.transaction_id
     }
   ]
 
@@ -57,7 +51,8 @@ export default function DepositConfirmationScreen() {
             Nạp tiền thành công!
           </SemiText>
           <NormalText className="text-tertiary mt-4 text-center">
-            Bạn đã nạp thành công 100.000đ vào ví FPTUPay
+            Bạn đã nạp thành công {formatMoney(data?.data.amount)}đ vào ví
+            FPTUPay
           </NormalText>
           <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
           <View className="mt-5 w-full">
