@@ -5,7 +5,8 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { WINDOW_HEIGHT } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function PaymentSuccessScreen() {
   const transferDetail = [

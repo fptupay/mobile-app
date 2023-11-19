@@ -1,13 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
+import { Image } from 'expo-image'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'

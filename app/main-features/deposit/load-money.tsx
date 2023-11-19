@@ -1,4 +1,5 @@
 import { getLinkedBanks, topupVerify } from '@/api/bank'
+import LoadingSpin from '@/components/LoadingSpin'
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
@@ -9,19 +10,24 @@ import { BankAccountSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
 import { useAccountStore } from '@/stores/accountStore'
 
 import { useBankStore } from '@/stores/bankStore'
-import { formatMoney, getBankName, successResponseStatus } from '@/utils/helper'
+import {
+  formatInputMoney,
+  formatMoney,
+  getBankName,
+  successResponseStatus
+} from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
-  Image,
   Keyboard,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function LoadMoneyScreen() {
@@ -101,11 +107,11 @@ export default function LoadMoneyScreen() {
                   Nạp tiền vào ví FPTU Pay
                 </SemiText>
 
-                <View className="bg-white rounded-lg my-4 px-4 py-2 shadow-md shadow-neutral-400">
+                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
                   <NormalText className="text-tertiary">
                     Tài khoản nguồn
                   </NormalText>
-                  <SemiText className="text-2xl">
+                  <SemiText className="text-2xl text-secondary">
                     {formatMoney(balance)}đ
                   </SemiText>
                 </View>
@@ -115,7 +121,7 @@ export default function LoadMoneyScreen() {
                   label="Số tiền cần nạp"
                   editable={true}
                   selectTextOnFocus={true}
-                  value={amount}
+                  value={formatInputMoney(amount)}
                   onChangeText={handleAmountInput}
                 />
               </View>
@@ -124,7 +130,7 @@ export default function LoadMoneyScreen() {
             <View className="py-8 bg-transparent">
               <SemiText className="text-secondary mb-5">Từ ngân hàng</SemiText>
               {banksLinkedQuery.isLoading ? (
-                <NormalText className="text-secondary">Loading...</NormalText>
+                <LoadingSpin />
               ) : (
                 banksLinkedQuery.data.data.map((item: BankAccountSchema) => (
                   <TouchableOpacity
@@ -133,6 +139,7 @@ export default function LoadMoneyScreen() {
                     onPress={() => setSelectedBank(item.id)}
                   >
                     <SelectField
+                      image={{ uri: item.logo }}
                       id={item.id}
                       label={getBankName(item.bank_code) || 'Ngân hàng'}
                       description={item.bank_acc_hide}
@@ -144,8 +151,7 @@ export default function LoadMoneyScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/bank/add-bank"
-                previousRoute="/main-features/deposit/load-money"
+                onPress={() => router.push('/main-features/bank/add-bank')}
               />
             </View>
           </View>
@@ -165,13 +171,13 @@ export default function LoadMoneyScreen() {
         <TextButton
           text="Nạp tiền"
           type={TextButtonType.PRIMARY}
-          onPress={() =>
+          onPress={() => {
             depositMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount),
+              amount: parseInt(amount.replace('.', '')),
               content: 'Nạp tiền vào ví FPTU Pay'
             })
-          }
+          }}
           loading={depositMutation.isLoading}
           disable={
             selectedBank == '' || amount == '' || depositMutation.isLoading

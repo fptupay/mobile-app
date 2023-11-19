@@ -17,6 +17,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity, View } from 'react-native'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function EkycCameraScreen() {
   const router = useRouter()
@@ -96,7 +97,7 @@ export default function EkycCameraScreen() {
   })
 
   if (!permission) {
-    return <NormalText>Loading...</NormalText>
+    return <LoadingSpin />
   }
 
   if (!permission.granted) {
