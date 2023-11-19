@@ -8,7 +8,8 @@ import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { router } from 'expo-router'
 import React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function SuccessfulRequestScreen() {
   return (

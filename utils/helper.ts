@@ -1,4 +1,3 @@
-import { CameraCapturedPicture } from 'expo-camera'
 import * as Crypto from 'expo-crypto'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
@@ -10,6 +9,15 @@ import * as Application from 'expo-application'
 
 export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+export const formatInputMoney = (value: number | string) => {
+  const cleanValue = value.toString().replace(/[^\d]/g, '')
+  return cleanValue.replace(/(?<=\d)(?=(\d{3})+(?!\d))/g, '.')
+}
+
+export const formatPhoneNumber = (value: string) => {
+  return value.replace(/\d(?=\d{4})/g, '*')
 }
 
 export const formatDateTime = (value: string) => {
@@ -41,9 +49,9 @@ export const deleteToken = async (key: string) => {
   return await SecureStore.deleteItemAsync(key)
 }
 
-export const compressImg = async (data: CameraCapturedPicture) => {
+export const compressImg = async (data: string) => {
   return await manipulateAsync(
-    data.uri,
+    data,
     [
       {
         resize: {
@@ -226,7 +234,8 @@ export const successResponseStatus = (status: any) => {
 }
 
 export const getBankName = (bankCode: string) => {
-  return Banks.find((item) => item.bank_code === bankCode)?.bank_name
+  return Banks.find((item) => item.bank_code === bankCode.toLowerCase())
+    ?.bank_name
 }
 
 export const getDeviceId = async () => {

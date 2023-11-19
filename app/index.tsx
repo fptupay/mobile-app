@@ -1,5 +1,4 @@
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -7,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
+import { Image } from 'expo-image'
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
@@ -155,6 +154,7 @@ export default function LoginScreen() {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
+                      textContentType="oneTimeCode"
                       returnKeyType="next"
                       blurOnSubmit={false}
                       onSubmitEditing={() => passwordRef.current?.focus()}
@@ -178,6 +178,7 @@ export default function LoginScreen() {
                       secureTextEntry={true}
                       onBlur={onBlur}
                       onChangeText={onChange}
+                      textContentType="oneTimeCode"
                       style={{ fontFamily: 'Inter' }}
                       ref={passwordRef}
                     />

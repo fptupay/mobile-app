@@ -31,6 +31,7 @@ export const bankAccountSchema = z.object({
   bank_acc_hide: z.string(),
   bank_code: z.string(),
   phone_number: z.string(),
+  logo: z.string(),
   is_default: z.boolean().nullable(),
   status: z.enum(['ACTIVE', 'INACTIVE']),
   created_at: z.string(),

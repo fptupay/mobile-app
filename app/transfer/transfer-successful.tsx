@@ -7,7 +7,8 @@ import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
-import { Image, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function TransferSuccessfulScreen() {
   const transactionDetails = useTransactionStore(

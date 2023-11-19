@@ -4,7 +4,7 @@ import { Platform } from 'react-native'
 import { apiPostCall } from '..'
 
 export const ekycFront = async (data: CameraCapturedPicture) => {
-  const image = await compressImg(data)
+  const image = await compressImg(data.uri)
 
   const file = {
     uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,
@@ -28,7 +28,7 @@ export const ekycFront = async (data: CameraCapturedPicture) => {
 }
 
 export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
-  const image = await compressImg(data)
+  const image = await compressImg(data.uri)
 
   const file = {
     uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,
@@ -53,7 +53,7 @@ export const ekycBack = async (data: CameraCapturedPicture, id: string) => {
 }
 
 export const ekycSelfie = async (data: CameraCapturedPicture, id: string) => {
-  const image = await compressImg(data)
+  const image = await compressImg(data.uri)
 
   const file = {
     uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : data.uri,

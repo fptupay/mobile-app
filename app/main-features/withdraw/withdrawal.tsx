@@ -1,4 +1,5 @@
 import { getLinkedBanks, withdrawVerify } from '@/api/bank'
+import LoadingSpin from '@/components/LoadingSpin'
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
@@ -8,19 +9,24 @@ import TextButton from '@/components/buttons/TextButton'
 import { BankAccountSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
 import { useAccountStore } from '@/stores/accountStore'
 import { useBankStore } from '@/stores/bankStore'
-import { formatMoney, getBankName, successResponseStatus } from '@/utils/helper'
+import {
+  formatInputMoney,
+  formatMoney,
+  getBankName,
+  successResponseStatus
+} from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
-  Image,
   Keyboard,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function WithdrawalScreen() {
@@ -96,11 +102,11 @@ export default function WithdrawalScreen() {
                   Rút tiền từ ví FPTU Pay
                 </SemiText>
 
-                <View className="bg-white rounded-lg my-4 px-4 py-2 shadow-md shadow-neutral-400">
+                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
                   <NormalText className="text-tertiary">
                     Tài khoản nguồn
                   </NormalText>
-                  <SemiText className="text-2xl">
+                  <SemiText className="text-2xl text-secondary">
                     {formatMoney(balance)}đ
                   </SemiText>
                 </View>
@@ -110,16 +116,16 @@ export default function WithdrawalScreen() {
                   label="Số tiền cần rút"
                   editable={true}
                   selectTextOnFocus={true}
-                  value={amount}
+                  value={formatInputMoney(amount)}
                   onChangeText={(value) => setAmount(value)}
                 />
               </View>
             </TouchableWithoutFeedback>
 
             <View className="pt-6">
-              <SemiText className="text-secondary mb-2">Từ ngân hàng</SemiText>
+              <SemiText className="text-secondary mb-2">Về ngân hàng</SemiText>
               {banksLinkedQuery.isLoading ? (
-                <NormalText className="text-secondary">Loading...</NormalText>
+                <LoadingSpin />
               ) : (
                 banksLinkedQuery.data.data.map((item: BankAccountSchema) => (
                   <TouchableOpacity
@@ -128,6 +134,7 @@ export default function WithdrawalScreen() {
                     onPress={() => setSelectedBank(item.id)}
                   >
                     <SelectField
+                      image={{ uri: item.logo }}
                       id={item.id}
                       label={getBankName(item.bank_code) || 'Ngân hàng'}
                       description={item.bank_acc_hide}
@@ -139,8 +146,7 @@ export default function WithdrawalScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/bank/add-bank"
-                previousRoute="/main-features/withdraw/withdrawal"
+                onPress={() => router.push('/main-features/bank/add-bank')}
               />
             </View>
           </View>
@@ -163,7 +169,7 @@ export default function WithdrawalScreen() {
           onPress={() =>
             withdrawMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount),
+              amount: parseInt(amount.replace('.', '')),
               content: 'Rút tiền từ ví FPTU Pay'
             })
           }

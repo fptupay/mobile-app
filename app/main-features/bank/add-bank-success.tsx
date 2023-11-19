@@ -2,7 +2,8 @@ import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function AddBankSuccessScreen() {

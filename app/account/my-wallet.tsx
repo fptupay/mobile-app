@@ -6,13 +6,20 @@ import List from '@/components/list'
 import { ListItemProps } from '@/components/list/ListItem'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
-import { deleteToken, formatMoney } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { deleteToken, formatMoney, successResponseStatus } from '@/utils/helper'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useState } from 'react'
-import { Image, Pressable, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native'
+import { Image } from 'expo-image'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import * as ImagePicker from 'expo-image-picker'
+import { AxiosError } from 'axios'
+import Toast from 'react-native-toast-message'
+import { uploadUserAvatar } from '@/api/profile'
+import { blurHash } from '@/constants/Hash'
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -77,10 +84,12 @@ const otherFunctions: ListItemProps[] = [
 
 export default function MyWalletScreen() {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [showBalance, setShowBalance] = useState(false)
   const balance = useAccountStore((state) => state.balance)
   const details = useAccountStore((state) => state.details)
+  const avatar = useAccountStore((state) => state.avatar)
   const setDetails = useAccountStore((state) => state.setDetails)
 
   const logoutMutation = useMutation({
@@ -91,10 +100,54 @@ export default function MyWalletScreen() {
         .then(() => router.push('/'))
         .catch((err) => console.log(err))
     },
-    onError: (error: any) => {
-      console.log(error)
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
     }
   })
+
+  const avatarMutation = useMutation({
+    mutationFn: (data: string) => uploadUserAvatar(data),
+    onSuccess: async (data) => {
+      if (successResponseStatus(data)) {
+        Toast.show({
+          type: 'success',
+          text1: 'Cập nhật ảnh đại diện thành công'
+        })
+        await queryClient.invalidateQueries(['user-avatar'])
+      } else {
+        console.log(data)
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5
+    })
+
+    if (result?.assets) {
+      avatarMutation.mutate(result.assets[0].uri)
+    }
+  }
 
   return (
     <View className="flex-1 bg-white">
@@ -104,15 +157,28 @@ export default function MyWalletScreen() {
           colors={['#fdc83080', '#f97316bf']}
         />
         <View className="absolute bg-transparent pt-8 flex items-center">
-          <View className="w-[72px] h-[72px] rounded-full relative">
-            <Image
-              className="rounded-full w-[72px] h-[72px] bg-black"
-              source={require('@/assets/images/account-mascot.png')}
-            />
-            <View className="bg-white w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
+          <TouchableOpacity
+            onPress={pickImage}
+            className="w-[72px] h-[72px] rounded-full relative"
+          >
+            {avatarMutation.isLoading ? (
+              <View className="w-[72px] h-[72px] rounded-full flex items-center justify-center">
+                <ActivityIndicator color={Colors.tertiary} />
+              </View>
+            ) : (
+              <Image
+                source={{
+                  uri: avatar
+                }}
+                transition={200}
+                placeholder={blurHash}
+                className="w-[72px] h-[72px] rounded-full"
+              />
+            )}
+            <View className="bg-white border border-secondary/50 w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
               <CustomIcon name="Pencil" color="black" size={16} />
             </View>
-          </View>
+          </TouchableOpacity>
           <SemiText className="text-center text-secondary mt-5">
             {details.full_name}
           </SemiText>

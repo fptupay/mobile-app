@@ -1,5 +1,6 @@
 import { getAllBanks } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
+import LoadingSpin from '@/components/LoadingSpin'
 import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText, SemiText } from '@/components/Themed'
@@ -14,17 +15,19 @@ import { ChevronRight } from 'lucide-react-native'
 import { useState } from 'react'
 import {
   FlatList,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
+import { blurHash } from '@/constants/Hash'
 
 export type AddBankRouteParams = {
   setDepositSuccessful?: boolean
@@ -51,6 +54,7 @@ export default function AddBankScreen() {
     bankName: ''
   })
   const [isVisible, setVisible] = useState(false)
+  const [bankCreateType, setBankCreateType] = useState('')
   const router = useRouter()
 
   const banksQuery = useQuery({
@@ -84,44 +88,38 @@ export default function AddBankScreen() {
       item.create_link != null
   )
 
+  const handleSelectBank = (item: BankItemProp) => {
+    setBankCreateType(item.create_link || '')
+    setBank({
+      bankCode: item.code,
+      bankName: item.short_name
+    })
+    setVisible(true)
+  }
+
   const renderItem = ({ item }: { item: BankItemProp }) => (
-    <KeyboardAvoidingView>
-      <View className="flex-row justify-between items-center py-3 h-[75px] w-full border-b border-gray-300">
-        <View className="flex-row items-center space-x-4">
-          <View className="w-[48px] h-[48px] rounded-full">
-            {item.logo != null ? (
+    <TouchableOpacity onPress={() => handleSelectBank(item)}>
+      <KeyboardAvoidingView>
+        <View className="flex-row justify-between items-center py-3 h-[75px] w-full border-b border-gray-300">
+          <View className="flex-row items-center space-x-4">
+            <View className="w-[48px] h-[48px] rounded-full">
               <Image
                 source={{
                   uri: item.logo
                 }}
+                transition={200}
+                placeholder={blurHash}
                 className="w-full h-full rounded-full"
               />
-            ) : (
-              <Image
-                source={require('@/assets/images/tick.png')}
-                className="w-full h-full rounded-full"
-              />
-            )}
+            </View>
+            <View>
+              <Text>{item.short_name}</Text>
+            </View>
           </View>
-          <View>
-            <Text>{item.short_name}</Text>
-          </View>
+          <ChevronRight size={24} color={Colors.secondary} />
         </View>
-        <View>
-          <Pressable
-            onPress={() => {
-              setVisible(true)
-              setBank({
-                bankCode: item.code,
-                bankName: item.short_name
-              })
-            }}
-          >
-            <ChevronRight size={24} color={Colors.secondary} />
-          </Pressable>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableOpacity>
   )
 
   const BankTypeModal = () => {
@@ -133,24 +131,26 @@ export default function AddBankScreen() {
           </View>
           <Modal.Body>
             <NormalText className="text-tertiary text-center">
-              Bạn có thể liên kết ví FPTUPay với thẻ hoặc tài khoản ngân hàng
+              Chọn phương thức liên kết ví FPTUPay với ngân hàng của bạn
             </NormalText>
 
             <View className="bg-[#FAFAFA] rounded-lg mt-3">
-              <IconButton
-                label="Thẻ ngân hàng"
-                onPress={() =>
-                  router.push({
-                    pathname: '/main-features/bank/[code]',
-                    params: {
-                      code: bank.bankCode,
-                      type: 'CARD',
-                      name: bank.bankName
-                    }
-                  })
-                }
-                description="Liên kết bằng số thẻ ngân hàng"
-              />
+              {bankCreateType.includes('issue_date') && (
+                <IconButton
+                  label="Thẻ ngân hàng"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/main-features/bank/[code]',
+                      params: {
+                        code: bank.bankCode,
+                        type: 'CARD',
+                        name: bank.bankName
+                      }
+                    })
+                  }
+                  description="Liên kết bằng số thẻ ngân hàng"
+                />
+              )}
               <View className="mt-2">
                 <IconButton
                   label="Tài khoản ngân hàng"
@@ -187,9 +187,11 @@ export default function AddBankScreen() {
       <View className="w-full mt-5">
         <View className="px-4">
           {banksQuery.isLoading ? (
-            <Text>Loading...</Text>
+            <LoadingSpin />
           ) : filteredBankData.length == 0 ? (
-            <Text className="text-secondary">No banks</Text>
+            <Text className="text-secondary">
+              Không có ngân hàng bạn cần tìm
+            </Text>
           ) : (
             <FlatList
               contentContainerStyle={{

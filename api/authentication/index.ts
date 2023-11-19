@@ -76,6 +76,9 @@ export const confirmPhoneNumber = async (data: PhoneSchema) => {
 }
 
 export const verifyOtp = async (data: { otp: string }) => {
-  const response = await apiPostCall('/user/profile/verify-otp', data)
+  const response = await apiPostCall(
+    '/user/profile/phone-number/verify-otp',
+    data
+  )
   return response.data
 }

@@ -5,7 +5,8 @@ import TextButton from '@/components/buttons/TextButton'
 import { getBackGroundColor, getImagePath, getTitle } from '@/utils/helper'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function RequestDetailScreen() {
   const request = useLocalSearchParams()

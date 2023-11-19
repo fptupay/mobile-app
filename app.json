@@ -40,6 +40,12 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow the app to access your photos to upload new avatars."
+        }
       ]
     ],
     "experiments": {
