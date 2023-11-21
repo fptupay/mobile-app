@@ -164,12 +164,12 @@ export default function FaceAuthenticatorScreen() {
               Xác thực tài khoản hoàn tất
             </MediumText>
             <NormalText className="text-tertiary text-center">
-              Vui lòng đăng nhập lại để tiếp tục sử dụng.
+              Vui lòng đăng nhập lại để tiếp tục sử dụng app nhé!
             </NormalText>
 
             <View className="mt-6 w-full">
               <TextButton
-                text="Đến trang chủ"
+                text="Đăng nhập lại"
                 type="primary"
                 onPress={() => router.push('/')}
               />
