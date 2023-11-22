@@ -2,8 +2,8 @@ import { compressImg } from '@/utils/helper'
 import { apiGetCall, apiPostCall } from '..'
 import { Platform } from 'react-native'
 
-export const getSupportRequestList = async () => {
-  const response = await apiGetCall('/user/help-center')
+export const getSupportRequests = async () => {
+  const response = await apiGetCall('/user/help-center/list')
   return response.data
 }
 
