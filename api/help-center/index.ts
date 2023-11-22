@@ -17,13 +17,17 @@ export const uploadImagesToSupportRequest = async (data: any) => {
   }
 
   const formData = new FormData()
-  formData.append('image', file as any)
+  formData.append('images', file as any)
 
-  const response = await apiPostCall('/user/avatar/change', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+  const response = await apiPostCall(
+    '/user/help-center/upload-image',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     }
-  })
+  )
   return response.data
 }
 
