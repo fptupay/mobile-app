@@ -55,6 +55,11 @@ export default function EkycResultScreen() {
             } as any)
           }
         />
+        <TextButton
+          text="Quay lại"
+          type="secondary"
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   )
