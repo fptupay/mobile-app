@@ -99,7 +99,7 @@ export default function BankDetailScreen() {
   })
 
   return (
-    <SharedLayout href="/bank/bank-list" title="Thông tin liên kết">
+    <SharedLayout backHref="/bank/bank-list" title="Thông tin liên kết">
       <View className="py-4 bg-transparent flex-1 flex-col justify-between">
         <View className="bg-transparent">
           <View className=" w-full h-[225px] bg-primary relative p-3 rounded-lg">

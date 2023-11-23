@@ -210,7 +210,8 @@ export default function AddBankScreen() {
 
   return (
     <SharedLayout
-      href={params.previousRoute || '/account/home'}
+    questionHref='/instruction/add-bank-instruction'
+      backHref={params.previousRoute || '/account/home'}
       title="Liên kết ngân hàng"
     >
       <View className="py-4 flex-1 flex-col justify-start gap-y-5">

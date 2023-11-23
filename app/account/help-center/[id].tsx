@@ -18,7 +18,7 @@ export default function RequestDetailScreen() {
 
   return (
     <>
-      <SharedLayout title="" href="/help-center">
+      <SharedLayout title="" backHref="/help-center">
         <View className="mt-12 relative">
           <View className="absolute -top-20 left-0 right-0 justify-center items-center">
             <View

@@ -195,7 +195,7 @@ export default function StatisticsScreen() {
   )
 
   return (
-    <SharedLayout title="Thống kê chi tiêu" href="/home">
+    <SharedLayout title="Thống kê chi tiêu" backHref="/home">
       <Pressable
         className="text-tertiary uppercase"
         onPress={toggleBottomSheet}

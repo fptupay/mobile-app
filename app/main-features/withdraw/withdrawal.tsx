@@ -89,7 +89,7 @@ export default function WithdrawalScreen() {
   })
 
   return (
-    <SharedLayout href="/account/home" title="Rút tiền">
+    <SharedLayout backHref="/account/home" questionHref="/instruction/withdraw-instruction" title="Rút tiền">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}

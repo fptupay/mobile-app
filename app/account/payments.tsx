@@ -38,7 +38,7 @@ const PaymentItem = ({ title, icon, href }: PaymentItemProps) => {
 
 export default function PaymentsScreen() {
   return (
-    <SharedLayout href="/account/home" title="Thanh toán">
+    <SharedLayout backHref="/account/home" questionHref="/instruction/payment-instruction" title="Thanh toán">
       <SemiText className="mt-4">Lựa chọn các khoản nộp</SemiText>
       <ScrollView className="mt-4">
         <PaymentItem

@@ -43,7 +43,7 @@ export default function CreateRequestScreen() {
   }
 
   return (
-    <SharedLayout href="/index" title="Tạo yêu cầu">
+    <SharedLayout backHref="/index" questionHref='/instruction/create-request-instruction' title="Tạo yêu cầu">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="mt-8 flex-1"
