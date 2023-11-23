@@ -114,19 +114,6 @@ export const getImagePath = (status?: string | string[]) => {
   }
 }
 
-export const getBackGroundColor = (status?: string | string[]) => {
-  switch (status) {
-    case 'PROCESSING':
-      return 'bg-yellow-50'
-    case 'APPROVED':
-      return 'bg-green-50'
-    case 'CLOSED':
-      return 'bg-red-50'
-    default:
-      return 'bg-yellow-50'
-  }
-}
-
 const defaultNumbers = ' hai ba bốn năm sáu bảy tám chín'
 
 const unitsPlace: string[] = ('1 một' + defaultNumbers).split(' ')

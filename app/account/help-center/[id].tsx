@@ -3,18 +3,19 @@ import SharedLayout from '@/components/SharedLayout'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { getImagePath, getTitle } from '@/utils/helper'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { Image } from 'expo-image'
-import { useQuery } from '@tanstack/react-query'
-import { getSupportRequestDetail } from '@/api/help-center'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { closeSupportRequest, getSupportRequestDetail } from '@/api/help-center'
+import Toast from 'react-native-toast-message'
 
 export default function RequestDetailScreen() {
   const request = useLocalSearchParams()
-  console.log(request)
   const [isModalVisible, setIsModalVisible] = useState(false)
 
+  const queryClient = useQueryClient()
   const { data: details } = useQuery({
     queryKey: ['supportDetails', request.id],
     queryFn: () => getSupportRequestDetail(request.id as string)
@@ -47,11 +48,28 @@ export default function RequestDetailScreen() {
     }
   ]
 
+  console.log(details?.data?.status)
+
+  const closeRequestMutation = useMutation({
+    mutationKey: ['closeRequest', request.id],
+    mutationFn: () => closeSupportRequest(request.id as string),
+    onSuccess: async () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Đóng yêu cầu thành công'
+      })
+      await queryClient.invalidateQueries(['requests'])
+      router.replace('/account/help-center/')
+    }
+  })
+
+  const handleCloseSupportRequest = () => {
+    closeRequestMutation.mutate()
+  }
+
   const handleOpenModal = () => {
     setIsModalVisible(true)
   }
-
-  console.log(request.status)
 
   return (
     <>
@@ -71,9 +89,9 @@ export default function RequestDetailScreen() {
               {getTitle(details?.data.status)}
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
-            <SemiText>Chi tiết yêu cầu</SemiText>
+            <SemiText className="mt-4">Chi tiết yêu cầu</SemiText>
             <View className="my-4">
-              <View className="mt-2 flex space-y-4">
+              <View className="flex space-y-4">
                 {supportDetails.map((item: any) => (
                   <View className="flex-row justify-between" key={item.key}>
                     <NormalText className="text-tertiary">
@@ -116,7 +134,13 @@ export default function RequestDetailScreen() {
                 />
               </View>
               <View className="flex-1">
-                <TextButton text="Có" type="primary" />
+                <TextButton
+                  text="Có"
+                  type="primary"
+                  onPress={handleCloseSupportRequest}
+                  loading={closeRequestMutation.isLoading}
+                  disable={closeRequestMutation.isLoading}
+                />
               </View>
             </View>
           </Modal.Body>
