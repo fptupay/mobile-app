@@ -1,42 +1,17 @@
+import { getSupportRequests } from '@/api/help-center'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText, View } from '@/components/Themed'
-import { getLabelBackgroundColor, getLabelTextColor } from '@/utils/helper'
+import {
+  getLabelBackgroundColor,
+  getLabelTextColor,
+  getTitle
+} from '@/utils/helper'
+import { useQuery } from '@tanstack/react-query'
 import { Link, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Pressable } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
-
-const requests = [
-  {
-    id: '433245',
-    type: 'Học phí kỳ tiếp',
-    status: 'approved',
-    label: 'Đang xử lý',
-    date: '12/12/2021'
-  },
-  {
-    id: '433255',
-    type: 'Học phí kỳ tiếp',
-    status: 'pending',
-    label: 'Đã phê duyệt',
-    date: '12/12/2021'
-  },
-  {
-    id: '433275',
-    type: 'Học phí kỳ tiếp',
-    status: 'approved',
-    label: 'Đã đóng',
-    date: '12/12/2021'
-  },
-  {
-    id: '433285',
-    type: 'Học phí kỳ tiếp',
-    status: 'closed',
-    label: 'Đang xử lý',
-    date: '12/12/2021'
-  }
-]
 
 const statuses = [
   {
@@ -44,15 +19,15 @@ const statuses = [
     label: 'Tất cả'
   },
   {
-    id: 'pending',
+    id: 'PROCESSING',
     label: 'Đang xử lý'
   },
   {
-    id: 'approved',
+    id: 'APPROVED',
     label: 'Đã phê duyệt'
   },
   {
-    id: 'closed',
+    id: 'REJECTED',
     label: 'Đã đóng'
   }
 ]
@@ -60,22 +35,29 @@ const statuses = [
 export default function RequestsListScreen() {
   const router = useRouter()
   const [currentStatus, setCurrentStatus] = useState('all')
-  const [filteredRequests, setFilteredRequests] = useState(requests)
+
+  const requestsQuery = useQuery({
+    queryKey: ['requests'],
+    queryFn: getSupportRequests
+  })
+  const [filteredRequests, setFilteredRequests] = useState([])
 
   const handleFilterRequests = (status: string) => {
     setCurrentStatus(status)
     if (status === 'all') {
-      setFilteredRequests(requests)
+      setFilteredRequests(requestsQuery.data?.data)
     } else {
       setFilteredRequests(
-        requests.filter((request) => request.status === status)
+        requestsQuery.data?.data.filter(
+          (request: any) => request.status === status
+        )
       )
     }
   }
 
   return (
     <SharedLayout href="/index" title="Hỗ trợ" isTab={true}>
-      {requests.length === 0 ? (
+      {requestsQuery.data?.data.length === 0 ? (
         <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
           <CustomIcon name="FilePlus" size={64} color="#666" />
           <SemiText className="mt-4 text-lg">Không có yêu cầu</SemiText>
@@ -116,13 +98,20 @@ export default function RequestsListScreen() {
           </View>
 
           {/* Requests list */}
-          <FlatList
-            data={filteredRequests}
-            renderItem={({ item }) => <RequestItem request={item} />}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-          />
-
+          {requestsQuery.data?.data.length === 0 ? (
+            <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
+              <NormalText className="text-center text-tertiary">
+                Không có yêu cầu nào phù hợp
+              </NormalText>
+            </View>
+          ) : (
+            <FlatList
+              data={requestsQuery.data?.data}
+              renderItem={({ item }) => <RequestItem request={item} />}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
           {/* Create rounded button */}
           <View
             className="absolute bottom-0 right-0 mr-4 mb-8"
@@ -142,28 +131,26 @@ export default function RequestsListScreen() {
           </View>
         </>
       )}
-      {/* Top */}
     </SharedLayout>
   )
 }
 
 function RequestItem({ request }: { request: any }) {
   return (
-    <Link
-      href={{ pathname: `/help-center/${request.id}`, params: request } as any}
-      asChild
-    >
+    <Link href={`/account/help-center/${request.id}`} asChild>
       <Pressable className="border-b-gray-200 border-b flex-row items-center justify-between py-3">
         <View>
-          <MediumText className="text-secondary">{request.type}</MediumText>
-          <NormalText className="text-tertiary">{request.date}</NormalText>
+          <MediumText className="text-secondary">{request.title}</MediumText>
+          <NormalText className="text-tertiary">
+            {request.created_at}
+          </NormalText>
         </View>
         <View
           className="rounded-full px-2 py-0.5"
           style={{ backgroundColor: getLabelBackgroundColor(request.status) }}
         >
           <MediumText style={{ color: getLabelTextColor(request.status) }}>
-            {request.label}
+            {getTitle(request.status)}
           </MediumText>
         </View>
       </Pressable>

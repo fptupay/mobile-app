@@ -6,12 +6,13 @@ import {
 } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { View } from 'react-native'
 import { Image } from 'expo-image'
 
 export default function SuccessfulRequestScreen() {
+  const { id } = useLocalSearchParams()
   return (
     <SafeAreaView className="flex-1 px-4">
       <View className="flex-1 items-center justify-center">
@@ -29,7 +30,7 @@ export default function SuccessfulRequestScreen() {
         <SemiText className="text-center text-primary text-2xl">
           Gửi yêu cầu thành công!{' '}
         </SemiText>
-        <MediumText className="text-center mb-6">Mã yêu cầu: 123456</MediumText>
+        <MediumText className="text-center mb-6">Mã yêu cầu: {id}</MediumText>
         <View>
           <NormalText className="text-tertiary mb-2">
             Yêu cầu của bạn đã được tiếp nhận và dự kiến được xử lý trong tối đa
@@ -50,9 +51,9 @@ export default function SuccessfulRequestScreen() {
         />
         <View className="mt-2">
           <TextButton
-            onPress={() => router.push('/home')}
+            onPress={() => router.push('/account/home')}
             text="Về trang chủ"
-            type="primary"
+            type="outline"
           />
         </View>
       </View>
