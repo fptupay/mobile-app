@@ -68,33 +68,33 @@ export const compressImg = async (data: string) => {
 
 export const getLabelTextColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.text
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.text
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.text
   }
 }
 
 export const getLabelBackgroundColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.background
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.background
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.background
   }
 }
 
 export const getTitle = (status: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return 'Đang xử lý'
-    case 'approved':
+    case 'APPROVED':
       return 'Đã phê duyệt'
-    case 'closed':
+    case 'CLOSED':
       return 'Đã đóng'
     default:
       return 'Đang xử lý'
@@ -103,27 +103,14 @@ export const getTitle = (status: string | string[]) => {
 
 export const getImagePath = (status?: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return require('@/assets/images/icon-process.png')
-    case 'approved':
+    case 'APPROVED':
       return require('@/assets/images/icon-success.png')
-    case 'closed':
+    case 'CLOSED':
       return require('@/assets/images/icon-closed.png')
     default:
       return require('@/assets/images/icon-process.png')
-  }
-}
-
-export const getBackGroundColor = (status?: string | string[]) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-50'
-    case 'approved':
-      return 'bg-green-50'
-    case 'closed':
-      return 'bg-red-50'
-    default:
-      return 'bg-yellow-50'
   }
 }
 

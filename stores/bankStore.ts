@@ -10,7 +10,6 @@ interface TransactionProps {
   smartOTPTransactionId: string
   transactionDetails: any
   setTransactionId: (transactionId: string) => void
-  setSmartOTPTransactionId: (smartOTPTransactionId: string) => void
   setTransactionDetails: (transactionDetails: any) => void
 }
 
@@ -25,8 +24,6 @@ export const useTransactionStore = create<TransactionProps>((set) => ({
   transactionDetails: {},
   setTransactionId: (transactionId: string) =>
     set({ transactionId: transactionId }),
-  setSmartOTPTransactionId: (smartOTPTransactionId: string) =>
-    set({ smartOTPTransactionId: smartOTPTransactionId }),
   setTransactionDetails: (transactionDetails: any) =>
     set({ transactionDetails: transactionDetails })
 }))

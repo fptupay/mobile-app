@@ -21,7 +21,7 @@ export default function TransferSuccessfulScreen() {
     content,
     transaction_time,
     transaction_id
-  } = transactionDetails
+  } = transactionDetails || {}
 
   const transferDetail = [
     {
@@ -34,7 +34,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      content: balance + ' đ'
+      content: balance && formatMoney(balance) + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -42,7 +42,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Thời gian giao dịch',
-      content: formatDateTime(transaction_time)
+      content: transaction_time && formatDateTime(transaction_time)
     },
     {
       title: 'Mã giao dịch',
@@ -105,7 +105,7 @@ export default function TransferSuccessfulScreen() {
           Chuyển tiền thành công!
         </SemiText>
         <SemiText className="text-4xl text-secondary mt-4">
-          {formatMoney(amount)} đ
+          {amount && formatMoney(amount)} đ
         </SemiText>
 
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
