@@ -103,11 +103,11 @@ export const getTitle = (status: string | string[]) => {
 
 export const getImagePath = (status?: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return require('@/assets/images/icon-process.png')
-    case 'approved':
+    case 'APPROVED':
       return require('@/assets/images/icon-success.png')
-    case 'closed':
+    case 'CLOSED':
       return require('@/assets/images/icon-closed.png')
     default:
       return require('@/assets/images/icon-process.png')
@@ -116,11 +116,11 @@ export const getImagePath = (status?: string | string[]) => {
 
 export const getBackGroundColor = (status?: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return 'bg-yellow-50'
-    case 'approved':
+    case 'APPROVED':
       return 'bg-green-50'
-    case 'closed':
+    case 'CLOSED':
       return 'bg-red-50'
     default:
       return 'bg-yellow-50'

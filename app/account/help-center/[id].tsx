@@ -2,7 +2,7 @@ import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
-import { getBackGroundColor, getImagePath, getTitle } from '@/utils/helper'
+import { getImagePath, getTitle } from '@/utils/helper'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
@@ -23,23 +23,23 @@ export default function RequestDetailScreen() {
   const supportDetails = [
     {
       key: 'Loại yêu cầu',
-      value: details.data?.type
+      value: details?.data?.type === 'TRANSACTION' ? 'Lỗi giao dịch' : 'Khác'
     },
     {
       key: 'Mã giao dịch',
-      value: details.data?.transaction_id
+      value: details?.data?.transaction_id
     },
     {
       key: 'Thời gian tạo',
-      value: details.data?.created_at
+      value: details?.data?.created_at
     },
     {
       key: 'Mã yêu cầu',
-      value: details.data?.id
+      value: details?.data?.id
     },
     {
       key: 'Nội dung yêu cầu',
-      value: details.data?.description
+      value: details?.data?.description
     },
     {
       key: 'Phản hồi',
@@ -51,18 +51,16 @@ export default function RequestDetailScreen() {
     setIsModalVisible(true)
   }
 
+  console.log(request.status)
+
   return (
     <>
       <SharedLayout title="" href="/help-center">
         <View className="mt-12 relative">
           <View className="absolute -top-20 left-0 right-0 justify-center items-center">
-            <View
-              className={`w-16 h-16 rounded-full ${getBackGroundColor(
-                request.status
-              )} p-1`}
-            >
+            <View className="w-16 h-16 rounded-full bg-slate-50 shadow-md p-1">
               <Image
-                source={getImagePath(request.status)}
+                source={getImagePath(details?.data?.status)}
                 className="w-full h-full"
               />
             </View>
@@ -70,7 +68,7 @@ export default function RequestDetailScreen() {
 
           <ScrollView showsVerticalScrollIndicator={false} className="mb-4">
             <SemiText className="text-center text-lg">
-              {getTitle(request.status)}
+              {getTitle(details?.data.status)}
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
             <SemiText>Chi tiết yêu cầu</SemiText>
@@ -89,17 +87,16 @@ export default function RequestDetailScreen() {
               </View>
             </View>
           </ScrollView>
-
-          {request.status === 'pending' && (
-            <View className="mt-auto">
-              <TextButton
-                text="Đóng yêu cầu"
-                type="primary"
-                onPress={handleOpenModal}
-              />
-            </View>
-          )}
         </View>
+        {details?.data.status === 'PROCESSING' && (
+          <View className="mt-auto mb-4">
+            <TextButton
+              text="Đóng yêu cầu"
+              type="primary"
+              onPress={handleOpenModal}
+            />
+          </View>
+        )}
       </SharedLayout>
 
       <Modal isVisible={isModalVisible}>
