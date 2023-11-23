@@ -68,33 +68,33 @@ export const compressImg = async (data: string) => {
 
 export const getLabelTextColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.text
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.text
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.text
   }
 }
 
 export const getLabelBackgroundColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.background
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.background
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.background
   }
 }
 
 export const getTitle = (status: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return 'Đang xử lý'
-    case 'approved':
+    case 'APPROVED':
       return 'Đã phê duyệt'
-    case 'closed':
+    case 'CLOSED':
       return 'Đã đóng'
     default:
       return 'Đang xử lý'

@@ -7,10 +7,45 @@ import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { Image } from 'expo-image'
+import { useQuery } from '@tanstack/react-query'
+import { getSupportRequestDetail } from '@/api/help-center'
 
 export default function RequestDetailScreen() {
   const request = useLocalSearchParams()
+  console.log(request)
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const { data: details } = useQuery({
+    queryKey: ['supportDetails', request.id],
+    queryFn: () => getSupportRequestDetail(request.id as string)
+  })
+
+  const supportDetails = [
+    {
+      key: 'Loại yêu cầu',
+      value: details.data?.type
+    },
+    {
+      key: 'Mã giao dịch',
+      value: details.data?.transaction_id
+    },
+    {
+      key: 'Thời gian tạo',
+      value: details.data?.created_at
+    },
+    {
+      key: 'Mã yêu cầu',
+      value: details.data?.id
+    },
+    {
+      key: 'Nội dung yêu cầu',
+      value: details.data?.description
+    },
+    {
+      key: 'Phản hồi',
+      value: ''
+    }
+  ]
 
   const handleOpenModal = () => {
     setIsModalVisible(true)
@@ -38,45 +73,19 @@ export default function RequestDetailScreen() {
               {getTitle(request.status)}
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
+            <SemiText>Chi tiết yêu cầu</SemiText>
             <View className="my-4">
-              <SemiText>Chi tiết yêu cầu</SemiText>
               <View className="mt-2 flex space-y-4">
-                <View className="flex-row justify-between">
-                  <NormalText className="text-tertiary">
-                    Loại yêu cầu
-                  </NormalText>
-                  <NormalText>Lỗi giao dịch</NormalText>
-                </View>
-                <View className="flex-row justify-between">
-                  <NormalText className="text-tertiary">
-                    Mã sinh viên
-                  </NormalText>
-                  <NormalText>HE160005</NormalText>
-                </View>
-                <View className="flex-row justify-between">
-                  <NormalText className="text-tertiary">
-                    Thời gian gửi
-                  </NormalText>
-                  <NormalText>09:10 - 04/10/2023</NormalText>
-                </View>
-                <View className="flex-row justify-between">
-                  <NormalText className="text-tertiary">Mã yêu cầu</NormalText>
-                  <NormalText>1234567</NormalText>
-                </View>
-                <View>
-                  <NormalText className="text-tertiary">
-                    Nội dung yêu cầu
-                  </NormalText>
-                  <NormalText>
-                    Em là Hà Gia Kính, MSSV: HE150111. Vào 20:04 ngày
-                    01/01/2023, em có chuyển nhầm cho Phạm Quang Hưng (MSSV:
-                    HE151111) 10.000đ...
-                  </NormalText>
-                </View>
-                <View>
-                  <NormalText className="text-tertiary">Phản hồi</NormalText>
-                  <NormalText>Em đến Dịch vụ Sinh viên 102L nhé!</NormalText>
-                </View>
+                {supportDetails.map((item: any) => (
+                  <View className="flex-row justify-between" key={item.key}>
+                    <NormalText className="text-tertiary">
+                      {item.key}
+                    </NormalText>
+                    <NormalText className="flex-1 text-right">
+                      {item.value}
+                    </NormalText>
+                  </View>
+                ))}
               </View>
             </View>
           </ScrollView>
