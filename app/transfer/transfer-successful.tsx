@@ -3,7 +3,7 @@ import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { useTransactionStore } from '@/stores/bankStore'
-import { WINDOW_HEIGHT } from '@/utils/helper'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { StatusBar } from 'expo-status-bar'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
@@ -21,7 +21,7 @@ export default function TransferSuccessfulScreen() {
     content,
     transaction_time,
     transaction_id
-  } = transactionDetails
+  } = transactionDetails || {}
 
   const transferDetail = [
     {
@@ -34,7 +34,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      content: balance + ' đ'
+      content: balance && formatMoney(balance) + ' đ'
     },
     {
       title: 'Nội dung giao dịch',
@@ -42,7 +42,7 @@ export default function TransferSuccessfulScreen() {
     },
     {
       title: 'Thời gian giao dịch',
-      content: transaction_time
+      content: transaction_time && formatDateTime(transaction_time)
     },
     {
       title: 'Mã giao dịch',
@@ -104,7 +104,9 @@ export default function TransferSuccessfulScreen() {
         <SemiText className="text-primary text-2xl text-center mt-4">
           Chuyển tiền thành công!
         </SemiText>
-        <SemiText className="text-4xl text-secondary mt-4">{amount} đ</SemiText>
+        <SemiText className="text-4xl text-secondary mt-4">
+          {amount && formatMoney(amount)} đ
+        </SemiText>
 
         <View className="w-full h-px bg-[#E1E1E1] mt-4"></View>
 
