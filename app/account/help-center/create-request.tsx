@@ -7,7 +7,7 @@ import SharedLayout from '@/components/SharedLayout'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { successResponseStatus } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
@@ -71,14 +71,16 @@ export default function CreateRequestScreen() {
     }
   })
 
+  const queryClient = useQueryClient()
   const createSupportMutation = useMutation({
     mutationFn: createSupportRequest,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (successResponseStatus(data)) {
         router.push({
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
         })
+        await queryClient.invalidateQueries(['requests'])
       } else {
         Toast.show({
           type: 'error',

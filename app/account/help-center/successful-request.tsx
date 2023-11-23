@@ -45,7 +45,7 @@ export default function SuccessfulRequestScreen() {
 
       <View className="mt-auto mb-4 w-full">
         <TextButton
-          onPress={() => router.push('/help-center/433245')}
+          onPress={() => router.push(`/account/help-center/${id as string}`)}
           text="Xem chi tiết"
           type="primary"
         />
