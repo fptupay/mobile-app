@@ -40,9 +40,7 @@ export default function RequestsListScreen() {
     queryKey: ['requests'],
     queryFn: getSupportRequests
   })
-  const [filteredRequests, setFilteredRequests] = useState(
-    requestsQuery.data?.data
-  )
+  const [filteredRequests, setFilteredRequests] = useState([])
 
   const handleFilterRequests = (status: string) => {
     setCurrentStatus(status)
@@ -100,7 +98,7 @@ export default function RequestsListScreen() {
           </View>
 
           {/* Requests list */}
-          {filteredRequests.length === 0 ? (
+          {requestsQuery.data?.data.length === 0 ? (
             <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
               <NormalText className="text-center text-tertiary">
                 Không có yêu cầu nào phù hợp
@@ -108,7 +106,7 @@ export default function RequestsListScreen() {
             </View>
           ) : (
             <FlatList
-              data={filteredRequests}
+              data={requestsQuery.data?.data}
               renderItem={({ item }) => <RequestItem request={item} />}
               keyExtractor={(item) => item.id}
               showsVerticalScrollIndicator={false}
@@ -139,10 +137,7 @@ export default function RequestsListScreen() {
 
 function RequestItem({ request }: { request: any }) {
   return (
-    <Link
-      href={{ pathname: `/help-center/${request.id}`, params: request } as any}
-      asChild
-    >
+    <Link href={`/account/help-center/${request.id}`} asChild>
       <Pressable className="border-b-gray-200 border-b flex-row items-center justify-between py-3">
         <View>
           <MediumText className="text-secondary">{request.title}</MediumText>

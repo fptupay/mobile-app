@@ -35,3 +35,8 @@ export const createSupportRequest = async (data: any) => {
   const response = await apiPostCall('/user/help-center/new-help-center', data)
   return response.data
 }
+
+export const getSupportRequestDetail = async (id: string) => {
+  const response = await apiGetCall(`/user/help-center/${id}`)
+  return response.data
+}
