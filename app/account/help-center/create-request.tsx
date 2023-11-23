@@ -18,7 +18,8 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Toast from 'react-native-toast-message'
@@ -74,7 +75,6 @@ export default function CreateRequestScreen() {
     mutationFn: createSupportRequest,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        console.log(data)
         router.push({
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
@@ -154,9 +154,17 @@ export default function CreateRequestScreen() {
                     className="w-16 h-16 rounded-md overflow-hidden mr-2 mb-2"
                     key={image}
                   >
-                    <Image source={{ uri: image }} className="w-full h-full" />
+                    <Image
+                      source={{ uri: image }}
+                      className="w-full h-full object-cover"
+                    />
                   </View>
                 ))}
+              </View>
+            )}
+            {uploadImageMutation.isLoading && (
+              <View className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center mr-2 mb-2">
+                <ActivityIndicator size="small" color={Colors.tertiary} />
               </View>
             )}
             <TouchableOpacity
