@@ -1,24 +1,27 @@
+import { getRoomTypes } from '@/api/booking/dormitory'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { formatMoney } from '@/utils/helper'
+import { useQuery } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 interface Room {
   id: number
   name: string
-  price: number
+  code: string
+  amount: number
 }
-
-const roomTypes: Room[] = [
-  { id: 1, name: 'Phòng 3 người', price: 1000000 },
-  { id: 2, name: 'Phòng 4 người', price: 2000000 },
-  { id: 3, name: 'Phòng 6 người', price: 3000000 }
-]
 
 export default function DormitoryFeeScreen() {
   const [selectedRoomType, setSelectedRoomType] = useState<Room>()
+
+  const roomTypesQuery = useQuery({
+    queryKey: ['room'],
+    queryFn: getRoomTypes
+  })
 
   const handleSelectRoomType = (room: Room) => {
     // uncheck if the room is already checked
@@ -36,7 +39,7 @@ export default function DormitoryFeeScreen() {
 
         {/* Room type */}
         <View className="flex flex-row flex-wrap gap-x-4 mt-4">
-          {roomTypes.map((room) => (
+          {roomTypesQuery.data?.data.map((room: Room) => (
             <TouchableOpacity
               className={`p-4 mb-4 border rounded-lg ${
                 selectedRoomType?.id === room.id
@@ -50,7 +53,7 @@ export default function DormitoryFeeScreen() {
               <View>
                 <MediumText>{room.name}</MediumText>
                 <NormalText className="text-tertiary">
-                  {formatMoney(room.price)} đ
+                  {formatMoney(room.amount)} đ
                 </NormalText>
               </View>
             </TouchableOpacity>
@@ -63,7 +66,12 @@ export default function DormitoryFeeScreen() {
           text="Tiếp tục"
           type="primary"
           disable={!selectedRoomType}
-          href="/payments/school-payment-confirmation"
+          onPress={() =>
+            router.push({
+              pathname: '/payments/dormitory-choice',
+              params: { code: selectedRoomType?.code }
+            } as any)
+          }
         />
       </View>
     </SharedLayout>

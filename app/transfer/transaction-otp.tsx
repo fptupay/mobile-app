@@ -73,7 +73,6 @@ export default function TransactionOTPScreen() {
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(data)
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
