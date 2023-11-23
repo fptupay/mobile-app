@@ -10,13 +10,14 @@ import { Image } from 'expo-image'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { closeSupportRequest, getSupportRequestDetail } from '@/api/help-center'
 import Toast from 'react-native-toast-message'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function RequestDetailScreen() {
   const request = useLocalSearchParams()
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const queryClient = useQueryClient()
-  const { data: details } = useQuery({
+  const { data: details, isLoading } = useQuery({
     queryKey: ['supportDetails', request.id],
     queryFn: () => getSupportRequestDetail(request.id as string)
   })
@@ -28,7 +29,10 @@ export default function RequestDetailScreen() {
     },
     {
       key: 'Mã giao dịch',
-      value: details?.data?.transaction_id
+      value:
+        details?.data?.type === 'TRANSACTION'
+          ? details?.data?.transaction_id
+          : undefined
     },
     {
       key: 'Thời gian tạo',
@@ -48,7 +52,9 @@ export default function RequestDetailScreen() {
     }
   ]
 
-  console.log(details?.data?.status)
+  const filteredSupportDetails = supportDetails.filter(
+    (item) => item.value !== undefined
+  )
 
   const closeRequestMutation = useMutation({
     mutationKey: ['closeRequest', request.id],
@@ -90,20 +96,26 @@ export default function RequestDetailScreen() {
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
             <SemiText className="mt-4">Chi tiết yêu cầu</SemiText>
-            <View className="my-4">
-              <View className="flex space-y-4">
-                {supportDetails.map((item: any) => (
-                  <View className="flex-row justify-between" key={item.key}>
-                    <NormalText className="text-tertiary">
-                      {item.key}
-                    </NormalText>
-                    <NormalText className="flex-1 text-right">
-                      {item.value}
-                    </NormalText>
-                  </View>
-                ))}
+            {isLoading ? (
+              <View className="flex-1 items-center justify-center">
+                <LoadingSpin />
               </View>
-            </View>
+            ) : (
+              <View className="my-4">
+                <View className="flex space-y-4">
+                  {filteredSupportDetails.map((item: any) => (
+                    <View className="flex-row justify-between" key={item.key}>
+                      <NormalText className="text-tertiary">
+                        {item.key}
+                      </NormalText>
+                      <NormalText className="flex-1 text-right">
+                        {item.value}
+                      </NormalText>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
           </ScrollView>
         </View>
         {details?.data.status === 'PROCESSING' && (
