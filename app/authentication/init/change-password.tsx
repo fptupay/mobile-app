@@ -43,21 +43,21 @@ export default function ChangePasswordScreen() {
   const passwordConditions = [
     {
       isSatisfied: watch('new_password').length >= 6,
-      label: 'Ít nhất 6 ký tự'
+      label: 'Có ít nhất 6 ký tự'
     },
     {
       isSatisfied: /[A-Za-z]/.test(watch('new_password')),
-      label: 'Ít nhất có 1 chữ cái'
+      label: 'Có ít nhất 1 chữ cái'
     },
     {
       isSatisfied: /[0-9]/.test(watch('new_password')),
-      label: 'Ít nhất có 1 chữ số'
+      label: 'Có ít nhất 1 chữ số'
     },
     {
       isSatisfied: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(
         watch('new_password')
       ),
-      label: 'Ít nhất có 1 ký tự đặc biệt'
+      label: 'Có ít nhất 1 ký tự đặc biệt'
     }
   ]
 

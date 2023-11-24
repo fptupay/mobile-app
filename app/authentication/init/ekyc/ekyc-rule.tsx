@@ -67,20 +67,17 @@ export default function EkycRuleScreen() {
               onPress={(isChecked: boolean) => setAgree(isChecked)}
             />
           </View>
-          <View className="w-[322px] absolute top-0 left-7">
+          <View className="pr-4">
             <NormalText className=" text-gray-500 text-sm font-normal leading-18">
               Tôi đồng ý với{' '}
               <NormalText className="text-orange-500 font-medium">
-                Chính sách bảo mật
+                Chính sách bảo mật{' '}
               </NormalText>
-              <NormalText className="text-gray-500"> và </NormalText>
+              và{' '}
               <NormalText className="text-orange-500 font-medium">
-                Điều khoản sử dụng
+                Điều khoản sử dụng{' '}
               </NormalText>
-              <NormalText className="text-gray-500">
-                {' '}
-                của FPTU Pay khi tiến hành xác minh danh tính
-              </NormalText>
+              của FPTU Pay khi tiến hành xác minh danh tính
             </NormalText>
           </View>
         </View>

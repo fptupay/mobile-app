@@ -61,7 +61,7 @@ export const compressImg = async (data: string) => {
       }
     ],
     {
-      compress: 0.5
+      compress: Platform.OS === 'ios' ? 0.8 : 0.6
     }
   )
 }
