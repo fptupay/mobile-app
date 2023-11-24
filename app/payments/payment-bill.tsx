@@ -21,23 +21,23 @@ export default function PaymentBillScreen() {
   const billForm = [
     {
       label: 'Mã hóa đơn',
-      description: bill.data[0].id
+      description: bill?.data[0]?.id
     },
     {
       label: 'Loại hóa đơn',
-      description: bill.data[0].type_desc
+      description: bill?.data[0]?.type_desc
     },
     {
       label: 'Số tiền',
-      description: bill.data[0].amount
+      description: bill?.data[0]?.amount
     },
     {
       label: 'Nội dung',
-      description: bill.data[0].item_name
+      description: bill?.data[0]?.item_name
     },
     {
       label: 'Mã giao dịch',
-      description: bill.data[0].transaction_id
+      description: bill?.data[0]?.transaction_id
     }
   ]
 
@@ -59,8 +59,8 @@ export default function PaymentBillScreen() {
 
   const handlePayBill = () => {
     payBillMutation.mutate({
-      fee_type: bill.data[0].type,
-      trans_id: bill.data[0].transaction_id
+      fee_type: bill?.data[0]?.type,
+      trans_id: bill?.data[0]?.transaction_id
     })
   }
   return (
