@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { NormalText, SemiText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 
-export default function addBankInstruction() {
+export default function AddBankInstruction() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-4">
       <BackButton />
@@ -14,11 +14,11 @@ export default function addBankInstruction() {
           className="w-[225px] h-[225px] mx-auto"
         />
       </View>
-      <SemiText className="text-3xl text-secondary">
+      <SemiText className="text-3xl text-secondary mt-2">
         Hướng dẫn liên kết ngân hàng
       </SemiText>
 
-      <NormalText className="text-tertiary mt-2">
+      <NormalText className="text-tertiary mt-4">
         Để có thể thực hiện các giao dịch trên ứng dụng FPTUPay, bạn sẽ cần liên
         kết với một tài khoản ngân hàng có sẵn.
       </NormalText>

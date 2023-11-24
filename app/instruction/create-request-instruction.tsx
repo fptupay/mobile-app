@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { NormalText, SemiText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 
-export default function createRequestInstruction() {
+export default function CreateRequestInstructionScreen() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-4">
       <BackButton />
@@ -14,10 +14,10 @@ export default function createRequestInstruction() {
           className="w-[225px] h-[225px] mx-auto"
         />
       </View>
-      <SemiText className="text-3xl text-secondary">
+      <SemiText className="text-3xl text-secondary mt-2">
         Hướng dẫn gửi yêu cầu hỗ trợ
       </SemiText>
-      <NormalText className="text-tertiary mt-2">
+      <NormalText className="text-tertiary mt-4">
         Hỗ trợ là mục các bạn có thể gửi những yêu cầu trợ giúp nếu gặp phải các
         vấn đề trong việc sử dụng ví điện tử FPTUPay.
       </NormalText>

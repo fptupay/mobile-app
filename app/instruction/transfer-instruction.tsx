@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar'
 import { SemiText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 
-export default function transferInstruction() {
+export default function TransferInstructionScreen() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-4">
       <StatusBar style="auto" />
@@ -17,10 +17,10 @@ export default function transferInstruction() {
             className="w-[220px] h-[180px]"
           />
         </View>
-        <SemiText className="text-3xl text-secondary">
+        <SemiText className="text-3xl text-secondary mt-2">
           Hướng dẫn chuyển tiền giữa các tài khoản
         </SemiText>
-        <NormalText className="text-tertiary mt-2">
+        <NormalText className="text-tertiary mt-4">
           Biết tin gì chưa? Bạn hoàn toàn có thể chuyển tiền cho một người bạn
           của mình thông qua ứng dụng FPTUPay đó.
         </NormalText>
