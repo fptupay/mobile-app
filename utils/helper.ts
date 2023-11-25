@@ -11,9 +11,20 @@ export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
-export const formatInputMoney = (value: number | string) => {
-  const cleanValue = value.toString().replace(/[^\d]/g, '')
-  return cleanValue.replace(/(?<=\d)(?=(\d{3})+(?!\d))/g, '.')
+export const formatInputMoney = (amount: string): string => {
+  if (amount.startsWith('0')) {
+    return ''
+  }
+  let numericValue = amount.replace(/\D/g, '')
+
+  // prevent user from entering more than 100 million
+  if (numericValue.length > 8 && numericValue !== '100000000') {
+    numericValue = numericValue.slice(0, 8)
+  }
+
+  // format amount with dot by thousands
+  const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  return formattedAmount
 }
 
 export const formatPhoneNumber = (value: string) => {

@@ -68,7 +68,8 @@ export default function TransferAmountScreen() {
   }
 
   const handleSuggestionPress = (suggestion: number) => {
-    setAmount(formatMoney(suggestion))
+    setAmount(formatMoney(suggestion.toString()))
+    setRawAmount(suggestion.toString().replace(/\D/g, ''))
   }
 
   const handleTransfer = () => {
@@ -114,7 +115,7 @@ export default function TransferAmountScreen() {
                 autoFocus
               />
               <NormalText className="text-tertiary">
-                Số dư hiện tại: {balance}đ
+                Số dư hiện tại: {formatMoney(balance)}đ
               </NormalText>
             </View>
 

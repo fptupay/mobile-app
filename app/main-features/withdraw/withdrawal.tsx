@@ -36,6 +36,11 @@ export default function WithdrawalScreen() {
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
   const balance = useAccountStore((state) => state.balance)
 
+  const handleAmountInput = (value: string) => {
+    const formattedAmount = formatInputMoney(value)
+    setAmount(formattedAmount)
+  }
+
   const banksLinkedQuery = useQuery({
     queryKey: ['getLinkedBanks'],
     queryFn: () => getLinkedBanks(),
@@ -89,7 +94,11 @@ export default function WithdrawalScreen() {
   })
 
   return (
-    <SharedLayout backHref="/account/home" questionHref="/instruction/withdraw-instruction" title="Rút tiền">
+    <SharedLayout
+      backHref="/account/home"
+      questionHref="/instruction/withdraw-instruction"
+      title="Rút tiền"
+    >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -116,8 +125,8 @@ export default function WithdrawalScreen() {
                   label="Số tiền cần rút"
                   editable={true}
                   selectTextOnFocus={true}
-                  value={formatInputMoney(amount)}
-                  onChangeText={(value) => setAmount(value)}
+                  value={amount}
+                  onChangeText={handleAmountInput}
                 />
               </View>
             </TouchableWithoutFeedback>
@@ -169,7 +178,7 @@ export default function WithdrawalScreen() {
           onPress={() =>
             withdrawMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount.replace('.', '')),
+              amount: parseInt(amount.replace(/\./g, '')),
               content: 'Rút tiền từ ví FPTU Pay'
             })
           }
