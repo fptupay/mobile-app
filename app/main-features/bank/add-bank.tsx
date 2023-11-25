@@ -85,7 +85,7 @@ export default function AddBankScreen() {
   const filteredBankData = banksQuery.data?.data.filter(
     (item: BankItemProp) =>
       item.short_name.toLowerCase().includes(searchValue.toLowerCase()) &&
-      item.create_link != null
+      item.is_direct == true
   )
 
   const handleSelectBank = (item: BankItemProp) => {
