@@ -157,10 +157,7 @@ export default function MyWalletScreen() {
           colors={['#fdc83080', '#f97316bf']}
         />
         <View className="absolute bg-transparent pt-8 flex items-center">
-          <TouchableOpacity
-            onPress={pickImage}
-            className="w-[72px] h-[72px] rounded-full relative"
-          >
+          <View className="w-[72px] h-[72px] rounded-full relative">
             {avatarMutation.isLoading ? (
               <View className="w-[72px] h-[72px] rounded-full flex items-center justify-center">
                 <ActivityIndicator color={Colors.tertiary} />
@@ -175,10 +172,12 @@ export default function MyWalletScreen() {
                 className="w-[72px] h-[72px] rounded-full"
               />
             )}
-            <View className="bg-white border border-secondary/50 w-7 h-7 rounded-full flex items-center justify-center absolute -bottom-2 -right-1">
-              <CustomIcon name="Pencil" color="black" size={16} />
+            <View className="bg-white border border-secondary/20 w-6 h-6 rounded-full flex items-center justify-center absolute bottom-0 right-0">
+              <TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
+                <CustomIcon name="Pencil" color="#666" size={16} />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
           <SemiText className="text-center text-secondary mt-5">
             {details.full_name}
           </SemiText>

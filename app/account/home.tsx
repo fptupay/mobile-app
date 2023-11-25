@@ -14,7 +14,7 @@ import {
 import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { useRouter } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useRef, useState } from 'react'
 import {
@@ -314,14 +314,19 @@ export default function HomeScreen() {
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex flex-row space-x-2 items-center">
-            <Image
-              source={{
-                uri: avatar?.data.avatar
-              }}
-              transition={200}
-              placeholder={blurHash}
-              className="w-9 h-9 rounded-full"
-            />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => router.replace('/account/my-wallet')}
+            >
+              <Image
+                source={{
+                  uri: avatar?.data.avatar
+                }}
+                transition={200}
+                placeholder={blurHash}
+                className="w-9 h-9 rounded-full"
+              />
+            </TouchableOpacity>
             <View>
               <NormalText className="text-secondary">Xin chào</NormalText>
               <SemiText className="text-secondary">
