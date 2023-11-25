@@ -7,7 +7,7 @@ import SharedLayout from '@/components/SharedLayout'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { successResponseStatus } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
@@ -18,7 +18,8 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Toast from 'react-native-toast-message'
@@ -70,15 +71,16 @@ export default function CreateRequestScreen() {
     }
   })
 
+  const queryClient = useQueryClient()
   const createSupportMutation = useMutation({
     mutationFn: createSupportRequest,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (successResponseStatus(data)) {
-        console.log(data)
         router.push({
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
         })
+        await queryClient.invalidateQueries(['requests'])
       } else {
         Toast.show({
           type: 'error',
@@ -154,9 +156,17 @@ export default function CreateRequestScreen() {
                     className="w-16 h-16 rounded-md overflow-hidden mr-2 mb-2"
                     key={image}
                   >
-                    <Image source={{ uri: image }} className="w-full h-full" />
+                    <Image
+                      source={{ uri: image }}
+                      className="w-full h-full object-cover"
+                    />
                   </View>
                 ))}
+              </View>
+            )}
+            {uploadImageMutation.isLoading && (
+              <View className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center mr-2 mb-2">
+                <ActivityIndicator size="small" color={Colors.tertiary} />
               </View>
             )}
             <TouchableOpacity

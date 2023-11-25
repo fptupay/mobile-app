@@ -61,7 +61,7 @@ export const compressImg = async (data: string) => {
       }
     ],
     {
-      compress: 0.5
+      compress: Platform.OS === 'ios' ? 0.8 : 0.6
     }
   )
 }
@@ -103,27 +103,14 @@ export const getTitle = (status: string | string[]) => {
 
 export const getImagePath = (status?: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return require('@/assets/images/icon-process.png')
-    case 'approved':
+    case 'APPROVED':
       return require('@/assets/images/icon-success.png')
-    case 'closed':
+    case 'CLOSED':
       return require('@/assets/images/icon-closed.png')
     default:
       return require('@/assets/images/icon-process.png')
-  }
-}
-
-export const getBackGroundColor = (status?: string | string[]) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-50'
-    case 'approved':
-      return 'bg-green-50'
-    case 'closed':
-      return 'bg-red-50'
-    default:
-      return 'bg-yellow-50'
   }
 }
 

@@ -9,7 +9,7 @@ import {
 } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pressable } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 
@@ -27,7 +27,7 @@ const statuses = [
     label: 'Đã phê duyệt'
   },
   {
-    id: 'REJECTED',
+    id: 'CLOSED',
     label: 'Đã đóng'
   }
 ]
@@ -40,7 +40,13 @@ export default function RequestsListScreen() {
     queryKey: ['requests'],
     queryFn: getSupportRequests
   })
-  const [filteredRequests, setFilteredRequests] = useState([])
+  const [filteredRequests, setFilteredRequests] = useState(
+    requestsQuery?.data?.data
+  )
+
+  useEffect(() => {
+    setFilteredRequests(requestsQuery.data?.data)
+  }, [requestsQuery.data])
 
   const handleFilterRequests = (status: string) => {
     setCurrentStatus(status)
@@ -56,9 +62,8 @@ export default function RequestsListScreen() {
   }
 
   return (
-
     <SharedLayout backHref="/index" title="Hỗ trợ" isTab={true}>
-      {requestsQuery.data?.data.length === 0 ? (
+      {filteredRequests === 0 ? (
         <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
           <CustomIcon name="FilePlus" size={64} color="#666" />
           <SemiText className="mt-4 text-lg">Không có yêu cầu</SemiText>
@@ -99,7 +104,7 @@ export default function RequestsListScreen() {
           </View>
 
           {/* Requests list */}
-          {requestsQuery.data?.data.length === 0 ? (
+          {filteredRequests === 0 ? (
             <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
               <NormalText className="text-center text-tertiary">
                 Không có yêu cầu nào phù hợp
@@ -107,7 +112,7 @@ export default function RequestsListScreen() {
             </View>
           ) : (
             <FlatList
-              data={requestsQuery.data?.data}
+              data={filteredRequests}
               renderItem={({ item }) => <RequestItem request={item} />}
               keyExtractor={(item) => item.id}
               showsVerticalScrollIndicator={false}

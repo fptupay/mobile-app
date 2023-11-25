@@ -18,6 +18,7 @@ import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
 import { Button, ImageBackground, TouchableOpacity, View } from 'react-native'
 import LoadingSpin from '@/components/LoadingSpin'
+import { successResponseStatus } from '@/utils/helper'
 
 export default function EkycCameraScreen() {
   const router = useRouter()
@@ -47,7 +48,7 @@ export default function EkycCameraScreen() {
   const ekycFrontMutation = useMutation({
     mutationFn: (data: CameraCapturedPicture) => ekycFront(data),
     onSuccess: (data) => {
-      if (data.success === false) {
+      if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
           text1: 'Lỗi xác thực',
@@ -75,7 +76,7 @@ export default function EkycCameraScreen() {
       return ekycBack(data, ekycId)
     },
     onSuccess: (data) => {
-      if (data.success === 'false') {
+      if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
           text1: 'Lỗi xác thực',

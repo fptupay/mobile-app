@@ -67,14 +67,10 @@ export default function TransactionOTPScreen() {
 
   const confirmTransferMutation = useMutation({
     mutationFn: async (data: TransferConfirmSchema) => {
-      const smartOTPTransactionId = (await SecureStore.getItemAsync(
+      const smartOTPTransactionId = await SecureStore.getItemAsync(
         `${username}_transId`
-      )) as string
-      const confirmTransferPromise = await confirmTransfer(
-        data,
-        smartOTPTransactionId
       )
-      return confirmTransferPromise
+      return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
       if (successResponseStatus(data)) {

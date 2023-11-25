@@ -79,7 +79,6 @@ export default function SmartOTPConfirmationScreen() {
       })
 
       await SecureStore.setItemAsync(`${username}_transId`, transId)
-      //setSmartOTPTransactionId(transId)
     }
   }
 
