@@ -1,7 +1,7 @@
 import { getSupportRequests } from '@/api/help-center'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, SemiText, View } from '@/components/Themed'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import {
   getLabelBackgroundColor,
   getLabelTextColor,
@@ -10,8 +10,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { Link, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Pressable } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { Pressable, View, FlatList, TouchableOpacity } from 'react-native'
 
 const statuses = [
   {

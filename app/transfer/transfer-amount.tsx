@@ -125,9 +125,11 @@ export default function TransferAmountScreen() {
                 <TouchableOpacity
                   key={suggestion}
                   onPress={() => handleSuggestionPress(suggestion)}
-                  className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+                  className="flex-wrap p-1 rounded-md bg-orange-100"
                 >
-                  <MediumText>{formatMoney(suggestion)}</MediumText>
+                  <MediumText className="text-secondary">
+                    {formatMoney(suggestion)}
+                  </MediumText>
                 </TouchableOpacity>
               ))}
             </View>

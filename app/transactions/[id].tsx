@@ -1,14 +1,14 @@
 import { getTransactionDetails } from '@/api/transaction'
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, SemiText, View } from '@/components/Themed'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { formatDateTime, formatMoney } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 export default function TransactionDetailScreen() {
   const params: { id: string } = useLocalSearchParams()
@@ -63,7 +63,7 @@ export default function TransactionDetailScreen() {
       ) : (
         <>
           <View className="flex flex-row justify-between mt-4">
-            <MediumText>
+            <MediumText className="text-secondary">
               {data?.data.trans_code === 'TRANSFER'
                 ? 'Chuyển tiền nhanh'
                 : 'Hoàn tiền'}
@@ -71,7 +71,7 @@ export default function TransactionDetailScreen() {
             <CustomIcon name="Share" size={20} color="#000" />
           </View>
 
-          <SemiText className="text-4xl text-center mt-4">
+          <SemiText className="text-4xl text-center mt-4 text-secondary">
             {' '}
             {formatMoney(data?.data.amount)} đ
           </SemiText>
@@ -84,7 +84,7 @@ export default function TransactionDetailScreen() {
                   <NormalText className="text-tertiary">
                     {item.title}
                   </NormalText>
-                  <NormalText className="flex-1 text-right">
+                  <NormalText className="flex-1 text-right text-secondary">
                     {item.value}
                   </NormalText>
                 </View>
