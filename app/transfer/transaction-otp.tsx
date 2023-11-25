@@ -101,7 +101,7 @@ export default function TransactionOTPScreen() {
   }
 
   return (
-    <SharedLayout href="/account/home" title="Nhập mã OTP">
+    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
       <View className="flex-1 pt-8 space-y-8">
         <View>
           <NormalText className="text-tertiary mt-1">

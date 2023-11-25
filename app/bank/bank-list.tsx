@@ -35,7 +35,7 @@ export default function BankListScreen() {
   })
 
   return (
-    <SharedLayout href="/account/my-wallet" title="Danh sách liên kết">
+    <SharedLayout backHref="/account/my-wallet" title="Danh sách liên kết">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <View className="bg-transparent">
           {banksLinkedQuery.isLoading ? (

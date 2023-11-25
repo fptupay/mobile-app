@@ -12,7 +12,7 @@ export default function SchoolPaymentConfirmationScreen() {
 
   return (
     <>
-      <SharedLayout title="Xác nhận thông tin" href="/account/payments">
+      <SharedLayout title="Xác nhận thông tin" backHref="/account/payments">
         {/* Header */}
         <View className="mt-4 flex items-center">
           <NormalText className="text-tertiary">Số tiền nộp</NormalText>

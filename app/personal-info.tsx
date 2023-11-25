@@ -47,7 +47,7 @@ export default function PersonalInfoScreen() {
   ]
 
   return (
-    <SharedLayout href="/account/my-wallet" title="Thông tin cá nhân">
+    <SharedLayout backHref="/account/my-wallet" title="Thông tin cá nhân">
       <ScrollView className="mt-10">
         {mockPersonalData.map((item) => (
           <DescriptionRowItem

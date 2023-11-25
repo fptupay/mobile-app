@@ -113,7 +113,7 @@ export default function TransferListScreen() {
   }
 
   return (
-    <SharedLayout href="/account/home" title="Chuyển tiền tới">
+    <SharedLayout backHref="/account/home" questionHref='/instruction/transfer-instruction' title="Chuyển tiền tới" >
       <TouchableOpacity
         onPress={() => router.push('/transfer/transfer-new')}
         className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4"

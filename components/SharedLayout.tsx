@@ -9,14 +9,16 @@ import BackButton from './buttons/BackButton'
 import QuestionButton from './buttons/QuestionButton'
 
 interface SharedLayoutProps {
-  href?: string
+  backHref?: string
+  questionHref?: string
   title: string
   children: React.ReactNode
   isTab?: boolean
 }
 
 export default function SharedLayout({
-  href,
+  backHref,
+  questionHref,
   title,
   children,
   isTab
@@ -29,8 +31,8 @@ export default function SharedLayout({
         <SafeAreaView className="px-4 pt-4">
           {!isTab && (
             <View className="flex-row justify-between">
-              {href ? <BackButton /> : <BackButton href={href} />}
-              <QuestionButton href="" />
+              {backHref ? <BackButton /> : <BackButton href={backHref} />}
+              <QuestionButton href={questionHref ? questionHref : ''} />
             </View>
           )}
           <MediumText
