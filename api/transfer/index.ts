@@ -31,6 +31,7 @@ export const confirmTransfer = async (
       'x-client-device-id': deviceId,
       'Content-Type': 'application/json',
       'x-sotp-device-id': deviceId,
+      'x-sotp-version': Platform.Version.toString(),
       'x-sotp-transaction-id': smartOTPTransactionId
     }
   })
