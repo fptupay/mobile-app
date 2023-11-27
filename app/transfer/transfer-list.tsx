@@ -10,13 +10,20 @@ import { Animated, FlatList, TouchableOpacity, View } from 'react-native'
 import LoadingSpin from '@/components/LoadingSpin'
 import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function TransferListScreen() {
   const router = useRouter()
+  const { setSavedStudentCodes } = useTransferStore()
 
   const { data: friends, isLoading } = useQuery({
     queryKey: ['friends'],
-    queryFn: getSavedAccounts
+    queryFn: getSavedAccounts,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setSavedStudentCodes(data?.data.map((item: any) => item.ref_user_id))
+      }
+    }
   })
 
   return (

@@ -29,13 +29,14 @@ export default function TransferSuccessfulScreen() {
   const transactionDetails = useTransactionStore(
     (state) => state.transactionDetails
   )
-  const { studentCode } = useTransferStore()
+  const { studentCode, savedStudentCodes } = useTransferStore()
 
   const {
     amount,
     balance,
     receiver_name,
     content,
+    destination,
     transaction_time,
     transaction_id
   } = transactionDetails || {}
@@ -169,11 +170,13 @@ export default function TransferSuccessfulScreen() {
               type={TextButtonType.PRIMARY}
               href="/account/home"
             />
-            <TextButton
-              text="Lưu bạn bè"
-              type={TextButtonType.OUTLINE}
-              onPress={() => setIsModalVisible(true)}
-            />
+            {savedStudentCodes.indexOf(destination) === -1 && (
+              <TextButton
+                text="Lưu bạn bè"
+                type={TextButtonType.SECONDARY}
+                onPress={() => setIsModalVisible(true)}
+              />
+            )}
           </View>
         </View>
       </View>
