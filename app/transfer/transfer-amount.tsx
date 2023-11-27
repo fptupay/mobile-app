@@ -22,7 +22,7 @@ import {
 
 export default function TransferAmountScreen() {
   const router = useRouter()
-  const { studentCode, owner } = useLocalSearchParams()
+  const { studentCode, receiver } = useLocalSearchParams()
   const { full_name } = useAccountStore((state) => state.details)
 
   const [amount, setAmount] = useState<string>()
@@ -79,7 +79,7 @@ export default function TransferAmountScreen() {
       setIsOpen(false)
       router.push({
         pathname: '/transfer/transfer-confirmation',
-        params: { amount: rawAmount, message, studentCode, owner }
+        params: { amount: rawAmount, message, studentCode, receiver }
       })
     }
   }
@@ -96,7 +96,7 @@ export default function TransferAmountScreen() {
             {/* Recipient info */}
             <View className="border border-gray-300 rounded-lg px-4 py-2 flex flex-row justify-between items-center mt-4">
               <View>
-                <MediumText className="text-black">{owner}</MediumText>
+                <MediumText className="text-black">{receiver}</MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
               <Pressable onPress={() => router.back()}>

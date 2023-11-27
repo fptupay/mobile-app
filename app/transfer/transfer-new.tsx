@@ -19,7 +19,7 @@ export default function TransferMoneyScreen() {
   const { studentCode, setStudentCode } = useTransferStore()
   const { full_name } = useAccountStore((state) => state.details)
 
-  const [owner, setOwner] = useState<string>()
+  const [receiver, setReceiver] = useState<string>()
   const [error] = useState<string>()
   const [isVisible, setIsVisible] = useState(false)
 
@@ -33,10 +33,10 @@ export default function TransferMoneyScreen() {
             text1: 'Đã có lỗi xảy ra',
             text2: data.message
           })
-          setOwner('')
+          setReceiver('')
           return
         }
-        setOwner(data.data.name)
+        setReceiver(data.data.name)
       },
       onError: (error: AxiosError) => {
         Toast.show({
@@ -53,12 +53,12 @@ export default function TransferMoneyScreen() {
   }
 
   const handleVerifyStudent = () => {
-    if (owner === full_name) {
+    if (receiver === full_name) {
       setIsVisible(true)
     } else {
       router.push({
         pathname: '/transfer/transfer-amount',
-        params: { studentCode: studentCode, owner: owner }
+        params: { studentCode: studentCode, receiver: receiver }
       } as any)
     }
   }
@@ -76,7 +76,11 @@ export default function TransferMoneyScreen() {
               onChangeText={(text) => setStudentCode(text)}
               onSubmitEditing={() => handleGetStudentName(studentCode)}
             />
-            <TextField value={owner} label="Chủ tài khoản" editable={false} />
+            <TextField
+              value={receiver}
+              label="Chủ tài khoản"
+              editable={false}
+            />
             {getStudentNameMutation.isLoading && (
               <MediumText className="text-tertiary">
                 Đang tìm kiếm...
@@ -89,7 +93,7 @@ export default function TransferMoneyScreen() {
             onPress={handleVerifyStudent}
             text="Tiếp tục"
             type="primary"
-            disable={!owner}
+            disable={!receiver}
           />
         </View>
       </SharedLayout>

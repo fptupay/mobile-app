@@ -23,7 +23,7 @@ import { Modal } from '@/components/Modal'
 export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
   const { full_name, username } = useAccountStore((state) => state.details)
-  const { amount, message, studentCode, owner } = useLocalSearchParams()
+  const { amount, message, studentCode, receiver } = useLocalSearchParams()
   const setTransactionId = useTransactionStore(
     (state) => state.setTransactionId
   )
@@ -109,7 +109,7 @@ export default function TransferConfirmationScreen() {
               />
               <View>
                 <MediumText className="text-base text-secondary">
-                  {owner}
+                  {receiver}
                 </MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
