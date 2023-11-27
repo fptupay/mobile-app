@@ -1,14 +1,12 @@
 import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import Colors from '@/constants/Colors'
 
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import {
   FlatList,
   Keyboard,
-  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -36,7 +34,6 @@ const mockTransferList = [
 export default function TransferListScreen() {
   const router = useRouter()
   const [transferType, setTransferType] = useState<string>(transferTypes[0])
-  const [searchText, setSearchText] = useState<string>('')
 
   const recentList = () => (
     <View className="mt-4">
@@ -109,11 +106,14 @@ export default function TransferListScreen() {
 
   const handleTransferTypeChange = (type: string) => {
     setTransferType(type)
-    setSearchText('')
   }
 
   return (
-    <SharedLayout backHref="/account/home" questionHref='/instruction/transfer-instruction' title="Chuyển tiền tới" >
+    <SharedLayout
+      backHref="/account/home"
+      questionHref="/instruction/transfer-instruction"
+      title="Chuyển tiền tới"
+    >
       <TouchableOpacity
         onPress={() => router.push('/transfer/transfer-new')}
         className="border border-gray-300 rounded-lg px-4 py-3 flex flex-row items-center mt-4"
@@ -132,10 +132,9 @@ export default function TransferListScreen() {
               data={transferTypes}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  className={`border rounded-full px-2 py-1
-                ${
-                transferType === item ? 'border-primary' : 'border-tertiary'
-                }`}
+                  className={`border rounded-full px-2 py-1 ${
+                    transferType === item ? 'border-primary' : 'border-tertiary'
+                  }`}
                   onPress={() => handleTransferTypeChange(item)}
                 >
                   <NormalText
@@ -152,19 +151,6 @@ export default function TransferListScreen() {
               keyExtractor={(item) => item}
               contentContainerStyle={{ columnGap: 10 }}
             />
-          </View>
-          <View className="w-full relative mt-6 mb-4">
-            <TextInput
-              className="h-12 px-10 py-3 bg-[#f5f5f5] rounded-lg focus:border-primary"
-              placeholderTextColor={Colors.tertiary}
-              placeholder="Tìm người nhận"
-              style={{ fontFamily: 'Inter' }}
-              value={searchText}
-              onChangeText={(text) => setSearchText(text)}
-            />
-            <View className="absolute top-3 left-2">
-              <CustomIcon name="Search" size={24} color={Colors.tertiary} />
-            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
