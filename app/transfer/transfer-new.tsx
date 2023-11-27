@@ -5,6 +5,7 @@ import TextField from '@/components/TextField'
 import { MediumText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { useAccountStore } from '@/stores/accountStore'
+import { useTransferStore } from '@/stores/transferStore'
 import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
@@ -15,11 +16,12 @@ import { Keyboard, TouchableWithoutFeedback, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 export default function TransferMoneyScreen() {
-  const [studentCode, setStudentCode] = useState<string>()
+  const { studentCode, setStudentCode } = useTransferStore()
+  const { full_name } = useAccountStore((state) => state.details)
+
   const [owner, setOwner] = useState<string>()
   const [error] = useState<string>()
   const [isVisible, setIsVisible] = useState(false)
-  const { full_name } = useAccountStore((state) => state.details)
 
   const getStudentNameMutation = useMutation(
     (code: string) => getUserNameByStudentCode(code),
@@ -72,9 +74,7 @@ export default function TransferMoneyScreen() {
               label="Mã sinh viên"
               errorText={error}
               onChangeText={(text) => setStudentCode(text)}
-              onSubmitEditing={() =>
-                handleGetStudentName(studentCode as string)
-              }
+              onSubmitEditing={() => handleGetStudentName(studentCode)}
             />
             <TextField value={owner} label="Chủ tài khoản" editable={false} />
             {getStudentNameMutation.isLoading && (

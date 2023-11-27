@@ -43,3 +43,18 @@ export const getUserNameByStudentCode = async (studentCode: string) => {
   })
   return response.data
 }
+
+export const saveAccount = async (data: any) => {
+  const response = await apiPostCall('/user/contact', data)
+  return response.data
+}
+
+export const getSavedAccounts = async () => {
+  const response = await apiPostCall('/user/contact')
+  return response.data
+}
+
+export const deleteSavedAccount = async (id: string) => {
+  const response = await apiPostCall(`/user/contact/${id}`)
+  return response.data
+}
