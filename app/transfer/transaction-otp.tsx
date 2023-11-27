@@ -13,26 +13,31 @@ import TextButton from '@/components/buttons/TextButton'
 import { useMutation } from '@tanstack/react-query'
 import { confirmTransfer } from '@/api/transfer'
 import { TransferConfirmSchema } from '@/schemas/transfer-schema'
-import { useTransactionStore } from '@/stores/bankStore'
+import { useBankStore, useTransactionStore } from '@/stores/bankStore'
 import Toast from 'react-native-toast-message'
 import * as Clipboard from 'expo-clipboard'
 import useCountdown from '@/hooks/useCountdown'
 import { router } from 'expo-router'
 import { useAccountStore } from '@/stores/accountStore'
+import { withdrawConfirm } from '@/api/bank'
+import { MoneyConfirmSchema } from '@/schemas/bank-schema'
+import { isAxiosError } from 'axios'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
 
-  const transactionId = useTransactionStore((state) => state.transactionId)
-  const setTransactionId = useTransactionStore(
-    (state) => state.setTransactionId
+  const fundTransferId = useTransactionStore((state) => state.fundTransferId)
+  const setFundTransferId = useTransactionStore(
+    (state) => state.setFundTransferId
   )
-
   const setTransactionDetails = useTransactionStore(
     (state) => state.setTransactionDetails
   )
   const { username } = useAccountStore((state) => state.details)
+  const transactionId = useTransferStore((state) => state.transactionId)
+  const selectedBank = useBankStore((state) => state.selectedBank)
   const { secondsLeft, start } = useCountdown()
 
   const fetchData = async () => {
@@ -70,9 +75,11 @@ export default function TransactionOTPScreen() {
       const smartOTPTransactionId = await SecureStore.getItemAsync(
         `${username}_transId`
       )
+      console.log('smartOTPTransactionId', smartOTPTransactionId)
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
+      console.log('Transfer: ', data)
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
@@ -86,12 +93,53 @@ export default function TransactionOTPScreen() {
     }
   })
 
+  const withdrawMutation = useMutation({
+    mutationFn: async (data: MoneyConfirmSchema) => {
+      const smartOTPTransactionId = await SecureStore.getItemAsync(
+        `${username}_transId`
+      )
+      return withdrawConfirm(data, smartOTPTransactionId as string)
+    },
+    onSuccess: (data) => {
+      console.log('withdraw', data)
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      } else {
+        router.push({
+          pathname: '/main-features/withdraw/withdraw-confirmation',
+          params: { transId: data.data.trans_id }
+        })
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
   const handleConfirmTransfer = () => {
-    confirmTransferMutation.mutate({
-      fund_transfer_id: transactionId,
-      otp: copiedSmartOTP
-    })
-    setTransactionId('')
+    if (fundTransferId) {
+      confirmTransferMutation.mutate({
+        fund_transfer_id: fundTransferId,
+        otp: copiedSmartOTP
+      })
+      setFundTransferId('')
+    } else {
+      withdrawMutation.mutate({
+        link_account_id: selectedBank,
+        trans_id: transactionId,
+        otp: copiedSmartOTP
+      })
+    }
   }
 
   const handleCopyOTP = async () => {
@@ -129,8 +177,14 @@ export default function TransactionOTPScreen() {
           text="Xác nhận"
           type="primary"
           onPress={handleConfirmTransfer}
-          disable={confirmTransferMutation.isLoading || !copiedSmartOTP}
-          loading={confirmTransferMutation.isLoading}
+          disable={
+            confirmTransferMutation.isLoading ||
+            withdrawMutation.isLoading ||
+            !copiedSmartOTP
+          }
+          loading={
+            confirmTransferMutation.isLoading || withdrawMutation.isLoading
+          }
         />
       </View>
     </SharedLayout>

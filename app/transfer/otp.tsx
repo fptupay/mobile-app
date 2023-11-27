@@ -22,7 +22,7 @@ export default function TransactionOTPScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [enteredOTP, setEnteredOTP] = useState('')
 
-  const transactionId = useTransactionStore((state) => state.transactionId)
+  const fundTransferId = useTransactionStore((state) => state.fundTransferId)
   const { username } = useAccountStore((state) => state.details)
 
   const handleClear = () => {
@@ -53,7 +53,7 @@ export default function TransactionOTPScreen() {
             <View>
               <NormalText className="text-tertiary mt-1">
                 Vui lòng PIN Smart OTP của bạn để tạo mã xác thực cho giao dịch
-                này (Mã giao dịch: {transactionId})
+                này {fundTransferId && `Mã giao dịch: ${fundTransferId}`}
               </NormalText>
             </View>
 

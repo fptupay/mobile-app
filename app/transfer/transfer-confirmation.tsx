@@ -24,15 +24,15 @@ export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
   const { full_name, username } = useAccountStore((state) => state.details)
   const { amount, message, studentCode, receiver } = useLocalSearchParams()
-  const setTransactionId = useTransactionStore(
-    (state) => state.setTransactionId
+  const setFundTransferId = useTransactionStore(
+    (state) => state.setFundTransferId
   )
 
   const verifyTransferMutation = useMutation({
     mutationFn: (data: TransferVerifySchema) => verifyTransfer(data),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        setTransactionId(data.data.fund_transfer_id)
+        setFundTransferId(data.data.fund_transfer_id)
         router.push('/transfer/otp')
       } else {
         Toast.show({

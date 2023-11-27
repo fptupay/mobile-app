@@ -11,7 +11,6 @@ import { getDeviceId } from '@/utils/helper'
 
 const bankConfig = {
   headers: {
-    'x-client-device-id': '',
     'x-client-platform': Platform.OS,
     'x-client-platform-version': Platform.Version.toString(),
     'x-client-source-app': 'fptupay'
@@ -155,10 +154,24 @@ export const withdrawVerify = async (data: MoneyVerifySchema) => {
   return response.data
 }
 
-export const withdrawConfirm = async (data: MoneyConfirmSchema) => {
+export const withdrawConfirm = async (
+  data: MoneyConfirmSchema,
+  smartOTPTransactionId: string
+) => {
+  const deviceId = await getDeviceId()
   const response = await apiPostCall(
     '/finance/partner/bank/withdraw/confirm',
-    data
+    data,
+    {
+      headers: {
+        ...bankConfig.headers,
+        'x-client-device-id': deviceId,
+        'Content-Type': 'application/json',
+        'x-sotp-device-id': deviceId,
+        'x-sotp-version': Platform.Version.toString(),
+        'x-sotp-transaction-id': smartOTPTransactionId
+      }
+    }
   )
   return response.data
 }

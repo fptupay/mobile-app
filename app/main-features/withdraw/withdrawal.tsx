@@ -28,6 +28,7 @@ import {
 } from 'react-native'
 import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function WithdrawalScreen() {
   const router = useRouter()
@@ -35,6 +36,7 @@ export default function WithdrawalScreen() {
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
   const balance = useAccountStore((state) => state.balance)
+  const setTransactionId = useTransferStore((state) => state.setTransactionId)
 
   const handleAmountInput = (value: string) => {
     const formattedAmount = formatInputMoney(value)
@@ -72,14 +74,16 @@ export default function WithdrawalScreen() {
           text2: data.message
         })
       } else {
-        router.push({
-          pathname: '/main-features/otp',
+        /* router.push({
+          pathname: '/transfer/otp',
           params: {
             type: 'withdraw',
             link_account_id: selectedBank,
             trans_id: data.data.trans_id
           }
-        })
+        }) */
+        setTransactionId(data?.data.trans_id)
+        router.push('/transfer/otp')
       }
     },
     onError: (error: Error) => {
