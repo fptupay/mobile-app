@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { apiPostCall } from '..'
+import { apiDeleteCall, apiGetCall, apiPostCall } from '..'
 import { getDeviceId } from '@/utils/helper'
 
 const headerConfig = {
@@ -50,11 +50,11 @@ export const saveAccount = async (data: any) => {
 }
 
 export const getSavedAccounts = async () => {
-  const response = await apiPostCall('/user/contact')
+  const response = await apiGetCall('/user/contact')
   return response.data
 }
 
 export const deleteSavedAccount = async (id: string) => {
-  const response = await apiPostCall(`/user/contact/${id}`)
+  const response = await apiDeleteCall(`/user/contact/${id}`)
   return response.data
 }
