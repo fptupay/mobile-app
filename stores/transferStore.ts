@@ -7,6 +7,8 @@ interface TransferProps {
   setTransactionId: (transactionId: string) => void
   savedStudentCodes: string[]
   setSavedStudentCodes: (savedStudentCodes: string[]) => void
+  receiverAvatar: string
+  setReceiverAvatar: (receiverAvatar: string) => void
 }
 
 export const useTransferStore = create<TransferProps>((set) => ({
@@ -16,5 +18,7 @@ export const useTransferStore = create<TransferProps>((set) => ({
   setTransactionId: (transactionId: string) => set({ transactionId }),
   savedStudentCodes: [],
   setSavedStudentCodes: (savedStudentCodes: string[]) =>
-    set({ savedStudentCodes })
+    set({ savedStudentCodes }),
+  receiverAvatar: '',
+  setReceiverAvatar: (receiverAvatar: string) => set({ receiverAvatar })
 }))

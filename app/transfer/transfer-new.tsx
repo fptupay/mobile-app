@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message'
 export default function TransferMoneyScreen() {
   const { studentCode, setStudentCode } = useTransferStore()
   const { full_name } = useAccountStore((state) => state.details)
+  const { setReceiverAvatar } = useTransferStore()
 
   const [receiver, setReceiver] = useState<string>()
   const [error] = useState<string>()
@@ -37,6 +38,7 @@ export default function TransferMoneyScreen() {
           return
         }
         setReceiver(data.data.name)
+        setReceiverAvatar(data.data.avatar)
       },
       onError: (error: AxiosError) => {
         Toast.show({

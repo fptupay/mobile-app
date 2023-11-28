@@ -5,8 +5,7 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { useRouter } from 'expo-router'
-import React from 'react'
-import { Animated, FlatList, TouchableOpacity, View } from 'react-native'
+import { Animated, FlatList, TouchableOpacity, View, Image } from 'react-native'
 import LoadingSpin from '@/components/LoadingSpin'
 import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
@@ -79,6 +78,18 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
     }
   })
 
+  /*  const [receiverAvatars, setReceiverAvatars] = useState([])
+
+  useEffect(() => {
+    async function getSavedAccountAvatar() {
+      const avatar = await SecureStore.getItemAsync(item.ref_user_id)
+      setReceiverAvatars({ ...receiverAvatars,  avatar })
+    }
+    getSavedAccountAvatar().catch((error) => {
+      console.log(error)
+    })
+  }, []) */
+
   return (
     <Swipeable
       renderRightActions={(progress, dragX) => {
@@ -114,7 +125,12 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
         }
       >
         <View className="flex flex-row items-center">
-          <View className="w-10 h-10 bg-gray-300 rounded-full" />
+          <Image
+            source={{
+              uri: item.avatar
+            }}
+            className="w-12 h-12 rounded-full"
+          />
           <View className="ml-3">
             <MediumText className="text-secondary">{item.name}</MediumText>
             <NormalText className="text-tertiary">
