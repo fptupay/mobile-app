@@ -12,7 +12,7 @@ import {
   getCurrentYearTime
 } from '@/utils/datetime'
 import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -42,10 +42,6 @@ interface MainActionProps {
   route: any
 }
 
-interface Transaction {
-  [key: string]: string
-}
-
 const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
   const router = useRouter()
 
@@ -70,7 +66,7 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [accountNo, setAccountNo] = useState('')
 
   const setBalance = useAccountStore((state) => state.setBalance)
   const setDetails = useAccountStore((state) => state.setDetails)
@@ -82,11 +78,7 @@ export default function HomeScreen() {
     notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
       setBalance(data.data.balance)
-      getTransactionsMutation.mutate({
-        account_no: data?.data.account_no,
-        from_date: getCurrentYearTime(),
-        to_date: extractDateStringFromCurrentDate(new Date())
-      })
+      setAccountNo(data.data.account_no)
     },
     onError: (error: AxiosError) => {
       Toast.show({
@@ -113,10 +105,15 @@ export default function HomeScreen() {
     }
   })
 
-  const getTransactionsMutation = useMutation({
-    mutationKey: ['transactions'],
-    mutationFn: getTransactionsByAccountNumber,
-    onSuccess: (data) => setTransactions(data.data)
+  const getTransactionsQuery = useQuery({
+    queryKey: ['transactions', accountNo],
+    queryFn: () =>
+      getTransactionsByAccountNumber(
+        accountNo,
+        getCurrentYearTime(),
+        extractDateStringFromCurrentDate(new Date())
+      ),
+    notifyOnChangeProps: ['data']
   })
 
   const toggleSearch = () => {
@@ -231,7 +228,7 @@ export default function HomeScreen() {
           )}
 
           {/* display transactions list */}
-          {getTransactionsMutation.isLoading ? (
+          {getTransactionsQuery.isLoading ? (
             <View className="flex flex-col mt-8 space-y-2 items-center">
               <ActivityIndicator color={Colors.tertiary} />
               <NormalText className="text-tertiary">
@@ -240,66 +237,55 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View>
-              {transactions.length === 0 ? (
-                <View className="flex flex-col mt-8 space-y-2 items-center">
-                  <CustomIcon name="FileText" size={64} color="#666" />
-                  <NormalText className="text-tertiary">
-                    Bạn đang không có giao dịch nào
-                  </NormalText>
-                </View>
-              ) : (
-                <FlatList
-                  contentContainerStyle={{
-                    paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
-                  }}
-                  data={transactions}
-                  keyExtractor={(item) => item.id}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      className="flex flex-row py-3 items-center"
-                      onPress={() =>
-                        router.push({
-                          pathname: '/transactions/[id]',
-                          params: { id: item.transaction_id }
-                        } as any)
-                      }
-                    >
-                      <View className="flex flex-row items-center space-x-4 w-3/5">
-                        <View className="w-10 h-10 rounded-full bg-gray-100 flex justify-center items-center">
-                          <CustomIcon
-                            name={
-                              +item.amount < 0
-                                ? 'ArrowUpRight'
-                                : 'ArrowDownLeft'
-                            }
-                            size={24}
-                            color={+item.amount < 0 ? '#ef4444' : '#22c55e'}
-                          />
-                        </View>
-
-                        <View>
-                          <MediumText className="text-secondary">
-                            {item.description}
-                          </MediumText>
-                          <NormalText className="text-ellipsis text-xs text-tertiary">
-                            {formatDateTime(item.created_at)}
-                          </NormalText>
-                        </View>
+              <FlatList
+                contentContainerStyle={{
+                  paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
+                }}
+                data={getTransactionsQuery.data?.data}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="flex flex-row py-3 items-center"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/transactions/[id]',
+                        params: { id: item.transaction_id }
+                      } as any)
+                    }
+                  >
+                    <View className="flex flex-row items-center space-x-4 w-3/5">
+                      <View className="w-10 h-10 rounded-full bg-gray-100 flex justify-center items-center">
+                        <CustomIcon
+                          name={
+                            +item.amount < 0 ? 'ArrowUpRight' : 'ArrowDownLeft'
+                          }
+                          size={24}
+                          color={+item.amount < 0 ? '#ef4444' : '#22c55e'}
+                        />
                       </View>
-                      <View className="w-2/5">
-                        <NormalText
-                          className={`text-right ${
-                            +item.amount < 0 ? 'text-red-500' : 'text-green-500'
-                          }`}
-                        >
-                          {formatMoney(item.amount)} đ
+
+                      <View>
+                        <MediumText className="text-secondary">
+                          {item.description}
+                        </MediumText>
+                        <NormalText className="text-ellipsis text-xs text-tertiary">
+                          {formatDateTime(item.created_at)}
                         </NormalText>
                       </View>
-                    </TouchableOpacity>
-                  )}
-                />
-              )}
+                    </View>
+                    <View className="w-2/5">
+                      <NormalText
+                        className={`text-right ${
+                          +item.amount < 0 ? 'text-red-500' : 'text-green-500'
+                        }`}
+                      >
+                        {formatMoney(item.amount)} đ
+                      </NormalText>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
             </View>
           )}
         </Animated.View>
