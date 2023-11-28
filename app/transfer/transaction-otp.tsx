@@ -23,6 +23,7 @@ import { withdrawConfirm } from '@/api/bank'
 import { MoneyConfirmSchema } from '@/schemas/bank-schema'
 import { isAxiosError } from 'axios'
 import { useTransferStore } from '@/stores/transferStore'
+import { payBill } from '@/api/bill'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
@@ -126,6 +127,26 @@ export default function TransactionOTPScreen() {
     }
   })
 
+  const payBillMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const smartOTPTransactionId = await SecureStore.getItemAsync(
+        `${username}_transId`
+      )
+      return payBill(data, smartOTPTransactionId as string)
+    },
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        console.log(data)
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    }
+  })
+
   const handleConfirmTransfer = () => {
     if (fundTransferId) {
       confirmTransferMutation.mutate({
@@ -134,10 +155,15 @@ export default function TransactionOTPScreen() {
       })
       setFundTransferId('')
     } else {
-      withdrawMutation.mutate({
+      /*  withdrawMutation.mutate({
         link_account_id: selectedBank,
         trans_id: transactionId,
         otp: copiedSmartOTP
+      }) */
+      payBillMutation.mutate({
+        otp: copiedSmartOTP,
+        fee_type: 'KTX',
+        trans_id: 'crhdkiguxtvi'
       })
     }
   }

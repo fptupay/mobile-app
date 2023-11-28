@@ -49,8 +49,12 @@ export default function DormitoryChoiceScreen() {
     mutationKey: ['room'],
     mutationFn: bookDomRoom,
     onSuccess: (data) => {
+      console.log(data)
       if (successResponseStatus(data)) {
-        router.push('/payments/payment-bill')
+        router.push({
+          pathname: '/payments/payment-bill',
+          params: { type: 'ktx' }
+        })
       } else {
         Toast.show({
           type: 'error',
@@ -142,7 +146,6 @@ export default function DormitoryChoiceScreen() {
         </View>
         <View className="mt-4">
           <TextField
-            maxLength={10}
             label="Ghi chú"
             value={note}
             onChangeText={(text) => setNote(text)}
