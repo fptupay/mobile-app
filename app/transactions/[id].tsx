@@ -7,8 +7,8 @@ import Colors from '@/constants/Colors'
 import { formatDateTime, formatMoney } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
-import React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import * as Clipboard from 'expo-clipboard'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
 export default function TransactionDetailScreen() {
   const params: { id: string } = useLocalSearchParams()
@@ -51,8 +51,12 @@ export default function TransactionDetailScreen() {
 
   const filteredDetails = details.filter((item) => item.value !== 'Không có')
 
+  const handleCopyTransactionId = async () => {
+    await Clipboard.setStringAsync(data?.data.transaction_id)
+  }
+
   return (
-    <SharedLayout title="Chi tiết giao dịch">
+    <SharedLayout title="Chi tiết giao dịch" backHref="/home">
       {isLoading ? (
         <View className="flex justify-center items-center mt-8 h-full">
           <ActivityIndicator size="large" color={Colors.tertiary} />
@@ -84,9 +88,23 @@ export default function TransactionDetailScreen() {
                   <NormalText className="text-tertiary">
                     {item.title}
                   </NormalText>
-                  <NormalText className="flex-1 text-right text-secondary">
-                    {item.value}
-                  </NormalText>
+                  <View className="flex flex-row">
+                    <NormalText className="mr-1 text-secondary">
+                      {item.value}
+                    </NormalText>
+                    {item.title === 'Mã giao dịch' && (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={handleCopyTransactionId}
+                      >
+                        <CustomIcon
+                          name="Copy"
+                          size={20}
+                          color={Colors.tertiary}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
               ))}
             </View>
