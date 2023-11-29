@@ -1,12 +1,15 @@
 import { getDNGBillByFeeType } from '@/api/bill'
 import CustomIcon from '@/components/Icon'
+import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, SemiText } from '@/components/Themed'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import TextButton from '@/components/buttons/TextButton'
+import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
 import { formatMoney } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 
 interface PaymentItemProps {
@@ -17,28 +20,65 @@ interface PaymentItemProps {
 }
 
 const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
+  const { pendingBill } = usePaymentStore()
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const handlePaymentItemPress = (href: any) => {
+    if (pendingBill !== null) {
+      setIsModalVisible(true)
+    } else {
+      router.push({
+        pathname: '/payments/[id]',
+        params: { id: href }
+      } as any)
+    }
+  }
+
   return (
-    <TouchableOpacity
-      className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
-      onPress={() =>
+    <>
+      <TouchableOpacity
+        className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
+        /* onPress={() =>
         router.push({ pathname: 'payments/[id]', params: { id: href } } as any)
-      }
-      activeOpacity={0.8}
-    >
-      <View className="flex-row">
-        <CustomIcon name={icon} size={24} color="#374151" />
-        <MediumText className="text-secondary ml-2">{title}</MediumText>
-      </View>
-      <View>
-        {title === 'Học phí kỳ tiếp' ? (
-          <MediumText className="text-primary">
-            {amount && formatMoney(amount)}đ
-          </MediumText>
-        ) : (
-          <CustomIcon name="ChevronRight" size={24} color="#374151" />
-        )}
-      </View>
-    </TouchableOpacity>
+      } */
+        onPress={() => handlePaymentItemPress(href)}
+        activeOpacity={0.8}
+      >
+        <View className="flex-row">
+          <CustomIcon name={icon} size={24} color="#374151" />
+          <MediumText className="text-secondary ml-2">{title}</MediumText>
+        </View>
+        <View>
+          {title === 'Học phí kỳ tiếp' ? (
+            <MediumText className="text-primary">
+              {amount && formatMoney(amount)}đ
+            </MediumText>
+          ) : (
+            <CustomIcon name="ChevronRight" size={24} color="#374151" />
+          )}
+        </View>
+      </TouchableOpacity>
+
+      <Modal isVisible={isModalVisible}>
+        <Modal.Container>
+          <Modal.Header title="Lưu ý" />
+          <Modal.Body>
+            <NormalText className="text-tertiary">
+              Hệ thống ghi nhận bạn vẫn còn giao dịch chưa thanh toán. Hãy hoàn
+              thành nó trước khi thực hiện giao dịch mới nhé.
+            </NormalText>
+
+            <View className="mt-6 w-full">
+              <TextButton
+                text="Đi đến giao dịch"
+                type="primary"
+                onPress={() => router.push('/payments/payment-bill')}
+              />
+            </View>
+          </Modal.Body>
+        </Modal.Container>
+      </Modal>
+    </>
   )
 }
 
