@@ -1,8 +1,9 @@
-import { loginOtpUser } from '@/api/authentication'
+import { loginOtpUser, loginUser } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { LoginOtpFormSchema } from '@/schemas/auth-schema'
+import { useAccountStore } from '@/stores/accountStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { saveToken, successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
@@ -11,10 +12,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -27,6 +30,7 @@ export default function SignUpOtpScreen() {
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
+  const { credentials } = useAccountStore()
 
   const handleClear = () => {
     otpInputRef.current?.clear()
@@ -69,6 +73,41 @@ export default function SignUpOtpScreen() {
     }
   })
 
+  const resendOTPMutation = useMutation({
+    mutationFn: (data: LoginOtpFormSchema) => loginUser(data),
+    onSuccess: (data) => {
+      try {
+        if (successResponseStatus(data)) {
+          Toast.show({
+            type: 'success',
+            text1: 'Đã gửi lại mã OTP'
+          })
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: data.message
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
+  const handleResendOTP = () => {
+    resendOTPMutation.mutate(credentials)
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -96,14 +135,30 @@ export default function SignUpOtpScreen() {
                 focusColor="#F97316"
                 onTextChange={(text: any) => setOtpCode(text)}
               />
-            </View>
-
-            <View className="w-full mt-8 space-y-2">
-              <Pressable className="mb-5" onPress={handleClear}>
+              <Pressable className="mt-2" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
+            </View>
+
+            <View className="w-full mt-8">
+              <View className="flex flex-row justify-center">
+                <NormalText className="text-tertiary mb-2 flex-row items-center">
+                  Không nhận được mã?
+                </NormalText>
+                <TouchableOpacity onPress={handleResendOTP}>
+                  {resendOTPMutation.isLoading ? (
+                    <ActivityIndicator size="small" color="#F97316" />
+                  ) : (
+                    <NormalText className="text-primary ml-1">
+                      {' '}
+                      Gửi lại
+                    </NormalText>
+                  )}
+                </TouchableOpacity>
+              </View>
+
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}

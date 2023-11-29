@@ -7,6 +7,9 @@ interface AccountProps {
   setDetails: (details: any) => void
   avatar: string
   setAvatar: (avatar: string) => void
+  credentials: any
+  setCredentials: (credentials: any) => void
+  clearCredentials: () => void
 }
 
 export const useAccountStore = create<AccountProps>((set) => ({
@@ -15,5 +18,8 @@ export const useAccountStore = create<AccountProps>((set) => ({
   details: {},
   setDetails: (details) => set({ details }),
   avatar: '',
-  setAvatar: (avatar) => set({ avatar })
+  setAvatar: (avatar) => set({ avatar }),
+  credentials: {},
+  setCredentials: (credentials) => set({ credentials }),
+  clearCredentials: () => set({ credentials: {} })
 }))

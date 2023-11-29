@@ -81,15 +81,14 @@ export default function MyWalletScreen() {
   const queryClient = useQueryClient()
 
   const [showBalance, setShowBalance] = useState(false)
-  const balance = useAccountStore((state) => state.balance)
-  const details = useAccountStore((state) => state.details)
-  const avatar = useAccountStore((state) => state.avatar)
-  const setDetails = useAccountStore((state) => state.setDetails)
+  const { balance, details, avatar, setDetails, clearCredentials } =
+    useAccountStore()
 
   const logoutMutation = useMutation({
     mutationFn: () => logoutUser(),
     onSuccess: () => {
       setDetails({})
+      clearCredentials()
       deleteToken('access_token')
         .then(() => router.push('/'))
         .catch((err) => console.log(err))
