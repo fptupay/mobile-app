@@ -1,7 +1,13 @@
 import { apiGetCall, apiPostCall } from '..'
 
-export const getTransactionsByAccountNumber = async (data: any) => {
-  const response = await apiPostCall('/finance/transaction/account', data)
+export const getTransactionsByAccountNumber = async (
+  accountNumber: string,
+  fromDate: string,
+  toDate: string
+) => {
+  const response = await apiGetCall(
+    `/finance/transaction/account?account_no=${accountNumber}&from_date=${fromDate}&to_date=${toDate}`
+  )
   return response.data
 }
 

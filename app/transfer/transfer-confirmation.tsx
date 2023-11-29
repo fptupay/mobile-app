@@ -19,20 +19,23 @@ import Toast from 'react-native-toast-message'
 import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { Modal } from '@/components/Modal'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
   const { full_name, username } = useAccountStore((state) => state.details)
-  const { amount, message, studentCode, owner } = useLocalSearchParams()
-  const setTransactionId = useTransactionStore(
-    (state) => state.setTransactionId
+  const avatar = useAccountStore((state) => state.avatar)
+  const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
+  const { amount, message, studentCode, receiver } = useLocalSearchParams()
+  const setFundTransferId = useTransactionStore(
+    (state) => state.setFundTransferId
   )
 
   const verifyTransferMutation = useMutation({
     mutationFn: (data: TransferVerifySchema) => verifyTransfer(data),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        setTransactionId(data.data.fund_transfer_id)
+        setFundTransferId(data.data.fund_transfer_id)
         router.push('/transfer/otp')
       } else {
         Toast.show({
@@ -84,7 +87,7 @@ export default function TransferConfirmationScreen() {
             <View className="flex flex-row gap-x-2 mt-2 items-center">
               <Image
                 source={{
-                  uri: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/FPTUCT.png'
+                  uri: avatar
                 }}
                 className="w-12 h-12 rounded-full"
               />
@@ -103,13 +106,13 @@ export default function TransferConfirmationScreen() {
             <View className="flex flex-row gap-x-2 mt-2 items-center">
               <Image
                 source={{
-                  uri: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/FPTUCT.png'
+                  uri: receiverAvatar
                 }}
                 className="w-12 h-12 rounded-full"
               />
               <View>
                 <MediumText className="text-base text-secondary">
-                  {owner}
+                  {receiver}
                 </MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>

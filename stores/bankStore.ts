@@ -6,10 +6,9 @@ interface BankProps {
 }
 
 interface TransactionProps {
-  transactionId: string
-  smartOTPTransactionId: string
+  fundTransferId: string
   transactionDetails: any
-  setTransactionId: (transactionId: string) => void
+  setFundTransferId: (fundTransferId: string) => void
   setTransactionDetails: (transactionDetails: any) => void
 }
 
@@ -19,11 +18,10 @@ export const useBankStore = create<BankProps>((set) => ({
 }))
 
 export const useTransactionStore = create<TransactionProps>((set) => ({
-  transactionId: '',
-  smartOTPTransactionId: '',
+  fundTransferId: '',
   transactionDetails: {},
-  setTransactionId: (transactionId: string) =>
-    set({ transactionId: transactionId }),
+  setFundTransferId: (fundTransferId: string) =>
+    set({ fundTransferId: fundTransferId }),
   setTransactionDetails: (transactionDetails: any) =>
     set({ transactionDetails: transactionDetails })
 }))

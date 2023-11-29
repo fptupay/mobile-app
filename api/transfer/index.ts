@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { apiPostCall } from '..'
+import { apiDeleteCall, apiGetCall, apiPostCall } from '..'
 import { getDeviceId } from '@/utils/helper'
 
 const headerConfig = {
@@ -31,6 +31,7 @@ export const confirmTransfer = async (
       'x-client-device-id': deviceId,
       'Content-Type': 'application/json',
       'x-sotp-device-id': deviceId,
+      'x-sotp-version': Platform.Version.toString(),
       'x-sotp-transaction-id': smartOTPTransactionId
     }
   })
@@ -41,5 +42,20 @@ export const getUserNameByStudentCode = async (studentCode: string) => {
   const response = await apiPostCall('/user/get-name-by-user', {
     data: studentCode
   })
+  return response.data
+}
+
+export const saveAccount = async (data: any) => {
+  const response = await apiPostCall('/user/contact', data)
+  return response.data
+}
+
+export const getSavedAccounts = async () => {
+  const response = await apiGetCall('/user/contact')
+  return response.data
+}
+
+export const deleteSavedAccount = async (id: string) => {
+  const response = await apiDeleteCall(`/user/contact/${id}`)
   return response.data
 }

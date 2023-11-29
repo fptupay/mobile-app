@@ -74,3 +74,8 @@ export const apiPostCall = async (
   const response = await axiosPrivate.post(url, data, config)
   return response
 }
+
+export const apiDeleteCall = async (url: string, config?: any) => {
+  const response = await axiosPrivate.delete(url, config)
+  return response
+}

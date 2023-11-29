@@ -5,6 +5,7 @@ import TextField from '@/components/TextField'
 import { MediumText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { useAccountStore } from '@/stores/accountStore'
+import { useTransferStore } from '@/stores/transferStore'
 import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
@@ -15,11 +16,13 @@ import { Keyboard, TouchableWithoutFeedback, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 export default function TransferMoneyScreen() {
-  const [studentCode, setStudentCode] = useState<string>()
-  const [owner, setOwner] = useState<string>()
+  const { studentCode, setStudentCode } = useTransferStore()
+  const { full_name } = useAccountStore((state) => state.details)
+  const { setReceiverAvatar } = useTransferStore()
+
+  const [receiver, setReceiver] = useState<string>()
   const [error] = useState<string>()
   const [isVisible, setIsVisible] = useState(false)
-  const { full_name } = useAccountStore((state) => state.details)
 
   const getStudentNameMutation = useMutation(
     (code: string) => getUserNameByStudentCode(code),
@@ -31,10 +34,11 @@ export default function TransferMoneyScreen() {
             text1: 'Đã có lỗi xảy ra',
             text2: data.message
           })
-          setOwner('')
+          setReceiver('')
           return
         }
-        setOwner(data.data.name)
+        setReceiver(data.data.name)
+        setReceiverAvatar(data.data.avatar)
       },
       onError: (error: AxiosError) => {
         Toast.show({
@@ -51,12 +55,12 @@ export default function TransferMoneyScreen() {
   }
 
   const handleVerifyStudent = () => {
-    if (owner === full_name) {
+    if (receiver === full_name) {
       setIsVisible(true)
     } else {
       router.push({
         pathname: '/transfer/transfer-amount',
-        params: { studentCode: studentCode, owner: owner }
+        params: { studentCode: studentCode, receiver: receiver }
       } as any)
     }
   }
@@ -72,11 +76,13 @@ export default function TransferMoneyScreen() {
               label="Mã sinh viên"
               errorText={error}
               onChangeText={(text) => setStudentCode(text)}
-              onSubmitEditing={() =>
-                handleGetStudentName(studentCode as string)
-              }
+              onSubmitEditing={() => handleGetStudentName(studentCode)}
             />
-            <TextField value={owner} label="Chủ tài khoản" editable={false} />
+            <TextField
+              value={receiver}
+              label="Chủ tài khoản"
+              editable={false}
+            />
             {getStudentNameMutation.isLoading && (
               <MediumText className="text-tertiary">
                 Đang tìm kiếm...
@@ -89,7 +95,7 @@ export default function TransferMoneyScreen() {
             onPress={handleVerifyStudent}
             text="Tiếp tục"
             type="primary"
-            disable={!owner}
+            disable={!receiver}
           />
         </View>
       </SharedLayout>
