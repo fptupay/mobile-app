@@ -8,9 +8,11 @@ import { Image } from 'expo-image'
 import { useLocalSearchParams } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
 import { getTransactionDetails } from '@/api/transaction'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function PaymentSuccessScreen() {
-  const { type, transId } = useLocalSearchParams()
+  const { transId } = useLocalSearchParams()
+  const { transactionType } = useTransferStore()
   const { data, isFetched } = useQuery({
     queryKey: ['transaction-detail', transId],
     queryFn: () => getTransactionDetails(transId as string)
@@ -27,7 +29,7 @@ export default function PaymentSuccessScreen() {
     },
     {
       title: 'Số dư khả dụng',
-      value: isFetched && formatMoney(data?.data.close_balance)
+      value: isFetched && formatMoney(data?.data.close_balance) + 'đ'
     }
   ]
 
@@ -47,8 +49,8 @@ export default function PaymentSuccessScreen() {
           Thanh toán thành công
         </SemiText>
         <NormalText className="text-tertiary mt-4 text-center">
-          Bạn đã nộp tiền {type === 'ktx' ? 'ký túc xá' : 'học phí'} thành công.
-          Chúc bạn một kỳ học mới hiệu quả!
+          Bạn đã nộp tiền {transactionType === 'HP' ? 'học phí' : 'ký túc xá'}{' '}
+          thành công. Chúc bạn một kỳ học mới hiệu quả!
         </NormalText>
         <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
         <View className="mt-5 w-full">

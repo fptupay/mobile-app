@@ -136,7 +136,7 @@ export default function TransactionOTPScreen() {
       if (successResponseStatus(data)) {
         router.push({
           pathname: '/payments/payment-success',
-          params: { type: 'ktx', transId: data?.data?.transaction_id }
+          params: { transId: data?.data?.transaction_id }
         })
       } else {
         Toast.show({
