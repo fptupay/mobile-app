@@ -38,7 +38,8 @@ export default function LoadMoneyScreen() {
   const balance = useAccountStore((state) => state.balance)
 
   const handleAmountInput = (value: string) => {
-    setAmount(value)
+    const formattedAmount = formatInputMoney(value)
+    setAmount(formattedAmount)
   }
 
   const banksLinkedQuery = useQuery({
@@ -94,7 +95,11 @@ export default function LoadMoneyScreen() {
   })
 
   return (
-    <SharedLayout href="/account/home" title="Nạp tiền">
+    <SharedLayout
+      backHref="/account/home"
+      questionHref="/instruction/deposit-instruction"
+      title="Nạp tiền"
+    >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -119,9 +124,7 @@ export default function LoadMoneyScreen() {
                 <TextField
                   keyboardType="numeric"
                   label="Số tiền cần nạp"
-                  editable={true}
-                  selectTextOnFocus={true}
-                  value={formatInputMoney(amount)}
+                  value={amount}
                   onChangeText={handleAmountInput}
                 />
               </View>
@@ -174,7 +177,7 @@ export default function LoadMoneyScreen() {
           onPress={() => {
             depositMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount.replace('.', '')),
+              amount: parseInt(amount.replace(/\./g, '')),
               content: 'Nạp tiền vào ví FPTU Pay'
             })
           }}

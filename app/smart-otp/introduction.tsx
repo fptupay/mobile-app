@@ -1,11 +1,6 @@
 import React from 'react'
-import {
-  MediumText,
-  NormalText,
-  SafeAreaView,
-  SemiText,
-  View
-} from '@/components/Themed'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import { View, SafeAreaView } from 'react-native'
 import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
 import { Image } from 'expo-image'

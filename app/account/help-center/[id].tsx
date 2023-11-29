@@ -79,7 +79,7 @@ export default function RequestDetailScreen() {
 
   return (
     <>
-      <SharedLayout title="" href="/help-center">
+      <SharedLayout title="" backHref="/help-center">
         <View className="mt-12 relative">
           <View className="absolute -top-20 left-0 right-0 justify-center items-center">
             <View className="w-16 h-16 rounded-full bg-slate-50 shadow-md p-1">
@@ -91,11 +91,13 @@ export default function RequestDetailScreen() {
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false} className="mb-4">
-            <SemiText className="text-center text-lg">
+            <SemiText className="text-center text-lg text-secondary">
               {getTitle(details?.data.status)}
             </SemiText>
             <View className="h-[1px] mt-4 w-full mx-auto bg-gray-200" />
-            <SemiText className="mt-4">Chi tiết yêu cầu</SemiText>
+            <SemiText className="mt-4 text-secondary">
+              Chi tiết yêu cầu
+            </SemiText>
             {isLoading ? (
               <View className="flex-1 items-center justify-center">
                 <LoadingSpin />
@@ -108,7 +110,7 @@ export default function RequestDetailScreen() {
                       <NormalText className="text-tertiary">
                         {item.key}
                       </NormalText>
-                      <NormalText className="flex-1 text-right">
+                      <NormalText className="flex-1 text-right text-secondary">
                         {item.value}
                       </NormalText>
                     </View>

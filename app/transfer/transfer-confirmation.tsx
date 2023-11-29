@@ -68,11 +68,11 @@ export default function TransferConfirmationScreen() {
 
   return (
     <>
-      <SharedLayout title="Xác nhận thông tin" href="/account/payments">
+      <SharedLayout title="Xác nhận thông tin" backHref="/account/payments">
         {/* Header */}
         <View className="mt-4 flex items-center">
           <NormalText className="text-tertiary">Số tiền chuyển</NormalText>
-          <SemiText className="text-4xl mt-2">
+          <SemiText className="text-4xl mt-2 text-secondary">
             {formatMoney(amount as string)}đ
           </SemiText>
         </View>
@@ -89,7 +89,9 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base">{full_name}</MediumText>
+                <MediumText className="text-base text-secondary">
+                  {full_name}
+                </MediumText>
                 <NormalText className="text-tertiary">{username}</NormalText>
               </View>
             </View>
@@ -106,7 +108,9 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base">{owner}</MediumText>
+                <MediumText className="text-base text-secondary">
+                  {owner}
+                </MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
             </View>
@@ -118,19 +122,21 @@ export default function TransferConfirmationScreen() {
           <View className="mt-2 flex space-y-4">
             <View className="flex-row justify-between">
               <NormalText className="text-tertiary">Loại thanh toán</NormalText>
-              <NormalText>Chuyển tiền nhanh</NormalText>
+              <NormalText className="text-secondary">
+                Chuyển tiền nhanh
+              </NormalText>
             </View>
             <View className="flex-row justify-between w-full">
               <NormalText className="text-tertiary flex-1">
                 Số tiền bằng chữ
               </NormalText>
-              <NormalText className="text-right flex-1 flex flex-wrap">
+              <NormalText className="text-right text-secondary flex-1 flex flex-wrap">
                 {convertNumberToVietnameseWords(amount as string)}
               </NormalText>
             </View>
             <View className="flex-row justify-between w-full">
               <NormalText className="text-tertiary flex-1">Nội dung</NormalText>
-              <NormalText className="text-right flex-1 flex flex-wrap">
+              <NormalText className="text-right text-secondary flex-1 flex flex-wrap">
                 {message}
               </NormalText>
             </View>

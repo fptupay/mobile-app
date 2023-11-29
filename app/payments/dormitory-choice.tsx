@@ -78,7 +78,7 @@ export default function DormitoryChoiceScreen() {
   }
 
   return (
-    <SharedLayout title={code as string} href="/account/payments">
+    <SharedLayout title={code as string} backHref="/account/payments">
       <View className="mb-4">
         <View className="mt-4">
           <DropDownPicker

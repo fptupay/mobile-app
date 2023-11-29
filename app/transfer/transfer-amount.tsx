@@ -68,7 +68,8 @@ export default function TransferAmountScreen() {
   }
 
   const handleSuggestionPress = (suggestion: number) => {
-    setAmount(formatMoney(suggestion))
+    setAmount(formatMoney(suggestion.toString()))
+    setRawAmount(suggestion.toString().replace(/\D/g, ''))
   }
 
   const handleTransfer = () => {
@@ -86,7 +87,7 @@ export default function TransferAmountScreen() {
   return (
     <>
       {isOpen && <PromptModal />}
-      <SharedLayout href="/transfer/transfer-new" title="Chuyển tiền">
+      <SharedLayout backHref="/transfer/transfer-new" title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             className="h-full"
@@ -114,7 +115,7 @@ export default function TransferAmountScreen() {
                 autoFocus
               />
               <NormalText className="text-tertiary">
-                Số dư hiện tại: {balance}đ
+                Số dư hiện tại: {formatMoney(balance)}đ
               </NormalText>
             </View>
 
@@ -124,9 +125,11 @@ export default function TransferAmountScreen() {
                 <TouchableOpacity
                   key={suggestion}
                   onPress={() => handleSuggestionPress(suggestion)}
-                  className="flex-wrap p-1 rounded-md bg-orange-100 text-primary"
+                  className="flex-wrap p-1 rounded-md bg-orange-100"
                 >
-                  <MediumText>{formatMoney(suggestion)}</MediumText>
+                  <MediumText className="text-secondary">
+                    {formatMoney(suggestion)}
+                  </MediumText>
                 </TouchableOpacity>
               ))}
             </View>

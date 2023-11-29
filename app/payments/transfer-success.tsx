@@ -8,7 +8,7 @@ import { Image } from 'expo-image'
 
 export default function TransferSuccessScreen() {
   return (
-    <SharedLayout title="" href="/help-center">
+    <SharedLayout title="" backHref="/help-center">
       <View className="mt-12 relative">
         <View className="absolute -top-20 left-0 right-0 justify-center items-center">
           <View className="w-16 h-16 rounded-full bg-green-100 p-1">

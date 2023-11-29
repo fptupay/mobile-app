@@ -33,9 +33,9 @@ export default function DormitoryFeeScreen() {
   }
 
   return (
-    <SharedLayout title="Ký túc xá" href="/account/payments">
+    <SharedLayout title="Ký túc xá" backHref="/account/payments">
       <View className="mt-4">
-        <MediumText>Lựa chọn loại phòng</MediumText>
+        <MediumText className="text-secondary">Lựa chọn loại phòng</MediumText>
 
         {/* Room type */}
         <View className="flex flex-row flex-wrap gap-x-4 mt-4">
@@ -51,7 +51,7 @@ export default function DormitoryFeeScreen() {
               onPress={() => handleSelectRoomType(room)}
             >
               <View>
-                <MediumText>{room.name}</MediumText>
+                <MediumText className="text-secondary">{room.name}</MediumText>
                 <NormalText className="text-tertiary">
                   {formatMoney(room.amount)} đ
                 </NormalText>
