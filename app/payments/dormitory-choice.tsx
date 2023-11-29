@@ -10,9 +10,11 @@ import { bookDomRoom } from '@/api/booking/dormitory'
 import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
 import { isAxiosError } from 'axios'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function DormitoryChoiceScreen() {
   const { code } = useLocalSearchParams()
+  const { setTransactionType, setTransactionId } = useTransferStore()
 
   const [domOpen, setDomOpen] = useState(false)
   const [floorOpen, setFloorOpen] = useState(false)
@@ -55,6 +57,8 @@ export default function DormitoryChoiceScreen() {
           pathname: '/payments/payment-bill',
           params: { type: 'ktx' }
         })
+        setTransactionId(data.data.trans_id)
+        setTransactionType('ktx')
       } else {
         Toast.show({
           type: 'error',

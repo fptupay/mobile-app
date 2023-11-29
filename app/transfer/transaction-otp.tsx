@@ -37,7 +37,7 @@ export default function TransactionOTPScreen() {
     (state) => state.setTransactionDetails
   )
   const { username } = useAccountStore((state) => state.details)
-  const transactionId = useTransferStore((state) => state.transactionId)
+  const { transactionId, transactionType } = useTransferStore()
   const selectedBank = useBankStore((state) => state.selectedBank)
   const { secondsLeft, start } = useCountdown()
 
@@ -76,11 +76,9 @@ export default function TransactionOTPScreen() {
       const smartOTPTransactionId = await SecureStore.getItemAsync(
         `${username}_transId`
       )
-      console.log('smartOTPTransactionId', smartOTPTransactionId)
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log('Transfer: ', data)
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
@@ -102,7 +100,6 @@ export default function TransactionOTPScreen() {
       return withdrawConfirm(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log('withdraw', data)
       if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
@@ -136,7 +133,14 @@ export default function TransactionOTPScreen() {
     },
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        console.log(data)
+        console.log(
+          '🚀 ~ file: transaction-otp.tsx:136 ~ TransactionOTPScreen ~ data:',
+          data
+        )
+        router.push({
+          pathname: '/payments/payment-success',
+          params: { type: 'ktx', transId: data?.data?.transaction_id }
+        })
       } else {
         Toast.show({
           type: 'error',
@@ -154,16 +158,18 @@ export default function TransactionOTPScreen() {
         otp: copiedSmartOTP
       })
       setFundTransferId('')
+    }
+    if (transactionType) {
+      payBillMutation.mutate({
+        otp: copiedSmartOTP,
+        fee_type: transactionType,
+        trans_id: transactionId
+      })
     } else {
-      /*  withdrawMutation.mutate({
+      withdrawMutation.mutate({
         link_account_id: selectedBank,
         trans_id: transactionId,
         otp: copiedSmartOTP
-      }) */
-      payBillMutation.mutate({
-        otp: copiedSmartOTP,
-        fee_type: 'KTX',
-        trans_id: 'crhdkiguxtvi'
       })
     }
   }
@@ -206,10 +212,13 @@ export default function TransactionOTPScreen() {
           disable={
             confirmTransferMutation.isLoading ||
             withdrawMutation.isLoading ||
+            payBillMutation.isLoading ||
             !copiedSmartOTP
           }
           loading={
-            confirmTransferMutation.isLoading || withdrawMutation.isLoading
+            confirmTransferMutation.isLoading ||
+            withdrawMutation.isLoading ||
+            payBillMutation.isLoading
           }
         />
       </View>

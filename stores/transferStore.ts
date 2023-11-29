@@ -9,6 +9,8 @@ interface TransferProps {
   setSavedStudentCodes: (savedStudentCodes: string[]) => void
   receiverAvatar: string
   setReceiverAvatar: (receiverAvatar: string) => void
+  transactionType: string
+  setTransactionType: (transactionType: string) => void
 }
 
 export const useTransferStore = create<TransferProps>((set) => ({
@@ -20,5 +22,7 @@ export const useTransferStore = create<TransferProps>((set) => ({
   setSavedStudentCodes: (savedStudentCodes: string[]) =>
     set({ savedStudentCodes }),
   receiverAvatar: '',
-  setReceiverAvatar: (receiverAvatar: string) => set({ receiverAvatar })
+  setReceiverAvatar: (receiverAvatar: string) => set({ receiverAvatar }),
+  transactionType: '',
+  setTransactionType: (transactionType: string) => set({ transactionType })
 }))

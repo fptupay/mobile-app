@@ -7,10 +7,11 @@ import { MediumText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { formatMoney } from '@/utils/helper'
 import { router, useLocalSearchParams } from 'expo-router'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
-  const { data: bill } = useQuery({
+  const { data: bill, isLoading } = useQuery({
     queryKey: ['bill'],
     queryFn: () => getDNGBillByFeeType(type as string)
   })
@@ -45,13 +46,19 @@ export default function PaymentBillScreen() {
           Vui lòng kiểm tra lại chi tiết hoá đơn trước khi thanh toán nhé!
         </MediumText>
         <View className="mt-4">
-          {billForm.map((item: any) => (
-            <DescriptionRowItem
-              key={item.label}
-              label={item.label}
-              description={item.description}
-            />
-          ))}
+          {isLoading ? (
+            <LoadingSpin />
+          ) : (
+            <View>
+              {billForm.map((item: any) => (
+                <DescriptionRowItem
+                  key={item.label}
+                  label={item.label}
+                  description={item.description}
+                />
+              ))}
+            </View>
+          )}
         </View>
 
         <View className="mt-auto mb-4">
