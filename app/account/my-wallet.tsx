@@ -73,12 +73,6 @@ const otherFunctions: ListItemProps[] = [
     color: '#35CC9F',
     href: '/settings/change-phone',
     title: 'Đổi số điện thoại'
-  },
-  {
-    leftIcon: 'Settings',
-    color: '#CCA967',
-    href: '/main-features/deposit/load-money',
-    title: 'Cài đặt'
   }
 ]
 
