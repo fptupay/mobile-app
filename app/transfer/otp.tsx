@@ -46,7 +46,7 @@ export default function TransactionOTPScreen() {
     <SharedLayout backHref="/account/home" title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1 px-4"
+        className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 pt-8 space-y-8">
