@@ -1,8 +1,7 @@
 import { View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
 import { router, useLocalSearchParams } from 'expo-router'
-import Colors from '@/constants/Colors'
 import DropDownPicker from 'react-native-dropdown-picker'
 import TextButton from '@/components/buttons/TextButton'
 import TextField from '@/components/TextField'
@@ -16,19 +15,23 @@ export default function DormitoryChoiceScreen() {
   const { code } = useLocalSearchParams()
 
   const [domOpen, setDomOpen] = useState(false)
+  const [floorOpen, setFloorOpen] = useState(false)
+  const [semesterOpen, setSemesterOpen] = useState(false)
+
   const [value, setValue] = useState(null)
   const [value1, setValue1] = useState(null)
   const [value2, setValue2] = useState(null)
+
   const [dom, setDom] = useState([
     { label: 'DOM A', value: 'DOM_A' },
     { label: 'DOM B', value: 'DOM_B' },
     { label: 'DOM C', value: 'DOM_C' },
     { label: 'DOM D', value: 'DOM_D' },
-    { label: 'DOM E', value: 'DOM_E' }
+    { label: 'DOM E', value: 'DOM_E' },
+    { label: 'DOM F', value: 'DOM_F' },
+    { label: 'DOM G', value: 'DOM_G' },
+    { label: 'DOM H', value: 'DOM_H' }
   ])
-
-  const [floorOpen, setFloorOpen] = useState(false)
-  const [semesterOpen, setSemesterOpen] = useState(false)
   const [floor, setFloor] = useState([
     { label: 'Tầng 1', value: 1 },
     { label: 'Tầng 2', value: 2 },
@@ -47,7 +50,10 @@ export default function DormitoryChoiceScreen() {
     mutationFn: bookDomRoom,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        router.push('/payments/payment-bill')
+        router.push({
+          pathname: '/payments/payment-bill',
+          params: { type: 'ktx' }
+        })
       } else {
         Toast.show({
           type: 'error',
@@ -77,57 +83,68 @@ export default function DormitoryChoiceScreen() {
     })
   }
 
+  const onDOMOpen = useCallback(() => {
+    setFloorOpen(false)
+    setSemesterOpen(false)
+  }, [])
+
+  const onFloorOpen = useCallback(() => {
+    setDomOpen(false)
+    setSemesterOpen(false)
+  }, [])
+
+  const onSemesterOpen = useCallback(() => {
+    setDomOpen(false)
+    setFloorOpen(false)
+  }, [])
+
   return (
     <SharedLayout title={code as string} backHref="/account/payments">
       <View className="mb-4">
         <View className="mt-4">
           <DropDownPicker
-            open={domOpen}
             placeholder="Chọn DOM"
+            open={domOpen}
             value={value}
             items={dom}
+            onOpen={onDOMOpen}
             setOpen={setDomOpen}
             setValue={setValue}
             setItems={setDom}
             zIndex={3000}
             zIndexInverse={1000}
-            style={{ borderColor: Colors.tertiary }}
-            textStyle={{ color: Colors.tertiary }}
           />
         </View>
         <View className="mt-4">
           <DropDownPicker
-            open={floorOpen}
             placeholder="Chọn tầng"
+            open={floorOpen}
             value={value1}
             items={floor}
+            onOpen={onFloorOpen}
             setOpen={setFloorOpen}
             setValue={setValue1}
             setItems={setFloor}
             zIndex={2000}
             zIndexInverse={2000}
-            style={{ borderColor: Colors.tertiary }}
-            textStyle={{ color: Colors.tertiary }}
           />
         </View>
         <View className="mt-4">
           <DropDownPicker
-            open={semesterOpen}
             placeholder="Chọn học kỳ"
+            open={semesterOpen}
             value={value2}
             items={semester}
+            onOpen={onSemesterOpen}
             setOpen={setSemesterOpen}
             setValue={setValue2}
             setItems={setSemester}
             zIndex={1000}
             zIndexInverse={3000}
-            style={{ borderColor: Colors.tertiary }}
-            textStyle={{ color: Colors.tertiary }}
           />
         </View>
         <View className="mt-4">
           <TextField
-            maxLength={10}
             label="Ghi chú"
             value={note}
             onChangeText={(text) => setNote(text)}

@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { getRegisteredPhoneNumber } from '@/api/authentication'
-import { topupConfirm, withdrawConfirm } from '@/api/bank'
+import { topupConfirm } from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
@@ -66,33 +66,6 @@ export default function OtpScreen() {
     }
   })
 
-  const withdrawMutation = useMutation({
-    mutationFn: (data: MoneyConfirmSchema) => withdrawConfirm(data),
-    onSuccess: (data) => {
-      if (!successResponseStatus(data)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Đã có lỗi xảy ra',
-          text2: data.message
-        })
-      } else {
-        router.push({
-          pathname: '/main-features/withdraw/withdraw-confirmation',
-          params: { transId: data.data.trans_id }
-        })
-      }
-    },
-    onError: (error: Error) => {
-      if (isAxiosError(error)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Lỗi',
-          text2: error.response?.data?.message
-        })
-      }
-    }
-  })
-
   return (
     <SharedLayout backHref="/account/home" title="Nhập mã OTP">
       <KeyboardAvoidingView
@@ -127,24 +100,15 @@ export default function OtpScreen() {
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
-                disable={
-                  otpCode.length != 6 ||
-                  topupMutation.isLoading ||
-                  withdrawMutation.isLoading
-                }
-                loading={topupMutation.isLoading || withdrawMutation.isLoading}
+                disable={otpCode.length != 6 || topupMutation.isLoading}
+                loading={topupMutation.isLoading}
                 onPress={() => {
-                  params.type == 'deposit'
-                    ? topupMutation.mutate({
-                        link_account_id: params.link_account_id,
-                        trans_id: params.trans_id,
-                        otp: otpCode
-                      })
-                    : withdrawMutation.mutate({
-                        link_account_id: params.link_account_id,
-                        trans_id: params.trans_id,
-                        otp: otpCode
-                      })
+                  params.type == 'deposit' &&
+                    topupMutation.mutate({
+                      link_account_id: params.link_account_id,
+                      trans_id: params.trans_id,
+                      otp: otpCode
+                    })
                 }}
               />
             </View>
