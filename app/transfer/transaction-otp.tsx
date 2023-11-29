@@ -155,7 +155,7 @@ export default function TransactionOTPScreen() {
       })
       setFundTransferId('')
     }
-    if (transactionType) {
+    if (transactionType === 'hp' || transactionType === 'ktx') {
       payBillMutation.mutate({
         otp: copiedSmartOTP,
         fee_type: transactionType,
