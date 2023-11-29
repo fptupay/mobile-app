@@ -8,12 +8,19 @@ import TextButton from '@/components/buttons/TextButton'
 import { formatMoney } from '@/utils/helper'
 import { router, useLocalSearchParams } from 'expo-router'
 import LoadingSpin from '@/components/LoadingSpin'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
+  const { setTransactionType, setTransactionId } = useTransferStore()
+
   const { data: bill, isLoading } = useQuery({
     queryKey: ['bill'],
-    queryFn: () => getDNGBillByFeeType(type as string)
+    queryFn: () => getDNGBillByFeeType((type as string) ?? 'hp'),
+    onSuccess: (data) => {
+      setTransactionType(data?.data[0].type)
+      setTransactionId(data?.data[0].transaction_id)
+    }
   })
 
   const billForm = [

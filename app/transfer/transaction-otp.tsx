@@ -38,6 +38,7 @@ export default function TransactionOTPScreen() {
   )
   const { username } = useAccountStore((state) => state.details)
   const { transactionId, transactionType } = useTransferStore()
+
   const selectedBank = useBankStore((state) => state.selectedBank)
   const { secondsLeft, start } = useCountdown()
 
@@ -155,7 +156,7 @@ export default function TransactionOTPScreen() {
       })
       setFundTransferId('')
     }
-    if (transactionType === 'hp' || transactionType === 'ktx') {
+    if (transactionType === 'HP' || transactionType === 'KTX') {
       payBillMutation.mutate({
         otp: copiedSmartOTP,
         fee_type: transactionType,

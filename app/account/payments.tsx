@@ -38,13 +38,17 @@ const PaymentItem = ({ title, icon, href }: PaymentItemProps) => {
 
 export default function PaymentsScreen() {
   return (
-    <SharedLayout backHref="/account/home" questionHref="/instruction/payment-instruction" title="Thanh toán">
+    <SharedLayout
+      backHref="/account/home"
+      questionHref="/instruction/payment-instruction"
+      title="Thanh toán"
+    >
       <SemiText className="mt-4">Lựa chọn các khoản nộp</SemiText>
       <ScrollView className="mt-4">
         <PaymentItem
           title="Học phí kỳ tiếp"
           icon="GraduationCap"
-          href="school-payment-confirmation"
+          href="payment-bill"
         />
         <PaymentItem title="Đăng ký môn học" icon="Book" href="subject-fee" />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
