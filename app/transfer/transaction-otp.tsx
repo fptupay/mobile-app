@@ -133,10 +133,6 @@ export default function TransactionOTPScreen() {
     },
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        console.log(
-          '🚀 ~ file: transaction-otp.tsx:136 ~ TransactionOTPScreen ~ data:',
-          data
-        )
         router.push({
           pathname: '/payments/payment-success',
           params: { type: 'ktx', transId: data?.data?.transaction_id }

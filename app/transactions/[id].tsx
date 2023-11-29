@@ -66,7 +66,7 @@ export default function TransactionDetailScreen() {
             <MediumText className="text-secondary">
               {data?.data.trans_code === 'TRANSFER'
                 ? 'Chuyển tiền nhanh'
-                : 'Hoàn tiền'}
+                : data?.data.description}
             </MediumText>
             <CustomIcon name="Share" size={20} color="#000" />
           </View>

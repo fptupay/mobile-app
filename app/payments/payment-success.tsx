@@ -15,10 +15,6 @@ export default function PaymentSuccessScreen() {
     queryKey: ['transaction-detail', transId],
     queryFn: () => getTransactionDetails(transId as string)
   })
-  console.log(
-    '🚀 ~ file: payment-success.tsx:18 ~ PaymentSuccessScreen ~ data:',
-    data
-  )
 
   const transferDetail = [
     {
