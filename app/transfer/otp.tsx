@@ -36,7 +36,7 @@ export default function TransactionOTPScreen() {
     } else {
       Toast.show({
         type: 'error',
-        text1: 'Mã OTP không đúng',
+        text1: 'Mã PIN không đúng',
         text2: 'Vui lòng nhập lại'
       })
     }
@@ -52,7 +52,7 @@ export default function TransactionOTPScreen() {
           <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng PIN Smart OTP của bạn để tạo mã xác thực cho giao dịch
+                Vui lòng nhập mã PIN của bạn để tạo mã xác thực cho giao dịch
                 này {fundTransferId && `Mã giao dịch: ${fundTransferId}`}
               </NormalText>
             </View>
