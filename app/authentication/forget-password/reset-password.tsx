@@ -24,7 +24,7 @@ import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
 
 export default function ResetPasswordScreen() {
-  const { credentials } = useForgotPasswordStore()
+  const { credentials, clearCredentials } = useForgotPasswordStore()
 
   const [clicked, setClicked] = useState(false)
   const {
@@ -44,6 +44,7 @@ export default function ResetPasswordScreen() {
     mutationFn: resetPassword,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
+        clearCredentials()
         Toast.show({
           type: 'success',
           text1: 'Đặt lại mật khẩu thành công'
