@@ -12,6 +12,12 @@ interface AccountProps {
   clearCredentials: () => void
 }
 
+interface ForgotPasswordProps {
+  credentials: any
+  setCredentials: (credentials: any) => void
+  clearCredentials: () => void
+}
+
 export const useAccountStore = create<AccountProps>((set) => ({
   balance: '0',
   setBalance: (balance) => set({ balance }),
@@ -20,6 +26,16 @@ export const useAccountStore = create<AccountProps>((set) => ({
   avatar: '',
   setAvatar: (avatar) => set({ avatar }),
   credentials: {},
+  setCredentials: (credentials) => set({ credentials }),
+  clearCredentials: () => set({ credentials: {} })
+}))
+
+export const useForgotPasswordStore = create<ForgotPasswordProps>((set) => ({
+  credentials: {
+    forgot_password_id: '',
+    email: '',
+    otp: ''
+  },
   setCredentials: (credentials) => set({ credentials }),
   clearCredentials: () => set({ credentials: {} })
 }))

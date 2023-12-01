@@ -1,5 +1,5 @@
 import TextField from '@/components/TextField'
-import { MediumText, NormalText } from '@/components/Themed'
+import { NormalText, SemiText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import {
@@ -16,12 +16,17 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useMutation } from '@tanstack/react-query'
 import { verifyExistingAccount } from '@/api/forgot-password'
+import { router } from 'expo-router'
+import { useForgotPasswordStore } from '@/stores/accountStore'
+import { successResponseStatus } from '@/utils/helper'
+import Toast from 'react-native-toast-message'
 
 export default function ForgetPasswordScreen() {
+  const { setCredentials } = useForgotPasswordStore()
+
   const {
     control,
     formState: { errors, isValid },
@@ -35,8 +40,24 @@ export default function ForgetPasswordScreen() {
     mode: 'onBlur'
   })
 
-  const { mutate } = useMutation({
-    mutationFn: verifyExistingAccount
+  const { mutate, isLoading } = useMutation({
+    mutationFn: verifyExistingAccount,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setCredentials({
+          forgot_password_id: data?.data.forgot_password_id,
+          username: getValues().username,
+          mobile: getValues().phone_number
+        })
+        router.push('/authentication/forget-password/otp-confirmation')
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    }
   })
 
   const handleVerification = () => {
@@ -60,20 +81,17 @@ export default function ForgetPasswordScreen() {
         <StatusBar style="auto" />
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-center items-center">
-            <Image
-              source={require('@/assets/images/reset-password.png')}
-              className="w-[225px] h-[225px] mx-auto"
-            />
+          <View className="flex-1 mt-4">
             <View>
-              <MediumText className="text-3xl text-left tracking-tighter text-secondary">
+              <SemiText className="text-3xl text-left tracking-tighter text-secondary">
                 Xác nhận tài khoản
-              </MediumText>
+              </SemiText>
               <NormalText className="text-tertiary mt-1">
                 Vui lòng nhập mã sinh viên và số điện thoại đã đăng ký để chúng
                 tôi xác định tài khoản của bạn nhé!
               </NormalText>
             </View>
+
             <View className="w-full">
               <Controller
                 control={control}
@@ -110,7 +128,7 @@ export default function ForgetPasswordScreen() {
                     style={{ fontFamily: 'Inter' }}
                     keyboardType="phone-pad"
                     returnKeyType="done"
-                    className="w-full mt-8"
+                    className="w-full mt-4"
                   />
                 )}
               />
@@ -123,9 +141,10 @@ export default function ForgetPasswordScreen() {
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={!isValid}
                 type={TextButtonType.PRIMARY}
                 onPress={handleVerification}
+                loading={isLoading}
+                disable={isLoading || !isValid}
               />
             </View>
           </View>
