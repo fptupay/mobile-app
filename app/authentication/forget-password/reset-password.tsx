@@ -15,17 +15,22 @@ import { Controller, useForm } from 'react-hook-form'
 import { PasswordSchema, passwordSchema } from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import BackButton from '@/components/buttons/BackButton'
+import { useForgotPasswordStore } from '@/stores/accountStore'
+import { useMutation } from '@tanstack/react-query'
+import { resetPassword } from '@/api/forgot-password'
+import { successResponseStatus } from '@/utils/helper'
+import Toast from 'react-native-toast-message'
 
 export default function ResetPasswordScreen() {
-  const params: { previousRoute: string; nextRoute: any } =
-    useLocalSearchParams()
+  const { credentials } = useForgotPasswordStore()
 
   const [clicked, setClicked] = useState(false)
   const {
     control,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
+    getValues
   } = useForm<PasswordSchema>({
     defaultValues: {
       password: '',
@@ -34,6 +39,27 @@ export default function ResetPasswordScreen() {
     resolver: zodResolver(passwordSchema),
     mode: 'onBlur'
   })
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: resetPassword,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        Toast.show({
+          type: 'success',
+          text1: 'Đặt lại mật khẩu thành công'
+        })
+        router.replace('/')
+      }
+    }
+  })
+
+  const handleResetPassword = () => {
+    mutate({
+      ...credentials,
+      new_password: getValues('password'),
+      confirm_password: getValues('confirmPassword')
+    })
+  }
 
   return (
     <SafeAreaView className="flex-1">
@@ -118,9 +144,10 @@ export default function ResetPasswordScreen() {
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={!isValid}
+                disable={!isValid || isLoading}
                 type={TextButtonType.PRIMARY}
-                href={params.nextRoute}
+                onPress={handleResetPassword}
+                loading={isLoading}
               />
             </View>
           </View>

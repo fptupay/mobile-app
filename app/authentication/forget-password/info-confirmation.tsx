@@ -20,7 +20,7 @@ import TextField from '@/components/TextField'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { InfoSchema, infoResetPasswordSchema } from '@/schemas/verify-schema'
-import { NormalText, SemiText } from '@/components/Themed'
+import { SemiText } from '@/components/Themed'
 
 export default function OTPConfirmationScreen() {
   const { credentials } = useForgotPasswordStore()
@@ -85,11 +85,8 @@ export default function OTPConfirmationScreen() {
           <View className="flex-1">
             <View>
               <SemiText className="text-3xl text-left tracking-tighter text-secondary">
-                Nhập mã OTP
+                Thông tin cá nhân
               </SemiText>
-              <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại đã đăng ký
-              </NormalText>
             </View>
 
             <View className="w-full">

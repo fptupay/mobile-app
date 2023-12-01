@@ -107,7 +107,7 @@ export default function EkycCameraScreen() {
         <>
           <View className="mt-8 mb-4">
             <TextButton
-              onPress={() => mutate(capturedImage.uri)}
+              onPress={() => mutate(capturedImage)}
               disable={isLoading}
               loading={isLoading}
               text="Dùng ảnh này"
