@@ -23,10 +23,12 @@ import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
+import { useAccountStore } from '@/stores/accountStore'
 
 export default function LoginScreen() {
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
+  const { setCredentials } = useAccountStore()
 
   const {
     control,
@@ -80,6 +82,10 @@ export default function LoginScreen() {
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {
+          setCredentials({
+            username: getValues('username'),
+            password: getValues('password')
+          })
           if (data.data.verify_otp) {
             router.push({
               pathname: '/authentication/common/[otp-type]',
