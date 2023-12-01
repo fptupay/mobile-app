@@ -24,10 +24,12 @@ import { MoneyConfirmSchema } from '@/schemas/bank-schema'
 import { isAxiosError } from 'axios'
 import { useTransferStore } from '@/stores/transferStore'
 import { payBill } from '@/api/bill'
+import { usePaymentStore } from '@/stores/paymentStore'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
+  const { clearPendingBill } = usePaymentStore()
 
   const fundTransferId = useTransactionStore((state) => state.fundTransferId)
   const setFundTransferId = useTransactionStore(
@@ -134,6 +136,7 @@ export default function TransactionOTPScreen() {
     },
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
+        clearPendingBill()
         router.push({
           pathname: '/payments/payment-success',
           params: { transId: data?.data?.transaction_id }
