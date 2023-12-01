@@ -212,7 +212,7 @@ export default function LoginScreen() {
                 loading={loginMutation.isLoading}
               />
               <Link
-                href="/authentication/forget-password/forget-password"
+                href="/authentication/forget-password/initial-verification"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

@@ -2,7 +2,10 @@ import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import BackButton from '@/components/buttons/BackButton'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
+import {
+  VerifySchema,
+  verifyResetPasswordSchema
+} from '@/schemas/verify-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusBar } from 'expo-status-bar'
 import { Controller, useForm } from 'react-hook-form'
@@ -15,18 +18,34 @@ import {
 } from 'react-native'
 import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useMutation } from '@tanstack/react-query'
+import { verifyExistingAccount } from '@/api/forgot-password'
 
 export default function ForgetPasswordScreen() {
   const {
     control,
-    formState: { errors, isValid }
-  } = useForm<PhoneSchema>({
+    formState: { errors, isValid },
+    getValues
+  } = useForm<VerifySchema>({
     defaultValues: {
-      phoneNumber: ''
+      username: '',
+      phone_number: ''
     },
-    resolver: zodResolver(phoneSchema),
+    resolver: zodResolver(verifyResetPasswordSchema),
     mode: 'onBlur'
   })
+
+  const { mutate } = useMutation({
+    mutationFn: verifyExistingAccount
+  })
+
+  const handleVerification = () => {
+    const { username, phone_number } = getValues()
+    mutate({
+      username: username,
+      mobile: phone_number
+    })
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -48,17 +67,40 @@ export default function ForgetPasswordScreen() {
             />
             <View>
               <MediumText className="text-3xl text-left tracking-tighter text-secondary">
-                Bạn quên mật khẩu?
+                Xác nhận tài khoản
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập số điện thoại di động để tìm kiếm tài khoản của
-                bạn
+                Vui lòng nhập mã sinh viên và số điện thoại đã đăng ký để chúng
+                tôi xác định tài khoản của bạn nhé!
               </NormalText>
             </View>
             <View className="w-full">
               <Controller
                 control={control}
-                name="phoneNumber"
+                name="username"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextField
+                    label="Mã sinh viên"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    style={{ fontFamily: 'Inter' }}
+                    returnKeyType="done"
+                    className="w-full mt-8"
+                  />
+                )}
+              />
+              {errors.username && (
+                <NormalText className="text-red-500 mt-1">
+                  {errors.username.message}
+                </NormalText>
+              )}
+            </View>
+
+            <View className="w-full">
+              <Controller
+                control={control}
+                name="phone_number"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextField
                     label="Số điện thoại"
@@ -72,9 +114,9 @@ export default function ForgetPasswordScreen() {
                   />
                 )}
               />
-              {errors.phoneNumber && (
+              {errors.phone_number && (
                 <NormalText className="text-red-500 mt-1">
-                  {errors.phoneNumber.message}
+                  {errors.phone_number.message}
                 </NormalText>
               )}
             </View>
@@ -83,9 +125,7 @@ export default function ForgetPasswordScreen() {
                 text="Xác nhận"
                 disable={!isValid}
                 type={TextButtonType.PRIMARY}
-                href="/authentication/otp"
-                previousRoute="/authentication/forget-password"
-                nextRoute="/authentication/reset-password"
+                onPress={handleVerification}
               />
             </View>
           </View>
