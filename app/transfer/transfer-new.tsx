@@ -2,7 +2,7 @@ import { getUserNameByStudentCode } from '@/api/transfer'
 import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
-import { MediumText, SemiText } from '@/components/Themed'
+import { MediumText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { useAccountStore } from '@/stores/accountStore'
 import { useTransferStore } from '@/stores/transferStore'
@@ -70,7 +70,9 @@ export default function TransferMoneyScreen() {
       <SharedLayout backHref="/transfer/transfer-list" title="Chuyển tiền tới">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="space-y-6">
-            <SemiText className="mt-4">Thông tin người nhận mới</SemiText>
+            <MediumText className="mt-4 text-secondary">
+              Thông tin người nhận mới
+            </MediumText>
             <TextField
               value={studentCode}
               label="Mã sinh viên"

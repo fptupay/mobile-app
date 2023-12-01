@@ -9,10 +9,12 @@ import { formatMoney } from '@/utils/helper'
 import { router, useLocalSearchParams } from 'expo-router'
 import LoadingSpin from '@/components/LoadingSpin'
 import { useTransferStore } from '@/stores/transferStore'
+import { usePaymentStore } from '@/stores/paymentStore'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
   const { setTransactionType, setTransactionId } = useTransferStore()
+  const { setPendingBill } = usePaymentStore()
 
   const { data: bill, isLoading } = useQuery({
     queryKey: ['bill'],
@@ -20,6 +22,7 @@ export default function PaymentBillScreen() {
     onSuccess: (data) => {
       setTransactionType(data?.data[0].type)
       setTransactionId(data?.data[0].transaction_id)
+      setPendingBill(data?.data[0])
     }
   })
 
