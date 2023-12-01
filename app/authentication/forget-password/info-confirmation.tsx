@@ -42,7 +42,6 @@ export default function OTPConfirmationScreen() {
   const { mutate, isLoading } = useMutation({
     mutationFn: confirmInfo,
     onSuccess: (data) => {
-      console.log(data)
       if (successResponseStatus(data)) {
         router.push('/authentication/forget-password/front-card-confirmation')
       } else {
@@ -122,7 +121,7 @@ export default function OTPConfirmationScreen() {
                   onChangeText={onChange}
                   style={{ fontFamily: 'Inter' }}
                   returnKeyType="next"
-                  className="w-full mt-8"
+                  className="w-full mt-4"
                 />
               )}
             />

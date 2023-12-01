@@ -15,7 +15,7 @@ export default function ForgotPasswordLayout() {
       <Stack.Screen name="front-card-confirmation" />
       <Stack.Screen name="back-card-confirmation" />
       <Stack.Screen name="face-confirmation" />
-      <Stack.Screen name="change-password" />
+      <Stack.Screen name="reset-password" />
     </Stack>
   )
 }
