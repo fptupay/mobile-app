@@ -5,7 +5,7 @@ import {
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
+import { PhoneSchema, phoneSchema } from '@/schemas/verify-schema'
 import { usePhoneStore } from '@/stores/phoneStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
