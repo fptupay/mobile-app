@@ -5,7 +5,7 @@ import {
 } from '@/schemas/auth-schema'
 import { Platform } from 'react-native'
 import { apiGetCall, apiPostCall } from '..'
-import { PhoneSchema } from '@/schemas/phone-schema'
+import { PhoneSchema } from '@/schemas/verify-schema'
 import { getDeviceId } from '@/utils/helper'
 
 const loginConfig = {

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 
+
 interface TransactionProps {
   fundTransferId: string
   transactionDetails: any
@@ -30,3 +31,4 @@ export const useTransactionStore = create<TransactionProps>((set) => ({
   setListTransaction: (listTransaction: any) =>
     set({ listTransaction: listTransaction })
 }))
+

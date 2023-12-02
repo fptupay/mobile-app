@@ -60,6 +60,7 @@ export default function RequestDetailScreen() {
     mutationKey: ['closeRequest', request.id],
     mutationFn: () => closeSupportRequest(request.id as string),
     onSuccess: async () => {
+      setIsModalVisible(false)
       Toast.show({
         type: 'success',
         text1: 'Đóng yêu cầu thành công'

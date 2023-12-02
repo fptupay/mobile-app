@@ -65,6 +65,7 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
     Animated.createAnimatedComponent(TouchableOpacity)
 
   const queryClient = useQueryClient()
+  const { setReceiverAvatar } = useTransferStore()
   const deleteSavedAccountMutation = useMutation({
     mutationFn: deleteSavedAccount,
     onSuccess: async (data) => {
@@ -77,18 +78,6 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
       }
     }
   })
-
-  /*  const [receiverAvatars, setReceiverAvatars] = useState([])
-
-  useEffect(() => {
-    async function getSavedAccountAvatar() {
-      const avatar = await SecureStore.getItemAsync(item.ref_user_id)
-      setReceiverAvatars({ ...receiverAvatars,  avatar })
-    }
-    getSavedAccountAvatar().catch((error) => {
-      console.log(error)
-    })
-  }, []) */
 
   return (
     <Swipeable
@@ -114,7 +103,8 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
     >
       <TouchableOpacity
         className="flex flex-row items-center justify-between py-3"
-        onPress={() =>
+        onPress={() => {
+          setReceiverAvatar(item.avatar)
           router.push({
             pathname: '/transfer/transfer-amount',
             params: {
@@ -122,7 +112,7 @@ function SwipeableItem({ item, router }: { item: any; router: any }) {
               studentCode: item.ref_user_id
             }
           })
-        }
+        }}
       >
         <View className="flex flex-row items-center">
           <Image
