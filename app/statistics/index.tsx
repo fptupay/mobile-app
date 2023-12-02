@@ -2,14 +2,43 @@ import { LineChart } from 'react-native-chart-kit'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import SharedLayout from '@/components/SharedLayout'
-import { WINDOW_WIDTH, formatMoney } from '@/utils/helper'
+import {
+  WINDOW_WIDTH,
+  formatMoney,
+  successResponseStatus
+} from '@/utils/helper'
 import { useTransactionStore } from '@/stores/transactionStore'
 import Colors from '@/constants/Colors'
 import { MediumText } from '@/components/Themed'
 import CustomIcon from '@/components/Icon'
+import { router } from 'expo-router'
+import { useMutation } from '@tanstack/react-query'
+import { getTransactionReportByList } from '@/api/transaction'
+import {
+  extractDateStringFromCurrentDate,
+  getCurrentYearTime
+} from '@/utils/datetime'
+import Toast from 'react-native-toast-message'
+import { isAxiosError } from 'axios'
+
+const chartConfig = {
+  backgroundGradientFrom: Colors.light.background,
+  backgroundGradientTo: Colors.light.background,
+  decimalPlaces: 0,
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  style: {
+    borderRadius: 16
+  },
+  propsForDots: {
+    r: '4',
+    strokeWidth: '1'
+  }
+}
 
 export default function TransactionStatisticsScreen() {
-  const { transactionReport } = useTransactionStore()
+  const { accountNumber, transactionReport, setListTransaction } =
+    useTransactionStore()
 
   const cashIn = transactionReport.in_amount_total_by_date
   const cashOut = transactionReport.out_amount_total_by_date
@@ -25,29 +54,34 @@ export default function TransactionStatisticsScreen() {
 
   const display = [
     {
+      key: 'cashIn',
       title: 'Tổng tiền vào',
       value: formatMoney(totalIn)
     },
     {
+      key: 'cashOut',
       title: 'Tổng tiền ra',
       value: formatMoney(totalOut)
     }
   ]
 
-  const chartConfig = {
-    backgroundGradientFrom: Colors.light.background,
-    backgroundGradientTo: Colors.light.background,
-    decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    style: {
-      borderRadius: 16
+  const { mutate } = useMutation({
+    mutationFn: getTransactionReportByList,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setListTransaction(data?.data)
+      }
     },
-    propsForDots: {
-      r: '4',
-      strokeWidth: '1'
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: error.message
+        })
+      }
     }
-  }
+  })
 
   return (
     <SharedLayout title="Thống kê giao dịch">
@@ -74,17 +108,26 @@ export default function TransactionStatisticsScreen() {
         width={WINDOW_WIDTH - 32}
         height={250}
         withInnerLines={false}
-        onDataPointClick={() => console.log('clicked')}
         chartConfig={chartConfig}
         style={styles.chart}
       />
 
       {display.map((item) => (
-        <View className="flex flex-row justify-between mb-4" key={item.title}>
+        <View className="flex flex-row justify-between mb-4" key={item.key}>
           <MediumText className="text-tertiary">{item.title}</MediumText>
           <TouchableOpacity
             className="flex flex-row items-center"
-            onPress={() => console.log('hello')}
+            onPress={() => {
+              mutate({
+                account_no: accountNumber,
+                from_date: getCurrentYearTime(),
+                to_date: extractDateStringFromCurrentDate(new Date())
+              })
+              router.push({
+                pathname: '/statistics/[cash]',
+                params: { cash: item.key }
+              })
+            }}
             activeOpacity={0.8}
           >
             <MediumText className="text-secondary mr-1">
