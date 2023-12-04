@@ -124,7 +124,7 @@ export default function HomeScreen() {
     notifyOnChangeProps: ['data']
   })
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: getTransactionReportByChart,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -140,8 +140,8 @@ export default function HomeScreen() {
     setIsSearching(!isSearching)
   }
 
-  const handleShowTransactionReport = () => {
-    mutate({
+  const handleShowTransactionReport = async () => {
+    await mutateAsync({
       account_no: accountNumber,
       from_date: getCurrentYearTime(),
       to_date: extractDateStringFromCurrentDate(new Date())

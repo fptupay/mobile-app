@@ -16,12 +16,14 @@ export default function TransactionListScreen() {
   return (
     <SharedLayout title={isCashIn ? 'Thống kê tiền vào' : 'Thống kê tiền ra'}>
       <View className="flex items-center">
-        <SemiText className="text-4xl text-secondary mt-4">
-          {isCashIn
-            ? formatMoney(listTransaction.total_in)
-            : formatMoney(listTransaction.total_out)}{' '}
-          đ
-        </SemiText>
+        {listTransaction && (
+          <SemiText className="text-4xl text-secondary mt-4">
+            {isCashIn
+              ? formatMoney(listTransaction?.total_in)
+              : formatMoney(listTransaction?.total_out)}{' '}
+            đ
+          </SemiText>
+        )}
 
         <FlatList
           className="mt-4"

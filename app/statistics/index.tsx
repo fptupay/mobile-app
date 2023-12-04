@@ -40,8 +40,9 @@ export default function TransactionStatisticsScreen() {
   const { accountNumber, transactionReport, setListTransaction } =
     useTransactionStore()
 
-  const cashIn = transactionReport.in_amount_total_by_date
-  const cashOut = transactionReport.out_amount_total_by_date
+  const cashIn = transactionReport && transactionReport?.in_amount_total_by_date
+  const cashOut =
+    transactionReport && transactionReport?.out_amount_total_by_date
 
   const totalIn = Object.values(cashIn).reduce(
     (a: any, b: any) => a + b,
@@ -65,7 +66,7 @@ export default function TransactionStatisticsScreen() {
     }
   ]
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: getTransactionReportByList,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -117,8 +118,8 @@ export default function TransactionStatisticsScreen() {
           <MediumText className="text-tertiary">{item.title}</MediumText>
           <TouchableOpacity
             className="flex flex-row items-center"
-            onPress={() => {
-              mutate({
+            onPress={async () => {
+              await mutateAsync({
                 account_no: accountNumber,
                 from_date: getCurrentYearTime(),
                 to_date: extractDateStringFromCurrentDate(new Date())
