@@ -15,10 +15,12 @@ import { StatusBar } from 'expo-status-bar'
 import * as SecureStore from 'expo-secure-store'
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -26,6 +28,7 @@ import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
 import { useAccountStore } from '@/stores/accountStore'
+import { useResendOTP } from '@/hooks/useResendOTP'
 
 export default function SmartOTPConfirmationScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
@@ -60,6 +63,8 @@ export default function SmartOTPConfirmationScreen() {
       })
     }
   })
+
+  const { mutate, isLoading } = useResendOTP()
 
   const handleVerifyOTP = async () => {
     const deviceId = await getDeviceId()
@@ -110,14 +115,29 @@ export default function SmartOTPConfirmationScreen() {
                   focusColor="#F97316"
                   onTextChange={(text: any) => setOtpCode(text)}
                 />
-              </View>
-
-              <View className="w-full mt-8 space-y-2">
-                <Pressable className="mb-5" onPress={handleClear}>
+                <Pressable className="mt-2" onPress={handleClear}>
                   <NormalText className="text-primary text-center">
                     Xóa
                   </NormalText>
                 </Pressable>
+              </View>
+
+              <View className="w-full mt-8 space-y-2">
+                <View className="flex flex-row justify-center">
+                  <NormalText className="text-tertiary mb-2 flex-row items-center">
+                    Không nhận được mã?
+                  </NormalText>
+                  <TouchableOpacity onPress={() => mutate()}>
+                    {isLoading ? (
+                      <ActivityIndicator size="small" color="#F97316" />
+                    ) : (
+                      <NormalText className="text-primary ml-1">
+                        {' '}
+                        Gửi lại
+                      </NormalText>
+                    )}
+                  </TouchableOpacity>
+                </View>
                 <TextButton
                   text="Xác nhận"
                   type={TextButtonType.PRIMARY}

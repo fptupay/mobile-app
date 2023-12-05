@@ -4,6 +4,7 @@ import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { useResendOTP } from '@/hooks/useResendOTP'
 import { BankLinkConfirmSchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
@@ -13,10 +14,12 @@ import { isAxiosError } from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -38,6 +41,8 @@ export default function OtpScreen() {
     queryKey: ['phoneNumber'],
     queryFn: getRegisteredPhoneNumber
   })
+
+  const { mutate, isLoading } = useResendOTP()
 
   const bankLinkMutation = useMutation({
     mutationFn: (data: BankLinkConfirmSchema) => bankLinkConfirm(data),
@@ -91,14 +96,29 @@ export default function OtpScreen() {
                 focusColor="#F97316"
                 onTextChange={(text: any) => setOtpCode(text)}
               />
-            </View>
-
-            <View className="w-full mt-8 space-y-2">
-              <Pressable className="mb-3" onPress={handleClear}>
+              <Pressable className="mt-2" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
+            </View>
+
+            <View className="w-full mt-8 space-y-2">
+              <View className="flex flex-row justify-center">
+                <NormalText className="text-tertiary mb-2 flex-row items-center">
+                  Không nhận được mã?
+                </NormalText>
+                <TouchableOpacity onPress={() => mutate()}>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#F97316" />
+                  ) : (
+                    <NormalText className="text-primary ml-1">
+                      {' '}
+                      Gửi lại
+                    </NormalText>
+                  )}
+                </TouchableOpacity>
+              </View>
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
