@@ -55,7 +55,7 @@ export default function BankDetailScreen() {
     setModalVisible(false)
   }
 
-  const { data: bank } = useQuery({
+  const { data: bank, isFetched } = useQuery({
     queryKey: ['getLinkedBanks', params.bankId],
     queryFn: getLinkedBanks
   })
@@ -67,7 +67,7 @@ export default function BankDetailScreen() {
     },
     {
       label: 'Ngày liên kết',
-      description: formatDateTime(bank?.data[0].created_at)
+      description: isFetched && formatDateTime(bank?.data[0].created_at)
     }
   ]
 
