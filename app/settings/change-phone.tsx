@@ -52,6 +52,9 @@ export default function ChangePhoneNumberScreen() {
     })
   }
 
+  const isInvalid =
+    changePhoneNumberMutation.isLoading || !phoneNumber || !password
+
   return (
     <SafeAreaView className="flex-1 pt-4">
       <View className="ml-4">
@@ -95,7 +98,7 @@ export default function ChangePhoneNumberScreen() {
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
                 onPress={handleChangePhoneNumber}
-                disable={changePhoneNumberMutation.isLoading}
+                disable={isInvalid}
                 loading={changePhoneNumberMutation.isLoading}
               />
             </View>

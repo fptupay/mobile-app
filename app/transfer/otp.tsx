@@ -78,6 +78,7 @@ export default function TransactionOTPScreen() {
                 text="Lấy mã OTP"
                 type="primary"
                 onPress={handleVerifyOTP}
+                disable={enteredOTP.length < 6}
               />
             </View>
           </View>

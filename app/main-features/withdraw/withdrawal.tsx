@@ -74,14 +74,6 @@ export default function WithdrawalScreen() {
           text2: data.message
         })
       } else {
-        /* router.push({
-          pathname: '/transfer/otp',
-          params: {
-            type: 'withdraw',
-            link_account_id: selectedBank,
-            trans_id: data.data.trans_id
-          }
-        }) */
         setTransactionId(data?.data.trans_id)
         router.push('/transfer/otp')
       }
