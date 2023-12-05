@@ -24,11 +24,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { useAccountStore } from '@/stores/accountStore'
+import { usePushNotifications } from '@/hooks/usePushNotification'
 
 export default function LoginScreen() {
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
   const { setCredentials } = useAccountStore()
+
+  const { expoPushToken } = usePushNotifications()
 
   const {
     control,
@@ -78,7 +81,7 @@ export default function LoginScreen() {
   }
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginFormSchema) => loginUser(data),
+    mutationFn: (data: LoginFormSchema) => loginUser(data, expoPushToken),
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {

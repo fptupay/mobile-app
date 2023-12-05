@@ -16,12 +16,13 @@ const loginConfig = {
   }
 }
 
-export const loginUser = async (data: LoginFormSchema) => {
+export const loginUser = async (data: LoginFormSchema, token: any) => {
   const deviceId = await getDeviceId()
   const config = {
     headers: {
       ...loginConfig.headers,
-      'x-client-device-id': deviceId
+      'x-client-device-id': deviceId,
+      'x-mobile-token': token?.data
     }
   }
   const response = await apiPostCall(
@@ -32,6 +33,7 @@ export const loginUser = async (data: LoginFormSchema) => {
     },
     config
   )
+  console.log(config)
   return response.data
 }
 
