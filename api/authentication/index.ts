@@ -21,7 +21,8 @@ export const loginUser = async (data: LoginFormSchema) => {
   const config = {
     headers: {
       ...loginConfig.headers,
-      'x-client-device-id': deviceId
+      'x-client-device-id': deviceId,
+      'x-mobile-token': 'ExponentPushToken[B0zlmCIu0o2hh5-jUumBEN]'
     }
   }
   const response = await apiPostCall(
