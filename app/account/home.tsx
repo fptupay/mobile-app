@@ -143,8 +143,8 @@ export default function HomeScreen() {
   const handleShowTransactionReport = async () => {
     await mutateAsync({
       account_no: accountNumber,
-      from_date: getCurrentYearTime(),
-      to_date: extractDateStringFromCurrentDate(new Date())
+      from_date: '2023-12-01',
+      to_date: '2023-12-31'
     })
     router.push('/statistics/')
   }
