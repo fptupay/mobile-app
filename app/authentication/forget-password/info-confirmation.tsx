@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { InfoSchema, infoResetPasswordSchema } from '@/schemas/verify-schema'
 import { SemiText } from '@/components/Themed'
+import { convertDateFormatToISO } from '@/utils/datetime'
 
 export default function OTPConfirmationScreen() {
   const { credentials } = useForgotPasswordStore()
@@ -38,6 +39,18 @@ export default function OTPConfirmationScreen() {
     resolver: zodResolver(infoResetPasswordSchema),
     mode: 'onBlur'
   })
+
+  const handleTextChange = (text: string) => {
+    // Remove non-numeric characters
+    const numericText = text.replace(/\D/g, '')
+
+    // Format as dd/MM/yyyy
+    const formattedText = numericText.replace(
+      /(\d{2})(\d{2})(\d{4})/,
+      '$1/$2/$3'
+    )
+    return formattedText
+  }
 
   const { mutate, isLoading } = useMutation({
     mutationFn: confirmInfo,
@@ -68,13 +81,13 @@ export default function OTPConfirmationScreen() {
       ...credentials,
       email: getValues().email,
       card_no: getValues().card_no,
-      date_of_birth: getValues().date_of_birth,
+      date_of_birth: convertDateFormatToISO(getValues().date_of_birth),
       card_holder_name: getValues().card_holder_name
     })
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white pt-4">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
@@ -132,8 +145,12 @@ export default function OTPConfirmationScreen() {
                     label="Ngày sinh"
                     value={value}
                     onBlur={onBlur}
-                    onChangeText={onChange}
+                    onChangeText={(value) => {
+                      onChange(handleTextChange(value))
+                    }}
                     style={{ fontFamily: 'Inter' }}
+                    placeholder="dd/MM/yyyy"
+                    placeholderTextColor={'#9CA3AF'}
                     keyboardType="phone-pad"
                     returnKeyType="next"
                     className="w-full mt-4"
