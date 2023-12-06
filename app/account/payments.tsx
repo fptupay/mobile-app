@@ -28,7 +28,7 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
       setIsModalVisible(true)
     }
     if (title === 'Học phí kỳ tiếp' && amount === 0) {
-      setIsModalVisible(true)
+      setIsModal2Visible(true)
       return
     } else {
       router.push({
@@ -42,9 +42,6 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
     <>
       <TouchableOpacity
         className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
-        /* onPress={() =>
-        router.push({ pathname: 'payments/[id]', params: { id: href } } as any)
-      } */
         onPress={() => handlePaymentItemPress(href)}
         activeOpacity={0.8}
       >
