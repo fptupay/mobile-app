@@ -158,6 +158,7 @@ export default function TransactionOTPScreen() {
         otp: copiedSmartOTP
       })
       setFundTransferId('')
+      return
     }
     if (transactionType === 'HP' || transactionType === 'KTX') {
       payBillMutation.mutate({
@@ -165,6 +166,7 @@ export default function TransactionOTPScreen() {
         fee_type: transactionType,
         trans_id: transactionId
       })
+      return
     } else {
       withdrawMutation.mutate({
         link_account_id: selectedBank,
