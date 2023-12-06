@@ -61,7 +61,11 @@ export default function RequestsListScreen() {
   }
 
   return (
-    <SharedLayout backHref="/index" title="Hỗ trợ" isTab={true}>
+    <SharedLayout
+      backHref="/index"
+      title="Hỗ trợ"
+      questionHref="/instruction/create-request-instruction"
+    >
       {filteredRequests === 0 ? (
         <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
           <CustomIcon name="FilePlus" size={64} color="#666" />

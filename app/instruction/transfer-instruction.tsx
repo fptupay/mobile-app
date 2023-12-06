@@ -7,7 +7,7 @@ import BackButton from '@/components/buttons/BackButton'
 
 export default function TransferInstructionScreen() {
   return (
-    <SafeAreaView className="flex-1 px-4 pt-4">
+    <SafeAreaView className="flex-1 px-6 pt-4">
       <StatusBar style="auto" />
       <View className="flex-1 w-full px-4 space-y-4">
         <BackButton />

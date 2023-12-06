@@ -101,7 +101,6 @@ export default function PaymentsScreen() {
     queryKey: ['payments'],
     queryFn: () => getDNGBillByFeeType('hp')
   })
-  console.log(data?.data[0])
 
   return (
     <SharedLayout
