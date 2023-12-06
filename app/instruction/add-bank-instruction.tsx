@@ -11,7 +11,7 @@ export default function AddBankInstruction() {
       <View className="items-center">
         <Image
           source={require('@/assets/images/payment.png')}
-          className="w-[225px] h-[225px] mx-auto"
+          className="w-full h-[225px] mx-auto"
         />
       </View>
       <SemiText className="text-3xl text-secondary mt-2">

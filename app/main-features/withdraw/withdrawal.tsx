@@ -94,6 +94,7 @@ export default function WithdrawalScreen() {
       backHref="/account/home"
       questionHref="/instruction/withdraw-instruction"
       title="Rút tiền"
+      hasInstruction
     >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
