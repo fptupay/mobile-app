@@ -6,7 +6,6 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
-import { formatMoney } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
@@ -22,10 +21,15 @@ interface PaymentItemProps {
 const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
   const { pendingBill } = usePaymentStore()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isModal2Visible, setIsModal2Visible] = useState(false)
 
   const handlePaymentItemPress = (href: any) => {
     if (pendingBill !== null) {
       setIsModalVisible(true)
+    }
+    if (title === 'Học phí kỳ tiếp' && amount === 0) {
+      setIsModalVisible(true)
+      return
     } else {
       router.push({
         pathname: '/payments/[id]',
@@ -49,13 +53,7 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
           <MediumText className="text-secondary ml-2">{title}</MediumText>
         </View>
         <View>
-          {title === 'Học phí kỳ tiếp' ? (
-            <MediumText className="text-primary">
-              {amount && formatMoney(amount)}đ
-            </MediumText>
-          ) : (
-            <CustomIcon name="ChevronRight" size={24} color="#374151" />
-          )}
+          <CustomIcon name="ChevronRight" size={24} color="#374151" />
         </View>
       </TouchableOpacity>
 
@@ -78,6 +76,25 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
           </Modal.Body>
         </Modal.Container>
       </Modal>
+
+      <Modal isVisible={isModal2Visible}>
+        <Modal.Container>
+          <Modal.Header title="Lưu ý" />
+          <Modal.Body>
+            <NormalText className="text-tertiary">
+              Bạn đang không có khoản học phí nào cần thanh toán.
+            </NormalText>
+
+            <View className="mt-6 w-full">
+              <TextButton
+                text="Đóng"
+                type="primary"
+                onPress={() => setIsModal2Visible(false)}
+              />
+            </View>
+          </Modal.Body>
+        </Modal.Container>
+      </Modal>
     </>
   )
 }
@@ -87,6 +104,7 @@ export default function PaymentsScreen() {
     queryKey: ['payments'],
     queryFn: () => getDNGBillByFeeType('hp')
   })
+  console.log(data?.data[0])
 
   return (
     <SharedLayout
@@ -98,15 +116,12 @@ export default function PaymentsScreen() {
         Lựa chọn các khoản nộp
       </SemiText>
       <ScrollView className="mt-4">
-        {data?.success === true ? (
-          <PaymentItem
-            title="Học phí kỳ tiếp"
-            icon="GraduationCap"
-            href="payment-bill"
-            amount={data?.data[0]?.amount}
-          />
-        ) : null}
-        <PaymentItem title="Đăng ký môn học" icon="Book" href="subject-fee" />
+        <PaymentItem
+          title="Học phí kỳ tiếp"
+          icon="GraduationCap"
+          href="payment-bill"
+          amount={data?.data[0]?.amount || 0}
+        />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
         <PaymentItem
           title="Các khoản phí khác"

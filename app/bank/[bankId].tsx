@@ -143,7 +143,7 @@ export default function BankDetailScreen() {
         <View className="mb-8">
           <TextButton
             text="Huỷ liên kết"
-            type="primary"
+            type="outlined"
             onPress={handleTextButtonClick}
           />
         </View>
