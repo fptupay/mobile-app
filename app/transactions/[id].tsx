@@ -85,8 +85,8 @@ export default function TransactionDetailScreen() {
                   <NormalText className="text-tertiary">
                     {item.title}
                   </NormalText>
-                  <View className="flex flex-row">
-                    <NormalText className="mr-1 text-secondary">
+                  <View className="flex flex-row flex-1 justify-end">
+                    <NormalText className="mr-1 text-secondary text-right">
                       {item.value}
                     </NormalText>
                     {item.title === 'Mã giao dịch' && (
