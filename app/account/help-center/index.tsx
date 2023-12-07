@@ -1,5 +1,6 @@
 import { getSupportRequests } from '@/api/help-center'
 import CustomIcon from '@/components/Icon'
+import LoadingSpin from '@/components/LoadingSpin'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import {
@@ -115,12 +116,18 @@ export default function RequestsListScreen() {
               </NormalText>
             </View>
           ) : (
-            <FlatList
-              data={filteredRequests}
-              renderItem={({ item }) => <RequestItem request={item} />}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-            />
+            <>
+              {requestsQuery.isFetching ? (
+                <LoadingSpin />
+              ) : (
+                <FlatList
+                  data={filteredRequests}
+                  renderItem={({ item }) => <RequestItem request={item} />}
+                  keyExtractor={(item) => item.id}
+                  showsVerticalScrollIndicator={false}
+                />
+              )}
+            </>
           )}
           {/* Create rounded button */}
           <View

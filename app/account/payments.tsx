@@ -19,12 +19,12 @@ interface PaymentItemProps {
   type?: string
 }
 
-const PaymentItem = ({ title, icon, amount, type }: PaymentItemProps) => {
+const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
   const { pendingBill } = usePaymentStore()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModal2Visible, setIsModal2Visible] = useState(false)
 
-  const handlePaymentItemPress = () => {
+  const handlePaymentItemPress = (href: any) => {
     if (pendingBill !== null) {
       setIsModalVisible(true)
     }
@@ -33,6 +33,8 @@ const PaymentItem = ({ title, icon, amount, type }: PaymentItemProps) => {
       (title === 'Phí đơn từ' && amount === 0)
     ) {
       setIsModal2Visible(true)
+    } else if (title === 'Ký túc xá') {
+      router.push(href)
     } else {
       router.push({
         pathname: '/payments/payment-bill',
@@ -45,7 +47,7 @@ const PaymentItem = ({ title, icon, amount, type }: PaymentItemProps) => {
     <>
       <TouchableOpacity
         className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
-        onPress={handlePaymentItemPress}
+        onPress={() => handlePaymentItemPress(href)}
         activeOpacity={0.8}
       >
         <View className="flex-row">
@@ -136,8 +138,7 @@ export default function PaymentsScreen() {
         <PaymentItem
           title="Ký túc xá"
           icon="Home"
-          href="dormitory-fee"
-          type="ktx"
+          href="/payments/dormitory-fee"
         />
         <PaymentItem
           title="Phí đơn từ"

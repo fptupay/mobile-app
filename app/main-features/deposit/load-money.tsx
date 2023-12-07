@@ -99,6 +99,7 @@ export default function LoadMoneyScreen() {
       backHref="/account/home"
       questionHref="/instruction/deposit-instruction"
       title="Nạp tiền"
+      hasInstruction
     >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
