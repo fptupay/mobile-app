@@ -15,9 +15,6 @@ export const infoResetPasswordSchema = z.object({
   email: z.string().email('Email không hợp lệ').trim(),
   card_no: z.string().length(12, 'Số CMND/CCCD phải có 12 ký tự').trim(),
   date_of_birth: z.string().trim(),
-  card_holder_name: z
-    .string()
-    .length(6, 'Tên chủ thẻ phải có ít nhất 6 ký tự')
-    .trim()
+  card_holder_name: z.string().min(1, 'Tên chủ thẻ không được để trống').trim()
 })
 export type InfoSchema = z.infer<typeof infoResetPasswordSchema>
