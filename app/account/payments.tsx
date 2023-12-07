@@ -6,7 +6,7 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -27,9 +27,11 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
     if (pendingBill !== null) {
       setIsModalVisible(true)
     }
-    if (title === 'Học phí kỳ tiếp' && amount === 0) {
+    if (
+      (title === 'Học phí kỳ tiếp' || title === 'Các khoản phí khác') &&
+      amount === 0
+    ) {
       setIsModal2Visible(true)
-      return
     } else {
       router.push({
         pathname: '/payments/[id]',
@@ -79,7 +81,9 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
           <Modal.Header title="Lưu ý" />
           <Modal.Body>
             <NormalText className="text-tertiary">
-              Bạn đang không có khoản học phí nào cần thanh toán.
+              Bạn đang không có khoản{' '}
+              {title === 'Học phí kỳ tiếp' ? 'học phí' : 'phí đơn từ'} nào cần
+              thanh toán.
             </NormalText>
 
             <View className="mt-6 w-full">
@@ -97,9 +101,17 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
 }
 
 export default function PaymentsScreen() {
-  const { data } = useQuery({
-    queryKey: ['payments'],
-    queryFn: () => getDNGBillByFeeType('hp')
+  const [tuitionData, otherFeeData] = useQueries({
+    queries: [
+      {
+        queryKey: ['tuition'],
+        queryFn: () => getDNGBillByFeeType('hp')
+      },
+      {
+        queryKey: ['otherFee'],
+        queryFn: () => getDNGBillByFeeType('khac')
+      }
+    ]
   })
 
   return (
@@ -117,13 +129,14 @@ export default function PaymentsScreen() {
           title="Học phí kỳ tiếp"
           icon="GraduationCap"
           href="payment-bill"
-          amount={data?.data[0]?.amount || 0}
+          amount={tuitionData.data?.data[0]?.amount || 0}
         />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
         <PaymentItem
-          title="Các khoản phí khác"
+          title="Phí đơn từ"
           icon="MoreHorizontal"
           href="application-fee"
+          amount={otherFeeData.data?.data[0]?.amount || 0}
         />
       </ScrollView>
     </SharedLayout>
