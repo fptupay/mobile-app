@@ -133,7 +133,12 @@ export default function PaymentsScreen() {
           amount={tuitionData.data?.data[0]?.amount || 0}
           type="hp"
         />
-        <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
+        <PaymentItem
+          title="Ký túc xá"
+          icon="Home"
+          href="dormitory-fee"
+          type="ktx"
+        />
         <PaymentItem
           title="Phí đơn từ"
           icon="MoreHorizontal"
