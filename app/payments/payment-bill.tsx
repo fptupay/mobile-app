@@ -13,12 +13,16 @@ import { usePaymentStore } from '@/stores/paymentStore'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
+  console.log(
+    '🚀 ~ file: payment-bill.tsx:16 ~ PaymentBillScreen ~ type:',
+    type
+  )
   const { setTransactionType, setTransactionId } = useTransferStore()
   const { setPendingBill } = usePaymentStore()
 
   const { data: bill, isLoading } = useQuery({
     queryKey: ['bill'],
-    queryFn: () => getDNGBillByFeeType((type as string) ?? 'hp'),
+    queryFn: () => getDNGBillByFeeType(type as string),
     onSuccess: (data) => {
       setTransactionType(data?.data[0].type)
       setTransactionId(data?.data[0].transaction_id)

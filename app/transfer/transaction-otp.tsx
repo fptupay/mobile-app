@@ -82,6 +82,10 @@ export default function TransactionOTPScreen() {
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
+      console.log(
+        '🚀 ~ file: transaction-otp.tsx:85 ~ TransactionOTPScreen ~ data:',
+        data
+      )
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
@@ -103,6 +107,10 @@ export default function TransactionOTPScreen() {
       return withdrawConfirm(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
+      console.log(
+        '🚀 ~ file: transaction-otp.tsx:106 ~ TransactionOTPScreen ~ data:',
+        data
+      )
       if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
@@ -135,6 +143,10 @@ export default function TransactionOTPScreen() {
       return payBill(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
+      console.log(
+        '🚀 ~ file: transaction-otp.tsx:140 ~ TransactionOTPScreen ~ data:',
+        data
+      )
       if (successResponseStatus(data)) {
         clearPendingBill()
         router.push({
@@ -152,21 +164,22 @@ export default function TransactionOTPScreen() {
   })
 
   const handleConfirmTransfer = () => {
-    if (fundTransferId) {
+    if (fundTransferId !== '') {
       confirmTransferMutation.mutate({
         fund_transfer_id: fundTransferId,
         otp: copiedSmartOTP
       })
       setFundTransferId('')
-      return
-    }
-    if (transactionType === 'HP' || transactionType === 'KTX') {
+    } else if (
+      transactionType === 'HP' ||
+      transactionType === 'KTX' ||
+      transactionType === 'KHAC'
+    ) {
       payBillMutation.mutate({
         otp: copiedSmartOTP,
         fee_type: transactionType,
         trans_id: transactionId
       })
-      return
     } else {
       withdrawMutation.mutate({
         link_account_id: selectedBank,

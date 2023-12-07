@@ -16,26 +16,27 @@ interface PaymentItemProps {
   icon: IconProps['name']
   href?: any
   amount?: number
+  type?: string
 }
 
-const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
+const PaymentItem = ({ title, icon, amount, type }: PaymentItemProps) => {
   const { pendingBill } = usePaymentStore()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModal2Visible, setIsModal2Visible] = useState(false)
 
-  const handlePaymentItemPress = (href: any) => {
+  const handlePaymentItemPress = () => {
     if (pendingBill !== null) {
       setIsModalVisible(true)
     }
     if (
-      (title === 'Học phí kỳ tiếp' || title === 'Các khoản phí khác') &&
-      amount === 0
+      (title === 'Học phí kỳ tiếp' && amount === 0) ||
+      (title === 'Phí đơn từ' && amount === 0)
     ) {
       setIsModal2Visible(true)
     } else {
       router.push({
-        pathname: '/payments/[id]',
-        params: { id: href }
+        pathname: '/payments/payment-bill',
+        params: { type: type }
       } as any)
     }
   }
@@ -44,7 +45,7 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
     <>
       <TouchableOpacity
         className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
-        onPress={() => handlePaymentItemPress(href)}
+        onPress={handlePaymentItemPress}
         activeOpacity={0.8}
       >
         <View className="flex-row">
@@ -130,13 +131,15 @@ export default function PaymentsScreen() {
           icon="GraduationCap"
           href="payment-bill"
           amount={tuitionData.data?.data[0]?.amount || 0}
+          type="hp"
         />
         <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
         <PaymentItem
           title="Phí đơn từ"
           icon="MoreHorizontal"
-          href="application-fee"
+          href="payment-bill"
           amount={otherFeeData.data?.data[0]?.amount || 0}
+          type="khac"
         />
       </ScrollView>
     </SharedLayout>
