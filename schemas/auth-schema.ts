@@ -34,6 +34,22 @@ export const passwordInitSchema = z.object({
   new_password: z.string().trim()
 })
 
+export const passwordChangeSchema = z.object({
+  username: z.string(),
+  old_password: z
+    .string()
+    .min(1, {
+      message: 'Mật khẩu cũ không được để trống'
+    })
+    .trim(),
+  new_password: z.string().min(1, {
+    message: 'Mật khẩu không được để trống'
+  }),
+  confirm_password: z.string().min(1, {
+    message: 'Mật khẩu không được để trống'
+  })
+})
+
 export const loginFormSchema = z.object({
   username: z
     .string()
@@ -59,3 +75,4 @@ export type LoginFormSchema = z.infer<typeof loginFormSchema>
 export type LoginOtpFormSchema = z.infer<typeof loginOtpFormSchema>
 export type PasswordSchema = z.infer<typeof passwordSchema>
 export type PasswordInitSchema = z.infer<typeof passwordInitSchema>
+export type PasswordChangeSchema = z.infer<typeof passwordChangeSchema>

@@ -12,18 +12,18 @@ import StepProgress, { StepType } from '@/components/progress/StepProgress'
 import { useEkycStore } from '@/stores/ekycStore'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-
 import { Camera, CameraType } from 'expo-camera'
-import * as FaceDetector from 'expo-face-detector'
+// import * as FaceDetector from 'expo-face-detector'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
-import { Image, ImageBackground, TouchableOpacity } from 'react-native'
+import { ImageBackground, TouchableOpacity } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
-  const [faceData, setFaceData] = useState([])
+  // const [faceData, setFaceData] = useState([])
   const [capturedImage, setCapturedImage] = useState<any>(null)
   const [isVisible, setIsVisible] = useState<boolean>(false)
   const ekycId = useEkycStore((state) => state.ekycId)
@@ -38,17 +38,17 @@ export default function FaceAuthenticatorScreen() {
     setCapturedImage(null)
   }
 
-  const handleFacesDetected = ({ faces }: { faces: any }) => {
-    setFaceData(faces)
-  }
+  // const handleFacesDetected = ({ faces }: { faces: any }) => {
+  //   setFaceData(faces)
+  // }
 
-  const getFaceData = () => {
-    if (faceData.length === 0) {
-      return (
-        <SemiText className="text-red-700">Không tìm thấy khuôn mặt</SemiText>
-      )
-    }
-  }
+  // const getFaceData = () => {
+  //   if (faceData.length === 0) {
+  //     return (
+  //       <SemiText className="text-red-700">Không tìm thấy khuôn mặt</SemiText>
+  //     )
+  //   }
+  // }
 
   const faceAuthenticationMutation = useMutation({
     mutationFn: (data: any) => ekycSelfie(data, ekycId),
@@ -95,23 +95,23 @@ export default function FaceAuthenticatorScreen() {
             <Camera
               className="flex-1 items-center justify-center"
               ref={(r) => (camera = r)}
-              onFacesDetected={handleFacesDetected}
+              // onFacesDetected={handleFacesDetected}
               type={CameraType.front}
-              faceDetectorSettings={{
-                mode: FaceDetector.FaceDetectorMode.fast,
-                detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
-                runClassifications:
-                  FaceDetector.FaceDetectorClassifications.none,
-                minDetectionInterval: 100,
-                tracking: true
-              }}
+              // faceDetectorSettings={{
+              //   mode: FaceDetector.FaceDetectorMode.fast,
+              //   detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
+              //   runClassifications:
+              //     FaceDetector.FaceDetectorClassifications.none,
+              //   minDetectionInterval: 100,
+              //   tracking: true
+              // }}
             />
           )}
         </View>
 
-        <View className="flex flex-row justify-center mb-8">
+        {/* <View className="flex flex-row justify-center mb-8">
           {getFaceData()}
-        </View>
+        </View> */}
 
         <View>
           <NormalText className="text-tertiary text-justify">
@@ -132,8 +132,12 @@ export default function FaceAuthenticatorScreen() {
                 disable={faceAuthenticationMutation.isLoading}
               />
             </View>
-            <TouchableOpacity onPress={retakePicture} className="mt-4">
-              <TextButton text="Hủy bỏ" type={TextButtonType.SECONDARY} />
+            <TouchableOpacity className="mt-4">
+              <TextButton
+                text="Hủy bỏ"
+                onPress={retakePicture}
+                type={TextButtonType.SECONDARY}
+              />
             </TouchableOpacity>
           </>
         ) : (
@@ -160,15 +164,14 @@ export default function FaceAuthenticatorScreen() {
               Xác thực tài khoản hoàn tất
             </MediumText>
             <NormalText className="text-tertiary text-center">
-              Bây giờ bạn đã có thể thoải mái trải nghiệm các dịch vụ của ví
-              điện tử FPTUPay!
+              Vui lòng đăng nhập lại để tiếp tục sử dụng app nhé!
             </NormalText>
 
             <View className="mt-6 w-full">
               <TextButton
-                text="Đến trang chủ"
+                text="Đăng nhập lại"
                 type="primary"
-                onPress={() => router.push('/account/home')}
+                onPress={() => router.push('/')}
               />
             </View>
           </Modal.Body>

@@ -5,7 +5,7 @@ import {
 } from '@/schemas/auth-schema'
 import { Platform } from 'react-native'
 import { apiGetCall, apiPostCall } from '..'
-import { PhoneSchema } from '@/schemas/phone-schema'
+import { PhoneSchema } from '@/schemas/verify-schema'
 import { getDeviceId } from '@/utils/helper'
 
 const loginConfig = {
@@ -16,15 +16,15 @@ const loginConfig = {
   }
 }
 
-export const loginUser = async (data: LoginFormSchema) => {
+export const loginUser = async (data: LoginFormSchema, token: any) => {
   const deviceId = await getDeviceId()
   const config = {
     headers: {
       ...loginConfig.headers,
-      'x-client-device-id': deviceId
+      'x-client-device-id': deviceId,
+      'x-mobile-token': token?.data
     }
   }
-  console.log('login config', config)
   const response = await apiPostCall(
     '/user/public/login',
     {
@@ -33,6 +33,7 @@ export const loginUser = async (data: LoginFormSchema) => {
     },
     config
   )
+  console.log(config)
   return response.data
 }
 
@@ -41,7 +42,8 @@ export const loginOtpUser = async (data: LoginOtpFormSchema) => {
   const config = {
     headers: {
       ...loginConfig.headers,
-      'x-client-device-id': deviceId
+      'x-client-device-id': deviceId,
+      'x-mobile-token': 'ExponentPushToken[B0zlmCIu0o2hh5-jUumBEN]'
     }
   }
   const response = await apiPostCall(
@@ -77,6 +79,9 @@ export const confirmPhoneNumber = async (data: PhoneSchema) => {
 }
 
 export const verifyOtp = async (data: { otp: string }) => {
-  const response = await apiPostCall('/user/profile/verify-otp', data)
+  const response = await apiPostCall(
+    '/user/profile/phone-number/verify-otp',
+    data
+  )
   return response.data
 }

@@ -1,6 +1,7 @@
 import { NormalText, SafeAreaView, SemiText, View } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { useEkycStore } from '@/stores/ekycStore'
+import { convertDateFormat } from '@/utils/helper'
 import { router } from 'expo-router'
 import React from 'react'
 import { FlatList } from 'react-native'
@@ -18,9 +19,9 @@ export default function EkycResultScreen() {
 
   const frontCard = [
     { label: 'Số ID', value: card_id },
-    { label: 'Có giá trị đến', value: doe },
+    { label: 'Có giá trị đến', value: doe && convertDateFormat(doe) },
     { label: 'Họ và tên', value: full_name },
-    { label: 'Ngày sinh', value: dob },
+    { label: 'Ngày sinh', value: dob && convertDateFormat(dob) },
     { label: 'Quốc tịch', value: nationality },
     { label: 'Quê quán', value: place_of_origin },
     { label: 'Nơi thường trú', value: permanent_address }
@@ -54,6 +55,13 @@ export default function EkycResultScreen() {
               params: { card: 'back' }
             } as any)
           }
+        />
+      </View>
+      <View className="mb-4">
+        <TextButton
+          text="Quay lại"
+          type="secondary"
+          onPress={() => router.back()}
         />
       </View>
     </SafeAreaView>

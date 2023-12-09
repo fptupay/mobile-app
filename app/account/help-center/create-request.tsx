@@ -1,100 +1,231 @@
+import {
+  createSupportRequest,
+  uploadImagesToSupportRequest
+} from '@/api/help-center'
+import CustomIcon from '@/components/Icon'
 import SharedLayout from '@/components/SharedLayout'
-import { NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
-import {
-  SupportRequestSchema,
-  supportRequestSchema
-} from '@/schemas/request-schema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { successResponseStatus } from '@/utils/helper'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { KeyboardAvoidingView, Platform, TextInput, View } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet
+} from 'react-native'
+import Toast from 'react-native-toast-message'
+import { Dropdown } from 'react-native-element-dropdown'
+
+import * as ImagePicker from 'expo-image-picker'
+import { NormalText } from '@/components/Themed'
+import TextField from '@/components/TextField'
+
+const requestType = [
+  { label: 'Lỗi giao dịch', value: 'TRANSACTION' },
+  { label: 'Vấn đề khác', value: 'OTHER' }
+]
 
 export default function CreateRequestScreen() {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(null)
-  const [requestType, setRequestType] = useState([
-    { label: 'Lỗi giao dịch', value: 'transaction-error' },
-    { label: 'Chuyển nhầm', value: 'wrong-transfer' },
-    { label: 'Cách sử dụng', value: 'usage' }
-  ])
-  const [requestError, setRequestError] = useState('')
+  const [isFocus, setIsFocus] = useState(false)
+  const [transactionId, setTransactionId] = useState('')
+  const [title, setTitle] = useState('')
+  const [value, setValue] = useState('')
+  const [description, setDescription] = useState('')
+  const [images, setImages] = useState<string[]>([])
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<SupportRequestSchema>({
-    defaultValues: {
-      content: ''
+  const handlePickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.5
+    })
+
+    if (result?.assets) {
+      uploadImageMutation.mutate(result.assets[0].uri)
+    }
+  }
+
+  const uploadImageMutation = useMutation({
+    mutationFn: (data: string) => uploadImagesToSupportRequest(data),
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setImages(data?.data.images)
+        Toast.show({
+          type: 'success',
+          text1: 'Thêm ảnh thành công'
+        })
+      }
     },
-    resolver: zodResolver(supportRequestSchema),
-    mode: 'onBlur'
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
   })
 
-  const onSubmit = (data: SupportRequestSchema) => {
-    console.log(data)
-    if (value === null) {
-      setRequestError('Vui lòng chọn loại yêu cầu')
+  const queryClient = useQueryClient()
+  const createSupportMutation = useMutation({
+    mutationFn: createSupportRequest,
+    onSuccess: async (data) => {
+      if (successResponseStatus(data)) {
+        router.push({
+          pathname: '/account/help-center/successful-request',
+          params: { id: data.data.id }
+        })
+        await queryClient.invalidateQueries(['requests'])
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
     }
-    router.push('/help-center/successful-request')
+  })
+
+  const handleCreateSupportRequest = () => {
+    createSupportMutation.mutate({
+      transaction_id: transactionId,
+      title: title,
+      description: description,
+      type: value,
+      images: images
+    })
   }
 
   return (
-    <SharedLayout href="/index" title="Tạo yêu cầu">
+    <SharedLayout
+      backHref="/index"
+      questionHref="/instruction/create-request-instruction"
+      title="Tạo yêu cầu"
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="mt-8 flex-1"
       >
-        <DropDownPicker
-          open={open}
-          placeholder="Chọn loại yêu cầu"
+        <Dropdown
+          style={[styles.dropdown, isFocus && { borderColor: Colors.primary }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={requestType}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocus ? 'Chọn DOM' : '...'}
           value={value}
-          items={requestType}
-          onChangeValue={() => setRequestError('')}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setRequestType}
-          style={{ borderColor: Colors.tertiary }}
-          textStyle={{ color: Colors.tertiary }}
+          onFocus={() => {
+            setIsFocus(true)
+          }}
+          onBlur={() => setIsFocus(false)}
+          onChange={(item) => {
+            setValue(item.value)
+          }}
         />
-        {requestError ? (
-          <NormalText className="text-red-500 mt-2">{requestError}</NormalText>
-        ) : null}
 
-        <Controller
-          control={control}
-          name="content"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="Nhập nội dung yêu cầu"
-              multiline
-              numberOfLines={10}
-              className="border border-gray-200 rounded-lg px-3 py-4 mt-6 mb-2"
-              textAlignVertical="top"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
+        <ScrollView
+          className="space-y-3 pt-4 pb-10"
+          showsVerticalScrollIndicator={false}
+        >
+          {value === 'TRANSACTION' && (
+            <TextField
+              label="Mã giao dịch"
+              value={transactionId}
+              onChangeText={(text) => setTransactionId(text)}
             />
           )}
-        />
-        {errors.content ? (
-          <NormalText className="text-red-500">
-            {errors.content.message}
-          </NormalText>
-        ) : null}
 
-        <View className="mt-auto mb-4">
-          <TextButton
-            onPress={handleSubmit(onSubmit)}
-            text="Gửi đơn"
-            type="primary"
+          <TextField
+            label="Tiêu đề"
+            value={title}
+            onChangeText={(text) => setTitle(text)}
           />
-        </View>
+
+          <TextInput
+            placeholder="Mô tả chi tiết vấn đề của bạn"
+            multiline
+            numberOfLines={7}
+            className="border border-gray-300 rounded-lg pl-6 pr-3 py-3"
+            textAlignVertical="top"
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+          />
+
+          <NormalText className="text-tertiary">Thêm ảnh chứng minh</NormalText>
+          <View className="flex flex-row">
+            {images && (
+              <View className="flex flex-row flex-wrap">
+                {images.map((image) => (
+                  <View
+                    className="w-16 h-16 rounded-md overflow-hidden mr-2 mb-2"
+                    key={image}
+                  >
+                    <Image
+                      source={{ uri: image }}
+                      className="w-full h-full object-cover"
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+            {uploadImageMutation.isLoading && (
+              <View className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center mr-2 mb-2">
+                <ActivityIndicator size="small" color={Colors.tertiary} />
+              </View>
+            )}
+            <TouchableOpacity
+              className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center"
+              onPress={handlePickImage}
+            >
+              <CustomIcon name="Camera" size={30} color={Colors.tertiary} />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
+      <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
+        <TextButton
+          onPress={handleCreateSupportRequest}
+          text="Gửi đơn"
+          type="primary"
+          disable={createSupportMutation.isLoading || !title}
+          loading={createSupportMutation.isLoading}
+        />
+      </View>
     </SharedLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  dropdown: {
+    height: 50,
+    borderColor: Colors.tertiary,
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14
+  },
+  placeholderStyle: {
+    fontSize: 14
+  },
+  selectedTextStyle: {
+    fontSize: 14
+  }
+})

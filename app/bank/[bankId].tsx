@@ -1,31 +1,20 @@
-import { View, Image, Modal, ScrollView, Pressable } from 'react-native'
+import { View, Modal, ScrollView } from 'react-native'
+import { Image } from 'expo-image'
 import React, { useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import { EyeOff, Eye } from 'lucide-react-native'
-import Colors from '@/constants/Colors'
 import { BlurView } from 'expo-blur'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import DescriptionRowItem, {
   ListItemProp
 } from '@/components/DescriptionRowItem'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { unlinkBank } from '@/api/bank'
-import { successResponseStatus } from '@/utils/helper'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { getLinkedBanks, unlinkBank } from '@/api/bank'
+import { formatDateTime, successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
 import { isAxiosError } from 'axios'
-
-const mockPersonalData: ListItemProp[] = [
-  {
-    label: 'Chủ thẻ',
-    description: 'NGUYEN QUANG HUNG'
-  },
-  {
-    label: 'Ngày liên kết',
-    description: '01/01/2023'
-  }
-]
+import { useAccountStore } from '@/stores/accountStore'
 
 const mockCardData = [
   {
@@ -34,25 +23,25 @@ const mockCardData = [
   },
   {
     label: 'Nạp tiền tối đa',
-    description: '5.000.000đ'
+    description: '50.000.000đ'
   },
   {
     label: 'Rút tiền tối thiểu',
-    description: '10.000đ'
+    description: '50.000đ'
   },
   {
     label: 'Rút tiền tối đa',
-    description: '5.000.000đ'
+    description: '50.000.000đ'
   }
 ]
 
 export default function BankDetailScreen() {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { details } = useAccountStore()
 
   const params: { bankId: any } = useLocalSearchParams()
   const [isModalVisible, setModalVisible] = useState(false)
-  const [isBalanceVisible, setBalanceVisible] = useState(false)
 
   const handleTextButtonClick = () => {
     setModalVisible(true)
@@ -65,6 +54,22 @@ export default function BankDetailScreen() {
   const handleCancelLink = () => {
     setModalVisible(false)
   }
+
+  const { data: bank, isFetched } = useQuery({
+    queryKey: ['getLinkedBanks', params.bankId],
+    queryFn: getLinkedBanks
+  })
+
+  const mockPersonalData: ListItemProp[] = [
+    {
+      label: 'Chủ thẻ',
+      description: details.full_name
+    },
+    {
+      label: 'Ngày liên kết',
+      description: isFetched && formatDateTime(bank?.data[0].created_at)
+    }
+  ]
 
   const bankLinkMutation = useMutation({
     mutationFn: (data: string) => unlinkBank(data),
@@ -98,67 +103,51 @@ export default function BankDetailScreen() {
   })
 
   return (
-    <SharedLayout href="/bank/bank-list" title="Thông tin liên kết">
-      <View className="py-4 bg-transparent flex-1 flex-col justify-between">
-        <View className="bg-transparent">
-          <View className=" w-full h-[225px] bg-primary relative p-3 rounded-lg">
-            <View className="absolute flex flex-row justify-between items-center p-3">
-              <Image
-                source={require('@/assets/images/techcombank.png')}
-                className=" h-10 w-10 mx-auto"
-              />
-              <MediumText className="tracking-tight text-center text-white ml-3 text-xl">
-                Agribank
-              </MediumText>
-            </View>
-            <View className="absolute flex flex-row items-center right-0 p-3 bottom-0">
-              {isBalanceVisible ? (
-                <MediumText className="tracking-tight text-white ml-3 text-lg">
-                  1903 6280 1234
-                </MediumText>
-              ) : (
-                <MediumText className="tracking-tight text-white ml-3 text-lg">
-                  **** **** 1234
-                </MediumText>
-              )}
-              <Pressable onPress={() => setBalanceVisible(!isBalanceVisible)}>
-                {isBalanceVisible ? (
-                  <Eye size={20} color={Colors.white} className="ml-2" />
-                ) : (
-                  <EyeOff size={20} color={Colors.white} className="ml-2" />
-                )}
-              </Pressable>
-            </View>
-          </View>
+    <SharedLayout backHref="/bank/bank-list" title="Thông tin liên kết">
+      <View className=" w-full h-[225px] bg-primary relative mt-4 rounded-lg">
+        <View className="absolute flex flex-row justify-between items-center p-3">
+          <Image
+            source={{ uri: bank?.data[0].logo }}
+            className=" h-10 w-10 mx-auto"
+          />
+          <MediumText className="tracking-tight text-center text-white ml-3 text-xl">
+            Agribank
+          </MediumText>
         </View>
-        <ScrollView className="pt-6">
-          <SemiText className="text-secondary pb-2">Thông tin cơ bản</SemiText>
-          {mockPersonalData.map((item) => (
-            <DescriptionRowItem
-              key={item.label}
-              label={item.label}
-              description={item.description}
-            />
-          ))}
-          <SemiText className="text-secondary pb-2 pt-6">
-            Hạn mức giao dịch
-          </SemiText>
-          {mockCardData.map((item) => (
-            <DescriptionRowItem
-              key={item.label}
-              label={item.label}
-              description={item.description}
-            />
-          ))}
-        </ScrollView>
+        <View className="absolute flex flex-row items-center right-0 p-3 bottom-0">
+          <MediumText className="tracking-tight text-white ml-3 text-lg">
+            {bank?.data[0].bank_acc_hide}
+          </MediumText>
+        </View>
       </View>
-      <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
-        <TextButton
-          text="Huỷ liên kết"
-          type="primary"
-          onPress={handleTextButtonClick}
-        />
-      </View>
+      <ScrollView className="pt-4" showsVerticalScrollIndicator={false}>
+        <SemiText className="text-secondary pb-2">Thông tin cơ bản</SemiText>
+        {mockPersonalData.map((item) => (
+          <DescriptionRowItem
+            key={item.label}
+            label={item.label}
+            description={item.description}
+          />
+        ))}
+        <SemiText className="text-secondary pb-2 pt-4">
+          Hạn mức giao dịch
+        </SemiText>
+        {mockCardData.map((item) => (
+          <DescriptionRowItem
+            key={item.label}
+            label={item.label}
+            description={item.description}
+          />
+        ))}
+
+        <View className="mb-8">
+          <TextButton
+            text="Huỷ liên kết"
+            type="outlined"
+            onPress={handleTextButtonClick}
+          />
+        </View>
+      </ScrollView>
       <Modal
         animationType="fade"
         transparent={true}

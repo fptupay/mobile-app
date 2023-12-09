@@ -34,7 +34,7 @@ export default function PromptModal() {
             </View>
             <View className="flex-1">
               <TextButton
-                href="/load-money"
+                href="/main-features/deposit/load-money"
                 text="Nạp tiền"
                 type={TextButtonType.PRIMARY}
               />

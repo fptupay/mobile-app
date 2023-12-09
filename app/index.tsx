@@ -1,5 +1,4 @@
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -7,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-
+import { Image } from 'expo-image'
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
@@ -24,10 +23,15 @@ import { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
+import { useAccountStore } from '@/stores/accountStore'
+import { usePushNotifications } from '@/hooks/usePushNotification'
 
 export default function LoginScreen() {
   const router = useRouter()
   const passwordRef = useRef<TextInput | null>(null)
+  const { setCredentials } = useAccountStore()
+
+  const { expoPushToken } = usePushNotifications()
 
   const {
     control,
@@ -51,13 +55,7 @@ export default function LoginScreen() {
         })
         break
       case UserStatus.ACTIVE:
-        router.push({
-          pathname: '/authentication/common/[otp-type]',
-          params: {
-            type: 'otp-login',
-            props: JSON.stringify({ ...getValues() })
-          }
-        })
+        router.push('/account/home')
         break
       case UserStatus.INACTIVE:
         Toast.show({
@@ -83,20 +81,31 @@ export default function LoginScreen() {
   }
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginFormSchema) => loginUser(data),
+    mutationFn: (data: LoginFormSchema) => loginUser(data, expoPushToken),
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {
-          if (data.data.user_status !== UserStatus.ACTIVE) {
-            await saveToken({
-              key: 'access_token',
-              value: data.data.access_token
+          setCredentials({
+            username: getValues('username'),
+            password: getValues('password')
+          })
+          if (data.data.verify_otp) {
+            router.push({
+              pathname: '/authentication/common/[otp-type]',
+              params: {
+                props: JSON.stringify({ ...getValues() })
+              }
             })
-            await saveToken({
-              key: 'refresh_token',
-              value: data.data.refresh_token
-            })
+            return
           }
+          await saveToken({
+            key: 'access_token',
+            value: data.data.access_token
+          })
+          await saveToken({
+            key: 'refresh_token',
+            value: data.data.refresh_token
+          })
           navigateBasedOnStatus(data.data.user_status, getValues('username'))
         } else {
           Toast.show({
@@ -154,6 +163,7 @@ export default function LoginScreen() {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
+                      textContentType="oneTimeCode"
                       returnKeyType="next"
                       blurOnSubmit={false}
                       onSubmitEditing={() => passwordRef.current?.focus()}
@@ -177,6 +187,7 @@ export default function LoginScreen() {
                       secureTextEntry={true}
                       onBlur={onBlur}
                       onChangeText={onChange}
+                      textContentType="oneTimeCode"
                       style={{ fontFamily: 'Inter' }}
                       ref={passwordRef}
                     />
@@ -204,7 +215,7 @@ export default function LoginScreen() {
                 loading={loginMutation.isLoading}
               />
               <Link
-                href="/authentication/forget-password/forget-password"
+                href="/authentication/forget-password/initial-verification"
                 className="text-center"
               >
                 <NormalText className="text-primary">Quên mật khẩu?</NormalText>

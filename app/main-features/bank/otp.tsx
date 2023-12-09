@@ -1,21 +1,25 @@
+import { getRegisteredPhoneNumber } from '@/api/authentication'
 import { bankLinkConfirm } from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { useResendOTP } from '@/hooks/useResendOTP'
 import { BankLinkConfirmSchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { successResponseStatus } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -32,6 +36,13 @@ export default function OtpScreen() {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  const { data: phone } = useQuery({
+    queryKey: ['phoneNumber'],
+    queryFn: getRegisteredPhoneNumber
+  })
+
+  const { mutate, isLoading } = useResendOTP()
 
   const bankLinkMutation = useMutation({
     mutationFn: (data: BankLinkConfirmSchema) => bankLinkConfirm(data),
@@ -63,7 +74,7 @@ export default function OtpScreen() {
   })
 
   return (
-    <SharedLayout href="/account/home" title="Nhập mã OTP">
+    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
@@ -72,7 +83,8 @@ export default function OtpScreen() {
           <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại{' '}
+                {formatPhoneNumber(phone?.data.phone_number || '')}
               </NormalText>
             </View>
 
@@ -84,14 +96,29 @@ export default function OtpScreen() {
                 focusColor="#F97316"
                 onTextChange={(text: any) => setOtpCode(text)}
               />
-            </View>
-
-            <View className="w-full mt-8 space-y-2">
-              <Pressable className="mb-3" onPress={handleClear}>
+              <Pressable className="mt-2" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
+            </View>
+
+            <View className="w-full mt-8 space-y-2">
+              <View className="flex flex-row justify-center">
+                <NormalText className="text-tertiary mb-2 flex-row items-center">
+                  Không nhận được mã?
+                </NormalText>
+                <TouchableOpacity onPress={() => mutate()}>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#F97316" />
+                  ) : (
+                    <NormalText className="text-primary ml-1">
+                      {' '}
+                      Gửi lại
+                    </NormalText>
+                  )}
+                </TouchableOpacity>
+              </View>
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}

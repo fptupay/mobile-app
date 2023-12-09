@@ -1,14 +1,42 @@
-import { CameraCapturedPicture } from 'expo-camera'
+import * as Crypto from 'expo-crypto'
 import { manipulateAsync } from 'expo-image-manipulator'
 import Colors from '@/constants/Colors'
 import * as SecureStore from 'expo-secure-store'
 import { Dimensions, Platform } from 'react-native'
-import { useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import Banks from '@/constants/Banks'
 import * as Application from 'expo-application'
 
-export const formatMoney = (value: number) => {
+export const formatMoney = (value: number | string) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+export const formatInputMoney = (amount: string): string => {
+  if (amount.startsWith('0')) {
+    return ''
+  }
+  let numericValue = amount.replace(/\D/g, '')
+
+  // prevent user from entering more than 100 million
+  if (numericValue.length > 8 && numericValue !== '100000000') {
+    numericValue = numericValue.slice(0, 8)
+  }
+
+  // format amount with dot by thousands
+  const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  return formattedAmount
+}
+
+export const formatPhoneNumber = (value: string) => {
+  return value.replace(/\d(?=\d{4})/g, '*')
+}
+
+export const formatDateTime = (value: string) => {
+  // original string: 2023-11-30 00:00:00
+  const parts = value.split(' ')
+  const dateParts = parts[0].split('-')
+  const outputDate = dateParts.reverse().join('/')
+  return outputDate + ' ' + parts[1]
 }
 
 export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } =
@@ -32,9 +60,9 @@ export const deleteToken = async (key: string) => {
   return await SecureStore.deleteItemAsync(key)
 }
 
-export const compressImg = async (data: CameraCapturedPicture) => {
+export const compressImg = async (data: string) => {
   return await manipulateAsync(
-    data.uri,
+    data,
     [
       {
         resize: {
@@ -44,40 +72,40 @@ export const compressImg = async (data: CameraCapturedPicture) => {
       }
     ],
     {
-      compress: 0.5
+      compress: Platform.OS === 'ios' ? 0.8 : 0.6
     }
   )
 }
 
 export const getLabelTextColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.text
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.text
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.text
   }
 }
 
 export const getLabelBackgroundColor = (status: string) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return Colors.label.pending.background
-    case 'approved':
+    case 'APPROVED':
       return Colors.label.approved.background
-    case 'closed':
+    case 'CLOSED':
       return Colors.label.closed.background
   }
 }
 
 export const getTitle = (status: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return 'Đang xử lý'
-    case 'approved':
+    case 'APPROVED':
       return 'Đã phê duyệt'
-    case 'closed':
+    case 'CLOSED':
       return 'Đã đóng'
     default:
       return 'Đang xử lý'
@@ -86,27 +114,14 @@ export const getTitle = (status: string | string[]) => {
 
 export const getImagePath = (status?: string | string[]) => {
   switch (status) {
-    case 'pending':
+    case 'PROCESSING':
       return require('@/assets/images/icon-process.png')
-    case 'approved':
+    case 'APPROVED':
       return require('@/assets/images/icon-success.png')
-    case 'closed':
+    case 'CLOSED':
       return require('@/assets/images/icon-closed.png')
     default:
       return require('@/assets/images/icon-process.png')
-  }
-}
-
-export const getBackGroundColor = (status?: string | string[]) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-50'
-    case 'approved':
-      return 'bg-green-50'
-    case 'closed':
-      return 'bg-red-50'
-    default:
-      return 'bg-yellow-50'
   }
 }
 
@@ -202,8 +217,6 @@ export const convertDateFormat = (inputDate: string) => {
 }
 
 export const successResponseStatus = (status: any) => {
-  const router = useRouter()
-
   if (!status.success || status.error) {
     if (status.httpStatus == 401) {
       deleteToken('access_token')
@@ -219,7 +232,8 @@ export const successResponseStatus = (status: any) => {
 }
 
 export const getBankName = (bankCode: string) => {
-  return Banks.find((item) => item.bank_code === bankCode)?.bank_name
+  return Banks.find((item) => item.bank_code === bankCode.toLowerCase())
+    ?.bank_name
 }
 
 export const getDeviceId = async () => {
@@ -227,4 +241,40 @@ export const getDeviceId = async () => {
     return await Application.getIosIdForVendorAsync()
   }
   return Application.androidId
+}
+
+export const generateSharedKey = async (
+  otpPin: string,
+  deviceId: string | null
+) => {
+  const message = otpPin + deviceId
+  const key = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message,
+    {
+      encoding: Crypto.CryptoEncoding.BASE64
+    }
+  )
+
+  return key
+}
+
+export const generateTransactionId = () => {
+  return Math.floor(Math.random() * 1000000000000000000).toString()
+}
+
+export const generateOTPPin = async (sharedKey: string) => {
+  const currentTime = new Date().getTime()
+  const timestamp = Math.floor(currentTime / 30000) * 30000
+
+  const message = timestamp + sharedKey
+  const hmac = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    message
+  )
+
+  const lastSixCharacters = hmac.slice(-6)
+  const otp = parseInt(lastSixCharacters, 16)
+
+  return otp.toString().padStart(8, '0')
 }

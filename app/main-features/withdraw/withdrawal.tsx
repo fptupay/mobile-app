@@ -1,4 +1,5 @@
 import { getLinkedBanks, withdrawVerify } from '@/api/bank'
+import LoadingSpin from '@/components/LoadingSpin'
 import SelectField from '@/components/SelectField'
 import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
@@ -6,27 +7,41 @@ import { NormalText, SemiText } from '@/components/Themed'
 import IconButton from '@/components/buttons/IconButton'
 import TextButton from '@/components/buttons/TextButton'
 import { BankAccountSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
+import { useAccountStore } from '@/stores/accountStore'
 import { useBankStore } from '@/stores/bankStore'
-import { getBankName, successResponseStatus } from '@/utils/helper'
+import {
+  formatInputMoney,
+  formatMoney,
+  getBankName,
+  successResponseStatus
+} from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
-  Image,
   Keyboard,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function WithdrawalScreen() {
   const router = useRouter()
   const [amount, setAmount] = useState('')
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
+  const balance = useAccountStore((state) => state.balance)
+  const setTransactionId = useTransferStore((state) => state.setTransactionId)
+
+  const handleAmountInput = (value: string) => {
+    const formattedAmount = formatInputMoney(value)
+    setAmount(formattedAmount)
+  }
 
   const banksLinkedQuery = useQuery({
     queryKey: ['getLinkedBanks'],
@@ -59,14 +74,8 @@ export default function WithdrawalScreen() {
           text2: data.message
         })
       } else {
-        router.push({
-          pathname: '/main-features/otp',
-          params: {
-            type: 'withdraw',
-            link_account_id: selectedBank,
-            trans_id: data.data.trans_id
-          }
-        })
+        setTransactionId(data?.data.trans_id)
+        router.push('/transfer/otp')
       }
     },
     onError: (error: Error) => {
@@ -81,7 +90,12 @@ export default function WithdrawalScreen() {
   })
 
   return (
-    <SharedLayout href="/account/home" title="Rút tiền">
+    <SharedLayout
+      backHref="/account/home"
+      questionHref="/instruction/withdraw-instruction"
+      title="Rút tiền"
+      hasInstruction
+    >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -93,21 +107,31 @@ export default function WithdrawalScreen() {
                 <SemiText className="text-secondary mb-2">
                   Rút tiền từ ví FPTU Pay
                 </SemiText>
+
+                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
+                  <NormalText className="text-tertiary">
+                    Tài khoản nguồn
+                  </NormalText>
+                  <SemiText className="text-2xl text-secondary">
+                    {formatMoney(balance)}đ
+                  </SemiText>
+                </View>
+
                 <TextField
                   keyboardType="numeric"
                   label="Số tiền cần rút"
                   editable={true}
                   selectTextOnFocus={true}
                   value={amount}
-                  onChangeText={(value) => setAmount(value)}
+                  onChangeText={handleAmountInput}
                 />
               </View>
             </TouchableWithoutFeedback>
 
             <View className="pt-6">
-              <SemiText className="text-secondary mb-2">Từ ngân hàng</SemiText>
+              <SemiText className="text-secondary mb-2">Về ngân hàng</SemiText>
               {banksLinkedQuery.isLoading ? (
-                <NormalText className="text-secondary">Loading...</NormalText>
+                <LoadingSpin />
               ) : (
                 banksLinkedQuery.data.data.map((item: BankAccountSchema) => (
                   <TouchableOpacity
@@ -116,6 +140,7 @@ export default function WithdrawalScreen() {
                     onPress={() => setSelectedBank(item.id)}
                   >
                     <SelectField
+                      image={{ uri: item.logo }}
                       id={item.id}
                       label={getBankName(item.bank_code) || 'Ngân hàng'}
                       description={item.bank_acc_hide}
@@ -127,8 +152,7 @@ export default function WithdrawalScreen() {
               <IconButton
                 label="Thêm ngân hàng"
                 description="Miễn phí nạp, rút tiền"
-                href="/main-features/bank/add-bank"
-                previousRoute="/main-features/withdraw/withdrawal"
+                onPress={() => router.push('/main-features/bank/add-bank')}
               />
             </View>
           </View>
@@ -151,7 +175,7 @@ export default function WithdrawalScreen() {
           onPress={() =>
             withdrawMutation.mutate({
               link_account_id: selectedBank,
-              amount: parseInt(amount),
+              amount: parseInt(amount.replace(/\./g, '')),
               content: 'Rút tiền từ ví FPTU Pay'
             })
           }

@@ -1,82 +1,191 @@
-import GradientBackground from '@/components/GradientBackground'
-import CustomIcon from '@/components/Icon'
-import { NormalText, SemiText } from '@/components/Themed'
-import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { WINDOW_HEIGHT } from '@/utils/helper'
-import { StatusBar } from 'expo-status-bar'
-import { Image, View } from 'react-native'
+import { verifyTransfer } from '@/api/transfer'
+import SharedLayout from '@/components/SharedLayout'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import TextButton from '@/components/buttons/TextButton'
+import { TransferVerifySchema } from '@/schemas/transfer-schema'
+import { useAccountStore } from '@/stores/accountStore'
+import { useTransactionStore } from '@/stores/bankStore'
+import {
+  convertNumberToVietnameseWords,
+  formatMoney,
+  successResponseStatus
+} from '@/utils/helper'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import { router, useLocalSearchParams } from 'expo-router'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import Toast from 'react-native-toast-message'
+import * as SecureStore from 'expo-secure-store'
+import { useState } from 'react'
+import { Modal } from '@/components/Modal'
+import { useTransferStore } from '@/stores/transferStore'
 
 export default function TransferConfirmationScreen() {
-  const transferDetail = [
-    {
-      title: 'Loại thanh toán',
-      content: 'Chuyển nhanh'
+  const [isVisible, setIsVisible] = useState(false)
+  const { full_name, username } = useAccountStore((state) => state.details)
+  const avatar = useAccountStore((state) => state.avatar)
+  const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
+  const { amount, message, studentCode, receiver } = useLocalSearchParams()
+  const setFundTransferId = useTransactionStore(
+    (state) => state.setFundTransferId
+  )
+
+  const verifyTransferMutation = useMutation({
+    mutationFn: (data: TransferVerifySchema) => verifyTransfer(data),
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setFundTransferId(data.data.fund_transfer_id)
+        router.push('/transfer/otp')
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
     },
-    {
-      title: 'Người nhận',
-      content: 'HA GIA KINH'
-    },
-    {
-      title: 'MSSV',
-      content: 'HE150111'
-    },
-    {
-      title: 'Nội dung giao dịch',
-      content: 'Cam on nha'
-    },
-    {
-      title: 'Thời gian giao dịch',
-      content: '19:44 - 01/01/2022'
-    },
-    {
-      title: 'Mã giao dịch',
-      content: '12345678904'
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
     }
-  ]
+  })
+
+  const handleVerifyTransfer = async () => {
+    const existingPIN = await SecureStore.getItemAsync(username)
+    if (!existingPIN) {
+      setIsVisible(true)
+    } else {
+      verifyTransferMutation.mutate({
+        data: studentCode as string,
+        amount: amount as string,
+        content: message as string
+      })
+    }
+  }
 
   return (
-    <View className="flex-1">
-      <StatusBar style="auto" />
-      <View style={{ height: WINDOW_HEIGHT * 0.25 }}>
-        <GradientBackground />
-        <View className="absolute right-6 top-16">
-          <CustomIcon name="Share" color="#000" size={24} />
+    <>
+      <SharedLayout title="Xác nhận thông tin" backHref="/account/payments">
+        {/* Header */}
+        <View className="mt-4 flex items-center">
+          <NormalText className="text-tertiary">Số tiền chuyển</NormalText>
+          <SemiText className="text-4xl mt-2 text-secondary">
+            {formatMoney(amount as string)}đ
+          </SemiText>
         </View>
-      </View>
-      <View
-        className="absolute left-0 right-0 bottom-0 bg-white flex-1 px-4 rounded-t-[30px] flex justify-start items-center"
-        style={{ top: WINDOW_HEIGHT * 0.2 }}
-      >
-        <Image
-          source={require('@/assets/images/tick-circle.png')}
-          className="w-[80px] h-[80px] mx-auto mt-[-40px]"
-        />
-        <SemiText className="text-primary text-2xl text-center mt-5">
-          Chuyển tiền thành công!
-        </SemiText>
-        <SemiText className="text-4xl text-secondary mt-7">-200.000 đ</SemiText>
-        <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
-        <View className="mt-5 w-full">
-          {transferDetail.map((item, index) => (
-            <View key={index} className="flex flex-row justify-between mb-4">
-              <NormalText className="text-tertiary">{item.title}</NormalText>
-              <NormalText className="text-secondary">{item.content}</NormalText>
+
+        <View className="bg-zinc-50 rounded-lg mt-4 p-2 space-y-4 shadow-md shadow-zinc-500">
+          {/* Origin */}
+          <View>
+            <NormalText className="text-tertiary">Từ tài khoản</NormalText>
+            <View className="flex flex-row gap-x-2 mt-2 items-center">
+              <Image
+                source={{
+                  uri: avatar
+                }}
+                className="w-12 h-12 rounded-full"
+              />
+              <View>
+                <MediumText className="text-base text-secondary">
+                  {full_name}
+                </MediumText>
+                <NormalText className="text-tertiary">{username}</NormalText>
+              </View>
             </View>
-          ))}
+          </View>
+
+          {/* Destination */}
+          <View>
+            <NormalText className="text-tertiary">Đến tài khoản</NormalText>
+            <View className="flex flex-row gap-x-2 mt-2 items-center">
+              <Image
+                source={{
+                  uri: receiverAvatar
+                }}
+                className="w-12 h-12 rounded-full"
+              />
+              <View>
+                <MediumText className="text-base text-secondary">
+                  {receiver}
+                </MediumText>
+                <NormalText className="text-tertiary">{studentCode}</NormalText>
+              </View>
+            </View>
+          </View>
         </View>
-        <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>
+
+        {/* Details */}
+        <View className="my-4">
+          <View className="mt-2 flex space-y-4">
+            <View className="flex-row justify-between">
+              <NormalText className="text-tertiary">Loại thanh toán</NormalText>
+              <NormalText className="text-secondary">
+                Chuyển tiền nhanh
+              </NormalText>
+            </View>
+            <View className="flex-row justify-between w-full">
+              <NormalText className="text-tertiary flex-1">
+                Số tiền bằng chữ
+              </NormalText>
+              <NormalText className="text-right text-secondary flex-1 flex flex-wrap">
+                {convertNumberToVietnameseWords(amount as string)}
+              </NormalText>
+            </View>
+            <View className="flex-row justify-between w-full">
+              <NormalText className="text-tertiary flex-1">Nội dung</NormalText>
+              <NormalText className="text-right text-secondary flex-1 flex flex-wrap">
+                {message}
+              </NormalText>
+            </View>
+          </View>
+        </View>
+
+        {/* Buttons */}
+        <View className="mt-auto mb-4">
           <TextButton
-            text="Về trang chủ"
-            type={TextButtonType.PRIMARY}
-            href="/account/home"
-          />
-          <TextButton
-            text="Lưu bạn bè"
-            type={TextButtonType.OUTLINE}
-            href="/transfer/transfer-list"
+            text="Xác nhận"
+            type="primary"
+            onPress={handleVerifyTransfer}
+            loading={verifyTransferMutation.isLoading}
+            disable={verifyTransferMutation.isLoading}
           />
         </View>
-      </View>
-    </View>
+      </SharedLayout>
+
+      <Modal isVisible={isVisible}>
+        <Modal.Container>
+          <Modal.Header title="Thông báo" />
+          <Modal.Body>
+            <NormalText className="text-tertiary">
+              Vui lòng đăng ký phương thức xác thực Smart OTP trước khi thực
+              diện giao dịch nhé!
+            </NormalText>
+
+            <View className="mt-6 flex flex-row gap-x-3">
+              <View className="flex-1">
+                <TextButton
+                  text="Đăng ký"
+                  type="primary"
+                  onPress={() => router.push('/smart-otp/introduction')}
+                />
+              </View>
+              <View className="flex-1">
+                <TextButton
+                  text="Không"
+                  type="secondary"
+                  onPress={() => setIsVisible(false)}
+                />
+              </View>
+            </View>
+          </Modal.Body>
+        </Modal.Container>
+      </Modal>
+    </>
   )
 }

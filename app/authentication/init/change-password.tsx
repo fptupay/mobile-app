@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { changePasswordInit } from '@/api/authentication'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
@@ -29,7 +29,7 @@ export default function ChangePasswordScreen() {
     control,
     getValues,
     watch,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<PasswordInitSchema>({
     defaultValues: {
       username: params.username,
@@ -43,21 +43,21 @@ export default function ChangePasswordScreen() {
   const passwordConditions = [
     {
       isSatisfied: watch('new_password').length >= 6,
-      label: 'Ít nhất 6 ký tự'
+      label: 'Có ít nhất 6 ký tự'
     },
     {
       isSatisfied: /[A-Za-z]/.test(watch('new_password')),
-      label: 'Ít nhất có 1 chữ cái'
+      label: 'Có ít nhất 1 chữ cái'
     },
     {
       isSatisfied: /[0-9]/.test(watch('new_password')),
-      label: 'Ít nhất có 1 chữ số'
+      label: 'Có ít nhất 1 chữ số'
     },
     {
       isSatisfied: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(
         watch('new_password')
       ),
-      label: 'At least có 1 ký tự đặc biệt'
+      label: 'Có ít nhất 1 ký tự đặc biệt'
     }
   ]
 
@@ -170,7 +170,7 @@ export default function ChangePasswordScreen() {
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={passwordMutation.isLoading}
+                disable={passwordMutation.isLoading || !isValid}
                 loading={passwordMutation.isLoading}
                 type={TextButtonType.PRIMARY}
                 onPress={() =>

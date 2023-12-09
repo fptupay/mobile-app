@@ -5,7 +5,7 @@ import {
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { PhoneSchema, phoneSchema } from '@/schemas/phone-schema'
+import { PhoneSchema, phoneSchema } from '@/schemas/verify-schema'
 import { usePhoneStore } from '@/stores/phoneStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -15,13 +15,13 @@ import { StatusBar } from 'expo-status-bar'
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PhoneConfirmationScreen() {
@@ -109,10 +109,9 @@ export default function PhoneConfirmationScreen() {
             <View className="w-full mt-8 space-y-2">
               <TextButton
                 text="Xác nhận"
-                disable={!isValid}
+                disable={!isValid || phoneNumberMutation.isLoading}
                 type={TextButtonType.PRIMARY}
-                previousRoute="/authentication/common/phone-confirmation"
-                nextRoute="/authentication/init/ekyc/ekyc-rule"
+                loading={phoneNumberMutation.isLoading}
                 onPress={() => {
                   phoneNumberMutation.mutate({
                     phone_number: getValues().phone_number

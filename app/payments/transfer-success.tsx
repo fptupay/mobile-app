@@ -3,11 +3,12 @@ import { NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { getImagePath } from '@/utils/helper'
 import React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
 
 export default function TransferSuccessScreen() {
   return (
-    <SharedLayout title="" href="/help-center">
+    <SharedLayout title="" backHref="/help-center">
       <View className="mt-12 relative">
         <View className="absolute -top-20 left-0 right-0 justify-center items-center">
           <View className="w-16 h-16 rounded-full bg-green-100 p-1">

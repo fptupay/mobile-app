@@ -1,20 +1,25 @@
-import { topupConfirm, withdrawConfirm } from '@/api/bank'
+/* eslint-disable indent */
+import { getRegisteredPhoneNumber } from '@/api/authentication'
+import { topupConfirm } from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { useResendOTP } from '@/hooks/useResendOTP'
 import { MoneyConfirmSchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { successResponseStatus } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -24,7 +29,6 @@ export default function OtpScreen() {
   const router = useRouter()
   const params: { type: string; link_account_id: string; trans_id: string } =
     useLocalSearchParams()
-  console.log(params)
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
 
@@ -32,6 +36,11 @@ export default function OtpScreen() {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  const { data: phone } = useQuery({
+    queryKey: ['phoneNumber'],
+    queryFn: getRegisteredPhoneNumber
+  })
 
   const topupMutation = useMutation({
     mutationFn: (data: MoneyConfirmSchema) => topupConfirm(data),
@@ -43,7 +52,10 @@ export default function OtpScreen() {
           text2: data.message
         })
       } else {
-        router.push('/main-features/deposit/deposit-confirmation')
+        router.push({
+          pathname: '/main-features/deposit/deposit-confirmation',
+          params: { transId: data.data.trans_id }
+        })
       }
     },
     onError: (error: Error) => {
@@ -57,32 +69,10 @@ export default function OtpScreen() {
     }
   })
 
-  const withdrawMutation = useMutation({
-    mutationFn: (data: MoneyConfirmSchema) => withdrawConfirm(data),
-    onSuccess: (data) => {
-      if (!successResponseStatus(data)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Đã có lỗi xảy ra',
-          text2: data.message
-        })
-      } else {
-        router.push('/main-features/withdraw/withdraw-confirmation')
-      }
-    },
-    onError: (error: Error) => {
-      if (isAxiosError(error)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Lỗi',
-          text2: error.response?.data?.message
-        })
-      }
-    }
-  })
+  const { mutate, isLoading } = useResendOTP()
 
   return (
-    <SharedLayout href="/account/home" title="Nhập mã OTP">
+    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
@@ -91,7 +81,8 @@ export default function OtpScreen() {
           <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại 0123456789
+                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại{' '}
+                {formatPhoneNumber(phone?.data.phone_number || '')}
               </NormalText>
             </View>
 
@@ -103,31 +94,37 @@ export default function OtpScreen() {
                 focusColor="#F97316"
                 onTextChange={(text: any) => setOtpCode(text)}
               />
-            </View>
-
-            <View className="w-full mt-8 space-y-2">
-              <Pressable className="mb-3" onPress={handleClear}>
+              <Pressable className="mt-2" onPress={handleClear}>
                 <NormalText className="text-primary text-center">
                   Xóa
                 </NormalText>
               </Pressable>
+            </View>
+
+            <View className="w-full mt-8 space-y-2">
+              <View className="flex flex-row justify-center">
+                <NormalText className="text-tertiary mb-2 flex-row items-center">
+                  Không nhận được mã?
+                </NormalText>
+                <TouchableOpacity onPress={() => mutate()}>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#F97316" />
+                  ) : (
+                    <NormalText className="text-primary ml-1">
+                      {' '}
+                      Gửi lại
+                    </NormalText>
+                  )}
+                </TouchableOpacity>
+              </View>
               <TextButton
                 text="Xác nhận"
                 type={TextButtonType.PRIMARY}
-                disable={
-                  otpCode.length != 6 ||
-                  topupMutation.isLoading ||
-                  withdrawMutation.isLoading
-                }
-                loading={topupMutation.isLoading || withdrawMutation.isLoading}
+                disable={otpCode.length != 6 || topupMutation.isLoading}
+                loading={topupMutation.isLoading}
                 onPress={() => {
-                  params.type == 'deposit'
-                    ? topupMutation.mutate({
-                      link_account_id: params.link_account_id,
-                      trans_id: params.trans_id,
-                      otp: otpCode
-                    })
-                    : withdrawMutation.mutate({
+                  params.type == 'deposit' &&
+                    topupMutation.mutate({
                       link_account_id: params.link_account_id,
                       trans_id: params.trans_id,
                       otp: otpCode

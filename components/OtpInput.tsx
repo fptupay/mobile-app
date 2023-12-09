@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useOtpInput } from '../hooks/useOtpInput'
 import { OtpInputProps, OtpInputRef } from '../types/OtpInput.type'
-import { VerticalStick } from './VerticalStick'
 
 export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
   const {
@@ -14,15 +13,14 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
   const {
     numberOfDigits,
     focusColor = '#A4D0A4',
-    focusStickBlinkingDuration,
-    theme = {}
+    theme = {},
+    type = 'uncovered'
   } = props
   const {
     containerStyle,
     inputsContainerStyle,
     pinCodeContainerStyle,
-    pinCodeTextStyle,
-    focusStickStyle
+    pinCodeTextStyle
   } = theme
 
   useImperativeHandle(ref, () => ({ clear, setValue: setText }))
@@ -34,30 +32,24 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
           .fill(0)
           .map((_, index) => {
             const char = text[index]
-            const isFocusedInput = index === focusedInputIndex
+            const isFocusedInput = focusedInputIndex === index
 
             return (
               <Pressable
                 key={`${char}-${index}`}
                 onPress={handlePress}
                 style={[
-                  styles.codeContainer,
+                  type === 'covered'
+                    ? styles.codeContainerCovered
+                    : styles.codeContainer,
                   isFocusedInput ? { borderColor: focusColor } : {},
                   pinCodeContainerStyle
                 ]}
                 accessibilityRole="button"
               >
-                {isFocusedInput ? (
-                  <VerticalStick
-                    focusColor={focusColor}
-                    style={focusStickStyle}
-                    focusStickBlinkingDuration={focusStickBlinkingDuration}
-                  />
-                ) : (
-                  <Text style={[styles.codeText, pinCodeTextStyle]}>
-                    {char}
-                  </Text>
-                )}
+                <Text style={[styles.codeText, pinCodeTextStyle]}>
+                  {char ? (type === 'covered' ? '*' : char) : ''}
+                </Text>
               </Pressable>
             )
           })}
@@ -68,7 +60,6 @@ export const OtpInput = forwardRef<OtpInputRef, OtpInputProps>((props, ref) => {
         maxLength={numberOfDigits}
         inputMode="numeric"
         ref={inputRef}
-        autoFocus
         style={styles.hiddenInput}
         testID="otp-input"
       />
@@ -88,6 +79,14 @@ const styles = StyleSheet.create({
   codeContainer: {
     borderWidth: 1,
     borderRadius: 12,
+    borderColor: '#DFDFDE',
+    height: 60,
+    width: 44,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  codeContainerCovered: {
+    borderBottomWidth: 1,
     borderColor: '#DFDFDE',
     height: 60,
     width: 44,

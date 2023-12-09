@@ -1,15 +1,23 @@
 import { z } from 'zod'
 
-export const bankLinkVerifySchema = z.object({
+export const bankLinkAccountVerifySchema = z.object({
   bank_code: z.string(),
-  card_no: z.string(),
-  identity: z.string(),
-  holder_name: z.string(),
-  identity_type: z.enum(['CCCD', 'CMND']),
-  link_type: z.enum(['ACCOUNT', 'CARD']),
-  phone_number: z.string(),
-  issue_date: z.string().optional()
+  card_no: z.string().min(1, { message: 'Số thẻ không được để trống' }),
+  link_type: z.string()
 })
+
+export const bankLinkCardVerifySchema = z
+  .object({
+    issue_date: z
+      .string()
+      .refine((val) => val.split('/')[0] <= '12', {
+        message: 'Tháng không hợp lệ'
+      })
+      .refine((val) => val.split('/')[1] >= '23', {
+        message: 'Năm không hợp lệ'
+      })
+  })
+  .merge(bankLinkAccountVerifySchema)
 
 export const bankLinkConfirmSchema = z.object({
   bank_code: z.string(),
@@ -23,6 +31,7 @@ export const bankAccountSchema = z.object({
   bank_acc_hide: z.string(),
   bank_code: z.string(),
   phone_number: z.string(),
+  logo: z.string(),
   is_default: z.boolean().nullable(),
   status: z.enum(['ACTIVE', 'INACTIVE']),
   created_at: z.string(),
@@ -41,7 +50,10 @@ export const moneyConfirmSchema = z.object({
   otp: z.string()
 })
 
-export type BankLinkVerifySchema = z.infer<typeof bankLinkVerifySchema>
+export type BankLinkAccountVerifySchema = z.infer<
+  typeof bankLinkAccountVerifySchema
+>
+export type BankLinkCardVerifySchema = z.infer<typeof bankLinkCardVerifySchema>
 export type BankLinkConfirmSchema = z.infer<typeof bankLinkConfirmSchema>
 export type BankAccountSchema = z.infer<typeof bankAccountSchema>
 export type MoneyVerifySchema = z.infer<typeof moneyVerifySchema>

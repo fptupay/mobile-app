@@ -6,9 +6,9 @@ import { useQuery } from '@tanstack/react-query'
 import { getLinkedBanks } from '@/api/bank'
 import { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
-import { NormalText } from '@/components/Themed'
 import { useRouter } from 'expo-router'
 import { getBankName, successResponseStatus } from '@/utils/helper'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function BankListScreen() {
   const router = useRouter()
@@ -34,14 +34,12 @@ export default function BankListScreen() {
     }
   })
 
-  console.log(banksLinkedQuery.data)
-
   return (
-    <SharedLayout href="/account/my-wallet" title="Danh sách liên kết">
+    <SharedLayout backHref="/account/my-wallet" title="Danh sách liên kết">
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <View className="bg-transparent">
           {banksLinkedQuery.isLoading ? (
-            <NormalText className="text-secondary">Loading...</NormalText>
+            <LoadingSpin />
           ) : (
             <FlatList
               data={banksLinkedQuery.data?.data}
@@ -50,13 +48,13 @@ export default function BankListScreen() {
                 <Pressable
                   onPress={() =>
                     router.push({
-                      pathname: '/bank/[bank-detail]',
+                      pathname: '/bank/[bankId]',
                       params: { bankId: item.item.id }
                     })
                   }
                 >
                   <BankButton
-                    image={require('@/assets/images/techcombank.png')}
+                    image={{ uri: item.item.logo }}
                     label={getBankName(item.item.bank_code) || 'Ngân hàng'}
                     description={item.item.bank_acc_hide}
                   />
