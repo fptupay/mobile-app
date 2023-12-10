@@ -38,7 +38,7 @@ export default function SmartOTPSetupScreen() {
         await mutateAsync({
           device_id: deviceId,
           version: Platform.Version.toString(),
-          trans_id: smartOTPTransactionId as string
+          trans_id: smartOTPTransactionId
         })
       } catch (error) {
         console.error(error)
@@ -98,7 +98,7 @@ export default function SmartOTPSetupScreen() {
               <TouchableOpacity
                 className="px-4 py-2 mt-4 rounded-lg flex flex-row items-center justify-between border border-gray-300"
                 activeOpacity={0.8}
-                onPress={() => router.push('/smart-otp/introduction')}
+                onPress={() => router.push('/smart-otp/old-pin')}
               >
                 <View className="flex flex-row gap-3 items-center w-3/4">
                   <RotateCcw size={24} color="#666" />
