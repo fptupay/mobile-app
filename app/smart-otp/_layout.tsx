@@ -9,6 +9,7 @@ export default function SmartOTPLayout() {
         contentStyle: { backgroundColor: 'transparent' }
       }}
     >
+      <Stack.Screen name="index" />
       <Stack.Screen name="introduction" />
       <Stack.Screen name="register-pin" />
       <Stack.Screen name="smart-otp-confirmation" />

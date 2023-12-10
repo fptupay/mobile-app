@@ -37,3 +37,8 @@ export const checkStatusSmartOTP = async (data: any) => {
   const response = await apiPostCall('/user/sotp/check-status', data, config)
   return response.data
 }
+
+export const changePINCode = async (data: any) => {
+  const response = await apiPostCall('/user/sotp/change-pin', data)
+  return response.data
+}
