@@ -13,13 +13,15 @@ import { router } from 'expo-router'
 
 export default function SmartOTPSetupScreen() {
   const { username } = useAccountStore((state) => state.details)
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(null)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState<boolean | null>(null)
 
   const { mutateAsync } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         setHasRegisteredOTP(data.data?.status)
+      } else {
+        setHasRegisteredOTP(false)
       }
     },
     onError: (error) => {
@@ -31,7 +33,7 @@ export default function SmartOTPSetupScreen() {
     const fetchData = async () => {
       try {
         const smartOTPTransactionId = await SecureStore.getItemAsync(
-          `${username}_transId`
+          `${username}_transId` || ''
         )
         const deviceId = await getDeviceId()
 
