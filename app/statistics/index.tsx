@@ -17,7 +17,11 @@ import {
   getTransactionReportByChart,
   getTransactionReportByList
 } from '@/api/transaction'
-import { getTransactionDates } from '@/utils/datetime'
+import {
+  convertDateFormat,
+  getFirstAndLastDayOfCurrentMonth,
+  getTransactionDates
+} from '@/utils/datetime'
 import Toast from 'react-native-toast-message'
 import { isAxiosError } from 'axios'
 
@@ -56,10 +60,13 @@ const periods = [
 ]
 
 export default function TransactionStatisticsScreen() {
+  const { firstDay, lastDay } = getFirstAndLastDayOfCurrentMonth()
+
   const [modalVisible, setModalVisible] = useState(false)
-  const [fromDate, setFromDate] = useState('')
-  const [toDate, setToDate] = useState('')
+  const [from, setFrom] = useState(firstDay)
+  const [to, setTo] = useState(lastDay)
   const {
+    listTransaction,
     accountNumber,
     transactionReport,
     setTransactionReport,
@@ -109,49 +116,42 @@ export default function TransactionStatisticsScreen() {
   })
 
   const handleSortTransaction = async (key: string) => {
-    const { from_date, to_date } = getTransactionDates(key)
+    const { fromDate, toDate } = getTransactionDates(key)
 
-    setFromDate(from_date)
-    setToDate(to_date)
+    setFrom(fromDate)
+    setTo(toDate)
 
     await chartReportMutation.mutateAsync({
       account_no: accountNumber,
-      from_date: fromDate,
-      to_date: toDate
+      from_date: from,
+      to_date: to
     })
     await listReportMutation.mutateAsync({
       account_no: accountNumber,
-      from_date: fromDate,
-      to_date: toDate
+      from_date: from,
+      to_date: to
     })
     setModalVisible(false)
   }
 
-  const cashIn = transactionReport && transactionReport?.in_amount_total_by_date
-  const cashOut =
+  const cashInChart =
+    transactionReport && transactionReport?.in_amount_total_by_date
+  const cashOutChart =
     transactionReport && transactionReport?.out_amount_total_by_date
 
-  const totalIn = Object.values(cashIn).reduce(
-    (a: any, b: any) => a + b,
-    0
-  ) as number
-  const totalOut = Object.values(cashOut).reduce(
-    (a: any, b: any) => a + b,
-    0
-  ) as number
-  console.log('Total in: ', totalIn)
-  console.log('Total out: ', totalOut)
+  const cashInList = listTransaction && listTransaction?.total_in
+  const cashOutList = listTransaction && listTransaction?.total_out
 
   const display = [
     {
-      key: 'cashIn',
+      key: 'cashInChart',
       title: 'Tổng tiền vào',
-      value: formatMoney(totalIn)
+      value: formatMoney(cashInList)
     },
     {
-      key: 'cashOut',
+      key: 'cashOutChart',
       title: 'Tổng tiền ra',
-      value: formatMoney(totalOut)
+      value: formatMoney(cashOutList)
     }
   ]
 
@@ -159,7 +159,7 @@ export default function TransactionStatisticsScreen() {
     <SharedLayout title="Thống kê giao dịch">
       <View className="flex flex-row justify-between mt-4">
         <MediumText className="text-secondary">
-          {fromDate} - {toDate}
+          {convertDateFormat(from)} - {convertDateFormat(to)}
         </MediumText>
         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
           <CustomIcon name="ListFilter" size={20} color={Colors.light.text} />
@@ -170,15 +170,19 @@ export default function TransactionStatisticsScreen() {
         withVerticalLabels={false}
         withDots={false}
         data={{
-          labels: Object.keys(cashIn),
+          labels: Object.keys(cashInChart),
           datasets: [
             {
-              data: Object.values(cashIn).map((value: any) => value / 1000),
+              data: Object.values(cashInChart).map(
+                (value: any) => value / 1000
+              ),
               strokeWidth: 2,
               color: () => '#60a5fa'
             },
             {
-              data: Object.values(cashOut).map((value: any) => value / 1000),
+              data: Object.values(cashOutChart).map(
+                (value: any) => value / 1000
+              ),
               strokeWidth: 2,
               color: () => '#fb923c'
             }
@@ -201,8 +205,8 @@ export default function TransactionStatisticsScreen() {
             onPress={async () => {
               await listReportMutation.mutateAsync({
                 account_no: accountNumber,
-                from_date: fromDate,
-                to_date: toDate
+                from_date: from,
+                to_date: to
               })
               router.push({
                 pathname: '/statistics/[cash]',

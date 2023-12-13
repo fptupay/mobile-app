@@ -23,66 +23,75 @@ export const convertDateFormat = (inputDate: string) => {
 }
 
 export const getTransactionDates = (period: string) => {
+  let fromDate = ''
+  let toDate = ''
   const today = new Date()
-  const utcOffset = 7 // UTC+7
-
-  let fromDate, toDate
-
   switch (period) {
     case 'this_week':
-      fromDate = new Date(today)
-      fromDate.setHours(0, 0, 0, 0)
-      toDate = new Date(today)
-      toDate.setDate(today.getDate() + (7 - today.getDay()))
-      toDate.setHours(23, 59, 59, 999)
-      break
-    case 'last_week':
-      fromDate = new Date(today)
-      fromDate.setDate(today.getDate() - today.getDay() - 7)
-      fromDate.setHours(0, 0, 0, 0)
-      toDate = new Date(today)
-      toDate.setDate(today.getDate() - today.getDay() - 1)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(
+        new Date(today.setDate(today.getDate() - today.getDay() + 1))
+      )
+      toDate = formatDate(
+        new Date(today.setDate(today.getDate() - today.getDay() + 7))
+      )
       break
     case 'this_month':
-      fromDate = new Date(today.getFullYear(), today.getMonth(), 1)
-      toDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1))
+      toDate = formatDate(
+        new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      )
       break
     case 'last_month':
-      fromDate = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-      toDate = new Date(today.getFullYear(), today.getMonth(), 0)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(
+        new Date(today.getFullYear(), today.getMonth() - 1, 1)
+      )
+      toDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 0))
       break
     case 'last_3_months':
-      fromDate = new Date(today)
-      fromDate.setMonth(today.getMonth() - 2)
-      fromDate.setDate(1)
-      fromDate.setHours(0, 0, 0, 0)
-      toDate = new Date(today)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(
+        new Date(today.getFullYear(), today.getMonth() - 2, 1)
+      )
+      toDate = formatDate(
+        new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      )
       break
     case 'this_year':
-      fromDate = new Date(today.getFullYear(), 0, 1)
-      toDate = new Date(today.getFullYear(), 11, 31)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(new Date(today.getFullYear(), 0, 1))
+      toDate = formatDate(new Date(today.getFullYear(), 11, 31))
       break
     default:
-      fromDate = new Date(today)
-      fromDate.setMonth(today.getMonth() - 2)
-      fromDate.setDate(1)
-      fromDate.setHours(0, 0, 0, 0)
-      toDate = new Date(today)
-      toDate.setHours(23, 59, 59, 999)
+      fromDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1))
+      toDate = formatDate(
+        new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      )
       break
   }
+  return { fromDate, toDate }
+}
 
-  // Adjust dates to UTC+7
-  fromDate?.setHours(fromDate.getHours() + utcOffset)
-  toDate?.setHours(toDate.getHours() + utcOffset)
+const formatDate = (date: Date) => {
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${year}-${month < 10 ? '0' + month : month}-${
+    day < 10 ? '0' + day : day
+  }`
+}
 
-  const formattedFromDate = fromDate?.toISOString().substring(0, 10)
-  const formattedToDate = toDate?.toISOString().substring(0, 10)
+export const getFirstAndLastDayOfCurrentMonth = () => {
+  const today = new Date()
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
 
-  return { from_date: formattedFromDate, to_date: formattedToDate }
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  return {
+    firstDay: formatDate(firstDay),
+    lastDay: formatDate(lastDay)
+  }
 }
