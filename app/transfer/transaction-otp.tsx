@@ -82,10 +82,6 @@ export default function TransactionOTPScreen() {
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:85 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
@@ -107,10 +103,6 @@ export default function TransactionOTPScreen() {
       return withdrawConfirm(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:106 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
@@ -143,10 +135,6 @@ export default function TransactionOTPScreen() {
       return payBill(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:140 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (successResponseStatus(data)) {
         clearPendingBill()
         router.push({

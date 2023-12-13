@@ -119,6 +119,7 @@ export default function CreateRequestScreen() {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           data={requestType}
+          placeholder="Chọn loại yêu cầu"
           maxHeight={300}
           labelField="label"
           valueField="value"
