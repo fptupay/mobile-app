@@ -1,6 +1,9 @@
 import { getAccountBalance } from '@/api/bank'
 import { getUserAvatar, getUserDetails } from '@/api/profile'
-import { getTransactionsByAccountNumber } from '@/api/transaction'
+import {
+  getTransactionReportByChart,
+  getTransactionsByAccountNumber
+} from '@/api/transaction'
 import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
@@ -11,8 +14,13 @@ import {
   extractDateStringFromCurrentDate,
   getCurrentYearTime
 } from '@/utils/datetime'
-import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
-import { useQuery } from '@tanstack/react-query'
+import {
+  WINDOW_HEIGHT,
+  formatDateTime,
+  formatMoney,
+  successResponseStatus
+} from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -35,6 +43,7 @@ import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { blurHash } from '@/constants/Hash'
+import { useTransactionStore } from '@/stores/transactionStore'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -66,11 +75,10 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
-  const [accountNo, setAccountNo] = useState('')
 
-  const setBalance = useAccountStore((state) => state.setBalance)
-  const setDetails = useAccountStore((state) => state.setDetails)
-  const setAvatar = useAccountStore((state) => state.setAvatar)
+  const { setBalance, setDetails, setAvatar } = useAccountStore()
+  const { accountNumber, setAccountNumber, setTransactionReport } =
+    useTransactionStore()
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
@@ -78,7 +86,7 @@ export default function HomeScreen() {
     notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
       setBalance(data.data.balance)
-      setAccountNo(data.data.account_no)
+      setAccountNumber(data.data.account_no)
     },
     onError: (error: AxiosError) => {
       Toast.show({
@@ -106,18 +114,39 @@ export default function HomeScreen() {
   })
 
   const getTransactionsQuery = useQuery({
-    queryKey: ['transactions', accountNo],
+    queryKey: ['transactions', accountNumber],
     queryFn: () =>
       getTransactionsByAccountNumber(
-        accountNo,
+        accountNumber,
         getCurrentYearTime(),
         extractDateStringFromCurrentDate(new Date())
       ),
     notifyOnChangeProps: ['data']
   })
 
+  const { mutateAsync } = useMutation({
+    mutationFn: getTransactionReportByChart,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setTransactionReport(data?.data)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    }
+  })
+
   const toggleSearch = () => {
     setIsSearching(!isSearching)
+  }
+
+  const handleShowTransactionReport = async () => {
+    await mutateAsync({
+      account_no: accountNumber,
+      from_date: '2023-12-01',
+      to_date: '2023-12-31'
+    })
+    router.push('/statistics/')
   }
 
   const BottomSheet = () => {
@@ -194,7 +223,7 @@ export default function HomeScreen() {
               <View className="flex-row">
                 <TouchableOpacity
                   className="mr-4"
-                  onPress={() => router.push('/statistics/')}
+                  onPress={handleShowTransactionReport}
                 >
                   <CustomIcon
                     name="BarChart"

@@ -4,7 +4,7 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { TransferVerifySchema } from '@/schemas/transfer-schema'
 import { useAccountStore } from '@/stores/accountStore'
-import { useTransactionStore } from '@/stores/bankStore'
+import { useTransactionStore } from '@/stores/transactionStore'
 import {
   convertNumberToVietnameseWords,
   formatMoney,

@@ -1,229 +1,275 @@
-import { getTransactionReport } from '@/api/transaction'
-import BottomSheet from '@/components/BottomSheet'
-import CustomIcon from '@/components/Icon'
+import { LineChart } from 'react-native-chart-kit'
+import React, { useState } from 'react'
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import Colors from '@/constants/Colors'
 import {
-  WINDOW_HEIGHT,
   WINDOW_WIDTH,
-  convertDateFormat,
-  formatMoney
+  formatMoney,
+  successResponseStatus
 } from '@/utils/helper'
-import { useMutation } from '@tanstack/react-query'
+import { useTransactionStore } from '@/stores/transactionStore'
+import Colors from '@/constants/Colors'
+import { MediumText, NormalText } from '@/components/Themed'
+import CustomIcon from '@/components/Icon'
 import { router } from 'expo-router'
-import React, { useEffect, useRef, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import {
-  Animated,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from 'react-native'
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
+  getTransactionReportByChart,
+  getTransactionReportByList
+} from '@/api/transaction'
+import {
+  convertDateFormat,
+  getFirstAndLastDayOfCurrentMonth,
+  getTransactionDates
+} from '@/utils/datetime'
+import Toast from 'react-native-toast-message'
+import { isAxiosError } from 'axios'
 
-export default function StatisticsScreen() {
-  const [index, setIndex] = useState(0)
-  const [routes] = useState([
-    { key: 'first', title: 'Tổng chi' },
-    { key: 'second', title: 'Tổng thu' }
-  ])
-  const [isOpen, setIsOpen] = useState(false)
-  const [totalExpenditure, setTotalExpenditure] = useState(0)
-  const [expenditures, setExpenditures] = useState([])
-  const [totalRevenue, setTotalRevenue] = useState(0)
-  const [revenues, setRevenues] = useState([])
+const chartConfig = {
+  backgroundGradientFrom: Colors.light.background,
+  backgroundGradientTo: Colors.light.background,
+  decimalPlaces: 0,
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  style: {
+    borderRadius: 16
+  }
+}
 
-  const { mutate } = useMutation({
-    mutationFn: getTransactionReport,
+const periods = [
+  {
+    key: 'this_week',
+    title: 'Tuần này'
+  },
+  {
+    key: 'this_month',
+    title: 'Tháng này'
+  },
+  {
+    key: 'last_month',
+    title: 'Tháng trước'
+  },
+  {
+    key: 'last_3_months',
+    title: '3 tháng gần nhất'
+  },
+  {
+    key: 'this_year',
+    title: 'Năm nay'
+  }
+]
+
+export default function TransactionStatisticsScreen() {
+  const { firstDay, lastDay } = getFirstAndLastDayOfCurrentMonth()
+
+  const [modalVisible, setModalVisible] = useState(false)
+  const [from, setFrom] = useState(firstDay)
+  const [to, setTo] = useState(lastDay)
+  const {
+    listTransaction,
+    accountNumber,
+    transactionReport,
+    setTransactionReport,
+    setListTransaction
+  } = useTransactionStore()
+
+  const listReportMutation = useMutation({
+    mutationFn: getTransactionReportByList,
     onSuccess: (data) => {
-      setTotalExpenditure(data.data.total_out)
-      setTotalRevenue(data.data.total_in)
-      setExpenditures(data.data.list_out)
-      setRevenues(data.data.list_in)
+      if (successResponseStatus(data)) {
+        setListTransaction(data?.data)
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: error.message
+        })
+      }
     }
   })
 
-  useEffect(() => {
-    mutate({
-      account_no: '000000000005',
-      from_date: '2023-09-25',
-      to_date: '2023-12-01'
-    })
-  }, [mutate])
-
-  const offset = useRef(new Animated.Value(WINDOW_HEIGHT)).current
-  const toggleBottomSheet = () => {
-    setIsOpen(!isOpen)
-
-    if (isOpen) {
-      // Exiting animation
-      Animated.timing(offset, {
-        toValue: WINDOW_HEIGHT,
-        duration: 800,
-        useNativeDriver: true
-      }).start()
-    } else {
-      // Entering animation
-      Animated.timing(offset, {
-        toValue: 0,
-        duration: 800,
-        useNativeDriver: true
-      }).start()
+  const chartReportMutation = useMutation({
+    mutationFn: getTransactionReportByChart,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setTransactionReport(data?.data)
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error) => {
+      console.log(error)
     }
+  })
+
+  const handleSortTransaction = async (key: string) => {
+    const { fromDate, toDate } = getTransactionDates(key)
+
+    setFrom(fromDate)
+    setTo(toDate)
+
+    await chartReportMutation.mutateAsync({
+      account_no: accountNumber,
+      from_date: from,
+      to_date: to
+    })
+    await listReportMutation.mutateAsync({
+      account_no: accountNumber,
+      from_date: from,
+      to_date: to
+    })
+    setModalVisible(false)
   }
 
-  /* Expenditures  */
-  const FirstTab = () => (
-    <>
-      <View className="flex flex-row justify-between items-baseline mt-4">
-        <SemiText className="text-primary text-2xl">
-          {formatMoney(totalExpenditure)}đ
-        </SemiText>
-        <View className="flex flex-row">
-          <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
-          <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
-        </View>
-      </View>
+  const cashInChart =
+    transactionReport && transactionReport?.in_amount_total_by_date
+  const cashOutChart =
+    transactionReport && transactionReport?.out_amount_total_by_date
 
-      <FlatList
-        data={expenditures}
-        keyExtractor={(item: any) => item.transaction_id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            className="flex flex-row items-center mt-4"
-            onPress={() =>
-              router.push({
-                pathname: '/transactions/[id]',
-                params: { id: item.transaction_id }
-              } as any)
-            }
-          >
-            <View className="w-3/5">
-              <MediumText>{item.description}</MediumText>
-              <NormalText className="text-tertiary">
-                {convertDateFormat(item.date)}
-              </NormalText>
-            </View>
-            <View className="w-2/5">
-              <MediumText className="text-primary text-right">
-                {formatMoney(item.amount)}đ
-              </MediumText>
-            </View>
-          </TouchableOpacity>
-        )}
-        showsVerticalScrollIndicator={false}
-      />
+  const cashInList = listTransaction && listTransaction?.total_in
+  const cashOutList = listTransaction && listTransaction?.total_out
 
-      {/* Sort by list or graph */}
-      <View className="flex flex-row mt-auto py-4 shadow-sm shadow-tertiary">
-        <View className="flex-1 items-center">
-          <MediumText>Danh sách</MediumText>
-        </View>
-        <View className="flex-1 items-center">
-          <MediumText className="text-tertiary">Biểu đồ</MediumText>
-        </View>
-      </View>
-    </>
-  )
-
-  /* Revenue */
-  const SecondTab = () => (
-    <>
-      <View className="flex flex-row justify-between items-baseline mt-4">
-        <SemiText className="text-primary text-2xl">
-          {formatMoney(totalRevenue)}đ
-        </SemiText>
-        <View className="flex flex-row">
-          <NormalText className="text-tertiary mr-2">25/09 - 01/10</NormalText>
-          <CustomIcon name="Filter" size={20} color={Colors.tertiary} />
-        </View>
-      </View>
-
-      <FlatList
-        data={revenues}
-        keyExtractor={(item: any) => item.transaction_id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            className="flex flex-row items-center mt-4"
-            onPress={() =>
-              router.push({
-                pathname: '/transactions/[id]',
-                params: { id: item.transaction_id }
-              } as any)
-            }
-          >
-            <View className="w-3/5">
-              <MediumText>{item.description}</MediumText>
-              <NormalText className="text-tertiary">
-                {convertDateFormat(item.date)}
-              </NormalText>
-            </View>
-            <View className="w-2/5">
-              <MediumText className="text-primary text-right">
-                {formatMoney(item.amount)}đ
-              </MediumText>
-            </View>
-          </TouchableOpacity>
-        )}
-        showsVerticalScrollIndicator={false}
-      />
-    </>
-  )
-
-  const renderedTab = SceneMap({
-    first: FirstTab,
-    second: SecondTab
-  })
-
-  const renderedTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: Colors.primary }}
-      style={{ backgroundColor: 'white', marginTop: 10, elevation: 0 }}
-      renderLabel={({ route, focused }) => (
-        <MediumText
-          style={{ color: focused ? Colors.primary : Colors.tertiary }}
-        >
-          {route.title}
-        </MediumText>
-      )}
-    />
-  )
+  const display = [
+    {
+      key: 'cashInChart',
+      title: 'Tổng tiền vào',
+      value: formatMoney(cashInList)
+    },
+    {
+      key: 'cashOutChart',
+      title: 'Tổng tiền ra',
+      value: formatMoney(cashOutList)
+    }
+  ]
 
   return (
-    <SharedLayout title="Thống kê chi tiêu" backHref="/home">
-      <Pressable
-        className="text-tertiary uppercase"
-        onPress={toggleBottomSheet}
-      >
-        <NormalText>Lọc theo khoảng</NormalText>
-      </Pressable>
-      <TabView
-        navigationState={{ index, routes }}
-        renderTabBar={renderedTabBar}
-        renderScene={renderedTab}
-        onIndexChange={setIndex}
-        initialLayout={{ width: WINDOW_WIDTH }}
+    <SharedLayout title="Thống kê giao dịch">
+      <View className="flex flex-row justify-between mt-4">
+        <MediumText className="text-secondary">
+          {convertDateFormat(from)} - {convertDateFormat(to)}
+        </MediumText>
+        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+          <CustomIcon name="ListFilter" size={20} color={Colors.light.text} />
+        </TouchableOpacity>
+      </View>
+      <LineChart
+        bezier
+        withVerticalLabels={false}
+        withDots={false}
+        data={{
+          labels: Object.keys(cashInChart),
+          datasets: [
+            {
+              data: Object.values(cashInChart).map(
+                (value: any) => value / 1000
+              ),
+              strokeWidth: 2,
+              color: () => '#60a5fa'
+            },
+            {
+              data: Object.values(cashOutChart).map(
+                (value: any) => value / 1000
+              ),
+              strokeWidth: 2,
+              color: () => '#fb923c'
+            }
+          ],
+          legend: ['Tiền vào', 'Tiền ra']
+        }}
+        formatYLabel={(value) => `${formatMoney(value)} k`}
+        width={WINDOW_WIDTH - 32}
+        height={250}
+        withInnerLines={false}
+        chartConfig={chartConfig}
+        style={styles.chart}
       />
-      <Animated.View
-        className="bg-white absolute bottom-0 left-0 z-10 p-4 h-64 shadow-xl shadow-gray-600"
-        style={[styles.bottomSheet, { transform: [{ translateY: offset }] }]}
-      >
-        <BottomSheet onPick={() => toggleBottomSheet()} />
-      </Animated.View>
+
+      {display.map((item) => (
+        <View className="flex flex-row justify-between mb-4" key={item.key}>
+          <MediumText className="text-tertiary">{item.title}</MediumText>
+          <TouchableOpacity
+            className="flex flex-row items-center"
+            onPress={async () => {
+              await listReportMutation.mutateAsync({
+                account_no: accountNumber,
+                from_date: from,
+                to_date: to
+              })
+              router.push({
+                pathname: '/statistics/[cash]',
+                params: { cash: item.key }
+              })
+            }}
+            activeOpacity={0.8}
+          >
+            <MediumText className="text-secondary mr-1">
+              {item.value} đ
+            </MediumText>
+            <CustomIcon
+              name="ChevronRight"
+              size={16}
+              color={Colors.light.text}
+            />
+          </TouchableOpacity>
+        </View>
+      ))}
+
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View className="flex-1 justify-end items-center">
+          <View
+            className="w-full p-4 bg-gray-50 rounded-t-md"
+            style={styles.modal}
+          >
+            <MediumText className="text-secondary mb-1">
+              Chọn khoảng thời gian
+            </MediumText>
+            <View>
+              {periods.map((item) => (
+                <TouchableOpacity
+                  className="flex flex-row justify-between items-center py-2"
+                  key={item.key}
+                  activeOpacity={0.8}
+                  onPress={() => handleSortTransaction(item.key)}
+                >
+                  <NormalText className="text-secondary">
+                    {item.title}
+                  </NormalText>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SharedLayout>
   )
 }
 
 const styles = StyleSheet.create({
-  bottomSheet: {
-    width: WINDOW_WIDTH,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 10
+  chart: {
+    marginVertical: 16,
+    borderRadius: 16
+  },
+  modal: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -4
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    elevation: 5
   }
 })
