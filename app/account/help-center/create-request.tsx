@@ -122,7 +122,6 @@ export default function CreateRequestScreen() {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Chọn DOM' : '...'}
           value={value}
           onFocus={() => {
             setIsFocus(true)

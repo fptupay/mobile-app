@@ -1,15 +1,11 @@
-import {
-  MediumText,
-  NormalText,
-  SafeAreaView,
-  SemiText
-} from '@/components/Themed'
+import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import Colors from '@/constants/Colors'
 import { router, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { View } from 'react-native'
 import { Image } from 'expo-image'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function SuccessfulRequestScreen() {
   const { id } = useLocalSearchParams()
@@ -30,7 +26,9 @@ export default function SuccessfulRequestScreen() {
         <SemiText className="text-center text-primary text-2xl">
           Gửi yêu cầu thành công!{' '}
         </SemiText>
-        <MediumText className="text-center mb-6">Mã yêu cầu: {id}</MediumText>
+        <MediumText className="text-center mb-6 text-secondary">
+          Mã yêu cầu: {id}
+        </MediumText>
         <View>
           <NormalText className="text-tertiary mb-2">
             Yêu cầu của bạn đã được tiếp nhận và dự kiến được xử lý trong tối đa
