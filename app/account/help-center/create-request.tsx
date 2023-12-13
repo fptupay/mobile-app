@@ -83,6 +83,13 @@ export default function CreateRequestScreen() {
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
         })
+        // clear state
+        setValue('')
+        setTransactionId('')
+        setTitle('')
+        setDescription('')
+        setImages([])
+
         await queryClient.invalidateQueries(['requests'])
       } else {
         Toast.show({
@@ -161,7 +168,9 @@ export default function CreateRequestScreen() {
             onChangeText={(text) => setDescription(text)}
           />
 
-          <NormalText className="text-tertiary">Thêm ảnh chứng minh</NormalText>
+          <NormalText className="text-tertiary">
+            Thêm ảnh chứng minh (tuỳ chọn)
+          </NormalText>
           <View className="flex flex-row">
             {images && (
               <View className="flex flex-row flex-wrap">
