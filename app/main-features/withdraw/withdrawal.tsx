@@ -24,7 +24,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
+  StyleSheet
 } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { useTransferStore } from '@/stores/transferStore'
@@ -107,7 +108,10 @@ export default function WithdrawalScreen() {
                   Rút tiền từ ví FPTU Pay
                 </SemiText>
 
-                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
+                <View
+                  className="bg-white rounded-lg my-5 mx-1 px-4 py-2"
+                  style={styles.shadow}
+                >
                   <NormalText className="text-tertiary">
                     Tài khoản nguồn
                   </NormalText>
@@ -177,3 +181,16 @@ export default function WithdrawalScreen() {
     </SharedLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3
+  }
+})
