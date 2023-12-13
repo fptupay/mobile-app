@@ -27,7 +27,6 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 
 export default function LoadMoneyScreen() {
@@ -162,16 +161,6 @@ export default function LoadMoneyScreen() {
         </ScrollView>
       </View>
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
-        <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
-          <Image
-            source={require('@/assets/images/tick.png')}
-            className="w-6 h-6"
-          />
-          <NormalText className="text-tertiary flex-1 text-xs">
-            Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
-            <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
-          </NormalText>
-        </View>
         <TextButton
           text="Nạp tiền"
           type={TextButtonType.PRIMARY}
