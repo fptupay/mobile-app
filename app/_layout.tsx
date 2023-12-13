@@ -14,6 +14,8 @@ const toastConfig = {
       style={{ borderLeftColor: '#22c55e', backgroundColor: '#f0fdf4' }}
       text1Style={{ fontSize: 16, fontWeight: 'semibold' }}
       text2Style={{ fontSize: 14 }}
+      text1NumberOfLines={2}
+      text2NumberOfLines={2}
     />
   ),
   error: (props: any) => (
@@ -22,6 +24,8 @@ const toastConfig = {
       style={{ borderLeftColor: '#ef4444', backgroundColor: '#fef2f2' }}
       text1Style={{ fontSize: 16, fontWeight: 'semibold' }}
       text2Style={{ fontSize: 14 }}
+      text1NumberOfLines={2}
+      text2NumberOfLines={2}
     />
   )
 }

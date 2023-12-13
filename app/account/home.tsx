@@ -189,6 +189,18 @@ export default function HomeScreen() {
       ]
     }
 
+    const [searchText, setSearchText] = useState('')
+    const handleSearchTransaction = (text: string) => {
+      setSearchText(text)
+    }
+
+    const filteredData = getTransactionsQuery.data?.data.filter((item: any) => {
+      return (
+        searchText === '' ||
+        item.description.toLowerCase().includes(searchText.toLowerCase())
+      )
+    })
+
     return (
       <View className="flex-1 bg-black">
         <Animated.View
@@ -237,6 +249,7 @@ export default function HomeScreen() {
                         className="h-12 px-10 py-3 bg-[#D9D9D9] rounded-lg focus:border-primary"
                         placeholderTextColor={Colors.tertiary}
                         placeholder="Tìm kiếm giao dịch"
+                        onChangeText={(text) => handleSearchTransaction(text)}
                         style={{ fontFamily: 'Inter' }}
                       />
                       <View className="absolute top-3 left-2">
@@ -270,7 +283,7 @@ export default function HomeScreen() {
                 contentContainerStyle={{
                   paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
                 }}
-                data={getTransactionsQuery.data?.data}
+                data={filteredData}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (

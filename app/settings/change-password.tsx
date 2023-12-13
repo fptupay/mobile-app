@@ -12,7 +12,10 @@ import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
 import { Controller, useForm } from 'react-hook-form'
-import { PasswordChangeSchema, passwordSchema } from '@/schemas/auth-schema'
+import {
+  PasswordChangeSchema,
+  passwordChangeSchema
+} from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import BackButton from '@/components/buttons/BackButton'
@@ -28,14 +31,18 @@ import Toast from 'react-native-toast-message'
 export default function ChangePasswordScreen() {
   const [error, setError] = useState('')
   const [isVisible, setIsVisible] = useState(false)
-  const { control, getValues } = useForm<PasswordChangeSchema>({
+  const {
+    control,
+    getValues,
+    formState: { isValid }
+  } = useForm<PasswordChangeSchema>({
     defaultValues: {
       username: '',
       old_password: '',
       new_password: '',
       confirm_password: ''
     },
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolver(passwordChangeSchema),
     mode: 'onBlur'
   })
   const { username } = useAccountStore((store) => store.details)
@@ -172,7 +179,7 @@ export default function ChangePasswordScreen() {
                   text="Xác nhận"
                   type={TextButtonType.PRIMARY}
                   onPress={handleChangePassword}
-                  disable={changePasswordMutation.isLoading}
+                  disable={changePasswordMutation.isLoading || !isValid}
                   loading={changePasswordMutation.isLoading}
                 />
               </View>

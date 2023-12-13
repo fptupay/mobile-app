@@ -1,6 +1,7 @@
 import React from 'react'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
-import { View, SafeAreaView } from 'react-native'
+import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
 import { Image } from 'expo-image'
@@ -27,7 +28,7 @@ const advantages = [
 export default function SmartOTPIntroductionScreen() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-4">
-      <BackButton />
+      <BackButton href="/smart-otp" />
       <Image
         source={require('@/assets/images/reset-password.png')}
         className="w-[225px] h-[225px] mx-auto"

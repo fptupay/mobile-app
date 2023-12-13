@@ -24,9 +24,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
+  StyleSheet
 } from 'react-native'
-import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 import { useTransferStore } from '@/stores/transferStore'
 
@@ -74,14 +74,6 @@ export default function WithdrawalScreen() {
           text2: data.message
         })
       } else {
-        /* router.push({
-          pathname: '/transfer/otp',
-          params: {
-            type: 'withdraw',
-            link_account_id: selectedBank,
-            trans_id: data.data.trans_id
-          }
-        }) */
         setTransactionId(data?.data.trans_id)
         router.push('/transfer/otp')
       }
@@ -102,6 +94,7 @@ export default function WithdrawalScreen() {
       backHref="/account/home"
       questionHref="/instruction/withdraw-instruction"
       title="Rút tiền"
+      hasInstruction
     >
       <View className="py-4 bg-transparent flex flex-col justify-between">
         <ScrollView
@@ -115,7 +108,10 @@ export default function WithdrawalScreen() {
                   Rút tiền từ ví FPTU Pay
                 </SemiText>
 
-                <View className="bg-white rounded-lg my-5 mx-4 px-4 py-2 shadow-md">
+                <View
+                  className="bg-white rounded-lg my-5 mx-1 px-4 py-2"
+                  style={styles.shadow}
+                >
                   <NormalText className="text-tertiary">
                     Tài khoản nguồn
                   </NormalText>
@@ -166,16 +162,6 @@ export default function WithdrawalScreen() {
         </ScrollView>
       </View>
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
-        <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
-          <Image
-            source={require('@/assets/images/tick.png')}
-            className="w-6 h-6"
-          />
-          <NormalText className="text-tertiary flex-1 text-xs">
-            Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
-            <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
-          </NormalText>
-        </View>
         <TextButton
           text="Rút tiền"
           type="primary"
@@ -195,3 +181,16 @@ export default function WithdrawalScreen() {
     </SharedLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3
+  }
+})

@@ -29,7 +29,7 @@ export default function ChangePasswordScreen() {
     control,
     getValues,
     watch,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<PasswordInitSchema>({
     defaultValues: {
       username: params.username,
@@ -170,7 +170,7 @@ export default function ChangePasswordScreen() {
             <View className="w-full mt-8">
               <TextButton
                 text="Xác nhận"
-                disable={passwordMutation.isLoading}
+                disable={passwordMutation.isLoading || !isValid}
                 loading={passwordMutation.isLoading}
                 type={TextButtonType.PRIMARY}
                 onPress={() =>

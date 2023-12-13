@@ -94,4 +94,9 @@ export const getFirstAndLastDayOfCurrentMonth = () => {
     firstDay: formatDate(firstDay),
     lastDay: formatDate(lastDay)
   }
+
+export const convertDateFormatToISO = (inputDate: string) => {
+  const parts = inputDate.split('/')
+  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`
+  return formattedDate
 }

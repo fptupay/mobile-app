@@ -8,21 +8,24 @@ import { useTransactionStore } from '@/stores/transactionStore'
 import {
   convertNumberToVietnameseWords,
   formatMoney,
+  getDeviceId,
   successResponseStatus
 } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { router, useLocalSearchParams } from 'expo-router'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { Modal } from '@/components/Modal'
 import { useTransferStore } from '@/stores/transferStore'
+import { checkStatusSmartOTP } from '@/api/otp'
 
 export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
@@ -56,9 +59,32 @@ export default function TransferConfirmationScreen() {
     }
   })
 
+  const { mutate } = useMutation({
+    mutationFn: checkStatusSmartOTP,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setHasRegisteredOTP(true)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    }
+  })
+
   const handleVerifyTransfer = async () => {
     const existingPIN = await SecureStore.getItemAsync(username)
-    if (!existingPIN) {
+    const smartOTPTransactionId = await SecureStore.getItemAsync(
+      `${username}_transId` || ''
+    )
+    const deviceId = await getDeviceId()
+
+    mutate({
+      device_id: deviceId,
+      version: Platform.Version.toString(),
+      trans_id: smartOTPTransactionId
+    })
+
+    if (!existingPIN && !hasRegisteredOTP) {
       setIsVisible(true)
     } else {
       verifyTransferMutation.mutate({
@@ -177,7 +203,7 @@ export default function TransferConfirmationScreen() {
               </View>
               <View className="flex-1">
                 <TextButton
-                  text="Không"
+                  text="Đóng"
                   type="secondary"
                   onPress={() => setIsVisible(false)}
                 />

@@ -12,7 +12,7 @@ import { generateOTP } from '@/api/otp'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 
-export default function RegisterPINScreen() {
+export default function ConfirmNewPINScreen() {
   const [pin, setPin] = useState<string>('')
   const [confirmedPin, setConfirmedPin] = useState<string>('')
   const otpRef = useRef<OtpInputRef>(null)
@@ -31,6 +31,8 @@ export default function RegisterPINScreen() {
   }
 
   const handleSetPIN = async () => {
+    const oldPIN = await SecureStore.getItemAsync(username)
+
     if (pin !== confirmedPin) {
       Toast.show({
         type: 'error',
@@ -39,23 +41,22 @@ export default function RegisterPINScreen() {
       })
       return
     }
+    if (confirmedPin === oldPIN) {
+      Toast.show({
+        type: 'error',
+        text1: 'Mã PIN mới không được trùng với mã PIN cũ'
+      })
+      return
+    }
+
     // save this pin to local storage
     await SecureStore.setItemAsync(username, pin)
     await generateOTP()
-    router.push('/smart-otp/smart-otp-confirmation')
+    router.push('/smart-otp/change-confirmation')
   }
 
   return (
     <SafeAreaView className="flex-1 px-4">
-      <View className="pt-8">
-        <MediumText className="text-3xl tracking-tight text-secondary">
-          Cài đặt Smart OTP
-        </MediumText>
-        <NormalText className="text-tertiary mt-1">
-          Vui lòng cài đặt PIN cho cho Smart OTP
-        </NormalText>
-      </View>
-
       <View className="flex space-y-4 mt-8">
         <MediumText className="text-center text-secondary mb-2">
           Nhâp mã PIN

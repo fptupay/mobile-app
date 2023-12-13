@@ -44,6 +44,7 @@ export default function CardForm({ cardForm }: { cardForm: any }) {
             className="mt-5 mb-1"
             keyboardType="numeric"
             value={value}
+            placeholder="MM/YY"
             editable={true}
             onBlur={onBlur}
             maxLength={5}

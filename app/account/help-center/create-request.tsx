@@ -19,25 +19,28 @@ import {
   View,
   Image,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
 import Toast from 'react-native-toast-message'
+import { Dropdown } from 'react-native-element-dropdown'
+
 import * as ImagePicker from 'expo-image-picker'
 import { NormalText } from '@/components/Themed'
 import TextField from '@/components/TextField'
 
+const requestType = [
+  { label: 'Lỗi giao dịch', value: 'TRANSACTION' },
+  { label: 'Vấn đề khác', value: 'OTHER' }
+]
+
 export default function CreateRequestScreen() {
-  const [open, setOpen] = useState(false)
-  const [type, setType] = useState('')
+  const [isFocus, setIsFocus] = useState(false)
   const [transactionId, setTransactionId] = useState('')
   const [title, setTitle] = useState('')
+  const [value, setValue] = useState('')
   const [description, setDescription] = useState('')
   const [images, setImages] = useState<string[]>([])
-  const [requestType, setRequestType] = useState([
-    { label: 'Lỗi giao dịch', value: 'TRANSACTION' },
-    { label: 'Vấn đề khác', value: 'OTHER' }
-  ])
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -80,6 +83,13 @@ export default function CreateRequestScreen() {
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
         })
+        // clear state
+        setValue('')
+        setTransactionId('')
+        setTitle('')
+        setDescription('')
+        setImages([])
+
         await queryClient.invalidateQueries(['requests'])
       } else {
         Toast.show({
@@ -96,34 +106,45 @@ export default function CreateRequestScreen() {
       transaction_id: transactionId,
       title: title,
       description: description,
-      type: type,
+      type: value,
       images: images
     })
   }
 
   return (
-    <SharedLayout backHref="/index" questionHref='/instruction/create-request-instruction' title="Tạo yêu cầu">
+    <SharedLayout
+      backHref="/index"
+      questionHref="/instruction/create-request-instruction"
+      title="Tạo yêu cầu"
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="mt-8 flex-1"
       >
-        <DropDownPicker
-          open={open}
+        <Dropdown
+          style={[styles.dropdown, isFocus && { borderColor: Colors.primary }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={requestType}
           placeholder="Chọn loại yêu cầu"
-          value={type}
-          items={requestType}
-          setOpen={setOpen}
-          setValue={setType}
-          setItems={setRequestType}
-          style={{ borderColor: Colors.tertiary }}
-          textStyle={{ color: Colors.tertiary }}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          value={value}
+          onFocus={() => {
+            setIsFocus(true)
+          }}
+          onBlur={() => setIsFocus(false)}
+          onChange={(item) => {
+            setValue(item.value)
+          }}
         />
 
         <ScrollView
           className="space-y-3 pt-4 pb-10"
           showsVerticalScrollIndicator={false}
         >
-          {type === 'TRANSACTION' && (
+          {value === 'TRANSACTION' && (
             <TextField
               label="Mã giao dịch"
               value={transactionId}
@@ -147,7 +168,9 @@ export default function CreateRequestScreen() {
             onChangeText={(text) => setDescription(text)}
           />
 
-          <NormalText className="text-tertiary">Thêm ảnh chứng minh</NormalText>
+          <NormalText className="text-tertiary">
+            Thêm ảnh chứng minh (tuỳ chọn)
+          </NormalText>
           <View className="flex flex-row">
             {images && (
               <View className="flex flex-row flex-wrap">
@@ -190,3 +213,28 @@ export default function CreateRequestScreen() {
     </SharedLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  dropdown: {
+    height: 50,
+    borderColor: Colors.tertiary,
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14
+  },
+  placeholderStyle: {
+    fontSize: 14
+  },
+  selectedTextStyle: {
+    fontSize: 14
+  }
+})

@@ -1,4 +1,4 @@
-import { getAllBanks } from '@/api/bank'
+import { getAllBanks, getLinkedBanks } from '@/api/bank'
 import CustomIcon from '@/components/Icon'
 import LoadingSpin from '@/components/LoadingSpin'
 import { Modal } from '@/components/Modal'
@@ -38,6 +38,7 @@ type BankItemProp = {
   code: string
   name: string
   short_name: string
+  bank_code: string
   status: string
   display_order: number
   is_direct: boolean
@@ -78,6 +79,33 @@ export default function AddBankScreen() {
     }
   })
 
+  const banksLinkedQuery = useQuery({
+    queryKey: ['getLinkedBanks'],
+    queryFn: () => getLinkedBanks(),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: AxiosError) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message
+      })
+    }
+  })
+
+  console.log(
+    'all banks:',
+    banksQuery.data?.data.filter((item: BankItemProp) => item.is_direct == true)
+  )
+  console.log('linked banks:', banksLinkedQuery.data?.data)
+
   const clearSearchValue = () => {
     setSearchValue('')
   }
@@ -85,7 +113,10 @@ export default function AddBankScreen() {
   const filteredBankData = banksQuery.data?.data.filter(
     (item: BankItemProp) =>
       item.short_name.toLowerCase().includes(searchValue.toLowerCase()) &&
-      item.is_direct == true
+      item.is_direct == true &&
+      banksLinkedQuery.data?.data.some(
+        (linkedItem: BankItemProp) => linkedItem.bank_code !== item.code
+      )
   )
 
   const handleSelectBank = (item: BankItemProp) => {
@@ -210,9 +241,10 @@ export default function AddBankScreen() {
 
   return (
     <SharedLayout
-    questionHref='/instruction/add-bank-instruction'
+      questionHref="/instruction/add-bank-instruction"
       backHref={params.previousRoute || '/account/home'}
       title="Liên kết ngân hàng"
+      hasInstruction
     >
       <View className="py-4 flex-1 flex-col justify-start gap-y-5">
         <View className="my-1 flex-row">

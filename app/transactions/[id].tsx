@@ -66,14 +66,11 @@ export default function TransactionDetailScreen() {
         </View>
       ) : (
         <>
-          <View className="flex flex-row justify-between mt-4">
-            <MediumText className="text-secondary">
-              {data?.data.trans_code === 'TRANSFER'
-                ? 'Chuyển tiền nhanh'
-                : data?.data.description}
-            </MediumText>
-            <CustomIcon name="Share" size={20} color="#000" />
-          </View>
+          <MediumText className="text-secondary mt-4">
+            {data?.data.trans_code === 'TRANSFER'
+              ? 'Chuyển tiền nhanh'
+              : data?.data.description}
+          </MediumText>
 
           <SemiText className="text-4xl text-center mt-4 text-secondary">
             {' '}
@@ -88,8 +85,8 @@ export default function TransactionDetailScreen() {
                   <NormalText className="text-tertiary">
                     {item.title}
                   </NormalText>
-                  <View className="flex flex-row">
-                    <NormalText className="mr-1 text-secondary">
+                  <View className="flex flex-row flex-1 justify-end">
+                    <NormalText className="mr-1 text-secondary text-right">
                       {item.value}
                     </NormalText>
                     {item.title === 'Mã giao dịch' && (

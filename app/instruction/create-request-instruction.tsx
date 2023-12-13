@@ -6,7 +6,7 @@ import BackButton from '@/components/buttons/BackButton'
 
 export default function CreateRequestInstructionScreen() {
   return (
-    <SafeAreaView className="flex-1 px-4 pt-4">
+    <SafeAreaView className="flex-1 px-6 pt-4">
       <BackButton />
       <View className="items-center">
         <Image

@@ -42,8 +42,12 @@ export const passwordChangeSchema = z.object({
       message: 'Mật khẩu cũ không được để trống'
     })
     .trim(),
-  new_password: z.string().trim(),
-  confirm_password: z.string().trim()
+  new_password: z.string().min(1, {
+    message: 'Mật khẩu không được để trống'
+  }),
+  confirm_password: z.string().min(1, {
+    message: 'Mật khẩu không được để trống'
+  })
 })
 
 export const loginFormSchema = z.object({

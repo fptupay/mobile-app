@@ -153,14 +153,17 @@ export default function TransactionOTPScreen() {
   })
 
   const handleConfirmTransfer = () => {
-    if (fundTransferId) {
+    if (fundTransferId !== '') {
       confirmTransferMutation.mutate({
         fund_transfer_id: fundTransferId,
         otp: copiedSmartOTP
       })
       setFundTransferId('')
-    }
-    if (transactionType === 'HP' || transactionType === 'KTX') {
+    } else if (
+      transactionType === 'HP' ||
+      transactionType === 'KTX' ||
+      transactionType === 'KHAC'
+    ) {
       payBillMutation.mutate({
         otp: copiedSmartOTP,
         fee_type: transactionType,

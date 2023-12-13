@@ -6,8 +6,7 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
-import { formatMoney } from '@/utils/helper'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -17,19 +16,29 @@ interface PaymentItemProps {
   icon: IconProps['name']
   href?: any
   amount?: number
+  type?: string
 }
 
-const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
+const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
   const { pendingBill } = usePaymentStore()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isModal2Visible, setIsModal2Visible] = useState(false)
 
   const handlePaymentItemPress = (href: any) => {
     if (pendingBill !== null) {
       setIsModalVisible(true)
+    }
+    if (
+      (title === 'Học phí kỳ tiếp' && amount === 0) ||
+      (title === 'Phí đơn từ' && amount === 0)
+    ) {
+      setIsModal2Visible(true)
+    } else if (title === 'Ký túc xá') {
+      router.push(href)
     } else {
       router.push({
-        pathname: '/payments/[id]',
-        params: { id: href }
+        pathname: '/payments/payment-bill',
+        params: { type: type }
       } as any)
     }
   }
@@ -38,9 +47,6 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
     <>
       <TouchableOpacity
         className="p-4 mb-4 border flex-row justify-between items-center border-gray-300 rounded-lg"
-        /* onPress={() =>
-        router.push({ pathname: 'payments/[id]', params: { id: href } } as any)
-      } */
         onPress={() => handlePaymentItemPress(href)}
         activeOpacity={0.8}
       >
@@ -49,13 +55,7 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
           <MediumText className="text-secondary ml-2">{title}</MediumText>
         </View>
         <View>
-          {title === 'Học phí kỳ tiếp' ? (
-            <MediumText className="text-primary">
-              {amount && formatMoney(amount)}đ
-            </MediumText>
-          ) : (
-            <CustomIcon name="ChevronRight" size={24} color="#374151" />
-          )}
+          <CustomIcon name="ChevronRight" size={24} color="#374151" />
         </View>
       </TouchableOpacity>
 
@@ -78,14 +78,43 @@ const PaymentItem = ({ title, icon, href, amount }: PaymentItemProps) => {
           </Modal.Body>
         </Modal.Container>
       </Modal>
+
+      <Modal isVisible={isModal2Visible}>
+        <Modal.Container>
+          <Modal.Header title="Lưu ý" />
+          <Modal.Body>
+            <NormalText className="text-tertiary">
+              Bạn đang không có khoản{' '}
+              {title === 'Học phí kỳ tiếp' ? 'học phí' : 'phí đơn từ'} nào cần
+              thanh toán.
+            </NormalText>
+
+            <View className="mt-6 w-full">
+              <TextButton
+                text="Đóng"
+                type="primary"
+                onPress={() => setIsModal2Visible(false)}
+              />
+            </View>
+          </Modal.Body>
+        </Modal.Container>
+      </Modal>
     </>
   )
 }
 
 export default function PaymentsScreen() {
-  const { data } = useQuery({
-    queryKey: ['payments'],
-    queryFn: () => getDNGBillByFeeType('hp')
+  const [tuitionData, otherFeeData] = useQueries({
+    queries: [
+      {
+        queryKey: ['tuition'],
+        queryFn: () => getDNGBillByFeeType('hp')
+      },
+      {
+        queryKey: ['otherFee'],
+        queryFn: () => getDNGBillByFeeType('khac')
+      }
+    ]
   })
 
   return (
@@ -93,25 +122,31 @@ export default function PaymentsScreen() {
       backHref="/account/home"
       questionHref="/instruction/payment-instruction"
       title="Thanh toán"
+      hasInstruction
     >
       <SemiText className="mt-4 text-secondary">
         Lựa chọn các khoản nộp
       </SemiText>
       <ScrollView className="mt-4">
-        {data?.success === true ? (
-          <PaymentItem
-            title="Học phí kỳ tiếp"
-            icon="GraduationCap"
-            href="payment-bill"
-            amount={data?.data[0]?.amount}
-          />
-        ) : null}
-        <PaymentItem title="Đăng ký môn học" icon="Book" href="subject-fee" />
-        <PaymentItem title="Ký túc xá" icon="Home" href="dormitory-fee" />
         <PaymentItem
-          title="Các khoản phí khác"
+          title="Học phí kỳ tiếp"
+          icon="GraduationCap"
+          href="payment-bill"
+          amount={tuitionData.data?.data[0]?.amount || 0}
+          type="hp"
+        />
+        <PaymentItem
+          title="Ký túc xá"
+          icon="Home"
+          href="/payments/dormitory-fee"
+          amount={0}
+        />
+        <PaymentItem
+          title="Phí đơn từ"
           icon="MoreHorizontal"
-          href="application-fee"
+          href="payment-bill"
+          amount={otherFeeData.data?.data[0]?.amount || 0}
+          type="khac"
         />
       </ScrollView>
     </SharedLayout>

@@ -26,16 +26,16 @@ const walletFunctions: ListItemProps[] = [
     leftIcon: 'Plus',
     color: '#000000',
     title: 'Nạp tiền',
-    description: 'Từ ngân hàng vào FPTU Pay',
+    description: 'Từ ngân hàng vào ví FPTUPay',
     href: '/main-features/deposit/load-money',
     rightIcon: 'ChevronRight'
   },
   {
     leftIcon: 'ArrowRight',
-    title: 'Chuyển tiền',
+    title: 'Rút tiền',
     color: '#000000',
-    description: 'Từ FPTU Pay tới FPT Academy',
-    href: '/transfer/transfer-list',
+    description: 'Về ngân hàng đã liên kết',
+    href: '/main-features/withdraw/withdrawal',
     rightIcon: 'ChevronRight'
   }
 ]
@@ -112,7 +112,6 @@ export default function MyWalletScreen() {
         })
         await queryClient.invalidateQueries(['user-avatar'])
       } else {
-        console.log(data)
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
@@ -241,7 +240,7 @@ export default function MyWalletScreen() {
             <List data={otherFunctions} title="Khác" />
           </View>
 
-          <View className="mx-4 my-4">
+          <View className="mx-4 mt-8">
             <TextButton
               onPress={logoutMutation.mutate}
               disable={logoutMutation.isLoading}

@@ -30,6 +30,7 @@ export default function TransferListScreen() {
       backHref="/account/home"
       questionHref="/instruction/transfer-instruction"
       title="Chuyển tiền tới"
+      hasInstruction
     >
       <TouchableOpacity
         onPress={() => router.push('/transfer/transfer-new')}
