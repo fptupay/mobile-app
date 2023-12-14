@@ -11,6 +11,7 @@ import { OtpInputRef } from '@/types/OtpInput.type'
 import { generateOTP } from '@/api/otp'
 import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
+import BackButton from '@/components/buttons/BackButton'
 
 export default function RegisterPINScreen() {
   const [pin, setPin] = useState<string>('')
@@ -48,11 +49,13 @@ export default function RegisterPINScreen() {
   return (
     <SafeAreaView className="flex-1 px-4">
       <View className="pt-8">
+        <BackButton />
         <MediumText className="text-3xl tracking-tight text-secondary">
-          Cài đặt Smart OTP
+          Thiết lập mã PIN
         </MediumText>
         <NormalText className="text-tertiary mt-1">
-          Vui lòng cài đặt PIN cho cho Smart OTP
+          Để thiết lập mã PIN, bạn hãy tạo một mã có 6 chữ số và xác nhận lại
+          như dưới đây.
         </NormalText>
       </View>
 

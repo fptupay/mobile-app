@@ -56,7 +56,7 @@ export default function TransactionDetailScreen() {
   }
 
   return (
-    <SharedLayout title="Chi tiết giao dịch" backHref="/home">
+    <SharedLayout title="Chi tiết giao dịch" backHref="/account/home">
       {isLoading ? (
         <View className="flex justify-center items-center mt-8 h-full">
           <ActivityIndicator size="large" color={Colors.tertiary} />
@@ -107,15 +107,17 @@ export default function TransactionDetailScreen() {
             </View>
           </View>
 
-          <View className="mt-auto mb-4">
-            <TextButton
-              text="Trợ giúp"
-              type="primary"
-              onPress={() => {
-                router.push('/account/help-center/create-request')
-              }}
-            />
-          </View>
+          {data?.data.amount < 0 && (
+            <View className="mt-auto mb-4">
+              <TextButton
+                text="Trợ giúp"
+                type="primary"
+                onPress={() => {
+                  router.push('/account/help-center/create-request')
+                }}
+              />
+            </View>
+          )}
         </>
       )}
     </SharedLayout>

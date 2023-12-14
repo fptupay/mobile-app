@@ -43,7 +43,7 @@ export default function TransactionOTPScreen() {
   }
 
   return (
-    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
+    <SharedLayout backHref="/account/home" title="Nhập mã PIN">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
