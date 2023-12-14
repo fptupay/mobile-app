@@ -1,5 +1,5 @@
 import { LineChart } from 'react-native-chart-kit'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import SharedLayout from '@/components/SharedLayout'
 import {
@@ -24,6 +24,7 @@ import {
 } from '@/utils/datetime'
 import Toast from 'react-native-toast-message'
 import { isAxiosError } from 'axios'
+import LoadingSpin from '@/components/LoadingSpin'
 
 const chartConfig = {
   backgroundGradientFrom: Colors.light.background,
@@ -65,6 +66,8 @@ export default function TransactionStatisticsScreen() {
   const [modalVisible, setModalVisible] = useState(false)
   const [from, setFrom] = useState(firstDay)
   const [to, setTo] = useState(lastDay)
+  const [isLoading, setIsLoading] = useState(false)
+
   const {
     listTransaction,
     accountNumber,
@@ -115,6 +118,38 @@ export default function TransactionStatisticsScreen() {
     }
   })
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setIsLoading(true)
+
+        await Promise.all([
+          chartReportMutation.mutateAsync({
+            account_no: accountNumber,
+            from_date: firstDay,
+            to_date: lastDay
+          }),
+          listReportMutation.mutateAsync({
+            account_no: accountNumber,
+            from_date: firstDay,
+            to_date: lastDay
+          })
+        ])
+      } catch (error) {
+        if (isAxiosError(error)) {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: error.message
+          })
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    void getData()
+  }, [accountNumber, firstDay, lastDay])
+
   const handleSortTransaction = async (key: string) => {
     const { fromDate, toDate } = getTransactionDates(key)
 
@@ -134,98 +169,102 @@ export default function TransactionStatisticsScreen() {
     setModalVisible(false)
   }
 
-  const cashInChart =
-    transactionReport && transactionReport?.in_amount_total_by_date
-  const cashOutChart =
-    transactionReport && transactionReport?.out_amount_total_by_date
-
-  const cashInList = listTransaction && listTransaction?.total_in
-  const cashOutList = listTransaction && listTransaction?.total_out
-
   const display = [
     {
       key: 'cashInChart',
       title: 'Tổng tiền vào',
-      value: formatMoney(cashInList)
+      value: formatMoney(listTransaction.total_in || 0)
     },
     {
       key: 'cashOutChart',
       title: 'Tổng tiền ra',
-      value: formatMoney(cashOutList)
+      value: formatMoney(listTransaction.total_out || 0)
     }
   ]
 
   return (
     <SharedLayout title="Thống kê giao dịch">
-      <View className="flex flex-row justify-between mt-4">
-        <MediumText className="text-secondary">
-          {convertDateFormat(from)} - {convertDateFormat(to)}
-        </MediumText>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-          <CustomIcon name="ListFilter" size={20} color={Colors.light.text} />
-        </TouchableOpacity>
-      </View>
-      <LineChart
-        bezier
-        withVerticalLabels={false}
-        withDots={false}
-        data={{
-          labels: Object.keys(cashInChart),
-          datasets: [
-            {
-              data: Object.values(cashInChart).map(
-                (value: any) => value / 1000
-              ),
-              strokeWidth: 2,
-              color: () => '#60a5fa'
-            },
-            {
-              data: Object.values(cashOutChart).map(
-                (value: any) => value / 1000
-              ),
-              strokeWidth: 2,
-              color: () => '#fb923c'
-            }
-          ],
-          legend: ['Tiền vào', 'Tiền ra']
-        }}
-        formatYLabel={(value) => `${formatMoney(value)} k`}
-        width={WINDOW_WIDTH - 32}
-        height={250}
-        withInnerLines={false}
-        chartConfig={chartConfig}
-        style={styles.chart}
-      />
-
-      {display.map((item) => (
-        <View className="flex flex-row justify-between mb-4" key={item.key}>
-          <MediumText className="text-tertiary">{item.title}</MediumText>
-          <TouchableOpacity
-            className="flex flex-row items-center"
-            onPress={async () => {
-              await listReportMutation.mutateAsync({
-                account_no: accountNumber,
-                from_date: from,
-                to_date: to
-              })
-              router.push({
-                pathname: '/statistics/[cash]',
-                params: { cash: item.key }
-              })
-            }}
-            activeOpacity={0.8}
-          >
-            <MediumText className="text-secondary mr-1">
-              {item.value} đ
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <View className="flex flex-row justify-between mt-4">
+            <MediumText className="text-secondary">
+              {convertDateFormat(from)} - {convertDateFormat(to)}
             </MediumText>
-            <CustomIcon
-              name="ChevronRight"
-              size={16}
-              color={Colors.light.text}
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+              <CustomIcon
+                name="ListFilter"
+                size={20}
+                color={Colors.light.text}
+              />
+            </TouchableOpacity>
+          </View>
+          {!isLoading && transactionReport.in_amount_total_by_date && (
+            <LineChart
+              bezier
+              withVerticalLabels={false}
+              withDots={false}
+              data={{
+                labels: Object.keys(transactionReport),
+                datasets: [
+                  {
+                    data: Object.values(
+                      transactionReport?.in_amount_total_by_date
+                    ).map((value: any) => value / 1000),
+                    strokeWidth: 2,
+                    color: () => '#60a5fa'
+                  },
+                  {
+                    data: Object.values(
+                      transactionReport?.out_amount_total_by_date
+                    ).map((value: any) => value / 1000),
+                    strokeWidth: 2,
+                    color: () => '#fb923c'
+                  }
+                ],
+                legend: ['Tiền vào', 'Tiền ra']
+              }}
+              formatYLabel={(value) => `${formatMoney(value)} k`}
+              width={WINDOW_WIDTH - 32}
+              height={250}
+              withInnerLines={false}
+              chartConfig={chartConfig}
+              style={styles.chart}
             />
-          </TouchableOpacity>
-        </View>
-      ))}
+          )}
+
+          {display.map((item) => (
+            <View className="flex flex-row justify-between mb-4" key={item.key}>
+              <MediumText className="text-tertiary">{item.title}</MediumText>
+              <TouchableOpacity
+                className="flex flex-row items-center"
+                onPress={async () => {
+                  await listReportMutation.mutateAsync({
+                    account_no: accountNumber,
+                    from_date: from,
+                    to_date: to
+                  })
+                  router.push({
+                    pathname: '/statistics/[cash]',
+                    params: { cash: item.key }
+                  })
+                }}
+                activeOpacity={0.8}
+              >
+                <MediumText className="text-secondary mr-1">
+                  {item.value} đ
+                </MediumText>
+                <CustomIcon
+                  name="ChevronRight"
+                  size={16}
+                  color={Colors.light.text}
+                />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </>
+      )}
 
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View className="flex-1 justify-end items-center">

@@ -1,9 +1,6 @@
 import { getAccountBalance } from '@/api/bank'
 import { getUserAvatar, getUserDetails } from '@/api/profile'
-import {
-  getTransactionReportByChart,
-  getTransactionsByAccountNumber
-} from '@/api/transaction'
+import { getTransactionsByAccountNumber } from '@/api/transaction'
 import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
@@ -14,13 +11,8 @@ import {
   extractDateStringFromCurrentDate,
   getCurrentYearTime
 } from '@/utils/datetime'
-import {
-  WINDOW_HEIGHT,
-  formatDateTime,
-  formatMoney,
-  successResponseStatus
-} from '@/utils/helper'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
+import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -77,8 +69,7 @@ export default function HomeScreen() {
   const [showBalance, setShowBalance] = useState(false)
 
   const { setBalance, setDetails, setAvatar } = useAccountStore()
-  const { accountNumber, setAccountNumber, setTransactionReport } =
-    useTransactionStore()
+  const { accountNumber, setAccountNumber } = useTransactionStore()
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
@@ -124,29 +115,8 @@ export default function HomeScreen() {
     notifyOnChangeProps: ['data']
   })
 
-  const { mutateAsync } = useMutation({
-    mutationFn: getTransactionReportByChart,
-    onSuccess: (data) => {
-      if (successResponseStatus(data)) {
-        setTransactionReport(data?.data)
-      }
-    },
-    onError: (error) => {
-      console.log(error)
-    }
-  })
-
   const toggleSearch = () => {
     setIsSearching(!isSearching)
-  }
-
-  const handleShowTransactionReport = async () => {
-    await mutateAsync({
-      account_no: accountNumber,
-      from_date: '2023-12-01',
-      to_date: '2023-12-31'
-    })
-    router.push('/statistics/')
   }
 
   const BottomSheet = () => {
@@ -223,7 +193,7 @@ export default function HomeScreen() {
               <View className="flex-row">
                 <TouchableOpacity
                   className="mr-4"
-                  onPress={handleShowTransactionReport}
+                  onPress={() => router.push('/statistics/')}
                 >
                   <CustomIcon
                     name="BarChart"
