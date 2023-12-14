@@ -1,9 +1,9 @@
 import { TouchableOpacity, View } from 'react-native'
-import { NormalText } from './Themed'
+import { MediumText, NormalText } from './Themed'
 import TextButton, { TextButtonType } from './buttons/TextButton'
 import { useModalStore } from '@/stores/modalStore'
 
-export default function PromptModal() {
+export default function PromptModal({ type }: { type: string }) {
   const setIsOpen = useModalStore((state) => state.setIsOpen)
 
   const closeModal = () => {
@@ -17,9 +17,13 @@ export default function PromptModal() {
     >
       <TouchableOpacity activeOpacity={0.8}>
         <View className="bg-white rounded-lg p-5">
-          <NormalText className="text-tertiary text-center mb-8">
-            Rất tiếc, giao dịch không thể thực hiện vì bạn không có đủ tiền
-            trong ví. Hãy nạp thêm tiền vào tài khoản nhé.
+          <MediumText className="text-primary mb-2 text-xl">
+            Thông báo
+          </MediumText>
+          <NormalText className="text-tertiary mb-4">
+            {type === 'not-enough-balance'
+              ? 'Số tiền còn lại trong tài khoản của bạn không đủ để thực hiện giao dịch này. Hãy nạp thêm tiền vào tài khoản nhé.'
+              : 'Số tiền nhỏ hơn hạn mức tối thiểu trên 1 giao dịch (10.000 đ)'}
           </NormalText>
           <View
             className="flex flex-row justify-around"
@@ -28,17 +32,19 @@ export default function PromptModal() {
             <View className="flex-1">
               <TextButton
                 onPress={closeModal}
-                text="Hủy"
+                text="Đóng"
                 type={TextButtonType.SECONDARY}
               />
             </View>
-            <View className="flex-1">
-              <TextButton
-                href="/main-features/deposit/load-money"
-                text="Nạp tiền"
-                type={TextButtonType.PRIMARY}
-              />
-            </View>
+            {type === 'not-enough-balance' ? (
+              <View className="flex-1">
+                <TextButton
+                  href="/main-features/deposit/load-money"
+                  text="Nạp tiền"
+                  type={TextButtonType.PRIMARY}
+                />
+              </View>
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>
