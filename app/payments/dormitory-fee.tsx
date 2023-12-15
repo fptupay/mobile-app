@@ -1,4 +1,5 @@
 import { getRoomTypes } from '@/api/booking/dormitory'
+import LoadingSpin from '@/components/LoadingSpin'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
@@ -18,7 +19,7 @@ interface Room {
 export default function DormitoryFeeScreen() {
   const [selectedRoomType, setSelectedRoomType] = useState<Room>()
 
-  const roomTypesQuery = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['room'],
     queryFn: getRoomTypes
   })
@@ -36,29 +37,33 @@ export default function DormitoryFeeScreen() {
     <SharedLayout title="Ký túc xá" backHref="/account/payments">
       <View className="mt-4">
         <MediumText className="text-secondary">Lựa chọn loại phòng</MediumText>
-
-        {/* Room type */}
-        <View className="flex flex-row flex-wrap gap-x-4 mt-4">
-          {roomTypesQuery.data?.data.map((room: Room) => (
-            <TouchableOpacity
-              className={`p-4 mb-4 border rounded-lg ${
-                selectedRoomType?.id === room.id
-                  ? 'border-primary'
-                  : 'border-gray-300'
-              }`}
-              key={room.id}
-              activeOpacity={0.8}
-              onPress={() => handleSelectRoomType(room)}
-            >
-              <View>
-                <MediumText className="text-secondary">{room.name}</MediumText>
-                <NormalText className="text-tertiary">
-                  {formatMoney(room.amount)} đ
-                </NormalText>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <View className="flex flex-row flex-wrap gap-x-4 mt-4">
+            {data?.data.map((room: Room) => (
+              <TouchableOpacity
+                className={`p-4 mb-4 border rounded-lg ${
+                  selectedRoomType?.id === room.id
+                    ? 'border-primary'
+                    : 'border-gray-300'
+                }`}
+                key={room.id}
+                activeOpacity={0.8}
+                onPress={() => handleSelectRoomType(room)}
+              >
+                <View>
+                  <MediumText className="text-secondary">
+                    {room.name}
+                  </MediumText>
+                  <NormalText className="text-tertiary">
+                    {formatMoney(room.amount)} đ
+                  </NormalText>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       <View className="mt-auto mb-4">

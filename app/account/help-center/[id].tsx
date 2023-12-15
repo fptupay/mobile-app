@@ -48,7 +48,7 @@ export default function RequestDetailScreen() {
     },
     {
       key: 'Phản hồi',
-      value: ''
+      value: details?.data?.note
     }
   ]
 
@@ -69,6 +69,8 @@ export default function RequestDetailScreen() {
       router.replace('/account/help-center/')
     }
   })
+
+  console.log(details)
 
   const handleCloseSupportRequest = () => {
     closeRequestMutation.mutate()

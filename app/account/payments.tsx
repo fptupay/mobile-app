@@ -139,6 +139,7 @@ export default function PaymentsScreen() {
           title="Ký túc xá"
           icon="Home"
           href="/payments/dormitory-fee"
+          amount={0}
         />
         <PaymentItem
           title="Phí đơn từ"

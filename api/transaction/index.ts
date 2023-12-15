@@ -26,9 +26,17 @@ export const getTransactionDetails = async (id: string) => {
   return response.data
 }
 
-export const getTransactionReport = async (data: any) => {
+export const getTransactionReportByList = async (data: any) => {
   const response = await apiPostCall(
     '/finance/transaction/account/report',
+    data
+  )
+  return response.data
+}
+
+export const getTransactionReportByChart = async (data: any) => {
+  const response = await apiPostCall(
+    '/finance/transaction/account/report/statistic',
     data
   )
   return response.data

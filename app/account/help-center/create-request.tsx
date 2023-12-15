@@ -83,6 +83,13 @@ export default function CreateRequestScreen() {
           pathname: '/account/help-center/successful-request',
           params: { id: data.data.id }
         })
+        // clear state
+        setValue('')
+        setTransactionId('')
+        setTitle('')
+        setDescription('')
+        setImages([])
+
         await queryClient.invalidateQueries(['requests'])
       } else {
         Toast.show({
@@ -119,10 +126,10 @@ export default function CreateRequestScreen() {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           data={requestType}
+          placeholder="Chọn loại yêu cầu"
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Chọn DOM' : '...'}
           value={value}
           onFocus={() => {
             setIsFocus(true)
@@ -161,7 +168,9 @@ export default function CreateRequestScreen() {
             onChangeText={(text) => setDescription(text)}
           />
 
-          <NormalText className="text-tertiary">Thêm ảnh chứng minh</NormalText>
+          <NormalText className="text-tertiary">
+            Thêm ảnh chứng minh (tuỳ chọn)
+          </NormalText>
           <View className="flex flex-row">
             {images && (
               <View className="flex flex-row flex-wrap">

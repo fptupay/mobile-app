@@ -28,7 +28,7 @@ const advantages = [
 export default function SmartOTPIntroductionScreen() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-4">
-      <BackButton href="/account/my-wallet" />
+      <BackButton href="/smart-otp" />
       <Image
         source={require('@/assets/images/reset-password.png')}
         className="w-[225px] h-[225px] mx-auto"

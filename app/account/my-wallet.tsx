@@ -35,7 +35,7 @@ const walletFunctions: ListItemProps[] = [
     title: 'Rút tiền',
     color: '#000000',
     description: 'Về ngân hàng đã liên kết',
-    href: '/transfer/transfer-list',
+    href: '/main-features/withdraw/withdrawal',
     rightIcon: 'ChevronRight'
   }
 ]

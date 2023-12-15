@@ -2,7 +2,7 @@ import GradientBackground from '@/components/GradientBackground'
 import CustomIcon from '@/components/Icon'
 import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { useTransactionStore } from '@/stores/bankStore'
+import { useTransactionStore } from '@/stores/transactionStore'
 import {
   WINDOW_HEIGHT,
   formatDateTime,
