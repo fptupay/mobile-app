@@ -39,7 +39,7 @@ export default function TransferConfirmationScreen() {
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         setFundTransferId(data.data.fund_transfer_id)
-        router.push('/transfer/otp')
+        router.push('/transfer/pin')
       } else {
         Toast.show({
           type: 'error',
