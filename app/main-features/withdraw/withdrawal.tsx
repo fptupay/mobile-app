@@ -75,7 +75,7 @@ export default function WithdrawalScreen() {
         })
       } else {
         setTransactionId(data?.data.trans_id)
-        router.push('/transfer/otp')
+        router.push('/transfer/pin')
       }
     },
     onError: (error: Error) => {
