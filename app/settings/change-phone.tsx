@@ -56,7 +56,7 @@ export default function ChangePhoneNumberScreen() {
     changePhoneNumberMutation.isLoading || !phoneNumber || !password
 
   return (
-    <SafeAreaView className="flex-1 pt-4">
+    <SafeAreaView className="flex-1 pt-4 bg-white">
       <View className="ml-4">
         <BackButton />
       </View>

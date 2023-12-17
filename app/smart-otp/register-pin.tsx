@@ -47,7 +47,7 @@ export default function RegisterPINScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <View className="pt-8">
         <BackButton />
         <MediumText className="text-3xl tracking-tight text-secondary">
