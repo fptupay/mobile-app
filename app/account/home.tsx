@@ -35,6 +35,7 @@ import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { blurHash } from '@/constants/Hash'
+import { useTransactionStore } from '@/stores/transactionStore'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -66,11 +67,9 @@ const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
 export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
-  const [accountNo, setAccountNo] = useState('')
 
-  const setBalance = useAccountStore((state) => state.setBalance)
-  const setDetails = useAccountStore((state) => state.setDetails)
-  const setAvatar = useAccountStore((state) => state.setAvatar)
+  const { setBalance, setDetails, setAvatar } = useAccountStore()
+  const { accountNumber, setAccountNumber } = useTransactionStore()
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
@@ -78,7 +77,7 @@ export default function HomeScreen() {
     notifyOnChangeProps: ['data'],
     onSuccess: (data) => {
       setBalance(data.data.balance)
-      setAccountNo(data.data.account_no)
+      setAccountNumber(data.data.account_no)
     },
     onError: (error: AxiosError) => {
       Toast.show({
@@ -106,10 +105,10 @@ export default function HomeScreen() {
   })
 
   const getTransactionsQuery = useQuery({
-    queryKey: ['transactions', accountNo],
+    queryKey: ['transactions', accountNumber],
     queryFn: () =>
       getTransactionsByAccountNumber(
-        accountNo,
+        accountNumber,
         getCurrentYearTime(),
         extractDateStringFromCurrentDate(new Date())
       ),

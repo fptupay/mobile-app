@@ -77,7 +77,7 @@ export default function PaymentBillScreen() {
 
         <View className="mt-auto mb-4">
           <TextButton
-            onPress={() => router.replace('/transfer/otp')}
+            onPress={() => router.replace('/transfer/pin')}
             text="Tiếp tục"
             type="primary"
           />

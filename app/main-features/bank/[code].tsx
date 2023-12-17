@@ -1,6 +1,6 @@
 import { bankLinkAccountVerify, bankLinkCardVerify } from '@/api/bank'
 import SharedLayout from '@/components/SharedLayout'
-import { NormalText, View } from '@/components/Themed'
+import { View } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import {
   BankLinkAccountVerifySchema,
@@ -14,7 +14,6 @@ import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
-import { Image } from 'expo-image'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import Toast from 'react-native-toast-message'
 import AccountForm from './account-form'
@@ -107,7 +106,10 @@ export default function AddBankItemScreen() {
   })
 
   return (
-    <SharedLayout backHref="/main-features/bank/add-bank" title={name as string}>
+    <SharedLayout
+      backHref="/main-features/bank/add-bank"
+      title={name as string}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="py-5 bg-transparent h-full flex flex-col justify-between">
           <View className="bg-transparent">
@@ -119,16 +121,6 @@ export default function AddBankItemScreen() {
           </View>
 
           <View className="bg-transparent">
-            <View className="bg-transparent flex flex-row gap-x-2 items-center mb-4">
-              <Image
-                source={require('@/assets/images/tick.png')}
-                className="w-6 h-6"
-              />
-              <NormalText className="text-tertiary flex-1 text-xs">
-                Mọi thông tin đều được mã hóa để bảo mật thông tin sinh viên.{' '}
-                <NormalText className="text-primary">Tìm hiểu thêm</NormalText>
-              </NormalText>
-            </View>
             <TextButton
               onPress={() =>
                 type == 'CARD'

@@ -12,7 +12,7 @@ import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import { OtpInput } from '@/components/OtpInput'
 import { OtpInputRef } from '@/types/OtpInput.type'
-import { useTransactionStore } from '@/stores/bankStore'
+import { useTransactionStore } from '@/stores/transactionStore'
 import * as SecureStore from 'expo-secure-store'
 import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
@@ -43,7 +43,7 @@ export default function TransactionOTPScreen() {
   }
 
   return (
-    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
+    <SharedLayout backHref="/account/home" title="Nhập mã PIN">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"

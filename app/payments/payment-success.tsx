@@ -9,6 +9,7 @@ import { useLocalSearchParams } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
 import { getTransactionDetails } from '@/api/transaction'
 import { useTransferStore } from '@/stores/transferStore'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function PaymentSuccessScreen() {
   const { transId } = useLocalSearchParams()
@@ -53,14 +54,18 @@ export default function PaymentSuccessScreen() {
           thành công. Chúc bạn một kỳ học mới hiệu quả!
         </NormalText>
         <View className="w-full h-px bg-[#E1E1E1] mt-5"></View>
-        <View className="mt-5 w-full">
-          {transferDetail.map((item, index) => (
-            <View key={index} className="flex flex-row justify-between mb-6">
-              <NormalText className="text-tertiary">{item.title}</NormalText>
-              <NormalText className="text-secondary">{item.value}</NormalText>
-            </View>
-          ))}
-        </View>
+        {isFetched ? (
+          <View className="mt-5 w-full">
+            {transferDetail.map((item, index) => (
+              <View key={index} className="flex flex-row justify-between mb-6">
+                <NormalText className="text-tertiary">{item.title}</NormalText>
+                <NormalText className="text-secondary">{item.value}</NormalText>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <LoadingSpin />
+        )}
         <View className="w-full mb-4 mt-auto" style={{ rowGap: 12 }}>
           <TextButton
             text="Về trang chủ"

@@ -29,6 +29,7 @@ export default function TransferAmountScreen() {
   const [rawAmount, setRawAmount] = useState<string>('')
   const [suggestions, setSuggestions] = useState<number[]>([])
   const [message, setMessage] = useState<string>(`${full_name} chuyển tiền`)
+  const [alertType, setAlertType] = useState('')
 
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
@@ -44,7 +45,7 @@ export default function TransferAmountScreen() {
 
     const baseAmount = parseInt(numericValue) || 0
     // prevent user from entering more than 100 million
-    if (numericValue.length > 8 && numericValue !== '100000000') {
+    if (rawAmount.length > 8 || baseAmount > 100000000) {
       return
     }
 
@@ -75,6 +76,10 @@ export default function TransferAmountScreen() {
   const handleTransfer = () => {
     if (rawAmount > balance) {
       setIsOpen(true)
+      setAlertType('not-enough-balance')
+    } else if (+rawAmount < 10000) {
+      setIsOpen(true)
+      setAlertType('min-amount')
     } else {
       setIsOpen(false)
       router.push({
@@ -86,7 +91,7 @@ export default function TransferAmountScreen() {
 
   return (
     <>
-      {isOpen && <PromptModal />}
+      {isOpen && <PromptModal type={alertType} />}
       <SharedLayout backHref="/transfer/transfer-new" title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
@@ -105,7 +110,7 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Entered amount */}
-            <View className="flex-1 justify-center items-center">
+            <View className="flex-auto justify-center items-center">
               <TextInput
                 className="text-4xl font-semibold text-primary w-full text-center"
                 placeholder="0đ"
@@ -120,26 +125,28 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Suggestion */}
-            <View className="space-x-2 flex-row">
-              {suggestions.map((suggestion) => (
-                <TouchableOpacity
-                  key={suggestion}
-                  onPress={() => handleSuggestionPress(suggestion)}
-                  className="flex-wrap p-1 rounded-md bg-orange-100"
-                >
-                  <MediumText className="text-secondary">
-                    {formatMoney(suggestion)}
-                  </MediumText>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <View className="flex-auto">
+              <View className="space-x-2 flex-row">
+                {suggestions.map((suggestion) => (
+                  <TouchableOpacity
+                    key={suggestion}
+                    onPress={() => handleSuggestionPress(suggestion)}
+                    className="flex-wrap p-1 rounded-md bg-orange-100"
+                  >
+                    <MediumText className="text-secondary">
+                      {formatMoney(suggestion)}
+                    </MediumText>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
-            <TextField
-              value={message}
-              label="Nhắn gửi"
-              onChangeText={(text) => setMessage(text)}
-              className="my-4"
-            />
+              <TextField
+                value={message}
+                label="Nhắn gửi"
+                onChangeText={(text) => setMessage(text)}
+                className="my-4"
+              />
+            </View>
 
             <View className="mb-4">
               <TextButton

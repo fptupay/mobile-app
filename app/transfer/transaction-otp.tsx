@@ -13,7 +13,8 @@ import TextButton from '@/components/buttons/TextButton'
 import { useMutation } from '@tanstack/react-query'
 import { confirmTransfer } from '@/api/transfer'
 import { TransferConfirmSchema } from '@/schemas/transfer-schema'
-import { useBankStore, useTransactionStore } from '@/stores/bankStore'
+import { useBankStore } from '@/stores/bankStore'
+import { useTransactionStore } from '@/stores/transactionStore'
 import Toast from 'react-native-toast-message'
 import * as Clipboard from 'expo-clipboard'
 import useCountdown from '@/hooks/useCountdown'
@@ -82,10 +83,6 @@ export default function TransactionOTPScreen() {
       return confirmTransfer(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:85 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (successResponseStatus(data)) {
         router.push('/transfer/transfer-successful')
         setTransactionDetails(data.data)
@@ -107,10 +104,6 @@ export default function TransactionOTPScreen() {
       return withdrawConfirm(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:106 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (!successResponseStatus(data)) {
         Toast.show({
           type: 'error',
@@ -143,10 +136,6 @@ export default function TransactionOTPScreen() {
       return payBill(data, smartOTPTransactionId as string)
     },
     onSuccess: (data) => {
-      console.log(
-        '🚀 ~ file: transaction-otp.tsx:140 ~ TransactionOTPScreen ~ data:',
-        data
-      )
       if (successResponseStatus(data)) {
         clearPendingBill()
         router.push({

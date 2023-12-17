@@ -2,7 +2,7 @@ import { View, Modal, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import React, { useState } from 'react'
 import SharedLayout from '@/components/SharedLayout'
-import { MediumText, NormalText, SemiText } from '@/components/Themed'
+import { MediumText, NormalText } from '@/components/Themed'
 import { BlurView } from 'expo-blur'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import DescriptionRowItem, {
@@ -19,19 +19,19 @@ import { useAccountStore } from '@/stores/accountStore'
 const mockCardData = [
   {
     label: 'Nạp tiền tối thiểu',
-    description: '10.000đ'
+    description: '10.000 đ'
   },
   {
     label: 'Nạp tiền tối đa',
-    description: '50.000.000đ'
+    description: '100.000.000 đ'
   },
   {
     label: 'Rút tiền tối thiểu',
-    description: '50.000đ'
+    description: '50.000 đ'
   },
   {
     label: 'Rút tiền tối đa',
-    description: '50.000.000đ'
+    description: '200.000.000 đ'
   }
 ]
 
@@ -104,14 +104,14 @@ export default function BankDetailScreen() {
 
   return (
     <SharedLayout backHref="/bank/bank-list" title="Thông tin liên kết">
-      <View className=" w-full h-[225px] bg-primary relative mt-4 rounded-lg">
+      <View className=" w-full h-[210px] bg-primary/80  relative mt-4 rounded-lg">
         <View className="absolute flex flex-row justify-between items-center p-3">
           <Image
             source={{ uri: bank?.data[0].logo }}
             className=" h-10 w-10 mx-auto"
           />
-          <MediumText className="tracking-tight text-center text-white ml-3 text-xl">
-            Agribank
+          <MediumText className="tracking-tight text-white ml-3 text-lg">
+            {bank?.data[0].bank_name}
           </MediumText>
         </View>
         <View className="absolute flex flex-row items-center right-0 p-3 bottom-0">
@@ -121,7 +121,9 @@ export default function BankDetailScreen() {
         </View>
       </View>
       <ScrollView className="pt-4" showsVerticalScrollIndicator={false}>
-        <SemiText className="text-secondary pb-2">Thông tin cơ bản</SemiText>
+        <MediumText className="text-secondary pb-2">
+          Thông tin cơ bản
+        </MediumText>
         {mockPersonalData.map((item) => (
           <DescriptionRowItem
             key={item.label}
@@ -129,9 +131,9 @@ export default function BankDetailScreen() {
             description={item.description}
           />
         ))}
-        <SemiText className="text-secondary pb-2 pt-4">
+        <MediumText className="text-secondary pb-2 pt-4">
           Hạn mức giao dịch
-        </SemiText>
+        </MediumText>
         {mockCardData.map((item) => (
           <DescriptionRowItem
             key={item.label}
