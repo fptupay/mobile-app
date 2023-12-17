@@ -56,7 +56,7 @@ export default function ConfirmNewPINScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <View className="flex space-y-4 mt-8">
         <MediumText className="text-center text-secondary mb-2">
           Nhâp mã PIN

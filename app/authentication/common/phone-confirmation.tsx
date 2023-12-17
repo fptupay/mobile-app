@@ -62,7 +62,7 @@ export default function PhoneConfirmationScreen() {
   }, [isFetched, phone])
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 pt-0"
