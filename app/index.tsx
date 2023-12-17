@@ -130,7 +130,7 @@ export default function LoginScreen() {
   })
 
   return (
-    <SafeAreaView className="flex-1 items-center relative">
+    <SafeAreaView className="flex-1 items-center relative bg-white">
       <StatusBar style="auto" />
 
       <KeyboardAvoidingView

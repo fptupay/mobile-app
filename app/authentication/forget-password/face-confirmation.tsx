@@ -57,7 +57,7 @@ export default function FaceAuthenticatorScreen() {
   })
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <StatusBar style="auto" />
       <View className="mt-10 mb-8">
         <SemiText className="text-3xl tracking-tighter text-secondary">

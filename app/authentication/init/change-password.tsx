@@ -91,7 +91,7 @@ export default function ChangePasswordScreen() {
   })
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="ml-4">
         <BackButton />
       </View>

@@ -10,7 +10,7 @@ export default function AddBankSuccessScreen() {
   const router = useRouter()
 
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <StatusBar style="auto" />
       <View className="flex-1 justify-center space-y-8">
         <Image
