@@ -114,8 +114,8 @@ export default function AddBankScreen() {
     (item: BankItemProp) =>
       item.short_name.toLowerCase().includes(searchValue.toLowerCase()) &&
       item.is_direct == true &&
-      (banksLinkedQuery.data === undefined || banksLinkedQuery.data.length === 0 || banksLinkedQuery.data?.data.some(
-        (linkedItem: BankItemProp) => linkedItem.bank_code !== item.code
+      (banksLinkedQuery.data === undefined || banksLinkedQuery.data.length === 0 || !banksLinkedQuery.data?.data.some(
+        (linkedItem: BankItemProp) => linkedItem.bank_code === item.code
       ))
   )
 
