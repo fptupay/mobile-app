@@ -25,10 +25,10 @@ export default function TransferAmountScreen() {
   const { studentCode, receiver } = useLocalSearchParams()
   const { full_name } = useAccountStore((state) => state.details)
 
-  const [amount, setAmount] = useState<string>()
-  const [rawAmount, setRawAmount] = useState<string>('')
+  const [amount, setAmount] = useState('')
+  const [rawAmount, setRawAmount] = useState('')
   const [suggestions, setSuggestions] = useState<number[]>([])
-  const [message, setMessage] = useState<string>(`${full_name} chuyển tiền`)
+  const [message, setMessage] = useState(`${full_name} chuyển tiền`)
   const [alertType, setAlertType] = useState('')
 
   const isOpen = useModalStore((state) => state.isOpen)
@@ -41,16 +41,15 @@ export default function TransferAmountScreen() {
       return
     }
     const numericValue = amount.replace(/\D/g, '')
-    setRawAmount(numericValue)
-
     const baseAmount = parseInt(numericValue) || 0
     // prevent user from entering more than 100 million
-    if (rawAmount.length > 8 || baseAmount > 100000000) {
+    if (numericValue.length > 8 || baseAmount > 100000000) {
       return
     }
 
     // format amount with dot by thousands
     const formattedAmount = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    setRawAmount(numericValue)
     setAmount(formattedAmount)
 
     let suggestions: any[] = []
@@ -74,7 +73,7 @@ export default function TransferAmountScreen() {
   }
 
   const handleTransfer = () => {
-    if (rawAmount > balance) {
+    if (+rawAmount > +balance) {
       setIsOpen(true)
       setAlertType('not-enough-balance')
     } else if (+rawAmount < 10000) {
