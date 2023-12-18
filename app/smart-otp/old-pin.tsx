@@ -1,4 +1,9 @@
-import { View, Pressable } from 'react-native'
+import {
+  View,
+  Pressable,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native'
 import React, { useRef, useState } from 'react'
 import * as SecureStore from 'expo-secure-store'
 import { MediumText, NormalText } from '@/components/Themed'
@@ -36,29 +41,34 @@ export default function OldPINScreen() {
 
   return (
     <SharedLayout title="Thay đổi PIN OTP">
-      <View className="flex space-y-4 mt-8">
-        <MediumText className="text-center text-secondary mb-2">
-          Nhâp mã PIN OTP hiện tại
-        </MediumText>
-        <OtpInput
-          ref={otpRef}
-          numberOfDigits={6}
-          onTextChange={(text) => setPin(text)}
-          focusColor={Colors.primary}
-          type="covered"
-        />
-        <Pressable onPress={handleClearPIN}>
-          <NormalText className="text-primary text-center">Xóa</NormalText>
-        </Pressable>
-      </View>
-      <View className="mt-auto mb-4">
-        <TextButton
-          text="Tiếp tục"
-          type="primary"
-          disable={pin.length < 6}
-          onPress={handleVerifyOldPIN}
-        />
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View className="flex-1 px-4 bg-white">
+          <View className="flex space-y-4 mt-8">
+            <MediumText className="text-center text-secondary mb-2">
+              Nhâp mã PIN OTP hiện tại
+            </MediumText>
+            <OtpInput
+              ref={otpRef}
+              numberOfDigits={6}
+              onTextChange={(text) => setPin(text)}
+              focusColor={Colors.primary}
+              type="covered"
+            />
+            <Pressable onPress={handleClearPIN}>
+              <NormalText className="text-primary text-center">Xóa</NormalText>
+            </Pressable>
+          </View>
+
+          <View className="mt-auto mb-4">
+            <TextButton
+              text="Tiếp tục"
+              type="primary"
+              disable={pin.length < 6}
+              onPress={handleVerifyOldPIN}
+            />
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     </SharedLayout>
   )
 }
