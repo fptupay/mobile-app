@@ -9,7 +9,7 @@ import {
 import { Image } from 'expo-image'
 import { loginUser } from '@/api/authentication'
 import TextField from '@/components/TextField'
-import { MediumText, NormalText } from '@/components/Themed'
+import { NormalText, SemiText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
 import UserStatus from '@/constants/statuses'
 import { LoginFormSchema, loginFormSchema } from '@/schemas/auth-schema'
@@ -144,11 +144,10 @@ export default function LoginScreen() {
                 source={require('@/assets/images/login-account.png')}
                 className="w-[215px] h-[160px]"
               />
-              <MediumText className="text-3xl tracking-tighter text-secondary">
+              <SemiText className="text-3xl tracking-tighter text-secondary">
                 Đăng nhập tài khoản{' '}
-                <MediumText className="text-primary">FPTUPay</MediumText> của
-                bạn{' '}
-              </MediumText>
+                <SemiText className="text-primary">FPTUPay</SemiText> của bạn{' '}
+              </SemiText>
             </View>
 
             <View className="w-full space-y-4">
