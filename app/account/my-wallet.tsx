@@ -52,6 +52,12 @@ const accountDetail: ListItemProps[] = [
     color: '#3074E3',
     href: '/bank/bank-list',
     title: 'Ngân hàng đã liên kết'
+  },
+  {
+    leftIcon: 'BarChart3',
+    color: '#4ade80',
+    href: '/statistics/',
+    title: 'Thống kê giao dịch'
   }
 ]
 

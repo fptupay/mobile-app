@@ -4,7 +4,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import GradientBackground from './GradientBackground'
-import { MediumText } from './Themed'
+import { SemiText } from './Themed'
 import BackButton from './buttons/BackButton'
 import QuestionButton from './buttons/QuestionButton'
 
@@ -34,12 +34,12 @@ export default function SharedLayout({
             {hasInstruction ? <QuestionButton href={questionHref} /> : null}
           </View>
 
-          <MediumText
+          <SemiText
             className="text-2xl text-secondary"
             style={{ marginTop: WINDOW_HEIGHT * 0.04 }}
           >
             {title}
-          </MediumText>
+          </SemiText>
         </SafeAreaView>
       </View>
       <View
