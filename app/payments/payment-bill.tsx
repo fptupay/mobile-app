@@ -34,7 +34,7 @@ export default function PaymentBillScreen() {
     }
   })
 
-  const { mutateAsync, isSuccess } = useMutation({
+  const checkSmartOTPStatusMutation = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -55,7 +55,7 @@ export default function PaymentBillScreen() {
     )
     const deviceId = await getDeviceId()
 
-    await mutateAsync({
+    await checkSmartOTPStatusMutation.mutateAsync({
       device_id: deviceId,
       version: Platform.Version.toString(),
       trans_id: smartOTPTransactionId
@@ -118,8 +118,8 @@ export default function PaymentBillScreen() {
             onPress={handleVerifyBill}
             text="Tiếp tục"
             type="primary"
-            loading={!isSuccess}
-            disable={!isSuccess}
+            loading={checkSmartOTPStatusMutation.isLoading}
+            disable={checkSmartOTPStatusMutation.isLoading}
           />
         </View>
       </SharedLayout>
