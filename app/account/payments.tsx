@@ -133,7 +133,7 @@ export default function PaymentsScreen() {
           title="Học phí kỳ tiếp"
           icon="GraduationCap"
           href="payment-bill"
-          amount={tuitionData.data?.data[0]?.amount || 0}
+          amount={tuitionData.data?.amount ?? 0}
           type="hp"
         />
         <PaymentItem
@@ -146,7 +146,7 @@ export default function PaymentsScreen() {
           title="Phí đơn từ"
           icon="MoreHorizontal"
           href="payment-bill"
-          amount={otherFeeData.data?.data[0]?.amount || 0}
+          amount={otherFeeData.data?.amount ?? 0}
           type="khac"
         />
       </ScrollView>
