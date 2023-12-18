@@ -21,11 +21,12 @@ interface PaymentItemProps {
 
 const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
   const { pendingBill } = usePaymentStore()
+
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModal2Visible, setIsModal2Visible] = useState(false)
 
   const handlePaymentItemPress = (href: any) => {
-    if (pendingBill !== null) {
+    if (pendingBill !== null && title == 'Ký túc xá') {
       setIsModalVisible(true)
     }
     if (

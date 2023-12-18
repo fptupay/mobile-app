@@ -30,7 +30,10 @@ export default function PaymentBillScreen() {
     onSuccess: (data) => {
       setTransactionType(data?.data[0].type)
       setTransactionId(data?.data[0].transaction_id)
-      setPendingBill(data?.data[0])
+
+      if (data?.data[0].type === 'KTX') {
+        setPendingBill(data?.data[0])
+      }
     }
   })
 
