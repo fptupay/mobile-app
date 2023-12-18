@@ -11,7 +11,7 @@ export default function TransactionListScreen() {
   const { cash } = useLocalSearchParams()
   const { listTransaction } = useTransactionStore()
 
-  const isCashIn = cash === 'cashIn'
+  const isCashIn = cash === 'cashInChart'
 
   return (
     <SharedLayout title={isCashIn ? 'Thống kê tiền vào' : 'Thống kê tiền ra'}>

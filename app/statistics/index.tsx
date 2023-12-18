@@ -118,56 +118,62 @@ export default function TransactionStatisticsScreen() {
     }
   })
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsLoading(true)
-
-        await Promise.all([
-          chartReportMutation.mutateAsync({
-            account_no: accountNumber,
-            from_date: firstDay,
-            to_date: lastDay
-          }),
-          listReportMutation.mutateAsync({
-            account_no: accountNumber,
-            from_date: firstDay,
-            to_date: lastDay
-          })
-        ])
-      } catch (error) {
-        if (isAxiosError(error)) {
-          Toast.show({
-            type: 'error',
-            text1: 'Đã có lỗi xảy ra',
-            text2: error.message
-          })
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    void getData()
-  }, [accountNumber, firstDay, lastDay])
-
-  const handleSortTransaction = async (key: string) => {
+  const handleSortTransaction = (key: string) => {
     const { fromDate, toDate } = getTransactionDates(key)
 
     setFrom(fromDate)
     setTo(toDate)
-
-    await chartReportMutation.mutateAsync({
-      account_no: accountNumber,
-      from_date: from,
-      to_date: to
-    })
-    await listReportMutation.mutateAsync({
-      account_no: accountNumber,
-      from_date: from,
-      to_date: to
-    })
     setModalVisible(false)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+
+      try {
+        const [chartData, listData] = await Promise.all([
+          chartReportMutation.mutateAsync({
+            account_no: accountNumber,
+            from_date: from,
+            to_date: to
+          }),
+          listReportMutation.mutateAsync({
+            account_no: accountNumber,
+            from_date: from,
+            to_date: to
+          })
+        ])
+
+        if (successResponseStatus(chartData)) {
+          setTransactionReport(chartData?.data)
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: chartData.message
+          })
+        }
+
+        if (successResponseStatus(listData)) {
+          setListTransaction(listData?.data)
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Đã có lỗi xảy ra',
+            text2: listData.message
+          })
+        }
+      } catch (error) {
+        console.log(error)
+        // Handle other errors if needed
+      } finally {
+        setIsLoading(false)
+        setModalVisible(false)
+      }
+    }
+
+    void fetchData()
+  }, [from, to, accountNumber])
 
   const display = [
     {
