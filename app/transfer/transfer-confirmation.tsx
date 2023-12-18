@@ -59,11 +59,13 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        setHasRegisteredOTP(true)
+        if (data.data?.status === true) {
+          setHasRegisteredOTP(true)
+        }
       }
     },
     onError: (error) => {
@@ -78,13 +80,13 @@ export default function TransferConfirmationScreen() {
     )
     const deviceId = await getDeviceId()
 
-    mutate({
+    await mutateAsync({
       device_id: deviceId,
       version: Platform.Version.toString(),
       trans_id: smartOTPTransactionId
     })
 
-    if (!existingPIN && !hasRegisteredOTP) {
+    if (!existingPIN || hasRegisteredOTP === false) {
       setIsVisible(true)
     } else {
       verifyTransferMutation.mutate({
