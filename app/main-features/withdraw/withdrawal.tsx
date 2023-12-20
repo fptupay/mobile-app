@@ -39,7 +39,7 @@ export default function WithdrawalScreen() {
   const router = useRouter()
 
   const [amount, setAmount] = useState('')
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
 
   const selectedBank = useBankStore((state) => state.selectedBank)
@@ -80,6 +80,8 @@ export default function WithdrawalScreen() {
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
+        } else {
+          setHasRegisteredOTP(false)
         }
       }
     },

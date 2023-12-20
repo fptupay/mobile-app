@@ -18,7 +18,7 @@ import { Modal } from '@/components/Modal'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
   const { setTransactionType, setTransactionId } = useTransferStore()
   const { setPendingBill } = usePaymentStore()
@@ -47,6 +47,8 @@ export default function PaymentBillScreen() {
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
+        } else {
+          setHasRegisteredOTP(false)
         }
       }
     },
