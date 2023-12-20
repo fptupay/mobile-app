@@ -40,6 +40,10 @@ export default function PaymentBillScreen() {
   const checkSmartOTPStatusMutation = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
+      console.log(
+        '🚀 ~ file: payment-bill.tsx:53 ~ PaymentBillScreen ~ data:',
+        data
+      )
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
@@ -64,7 +68,7 @@ export default function PaymentBillScreen() {
       trans_id: smartOTPTransactionId
     })
 
-    if (!existingPIN || hasRegisteredOTP === false) {
+    if (!existingPIN && hasRegisteredOTP === false) {
       setIsVisible(true)
     } else {
       router.replace('/transfer/pin')
