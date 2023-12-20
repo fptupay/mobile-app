@@ -74,7 +74,7 @@ export default function WithdrawalScreen() {
     }
   })
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isLoading, isSuccess } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -220,7 +220,7 @@ export default function WithdrawalScreen() {
             type="primary"
             onPress={handleVerifyWithdrawal}
             loading={isLoading}
-            disable={selectedBank == '' || amount == '' || isLoading}
+            disable={selectedBank == '' || amount == '' || isLoading || isSuccess}
           />
         </View>
       </SharedLayout>
