@@ -18,7 +18,8 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.fptupay"
+      "bundleIdentifier": "com.fptupay",
+      "buildNumber": "17"
     },
     "android": {
       "adaptiveIcon": {
