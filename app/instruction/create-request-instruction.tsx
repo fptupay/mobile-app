@@ -7,7 +7,7 @@ import BackButton from '@/components/buttons/BackButton'
 export default function CreateRequestInstructionScreen() {
   return (
     <SafeAreaView className="flex-1 px-6 pt-4 bg-white">
-      <BackButton />
+      <BackButton href={'/account/help-center'}/>
       <View className="items-center">
         <Image
           source={require('@/assets/images/send.png')}

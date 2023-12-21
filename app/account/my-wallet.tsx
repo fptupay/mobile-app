@@ -20,6 +20,7 @@ import { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 import { uploadUserAvatar } from '@/api/profile'
 import { blurHash } from '@/constants/Hash'
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -135,17 +136,23 @@ export default function MyWalletScreen() {
   })
 
   const pickImage = async () => {
+    let aspectRatio = [3, 4];
+  
+    if (Platform.OS === 'ios') {
+      aspectRatio = [4, 5];
+    }
+  
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: aspectRatio,
       quality: 0.5
-    })
-
+    });
+  
     if (result?.assets) {
-      avatarMutation.mutate(result.assets[0].uri)
+      avatarMutation.mutate(result.assets[0].uri);
     }
-  }
+  };
 
   return (
     <View className="flex-1 bg-white">
