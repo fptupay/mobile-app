@@ -10,7 +10,7 @@ export default function PaymentInstructionScreen() {
     <SafeAreaView className="flex-1 px-6 pt-4 bg-white">
       <StatusBar style="auto" />
       <View className="flex-1 w-full space-y-4">
-        <BackButton />
+        <BackButton href={'/account/payments'}/>
         <ScrollView
           className="flex-1 my-4"
           showsVerticalScrollIndicator={false}
