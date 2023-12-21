@@ -16,7 +16,7 @@ export default function PersonalInfoScreen() {
     },
     {
       label: 'Mã sinh viên',
-      description: userDetails.username
+      description: userDetails.username.toUpperCase()
     },
     {
       label: 'Email',

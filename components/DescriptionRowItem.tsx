@@ -13,7 +13,7 @@ export default function DescriptionRowItem({
   return (
     <View className="flex flex-row justify-between items-center mb-4">
       <NormalText className="text-tertiary flex-1">{label}</NormalText>
-      <NormalText className="text-secondary flex-1 text-right">
+      <NormalText className="text-secondary text-right">
         {description}
       </NormalText>
     </View>

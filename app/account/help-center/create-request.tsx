@@ -27,7 +27,6 @@ import { Dropdown } from 'react-native-element-dropdown'
 
 import * as ImagePicker from 'expo-image-picker'
 import { NormalText } from '@/components/Themed'
-import TextField from '@/components/TextField'
 
 const requestType = [
   { label: 'Lỗi giao dịch', value: 'TRANSACTION' },
@@ -121,40 +120,44 @@ export default function CreateRequestScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="mt-8 flex-1"
       >
-        <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: Colors.primary }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={requestType}
-          placeholder="Chọn loại yêu cầu"
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          value={value}
-          onFocus={() => {
-            setIsFocus(true)
-          }}
-          onBlur={() => setIsFocus(false)}
-          onChange={(item) => {
-            setValue(item.value)
-          }}
-        />
-
         <ScrollView
-          className="space-y-3 pt-4 pb-10"
+          className="space-y-3 pb-10"
           showsVerticalScrollIndicator={false}
         >
+          <Dropdown
+            style={[
+              styles.dropdown,
+              isFocus && { borderColor: Colors.primary }
+            ]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={requestType}
+            placeholder="Chọn loại yêu cầu"
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            value={value}
+            onFocus={() => {
+              setIsFocus(true)
+            }}
+            onBlur={() => setIsFocus(false)}
+            onChange={(item) => {
+              setValue(item.value)
+            }}
+          />
           {value === 'TRANSACTION' && (
-            <TextField
-              label="Mã giao dịch"
+            <TextInput
+              placeholder="Mã giao dịch"
+              className="border border-gray-300 rounded-lg pl-2.5 pr-3 py-3"
               value={transactionId}
               onChangeText={(text) => setTransactionId(text)}
             />
           )}
 
-          <TextField
-            label="Tiêu đề"
+          <TextInput
+            placeholder="Tiêu đề"
             value={title}
+            className="border border-gray-300 rounded-lg pl-2.5 pr-3 py-3"
             onChangeText={(text) => setTitle(text)}
           />
 
@@ -162,13 +165,13 @@ export default function CreateRequestScreen() {
             placeholder="Mô tả chi tiết vấn đề của bạn"
             multiline
             numberOfLines={7}
-            className="border border-gray-300 rounded-lg pl-6 pr-3 py-3"
+            className="border border-gray-300 rounded-lg pl-2.5 pr-3 py-3"
             textAlignVertical="top"
             value={description}
             onChangeText={(text) => setDescription(text)}
           />
 
-          <NormalText className="text-tertiary">
+          <NormalText className="text-secondary">
             Thêm ảnh chứng minh (tuỳ chọn)
           </NormalText>
           <View className="flex flex-row">
