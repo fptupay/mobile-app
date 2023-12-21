@@ -1,5 +1,6 @@
 import { getDNGBillByFeeType } from '@/api/bill'
 import CustomIcon from '@/components/Icon'
+import LoadingSpin from '@/components/LoadingSpin'
 import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
@@ -117,6 +118,14 @@ export default function PaymentsScreen() {
       }
     ]
   })
+  console.log(
+    '🚀 ~ file: payments.tsx:121 ~ PaymentsScreen ~ otherFeeData:',
+    otherFeeData.data
+  )
+  console.log(
+    '🚀 ~ file: payments.tsx:121 ~ PaymentsScreen ~ tuitionData:',
+    tuitionData.data
+  )
 
   return (
     <SharedLayout
@@ -128,28 +137,50 @@ export default function PaymentsScreen() {
       <SemiText className="mt-4 text-secondary">
         Lựa chọn các khoản nộp
       </SemiText>
-      <ScrollView className="mt-4">
-        <PaymentItem
-          title="Học phí kỳ tiếp"
-          icon="GraduationCap"
-          href="payment-bill"
-          amount={tuitionData.data?.data[0]?.amount ?? 0}
-          type="hp"
-        />
-        <PaymentItem
-          title="Ký túc xá"
-          icon="Home"
-          href="/payments/dormitory-fee"
-          amount={0}
-        />
-        <PaymentItem
-          title="Phí đơn từ"
-          icon="MoreHorizontal"
-          href="payment-bill"
-          amount={otherFeeData.data?.data[0]?.amount ?? 0}
-          type="khac"
-        />
-      </ScrollView>
+
+      {otherFeeData && tuitionData ? (
+        <ScrollView className="mt-4">
+          <PaymentItem
+            title="Học phí kỳ tiếp"
+            icon="GraduationCap"
+            href="payment-bill"
+            amount={
+              tuitionData &&
+              tuitionData.data &&
+              tuitionData.data.success &&
+              tuitionData.data.data &&
+              tuitionData.data.data[0]
+                ? tuitionData.data.data[0].amount
+                : 0
+            }
+            type="hp"
+          />
+          <PaymentItem
+            title="Ký túc xá"
+            icon="Home"
+            href="/payments/dormitory-fee"
+            amount={0}
+            type="ktx"
+          />
+          <PaymentItem
+            title="Phí đơn từ"
+            icon="MoreHorizontal"
+            href="payment-bill"
+            amount={
+              otherFeeData &&
+              otherFeeData.data &&
+              otherFeeData.data.success &&
+              otherFeeData.data.data &&
+              otherFeeData.data.data[0]
+                ? otherFeeData.data.data[0].amount
+                : 0
+            }
+            type="khac"
+          />
+        </ScrollView>
+      ) : (
+        <LoadingSpin />
+      )}
     </SharedLayout>
   )
 }

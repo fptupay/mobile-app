@@ -25,7 +25,7 @@ import { checkStatusSmartOTP } from '@/api/otp'
 
 export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
@@ -59,12 +59,14 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading, isSuccess } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
+        } else {
+          setHasRegisteredOTP(false)
         }
       }
     },
