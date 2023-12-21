@@ -14,7 +14,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { router, useLocalSearchParams } from 'expo-router'
-import { Platform, View } from 'react-native'
+import { Platform, View, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 import * as SecureStore from 'expo-secure-store'
@@ -25,7 +25,7 @@ import { checkStatusSmartOTP } from '@/api/otp'
 
 export default function TransferConfirmationScreen() {
   const [isVisible, setIsVisible] = useState(false)
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
@@ -59,12 +59,14 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading, isSuccess } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
+        } else {
+          setHasRegisteredOTP(false)
         }
       }
     },
@@ -108,7 +110,10 @@ export default function TransferConfirmationScreen() {
           </SemiText>
         </View>
 
-        <View className="bg-zinc-50 rounded-lg mt-4 p-2 space-y-4 shadow-md shadow-zinc-500">
+        <View
+          className="bg-zinc-50 rounded-lg mt-4 p-2 space-y-4"
+          style={styles.shadow}
+        >
           {/* Origin */}
           <View>
             <NormalText className="text-tertiary">Từ tài khoản</NormalText>
@@ -217,3 +222,16 @@ export default function TransferConfirmationScreen() {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3
+  }
+})

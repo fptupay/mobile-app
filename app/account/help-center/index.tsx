@@ -166,9 +166,9 @@ function RequestItem({ request }: { request: any }) {
           className="rounded-full px-2 py-0.5"
           style={{ backgroundColor: getLabelBackgroundColor(request.status) }}
         >
-          <MediumText style={{ color: getLabelTextColor(request.status) }}>
+          <NormalText style={{ color: getLabelTextColor(request.status) }}>
             {getTitle(request.status)}
-          </MediumText>
+          </NormalText>
         </View>
       </Pressable>
     </Link>

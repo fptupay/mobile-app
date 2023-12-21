@@ -39,7 +39,7 @@ export default function WithdrawalScreen() {
   const router = useRouter()
 
   const [amount, setAmount] = useState('')
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(false)
+  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
 
   const selectedBank = useBankStore((state) => state.selectedBank)
@@ -74,12 +74,14 @@ export default function WithdrawalScreen() {
     }
   })
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isLoading, isSuccess } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
         if (data.data?.status === true) {
           setHasRegisteredOTP(true)
+        } else {
+          setHasRegisteredOTP(false)
         }
       }
     },
@@ -218,7 +220,7 @@ export default function WithdrawalScreen() {
             type="primary"
             onPress={handleVerifyWithdrawal}
             loading={isLoading}
-            disable={selectedBank == '' || amount == '' || isLoading}
+            disable={selectedBank == '' || amount == '' || isLoading || isSuccess}
           />
         </View>
       </SharedLayout>
