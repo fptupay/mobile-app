@@ -16,7 +16,7 @@ export default function PersonalInfoScreen() {
     },
     {
       label: 'Mã sinh viên',
-      description: userDetails.username
+      description: userDetails.username.toUpperCase()
     },
     {
       label: 'Email',
@@ -34,10 +34,6 @@ export default function PersonalInfoScreen() {
       label: 'Trạng thái tài khoản',
       description:
         userDetails.status === 'ACTIVE' ? 'Đã kích hoạt' : 'Chưa kích hoạt'
-    },
-    {
-      label: 'Thời gian kích hoạt',
-      description: '01:01 - 01/01/2023'
     },
     {
       label: 'Loại tài khoản',

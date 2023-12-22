@@ -4,7 +4,6 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { TransferVerifySchema } from '@/schemas/transfer-schema'
 import { useAccountStore } from '@/stores/accountStore'
-import { useTransactionStore } from '@/stores/transactionStore'
 import {
   convertNumberToVietnameseWords,
   formatMoney,
@@ -22,23 +21,28 @@ import { useState } from 'react'
 import { Modal } from '@/components/Modal'
 import { useTransferStore } from '@/stores/transferStore'
 import { checkStatusSmartOTP } from '@/api/otp'
+import { TRANSACTION_TYPE } from '@/constants/payment'
+import { useTransactionStore } from '@/stores/transactionStore'
 
 export default function TransferConfirmationScreen() {
+  const { amount, message, studentCode, receiver } = useLocalSearchParams()
+
   const [isVisible, setIsVisible] = useState(false)
   const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
+
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
-  const { amount, message, studentCode, receiver } = useLocalSearchParams()
-  const setFundTransferId = useTransactionStore(
-    (state) => state.setFundTransferId
-  )
+  const { setTransactionType } = useTransferStore()
+  const { setFundTransferId } = useTransactionStore()
 
   const verifyTransferMutation = useMutation({
     mutationFn: (data: TransferVerifySchema) => verifyTransfer(data),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        setFundTransferId(data.data.fund_transfer_id)
+        setTransactionType(TRANSACTION_TYPE.P2P)
+        setFundTransferId(data.data?.fund_transfer_id)
+
         router.push('/transfer/pin')
       } else {
         Toast.show({
@@ -59,7 +63,7 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutateAsync, isLoading, isSuccess } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -125,10 +129,10 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base text-secondary">
-                  {full_name}
-                </MediumText>
-                <NormalText className="text-tertiary">{username}</NormalText>
+                <MediumText className=" text-secondary">{full_name}</MediumText>
+                <NormalText className="text-tertiary">
+                  {username.toUpperCase()}
+                </NormalText>
               </View>
             </View>
           </View>
@@ -144,9 +148,7 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base text-secondary">
-                  {receiver}
-                </MediumText>
+                <MediumText className=" text-secondary">{receiver}</MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
             </View>
@@ -185,8 +187,8 @@ export default function TransferConfirmationScreen() {
             text="Xác nhận"
             type="primary"
             onPress={handleVerifyTransfer}
-            loading={verifyTransferMutation.isLoading}
-            disable={verifyTransferMutation.isLoading}
+            loading={verifyTransferMutation.isLoading || isLoading}
+            disable={verifyTransferMutation.isLoading || isLoading}
           />
         </View>
       </SharedLayout>

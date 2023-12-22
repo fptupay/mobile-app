@@ -15,12 +15,14 @@ import { useState } from 'react'
 import { useAccountStore } from '@/stores/accountStore'
 import * as SecureStore from 'expo-secure-store'
 import { Modal } from '@/components/Modal'
+import { TRANSACTION_TYPE } from '@/constants/payment'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
   const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
-  const { setTransactionType, setTransactionId } = useTransferStore()
+  const { setTransactionType, setTransactionId, setFeeType } =
+    useTransferStore()
   const { setPendingBill } = usePaymentStore()
   const { username } = useAccountStore((state) => state.details)
 
@@ -28,7 +30,8 @@ export default function PaymentBillScreen() {
     queryKey: ['bill'],
     queryFn: () => getDNGBillByFeeType(type as string),
     onSuccess: (data) => {
-      setTransactionType(data?.data[0].type)
+      setFeeType(data?.data[0].type)
+      setTransactionType(TRANSACTION_TYPE.PAYMENT)
       setTransactionId(data?.data[0].transaction_id)
 
       if (data?.data[0].type === 'KTX') {

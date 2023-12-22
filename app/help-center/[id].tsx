@@ -66,7 +66,7 @@ export default function RequestDetailScreen() {
         text1: 'Đóng yêu cầu thành công'
       })
       await queryClient.invalidateQueries(['requests'])
-      router.replace('/account/help-center/')
+      router.replace('/account/help-center')
     }
   })
 

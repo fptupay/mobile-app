@@ -3,6 +3,7 @@ import SharedLayout from '@/components/SharedLayout'
 import TextField from '@/components/TextField'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
+import { useKeyboard } from '@/hooks/useKeyboard'
 import { useAccountStore } from '@/stores/accountStore'
 import { useModalStore } from '@/stores/modalStore'
 import { formatMoney } from '@/utils/helper'
@@ -31,6 +32,7 @@ export default function TransferAmountScreen() {
   const [message, setMessage] = useState(`${full_name} chuyển tiền`)
   const [alertType, setAlertType] = useState('')
 
+  const isKeyboardVisible = useKeyboard()
   const isOpen = useModalStore((state) => state.isOpen)
   const setIsOpen = useModalStore((state) => state.setIsOpen)
   const balance = useAccountStore((state) => state.balance)
@@ -124,7 +126,11 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Suggestion */}
-            <View className="flex-auto">
+            <View
+              className={`flex-auto ${
+                isKeyboardVisible ? 'justify-start' : 'justify-end'
+              }`}
+            >
               <View className="space-x-2 flex-row">
                 {suggestions.map((suggestion) => (
                   <TouchableOpacity

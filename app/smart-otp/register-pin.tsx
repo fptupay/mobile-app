@@ -5,7 +5,13 @@ import TextButton from '@/components/buttons/TextButton'
 import { router } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import Toast from 'react-native-toast-message'
-import { Pressable, View } from 'react-native'
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { generateOTP } from '@/api/otp'
@@ -47,58 +53,62 @@ export default function RegisterPINScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 px-4 bg-white">
-      <View className="pt-8">
-        <BackButton />
-        <MediumText className="text-3xl tracking-tight text-secondary">
-          Thiết lập mã PIN
-        </MediumText>
-        <NormalText className="text-tertiary mt-1">
-          Để thiết lập mã PIN, bạn hãy tạo một mã có 6 chữ số và xác nhận lại
-          như dưới đây.
-        </NormalText>
-      </View>
+    <KeyboardAvoidingView className="flex-1 px-4 bg-white">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView>
+          <View className="pt-4">
+            <BackButton />
+            <MediumText className="text-3xl mt-2 tracking-tight text-secondary">
+              Thiết lập mã PIN
+            </MediumText>
+            <NormalText className="text-tertiary mt-1">
+              Để thiết lập mã PIN, bạn hãy tạo một mã có 6 chữ số và xác nhận
+              lại như dưới đây.
+            </NormalText>
+          </View>
 
-      <View className="flex space-y-4 mt-8">
-        <MediumText className="text-center text-secondary mb-2">
-          Nhâp mã PIN
-        </MediumText>
-        <OtpInput
-          ref={otpRef}
-          numberOfDigits={6}
-          onTextChange={(text) => setPin(text)}
-          focusColor={Colors.primary}
-          type="covered"
-        />
-        <Pressable onPress={handleClearPIN}>
-          <NormalText className="text-primary text-center">Xóa</NormalText>
-        </Pressable>
-      </View>
+          <View className="flex space-y-4 mt-8">
+            <MediumText className="text-center text-secondary mb-2">
+              Nhập mã PIN
+            </MediumText>
+            <OtpInput
+              ref={otpRef}
+              numberOfDigits={6}
+              onTextChange={(text) => setPin(text)}
+              focusColor={Colors.primary}
+              type="covered"
+            />
+            <Pressable onPress={handleClearPIN}>
+              <NormalText className="text-primary text-center">Xóa</NormalText>
+            </Pressable>
+          </View>
 
-      <View className="flex space-y-4 mt-8">
-        <MediumText className="text-center text-secondary mb-2">
-          Nhập lại mã PIN
-        </MediumText>
-        <OtpInput
-          ref={confirmedOtpRef}
-          numberOfDigits={6}
-          onTextChange={(text) => setConfirmedPin(text)}
-          focusColor={Colors.primary}
-          type="covered"
-        />
-        <Pressable onPress={handleClearConfirmedPIN}>
-          <NormalText className="text-primary text-center">Xóa</NormalText>
-        </Pressable>
-      </View>
+          <View className="flex space-y-4 mt-8">
+            <MediumText className="text-center text-secondary mb-2">
+              Nhập lại mã PIN
+            </MediumText>
+            <OtpInput
+              ref={confirmedOtpRef}
+              numberOfDigits={6}
+              onTextChange={(text) => setConfirmedPin(text)}
+              focusColor={Colors.primary}
+              type="covered"
+            />
+            <Pressable onPress={handleClearConfirmedPIN}>
+              <NormalText className="text-primary text-center">Xóa</NormalText>
+            </Pressable>
+          </View>
 
-      <View className="mt-8">
-        <TextButton
-          type="primary"
-          text="Tiếp tục"
-          disable={pin.length < 6 || confirmedPin.length < 6}
-          onPress={handleSetPIN}
-        />
-      </View>
-    </SafeAreaView>
+          <View className="mt-8">
+            <TextButton
+              type="primary"
+              text="Tiếp tục"
+              disable={pin.length < 6 || confirmedPin.length < 6}
+              onPress={handleSetPIN}
+            />
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }

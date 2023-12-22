@@ -103,7 +103,7 @@ export default function ForgetPasswordScreen() {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     style={{ fontFamily: 'Inter' }}
-                    returnKeyType="done"
+                    returnKeyType="next"
                     className="w-full mt-8"
                   />
                 )}
