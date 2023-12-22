@@ -21,16 +21,15 @@ interface PaymentItemProps {
 }
 
 const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
-  const { pendingBill } = usePaymentStore()
-
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModal2Visible, setIsModal2Visible] = useState(false)
 
+  const { pendingBill } = usePaymentStore()
+
   const handlePaymentItemPress = (href: any) => {
-    if (pendingBill !== null && title == 'Ký túc xá') {
+    if (pendingBill && title === 'Ký túc xá') {
       setIsModalVisible(true)
-    }
-    if (title === 'Học phí kỳ tiếp' && amount === 0) {
+    } else if (title === 'Học phí kỳ tiếp' && amount === 0) {
       setIsModal2Visible(true)
     } else if (title === 'Ký túc xá' || title === 'Phí đơn từ') {
       router.push(href)
@@ -71,7 +70,7 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
               <TextButton
                 text="Đi đến giao dịch"
                 type="primary"
-                onPress={() => router.push('/payments/payment-bill')}
+                onPress={() => router.push('/payments/dormitory-checkout')}
               />
             </View>
           </Modal.Body>
