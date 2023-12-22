@@ -36,10 +36,6 @@ export default function PersonalInfoScreen() {
         userDetails.status === 'ACTIVE' ? 'Đã kích hoạt' : 'Chưa kích hoạt'
     },
     {
-      label: 'Thời gian kích hoạt',
-      description: '01:01 - 01/01/2023'
-    },
-    {
       label: 'Loại tài khoản',
       description:
         userDetails.user_type === 'STUDENT' ? 'Sinh viên' : 'Giảng viên'
