@@ -110,7 +110,7 @@ export default function LoadMoneyScreen() {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View className="bg-transparent">
                 <SemiText className="text-secondary">
-                  Nạp tiền vào ví FPTU Pay
+                  Nạp tiền vào ví FPTUPay
                 </SemiText>
 
                 <View
@@ -166,7 +166,7 @@ export default function LoadMoneyScreen() {
       </View>
       <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
         <TextButton
-          text="Nạp tiền"
+          text="Tiếp tục"
           type={TextButtonType.PRIMARY}
           onPress={() => {
             depositMutation.mutate({

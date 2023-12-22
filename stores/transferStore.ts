@@ -11,6 +11,8 @@ interface TransferProps {
   setReceiverAvatar: (receiverAvatar: string) => void
   transactionType: string
   setTransactionType: (transactionType: string) => void
+  feeType: string
+  setFeeType: (feeType: string) => void
 }
 
 export const useTransferStore = create<TransferProps>((set) => ({
@@ -24,5 +26,7 @@ export const useTransferStore = create<TransferProps>((set) => ({
   receiverAvatar: '',
   setReceiverAvatar: (receiverAvatar: string) => set({ receiverAvatar }),
   transactionType: '',
-  setTransactionType: (transactionType: string) => set({ transactionType })
+  setTransactionType: (transactionType: string) => set({ transactionType }),
+  feeType: '',
+  setFeeType: (feeType: string) => set({ feeType })
 }))

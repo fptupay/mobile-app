@@ -34,6 +34,7 @@ import Toast from 'react-native-toast-message'
 import { useTransferStore } from '@/stores/transferStore'
 import { checkStatusSmartOTP } from '@/api/otp'
 import { Modal } from '@/components/Modal'
+import { TRANSACTION_TYPE } from '@/constants/payment'
 
 export default function WithdrawalScreen() {
   const router = useRouter()
@@ -45,7 +46,7 @@ export default function WithdrawalScreen() {
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
   const balance = useAccountStore((state) => state.balance)
-  const setTransactionId = useTransferStore((state) => state.setTransactionId)
+  const { setTransactionId, setTransactionType } = useTransferStore()
   const { username } = useAccountStore((state) => state.details)
 
   const handleAmountInput = (value: string) => {
@@ -100,6 +101,7 @@ export default function WithdrawalScreen() {
           text2: data.message
         })
       } else {
+        setTransactionType(TRANSACTION_TYPE.WITHDRAW)
         setTransactionId(data?.data.trans_id)
         router.push('/transfer/pin')
       }
@@ -156,7 +158,7 @@ export default function WithdrawalScreen() {
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="bg-transparent">
                   <SemiText className="text-secondary mb-2">
-                    Rút tiền từ ví FPTU Pay
+                    Rút tiền từ ví FPTUPay
                   </SemiText>
 
                   <View
@@ -216,11 +218,13 @@ export default function WithdrawalScreen() {
         </View>
         <View className="bg-white p-4 shadow-sm shadow-tertiary absolute right-0 left-0 bottom-0">
           <TextButton
-            text="Rút tiền"
+            text="Tiếp tục"
             type="primary"
             onPress={handleVerifyWithdrawal}
-            loading={isLoading}
-            disable={selectedBank == '' || amount == '' || isLoading || isSuccess}
+            loading={isLoading || isSuccess}
+            disable={
+              selectedBank == '' || amount == '' || isLoading || isSuccess
+            }
           />
         </View>
       </SharedLayout>
