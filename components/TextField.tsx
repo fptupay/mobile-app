@@ -8,20 +8,25 @@ import React, {
 import {
   Animated,
   Easing,
+  Pressable,
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import CustomIcon from './Icon'
+import { useTogglePassword } from '@/hooks/useTogglePassword'
 
 interface TextFieldProps extends React.ComponentProps<typeof TextInput> {
   label: string
   errorText?: string | null
+  type?: string
 }
 
 const TextField = forwardRef<TextInput | null, TextFieldProps>((props, ref) => {
   const {
     label,
+    type,
     errorText,
     value,
     style,
@@ -46,6 +51,8 @@ const TextField = forwardRef<TextInput | null, TextFieldProps>((props, ref) => {
 
   useImperativeHandle(ref, () => inputRef.current!)
 
+  const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
+
   return (
     <View style={style}>
       <TextInput
@@ -65,7 +72,16 @@ const TextField = forwardRef<TextInput | null, TextFieldProps>((props, ref) => {
           setIsFocused(true)
           onFocus?.(event)
         }}
+        secureTextEntry={isPasswordVisible}
       />
+      {type === 'password' && (
+        <Pressable
+          className="absolute right-2.5 top-1/3"
+          onPress={togglePassword}
+        >
+          <CustomIcon name={icon} size={24} color="#9ca3af" />
+        </Pressable>
+      )}
       <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
         <Animated.View
           style={{

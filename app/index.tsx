@@ -183,7 +183,7 @@ export default function LoginScreen() {
                     <TextField
                       label="Mật khẩu"
                       value={value}
-                      secureTextEntry={true}
+                      type="password"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       textContentType="oneTimeCode"

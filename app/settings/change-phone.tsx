@@ -85,11 +85,11 @@ export default function ChangePhoneNumberScreen() {
             <View className="mt-4">
               <TextField
                 label="Mật khẩu"
+                type="password"
                 style={{ fontFamily: 'Inter' }}
                 value={password}
                 onChangeText={(password) => setPassword(password)}
                 returnKeyType="next"
-                secureTextEntry={true}
               />
             </View>
 

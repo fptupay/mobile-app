@@ -97,11 +97,11 @@ export default function ResetPasswordScreen() {
                     <TextField
                       label="Mật khẩu mới"
                       value={value}
+                      type="password"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       style={{ fontFamily: 'Inter' }}
                       returnKeyType="next"
-                      secureTextEntry={true}
                     />
                   )}
                 />
@@ -119,12 +119,12 @@ export default function ResetPasswordScreen() {
                     <TextField
                       label="Xác nhận mật khẩu"
                       value={value}
+                      type="password"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       onFocus={() => setClicked(true)}
                       style={{ fontFamily: 'Inter' }}
                       returnKeyType="done"
-                      secureTextEntry={true}
                     />
                   )}
                 />

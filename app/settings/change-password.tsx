@@ -119,11 +119,11 @@ export default function ChangePasswordScreen() {
                       <TextField
                         label="Mật khẩu cũ"
                         value={value}
+                        type="password"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="next"
-                        secureTextEntry={true}
                       />
                     )}
                   />
@@ -141,11 +141,11 @@ export default function ChangePasswordScreen() {
                       <TextField
                         label="Mật khẩu mới"
                         value={value}
+                        type="password"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="next"
-                        secureTextEntry={true}
                       />
                     )}
                   />
@@ -159,11 +159,11 @@ export default function ChangePasswordScreen() {
                       <TextField
                         label="Xác nhận mật khẩu mới"
                         value={value}
+                        type="password"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="done"
-                        secureTextEntry={true}
                       />
                     )}
                   />
