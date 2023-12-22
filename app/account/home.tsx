@@ -297,6 +297,17 @@ export default function HomeScreen() {
                     </View>
                   </TouchableOpacity>
                 )}
+                ListEmptyComponent={() => (
+                  <View className="flex flex-1 items-center justify-center mt-16 mx-auto">
+                    <CustomIcon name="WalletCards" size={32} color="#666" />
+                    <MediumText className="mt-4 text-lg text-secondary">
+                      Không có giao dịch
+                    </MediumText>
+                    <NormalText className="text-center text-tertiary">
+                      Hiện tại bạn không có giao dịch nào
+                    </NormalText>
+                  </View>
+                )}
               />
             </View>
           )}

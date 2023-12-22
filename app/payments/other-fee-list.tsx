@@ -15,7 +15,10 @@ export default function OtherFeeListScreen() {
   })
 
   return (
-    <SharedLayout title="Các khoản phí khác">
+    <SharedLayout
+      title="Các khoản phí khác"
+      backHref="/payments/dormitory-choice"
+    >
       {otherFeeData.data ? (
         <FlatList
           data={otherFeeData?.data?.data}
@@ -42,6 +45,17 @@ export default function OtherFeeListScreen() {
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={() => (
+            <View className="flex flex-1 items-center justify-center mt-20 mx-auto">
+              <CustomIcon name="WalletCards" size={32} color="#666" />
+              <MediumText className="mt-4 text-lg text-secondary">
+                Không có khoản phí
+              </MediumText>
+              <NormalText className="text-center text-tertiary">
+                Hiện tại bạn không có khoản phí nào
+              </NormalText>
+            </View>
+          )}
         />
       ) : (
         <LoadingSpin />
