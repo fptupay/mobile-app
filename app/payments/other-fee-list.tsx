@@ -15,10 +15,7 @@ export default function OtherFeeListScreen() {
   })
 
   return (
-    <SharedLayout
-      title="Các khoản phí khác"
-      backHref="/payments/dormitory-choice"
-    >
+    <SharedLayout title="Các khoản phí khác" backHref="/account/payments">
       {otherFeeData.data ? (
         <FlatList
           data={otherFeeData?.data?.data}
