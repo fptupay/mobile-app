@@ -10,11 +10,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export default function SuccessfulRequestScreen() {
   const { id } = useLocalSearchParams()
   return (
-    <SafeAreaView className="flex-1 px-4">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <View className="flex-1 items-center justify-center">
         <View className="bg-green-100 rounded-full w-28 h-28 justify-center items-center mb-4">
           <Image
-            source={require('../../../assets/images/icon-success.png')}
+            source={require('../../assets/images/icon-success.png')}
             style={{
               width: 100,
               height: 100,
@@ -43,13 +43,13 @@ export default function SuccessfulRequestScreen() {
 
       <View className="mt-auto mb-4 w-full">
         <TextButton
-          onPress={() => router.push(`/account/help-center/${id as string}`)}
+          onPress={() => router.replace(`/help-center/${id as string}`)}
           text="Xem chi tiết"
           type="primary"
         />
         <View className="mt-2">
           <TextButton
-            onPress={() => router.push('/account/home')}
+            onPress={() => router.replace('/account/home')}
             text="Về trang chủ"
             type="outline"
           />

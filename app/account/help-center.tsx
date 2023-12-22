@@ -135,8 +135,8 @@ export default function RequestsListScreen() {
             style={{ zIndex: 100 }}
           >
             <TouchableOpacity
-              onPress={() => router.push('/account/help-center/create-request')}
-              activeOpacity={0.8}
+              onPress={() => router.push('/help-center/create-request')}
+              activeOpacity={1}
             >
               <View
                 className="rounded-full bg-primary p-2 flex items-center justify-center"
@@ -154,7 +154,7 @@ export default function RequestsListScreen() {
 
 function RequestItem({ request }: { request: any }) {
   return (
-    <Link href={`/account/help-center/${request.id}`} asChild>
+    <Link href={`/help-center/${request.id}`} asChild>
       <Pressable className="border-b-gray-200 border-b flex-row items-center justify-between py-3">
         <View>
           <MediumText className="text-secondary">{request.title}</MediumText>
