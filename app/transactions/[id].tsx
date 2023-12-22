@@ -9,6 +9,8 @@ import { useQuery } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import * as Clipboard from 'expo-clipboard'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { printToFileAsync } from 'expo-print'
+import { shareAsync } from 'expo-sharing'
 
 export default function TransactionDetailScreen() {
   const params: { id: string } = useLocalSearchParams()
@@ -17,8 +19,13 @@ export default function TransactionDetailScreen() {
     queryKey: ['transaction-detail', params.id],
     queryFn: () => getTransactionDetails(params.id)
   })
+  console.log(data.data.am)
 
   const details = [
+    {
+      title: 'Số tiền',
+      value: isFetched && formatMoney(data?.data.amount) + ' đ'
+    },
     {
       title: 'Người nhận',
       value: data?.data.fund_transfer_detail?.receiver_name ?? 'Không có'
@@ -50,6 +57,40 @@ export default function TransactionDetailScreen() {
   ]
 
   const filteredDetails = details.filter((item) => item.value !== 'Không có')
+
+  const transferDetailHtml = filteredDetails
+    .slice(0, -1)
+    .map(
+      (item: any) => `
+  <div style="display: flex; justify-content: space-between; margin-bottom: 16px">
+    <h3 style="color: #808080; flex: 1 1 0%">
+      ${item.title}
+    </h3>
+    <p style="color: black; flex: 1 1 0%; text-align: right">
+      ${item.value}
+    </p>
+  </div>
+`
+    )
+    .join('')
+
+  const html = `
+   <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+      </head>
+      <body style="background-color: #f1f5f9; padding: 2rem; font-family: Helvetica Neue;">
+        <h1 style="font-size: 48px; margin-bottom: 32px"> Hoá đơn chuyển tiền </h1>
+        <h2 style="font-size: 20px; margin-bottom: 48px"> Cảm ơn bạn đã sử dụng dịch vụ của FPTUPay! </h2>
+        ${transferDetailHtml}
+      </body>
+    </html>
+    `
+
+  const handleShareBill = async () => {
+    const file = await printToFileAsync({ html: html, base64: false })
+    await shareAsync(file.uri)
+  }
 
   const handleCopyTransactionId = async () => {
     await Clipboard.setStringAsync(data?.data.transaction_id)
@@ -107,17 +148,24 @@ export default function TransactionDetailScreen() {
             </View>
           </View>
 
-          {data?.data.amount < 0 && (
-            <View className="mt-auto mb-4">
+          <View className="mt-auto mb-4">
+            {data?.data.amount < 0 && (
               <TextButton
                 text="Trợ giúp"
                 type="primary"
                 onPress={() => {
-                  router.push('/account/help-center/create-request')
+                  router.push('/help-center/create-request')
                 }}
               />
+            )}
+            <View className="mt-2">
+              <TextButton
+                text="Chia sẻ biên lai"
+                type="outline"
+                onPress={handleShareBill}
+              />
             </View>
-          )}
+          </View>
         </>
       )}
     </SharedLayout>
