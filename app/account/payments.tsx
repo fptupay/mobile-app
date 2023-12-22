@@ -73,6 +73,13 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
                 onPress={() => router.push('/payments/dormitory-checkout')}
               />
             </View>
+            <View className="mt-2 w-full">
+              <TextButton
+                text="Đóng"
+                type="secondary"
+                onPress={() => setIsModalVisible(false)}
+              />
+            </View>
           </Modal.Body>
         </Modal.Container>
       </Modal>
