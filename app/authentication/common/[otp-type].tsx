@@ -2,6 +2,7 @@ import { loginOtpUser, loginUser } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import { usePushNotifications } from '@/hooks/usePushNotification'
 import { LoginOtpFormSchema } from '@/schemas/auth-schema'
 import { useAccountStore } from '@/stores/accountStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
@@ -32,13 +33,15 @@ export default function SignUpOtpScreen() {
   const [otpCode, setOtpCode] = useState<string>('')
   const { credentials } = useAccountStore()
 
+  const { expoPushToken } = usePushNotifications()
+
   const handleClear = () => {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
 
   const loginOtpMutation = useMutation({
-    mutationFn: (data: LoginOtpFormSchema) => loginOtpUser(data),
+    mutationFn: (data: LoginOtpFormSchema) => loginOtpUser(data, expoPushToken),
     onSuccess: async (data) => {
       try {
         if (successResponseStatus(data)) {
@@ -74,7 +77,7 @@ export default function SignUpOtpScreen() {
   })
 
   const resendOTPMutation = useMutation({
-    mutationFn: (data: LoginOtpFormSchema) => loginUser(data),
+    mutationFn: (data: LoginOtpFormSchema) => loginUser(data, expoPushToken),
     onSuccess: (data) => {
       try {
         if (successResponseStatus(data)) {
