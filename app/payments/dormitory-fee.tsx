@@ -34,13 +34,13 @@ export default function DormitoryFeeScreen() {
   }
 
   return (
-    <SharedLayout title="Ký túc xá" backHref="/account/payments">
+    <SharedLayout title="Ký túc xá" backHref='/account/payments'>
       <View className="mt-4">
         <MediumText className="text-secondary">Lựa chọn loại phòng</MediumText>
         {isLoading ? (
           <LoadingSpin />
         ) : (
-          <View className="flex flex-row flex-wrap gap-x-4 mt-4">
+          <View className="gap-x-4 mt-4">
             {data?.data.map((room: Room) => (
               <TouchableOpacity
                 className={`p-4 mb-4 border rounded-lg ${
@@ -65,6 +65,7 @@ export default function DormitoryFeeScreen() {
           </View>
         )}
       </View>
+      
 
       <View className="mt-auto mb-4">
         <TextButton

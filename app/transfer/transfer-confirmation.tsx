@@ -59,7 +59,7 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutateAsync, isLoading, isSuccess } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: checkStatusSmartOTP,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
@@ -125,10 +125,10 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base text-secondary">
-                  {full_name}
-                </MediumText>
-                <NormalText className="text-tertiary">{username}</NormalText>
+                <MediumText className=" text-secondary">{full_name}</MediumText>
+                <NormalText className="text-tertiary">
+                  {username.toUpperCase()}
+                </NormalText>
               </View>
             </View>
           </View>
@@ -144,9 +144,7 @@ export default function TransferConfirmationScreen() {
                 className="w-12 h-12 rounded-full"
               />
               <View>
-                <MediumText className="text-base text-secondary">
-                  {receiver}
-                </MediumText>
+                <MediumText className=" text-secondary">{receiver}</MediumText>
                 <NormalText className="text-tertiary">{studentCode}</NormalText>
               </View>
             </View>
@@ -185,8 +183,8 @@ export default function TransferConfirmationScreen() {
             text="Xác nhận"
             type="primary"
             onPress={handleVerifyTransfer}
-            loading={verifyTransferMutation.isLoading}
-            disable={verifyTransferMutation.isLoading}
+            loading={verifyTransferMutation.isLoading || isLoading}
+            disable={verifyTransferMutation.isLoading || isLoading}
           />
         </View>
       </SharedLayout>
