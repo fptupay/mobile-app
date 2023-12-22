@@ -10,7 +10,7 @@ export default function PaymentInstructionScreen() {
     <SafeAreaView className="flex-1 px-6 pt-4 bg-white">
       <StatusBar style="auto" />
       <View className="flex-1 w-full space-y-4">
-        <BackButton href={'/account/payments'}/>
+        <BackButton href={'/account/payments'} />
         <ScrollView
           className="flex-1 my-4"
           showsVerticalScrollIndicator={false}
@@ -32,7 +32,7 @@ export default function PaymentInstructionScreen() {
               học phí, bạn sẽ không còn nhìn thấy danh mục này.
             </NormalText>
           </MediumText>
-          <MediumText className="text-secondary">
+          <MediumText className="text-secondary mt-2">
             2. Thanh toán phí môn:{' '}
             <NormalText className="text-tertiary mt-2">
               Số tiền học phí phải nộp sẽ được thông báo đến bạn vào chậm nhất 2
@@ -40,7 +40,7 @@ export default function PaymentInstructionScreen() {
               học phí, bạn sẽ không còn nhìn thấy danh mục này.
             </NormalText>
           </MediumText>
-          <MediumText className="text-secondary">
+          <MediumText className="text-secondary mt-2">
             3. Thanh toán phí ký túc xá:{' '}
             <NormalText className="text-tertiary mt-2">
               Số tiền học phí phải nộp sẽ được thông báo đến bạn vào chậm nhất 2
