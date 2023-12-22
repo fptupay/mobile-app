@@ -7,7 +7,7 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
-import { useQueries } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -30,12 +30,9 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
     if (pendingBill !== null && title == 'Ký túc xá') {
       setIsModalVisible(true)
     }
-    if (
-      (title === 'Học phí kỳ tiếp' && amount === 0) ||
-      (title === 'Phí đơn từ' && amount === 0)
-    ) {
+    if (title === 'Học phí kỳ tiếp' && amount === 0) {
       setIsModal2Visible(true)
-    } else if (title === 'Ký túc xá') {
+    } else if (title === 'Ký túc xá' || title === 'Phí đơn từ') {
       router.push(href)
     } else {
       router.push({
@@ -86,9 +83,7 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
           <Modal.Header title="Lưu ý" />
           <Modal.Body>
             <NormalText className="text-tertiary">
-              Bạn đang không có khoản{' '}
-              {title === 'Học phí kỳ tiếp' ? 'học phí' : 'phí đơn từ'} nào cần
-              thanh toán.
+              Bạn đang không có khoản học phí nào cần thanh toán.
             </NormalText>
 
             <View className="mt-6 w-full">
@@ -106,26 +101,10 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
 }
 
 export default function PaymentsScreen() {
-  const [tuitionData, otherFeeData] = useQueries({
-    queries: [
-      {
-        queryKey: ['tuition'],
-        queryFn: () => getDNGBillByFeeType('hp')
-      },
-      {
-        queryKey: ['otherFee'],
-        queryFn: () => getDNGBillByFeeType('khac')
-      }
-    ]
+  const tuitionData = useQuery({
+    queryKey: ['tuition'],
+    queryFn: () => getDNGBillByFeeType('hp')
   })
-  console.log(
-    '🚀 ~ file: payments.tsx:121 ~ PaymentsScreen ~ otherFeeData:',
-    otherFeeData.data
-  )
-  console.log(
-    '🚀 ~ file: payments.tsx:121 ~ PaymentsScreen ~ tuitionData:',
-    tuitionData.data
-  )
 
   return (
     <SharedLayout
@@ -138,7 +117,7 @@ export default function PaymentsScreen() {
         Lựa chọn các khoản nộp
       </SemiText>
 
-      {otherFeeData && tuitionData ? (
+      {tuitionData ? (
         <ScrollView className="mt-4">
           <PaymentItem
             title="Học phí kỳ tiếp"
@@ -159,22 +138,12 @@ export default function PaymentsScreen() {
             title="Ký túc xá"
             icon="Home"
             href="/payments/dormitory-fee"
-            amount={0}
             type="ktx"
           />
           <PaymentItem
             title="Phí đơn từ"
             icon="MoreHorizontal"
-            href="payment-bill"
-            amount={
-              otherFeeData &&
-              otherFeeData.data &&
-              otherFeeData.data.success &&
-              otherFeeData.data.data &&
-              otherFeeData.data.data[0]
-                ? otherFeeData.data.data[0].amount
-                : 0
-            }
+            href="/payments/other-fee-list"
             type="khac"
           />
         </ScrollView>
