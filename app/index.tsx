@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -25,6 +26,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { useAccountStore } from '@/stores/accountStore'
 import { usePushNotifications } from '@/hooks/usePushNotification'
+import { useTogglePassword } from '@/hooks/useTogglePassword'
+import CustomIcon from '@/components/Icon'
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -32,6 +35,7 @@ export default function LoginScreen() {
   const { setCredentials } = useAccountStore()
 
   const { expoPushToken } = usePushNotifications()
+  const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
 
   const {
     control,
@@ -180,16 +184,25 @@ export default function LoginScreen() {
                   control={control}
                   name="password"
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <TextField
-                      label="Mật khẩu"
-                      value={value}
-                      type="password"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      textContentType="oneTimeCode"
-                      style={{ fontFamily: 'Inter' }}
-                      ref={passwordRef}
-                    />
+                    <>
+                      <TextField
+                        label="Mật khẩu"
+                        value={value}
+                        type="password"
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        textContentType="oneTimeCode"
+                        secureTextEntry={isPasswordVisible}
+                        style={{ fontFamily: 'Inter' }}
+                        ref={passwordRef}
+                      />
+                      <TouchableOpacity
+                        className="absolute right-2.5 top-1/3"
+                        onPress={togglePassword}
+                      >
+                        <CustomIcon name={icon} size={24} color="#9ca3af" />
+                      </TouchableOpacity>
+                    </>
                   )}
                 />
                 {errors.password && (

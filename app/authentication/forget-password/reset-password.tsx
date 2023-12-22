@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -22,9 +23,12 @@ import { useMutation } from '@tanstack/react-query'
 import { resetPassword } from '@/api/forgot-password'
 import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
+import { useTogglePassword } from '@/hooks/useTogglePassword'
+import CustomIcon from '@/components/Icon'
 
 export default function ResetPasswordScreen() {
   const { credentials, clearCredentials } = useForgotPasswordStore()
+  const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
 
   const [clicked, setClicked] = useState(false)
   const {
@@ -94,15 +98,23 @@ export default function ResetPasswordScreen() {
                   control={control}
                   name="password"
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <TextField
-                      label="Mật khẩu mới"
-                      value={value}
-                      type="password"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      style={{ fontFamily: 'Inter' }}
-                      returnKeyType="next"
-                    />
+                    <>
+                      <TextField
+                        label="Mật khẩu mới"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        secureTextEntry={isPasswordVisible}
+                        style={{ fontFamily: 'Inter' }}
+                        returnKeyType="next"
+                      />
+                      <TouchableOpacity
+                        className="absolute right-2.5 top-1/3"
+                        onPress={togglePassword}
+                      >
+                        <CustomIcon name={icon} size={24} color="#9ca3af" />
+                      </TouchableOpacity>
+                    </>
                   )}
                 />
                 {errors.password && (
@@ -116,16 +128,24 @@ export default function ResetPasswordScreen() {
                   control={control}
                   name="confirmPassword"
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <TextField
-                      label="Xác nhận mật khẩu"
-                      value={value}
-                      type="password"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      onFocus={() => setClicked(true)}
-                      style={{ fontFamily: 'Inter' }}
-                      returnKeyType="done"
-                    />
+                    <>
+                      <TextField
+                        label="Xác nhận mật khẩu"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        secureTextEntry={isPasswordVisible}
+                        onFocus={() => setClicked(true)}
+                        style={{ fontFamily: 'Inter' }}
+                        returnKeyType="done"
+                      />
+                      <TouchableOpacity
+                        className="absolute right-2.5 top-1/3"
+                        onPress={togglePassword}
+                      >
+                        <CustomIcon name={icon} size={24} color="#9ca3af" />
+                      </TouchableOpacity>
+                    </>
                   )}
                 />
                 {!isValid &&
