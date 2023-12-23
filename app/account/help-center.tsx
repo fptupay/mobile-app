@@ -63,7 +63,6 @@ export default function RequestsListScreen() {
 
   return (
     <SharedLayout
-      backHref="/index"
       title="Hỗ trợ"
       questionHref="/instruction/create-request-instruction"
       hasInstruction

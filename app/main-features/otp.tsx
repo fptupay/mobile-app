@@ -72,7 +72,7 @@ export default function OtpScreen() {
   const { mutate, isLoading } = useResendOTP()
 
   return (
-    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
+    <SharedLayout title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
