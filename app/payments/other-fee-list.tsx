@@ -32,7 +32,7 @@ export default function OtherFeeListScreen() {
             >
               <View>
                 <MediumText className="text-secondary ml-2">
-                  Xin cấp bảng điểm quá trình
+                  {item.type_desc}
                 </MediumText>
                 <NormalText className="text-tertiary ml-2">
                   Mã đơn: {item.id}
