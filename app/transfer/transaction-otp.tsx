@@ -26,21 +26,16 @@ import { isAxiosError } from 'axios'
 import { useTransferStore } from '@/stores/transferStore'
 import { payBill } from '@/api/bill'
 import { usePaymentStore } from '@/stores/paymentStore'
+import { TRANSACTION_TYPE } from '@/constants/payment'
 
 export default function TransactionOTPScreen() {
   const [smartOTP, setSmartOTP] = useState('')
   const [copiedSmartOTP, setCopiedSmartOTP] = useState('')
   const { clearPendingBill } = usePaymentStore()
 
-  const fundTransferId = useTransactionStore((state) => state.fundTransferId)
-  const setFundTransferId = useTransactionStore(
-    (state) => state.setFundTransferId
-  )
-  const setTransactionDetails = useTransactionStore(
-    (state) => state.setTransactionDetails
-  )
+  const { fundTransferId, setTransactionDetails } = useTransactionStore()
   const { username } = useAccountStore((state) => state.details)
-  const { transactionId, transactionType } = useTransferStore()
+  const { transactionId, transactionType, feeType } = useTransferStore()
 
   const selectedBank = useBankStore((state) => state.selectedBank)
   const { secondsLeft, start } = useCountdown()
@@ -153,27 +148,28 @@ export default function TransactionOTPScreen() {
   })
 
   const handleConfirmTransfer = () => {
-    if (fundTransferId !== '') {
+    if (transactionType === TRANSACTION_TYPE.P2P) {
       confirmTransferMutation.mutate({
         fund_transfer_id: fundTransferId,
         otp: copiedSmartOTP
       })
-      setFundTransferId('')
-    } else if (
-      transactionType === 'HP' ||
-      transactionType === 'KTX' ||
-      transactionType === 'KHAC'
-    ) {
+    } else if (transactionType === TRANSACTION_TYPE.PAYMENT) {
       payBillMutation.mutate({
         otp: copiedSmartOTP,
-        fee_type: transactionType,
+        fee_type: feeType,
         trans_id: transactionId
       })
-    } else {
+    } else if (transactionType === TRANSACTION_TYPE.WITHDRAW) {
       withdrawMutation.mutate({
         link_account_id: selectedBank,
         trans_id: transactionId,
         otp: copiedSmartOTP
+      })
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Đã có lỗi xảy ra',
+        text2: 'Không xác định được loại giao dịch'
       })
     }
   }
@@ -185,7 +181,7 @@ export default function TransactionOTPScreen() {
   }
 
   return (
-    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
+    <SharedLayout title="Nhập mã OTP">
       <View className="flex-1 pt-8 space-y-8">
         <View>
           <NormalText className="text-tertiary mt-1">

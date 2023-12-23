@@ -19,7 +19,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.fptupay",
-      "buildNumber": "17"
+      "buildNumber": "18"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +55,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "17cc11a8-ae3b-4fdc-908c-aeed6733c1ea"
+        "projectId": ""
       }
     }
   }

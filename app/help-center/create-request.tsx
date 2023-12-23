@@ -79,7 +79,7 @@ export default function CreateRequestScreen() {
     onSuccess: async (data) => {
       if (successResponseStatus(data)) {
         router.push({
-          pathname: '/account/help-center/successful-request',
+          pathname: '/help-center/successful-request',
           params: { id: data.data.id }
         })
         // clear state
@@ -94,7 +94,7 @@ export default function CreateRequestScreen() {
         Toast.show({
           type: 'error',
           text1: 'Đã có lỗi xảy ra',
-          text2: data.message
+          text2: data.message ?? 'Vui lòng chọn loại yêu cầu'
         })
       }
     }
@@ -112,7 +112,7 @@ export default function CreateRequestScreen() {
 
   return (
     <SharedLayout
-      backHref="/index"
+      backHref="/account/help-center"
       questionHref="/instruction/create-request-instruction"
       title="Tạo yêu cầu"
     >

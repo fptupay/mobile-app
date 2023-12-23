@@ -4,7 +4,6 @@ import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { TransferVerifySchema } from '@/schemas/transfer-schema'
 import { useAccountStore } from '@/stores/accountStore'
-import { useTransactionStore } from '@/stores/transactionStore'
 import {
   convertNumberToVietnameseWords,
   formatMoney,
@@ -22,23 +21,28 @@ import { useState } from 'react'
 import { Modal } from '@/components/Modal'
 import { useTransferStore } from '@/stores/transferStore'
 import { checkStatusSmartOTP } from '@/api/otp'
+import { TRANSACTION_TYPE } from '@/constants/payment'
+import { useTransactionStore } from '@/stores/transactionStore'
 
 export default function TransferConfirmationScreen() {
+  const { amount, message, studentCode, receiver } = useLocalSearchParams()
+
   const [isVisible, setIsVisible] = useState(false)
   const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
+
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
-  const { amount, message, studentCode, receiver } = useLocalSearchParams()
-  const setFundTransferId = useTransactionStore(
-    (state) => state.setFundTransferId
-  )
+  const { setTransactionType } = useTransferStore()
+  const { setFundTransferId } = useTransactionStore()
 
   const verifyTransferMutation = useMutation({
     mutationFn: (data: TransferVerifySchema) => verifyTransfer(data),
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        setFundTransferId(data.data.fund_transfer_id)
+        setTransactionType(TRANSACTION_TYPE.P2P)
+        setFundTransferId(data.data?.fund_transfer_id)
+
         router.push('/transfer/pin')
       } else {
         Toast.show({
@@ -101,7 +105,7 @@ export default function TransferConfirmationScreen() {
 
   return (
     <>
-      <SharedLayout title="Xác nhận thông tin" backHref="/account/payments">
+      <SharedLayout title="Xác nhận thông tin">
         {/* Header */}
         <View className="mt-4 flex items-center">
           <NormalText className="text-tertiary">Số tiền chuyển</NormalText>

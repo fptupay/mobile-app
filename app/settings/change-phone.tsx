@@ -3,15 +3,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
 
-import { MediumText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
-import BackButton from '@/components/buttons/BackButton'
 import { useMutation } from '@tanstack/react-query'
 import { changePhoneNumber } from '@/api/profile'
 import { successResponseStatus } from '@/utils/helper'
@@ -19,10 +17,15 @@ import Toast from 'react-native-toast-message'
 import { useState } from 'react'
 import { router } from 'expo-router'
 import { usePhoneStore } from '@/stores/phoneStore'
+import SharedLayout from '@/components/SharedLayout'
+import CustomIcon from '@/components/Icon'
+import { useTogglePassword } from '@/hooks/useTogglePassword'
 
 export default function ChangePhoneNumberScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
+  const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
+
   const setPhone = usePhoneStore((state) => state.setPhone)
 
   const changePhoneNumberMutation = useMutation({
@@ -56,22 +59,14 @@ export default function ChangePhoneNumberScreen() {
     changePhoneNumberMutation.isLoading || !phoneNumber || !password
 
   return (
-    <SafeAreaView className="flex-1 pt-4 bg-white">
-      <View className="ml-4">
-        <BackButton />
-      </View>
-
+    <SharedLayout title="Đặt lại số điện thoại">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1 px-4 pt-4"
+        className="flex-1 pt-4"
       >
         <StatusBar style="auto" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-start">
-            <MediumText className="text-secondary text-3xl tracking-tighter text-left">
-              Đặt lại số điện thoại
-            </MediumText>
-
+          <View>
             <View className="mt-4">
               <TextField
                 label="Số điện thoại mới"
@@ -87,10 +82,16 @@ export default function ChangePhoneNumberScreen() {
                 label="Mật khẩu"
                 style={{ fontFamily: 'Inter' }}
                 value={password}
+                secureTextEntry={isPasswordVisible}
                 onChangeText={(password) => setPassword(password)}
                 returnKeyType="next"
-                secureTextEntry={true}
               />
+              <TouchableOpacity
+                className="absolute right-2.5 top-1/3"
+                onPress={togglePassword}
+              >
+                <CustomIcon name={icon} size={24} color="#9ca3af" />
+              </TouchableOpacity>
             </View>
 
             <View className="w-full mt-8">
@@ -105,6 +106,6 @@ export default function ChangePhoneNumberScreen() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </SharedLayout>
   )
 }

@@ -24,6 +24,10 @@ export default function RequestDetailScreen() {
 
   const supportDetails = [
     {
+      key: 'Tiêu đề',
+      value: details?.data?.title
+    },
+    {
       key: 'Loại yêu cầu',
       value: details?.data?.type === 'TRANSACTION' ? 'Lỗi giao dịch' : 'Khác'
     },
@@ -66,7 +70,7 @@ export default function RequestDetailScreen() {
         text1: 'Đóng yêu cầu thành công'
       })
       await queryClient.invalidateQueries(['requests'])
-      router.replace('/account/help-center/')
+      router.replace('/account/help-center')
     }
   })
 
@@ -82,7 +86,7 @@ export default function RequestDetailScreen() {
 
   return (
     <>
-      <SharedLayout title="" backHref="/help-center">
+      <SharedLayout title="" backHref="/account/help-center">
         <View className="mt-12 relative">
           <View className="absolute -top-20 left-0 right-0 justify-center items-center">
             <View className="w-16 h-16 rounded-full bg-slate-50 shadow-md p-1">
