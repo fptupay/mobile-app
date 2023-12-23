@@ -6,6 +6,7 @@ import { useTransactionStore } from '@/stores/transactionStore'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import { formatDateTime, formatMoney } from '@/utils/helper'
 import CustomIcon from '@/components/Icon'
+import LoadingSpin from '@/components/LoadingSpin'
 
 export default function TransactionListScreen() {
   const { cash } = useLocalSearchParams()
@@ -16,13 +17,15 @@ export default function TransactionListScreen() {
   return (
     <SharedLayout title={isCashIn ? 'Thống kê tiền vào' : 'Thống kê tiền ra'}>
       <View className="flex items-center">
-        {listTransaction && (
+        {listTransaction ? (
           <SemiText className="text-4xl text-secondary mt-4">
             {isCashIn
               ? formatMoney(listTransaction?.total_in)
               : formatMoney(listTransaction?.total_out)}{' '}
             đ
           </SemiText>
+        ) : (
+          <LoadingSpin />
         )}
 
         <FlatList

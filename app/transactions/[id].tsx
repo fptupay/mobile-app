@@ -19,12 +19,11 @@ export default function TransactionDetailScreen() {
     queryKey: ['transaction-detail', params.id],
     queryFn: () => getTransactionDetails(params.id)
   })
-  console.log(data.data.am)
 
   const details = [
     {
       title: 'Số tiền',
-      value: isFetched && formatMoney(data?.data.amount) + ' đ'
+      value: isFetched && formatMoney(data?.data?.amount) + ' đ'
     },
     {
       title: 'Người nhận',
