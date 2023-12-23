@@ -1,38 +1,38 @@
 import { Platform, View } from 'react-native'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { getDNGBillByFeeType } from '@/api/bill'
 import SharedLayout from '@/components/SharedLayout'
-import DescriptionRowItem from '@/components/DescriptionRowItem'
 import { MediumText, NormalText } from '@/components/Themed'
-import TextButton from '@/components/buttons/TextButton'
+import { usePaymentStore } from '@/stores/paymentStore'
+import DescriptionRowItem from '@/components/DescriptionRowItem'
 import { formatMoney, getDeviceId, successResponseStatus } from '@/utils/helper'
-import { router, useLocalSearchParams } from 'expo-router'
-import LoadingSpin from '@/components/LoadingSpin'
+import TextButton from '@/components/buttons/TextButton'
+import { router } from 'expo-router'
+import { TRANSACTION_TYPE } from '@/constants/payment'
 import { useTransferStore } from '@/stores/transferStore'
+import * as SecureStore from 'expo-secure-store'
+import { useAccountStore } from '@/stores/accountStore'
+import { useMutation } from '@tanstack/react-query'
 import { checkStatusSmartOTP } from '@/api/otp'
 import { useState } from 'react'
-import { useAccountStore } from '@/stores/accountStore'
-import * as SecureStore from 'expo-secure-store'
 import { Modal } from '@/components/Modal'
-import { TRANSACTION_TYPE } from '@/constants/payment'
 
-export default function PaymentBillScreen() {
-  const { type } = useLocalSearchParams()
+export default function DormitoryCheckoutScreen() {
   const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
+
+  const { pendingBill } = usePaymentStore()
   const { setTransactionType, setTransactionId, setFeeType } =
     useTransferStore()
   const { username } = useAccountStore((state) => state.details)
 
-  const { data: bill, isLoading } = useQuery({
-    queryKey: ['bill'],
-    queryFn: () => getDNGBillByFeeType(type as string),
-    onSuccess: (data) => {
-      setFeeType(data?.data[0].type)
-      setTransactionType(TRANSACTION_TYPE.PAYMENT)
-      setTransactionId(data?.data[0].transaction_id)
-    }
-  })
+  const dormitoryBill = [
+    { label: 'DOM', description: pendingBill?.dom.split('_').join(' ') },
+    { label: 'Tầng', description: `Tầng ${pendingBill?.floor}` },
+    { label: 'Loại phòng', description: pendingBill?.type },
+    { label: 'Học kỳ', description: pendingBill?.semester },
+    { label: 'Số tiền', description: `${formatMoney(pendingBill?.amount)} đ` },
+    { label: 'Mã giao dịch', description: pendingBill?.trans_id },
+    { label: 'Ghi chú', description: pendingBill?.note }
+  ]
 
   const checkSmartOTPStatusMutation = useMutation({
     mutationFn: checkStatusSmartOTP,
@@ -50,7 +50,11 @@ export default function PaymentBillScreen() {
     }
   })
 
-  const handleVerifyBill = async () => {
+  const handleVerifyBooking = async () => {
+    setFeeType('KTX')
+    setTransactionType(TRANSACTION_TYPE.PAYMENT)
+    setTransactionId(pendingBill.trans_id)
+
     const existingPIN = await SecureStore.getItemAsync(username)
     const smartOTPTransactionId = await SecureStore.getItemAsync(
       `${username}_transId` || ''
@@ -70,56 +74,27 @@ export default function PaymentBillScreen() {
     }
   }
 
-  const billForm = [
-    {
-      label: 'Mã hóa đơn',
-      description: bill?.data[0]?.id
-    },
-    {
-      label: 'Loại hóa đơn',
-      description: bill?.data[0]?.type_desc
-    },
-    {
-      label: 'Số tiền',
-      description: bill?.data[0] && formatMoney(bill?.data[0]?.amount)
-    },
-    {
-      label: 'Nội dung',
-      description: bill?.data[0]?.item_name
-    },
-    {
-      label: 'Mã giao dịch',
-      description: bill?.data[0]?.transaction_id
-    }
-  ]
-
   return (
     <>
-      <SharedLayout title="Hóa đơn">
+      <SharedLayout title="Hoá đơn">
         <MediumText className="mt-6 text-secondary">
-          Vui lòng kiểm tra lại chi tiết hoá đơn trước khi thanh toán nhé!
+          Vui lòng kiểm tra lại chi tiết đặt phòng ký túc xá trước khi thanh
+          toán nhé!
         </MediumText>
         <View className="mt-4">
-          {isLoading ? (
-            <LoadingSpin />
-          ) : (
-            <View>
-              {billForm.map((item: any) => (
-                <DescriptionRowItem
-                  key={item.label}
-                  label={item.label}
-                  description={item.description}
-                />
-              ))}
-            </View>
-          )}
+          {dormitoryBill.map((item: any) => (
+            <DescriptionRowItem
+              key={item.label}
+              label={item.label}
+              description={item.description}
+            />
+          ))}
         </View>
-
         <View className="mt-auto mb-4">
           <TextButton
-            onPress={handleVerifyBill}
             text="Tiếp tục"
             type="primary"
+            onPress={handleVerifyBooking}
             loading={checkSmartOTPStatusMutation.isLoading}
             disable={checkSmartOTPStatusMutation.isLoading}
           />

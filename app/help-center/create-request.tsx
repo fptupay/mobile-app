@@ -112,7 +112,7 @@ export default function CreateRequestScreen() {
 
   return (
     <SharedLayout
-      backHref="/index"
+      backHref="/account/help-center"
       questionHref="/instruction/create-request-instruction"
       title="Tạo yêu cầu"
     >

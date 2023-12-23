@@ -10,7 +10,7 @@ import Colors from '@/constants/Colors'
 import { successResponseStatus } from '@/utils/helper'
 import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { ChevronRight } from 'lucide-react-native'
 import { useState } from 'react'
 import {
@@ -48,7 +48,6 @@ type BankItemProp = {
 }
 
 export default function AddBankScreen() {
-  const params: { previousRoute: string } = useLocalSearchParams()
   const [searchValue, setSearchValue] = useState('')
   const [bank, setBank] = useState({
     bankCode: '',
@@ -100,12 +99,6 @@ export default function AddBankScreen() {
     }
   })
 
-  console.log(
-    'all banks:',
-    banksQuery.data?.data.filter((item: BankItemProp) => item.is_direct == true)
-  )
-  console.log('linked banks:', banksLinkedQuery.data?.data)
-
   const clearSearchValue = () => {
     setSearchValue('')
   }
@@ -114,9 +107,11 @@ export default function AddBankScreen() {
     (item: BankItemProp) =>
       item.short_name.toLowerCase().includes(searchValue.toLowerCase()) &&
       item.is_direct == true &&
-      (banksLinkedQuery.data === undefined || banksLinkedQuery.data.length === 0 || !banksLinkedQuery.data?.data.some(
-        (linkedItem: BankItemProp) => linkedItem.bank_code === item.code
-      ))
+      (banksLinkedQuery.data === undefined ||
+        banksLinkedQuery.data.length === 0 ||
+        !banksLinkedQuery.data?.data.some(
+          (linkedItem: BankItemProp) => linkedItem.bank_code === item.code
+        ))
   )
 
   const handleSelectBank = (item: BankItemProp) => {
@@ -242,7 +237,6 @@ export default function AddBankScreen() {
   return (
     <SharedLayout
       questionHref="/instruction/add-bank-instruction"
-      backHref={params.previousRoute || '/account/home'}
       title="Liên kết ngân hàng"
       hasInstruction
     >

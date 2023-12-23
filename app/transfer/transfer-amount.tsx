@@ -93,7 +93,7 @@ export default function TransferAmountScreen() {
   return (
     <>
       {isOpen && <PromptModal type={alertType} />}
-      <SharedLayout backHref="/transfer/transfer-new" title="Chuyển tiền">
+      <SharedLayout title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             className="h-full"
