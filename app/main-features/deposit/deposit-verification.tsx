@@ -30,7 +30,7 @@ import {
 } from 'react-native'
 import Toast from 'react-native-toast-message'
 
-export default function LoadMoneyScreen() {
+export default function DepositVerificationScreen() {
   const router = useRouter()
   const [amount, setAmount] = useState('')
   const selectedBank = useBankStore((state) => state.selectedBank)
@@ -78,7 +78,8 @@ export default function LoadMoneyScreen() {
           params: {
             type: 'deposit',
             link_account_id: selectedBank,
-            trans_id: data.data.trans_id
+            trans_id: data.data.trans_id,
+            amount: parseInt(amount.replace(/\./g, ''))
           }
         })
       }
@@ -93,6 +94,14 @@ export default function LoadMoneyScreen() {
       }
     }
   })
+
+  const handleDepositVerification = () => {
+    depositMutation.mutate({
+      link_account_id: selectedBank,
+      amount: parseInt(amount.replace(/\./g, '')),
+      content: 'Nạp tiền vào ví FPTU Pay'
+    })
+  }
 
   return (
     <SharedLayout
@@ -168,13 +177,7 @@ export default function LoadMoneyScreen() {
         <TextButton
           text="Tiếp tục"
           type={TextButtonType.PRIMARY}
-          onPress={() => {
-            depositMutation.mutate({
-              link_account_id: selectedBank,
-              amount: parseInt(amount.replace(/\./g, '')),
-              content: 'Nạp tiền vào ví FPTU Pay'
-            })
-          }}
+          onPress={handleDepositVerification}
           loading={depositMutation.isLoading}
           disable={
             selectedBank == '' || amount == '' || depositMutation.isLoading

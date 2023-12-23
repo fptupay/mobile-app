@@ -369,7 +369,7 @@ export default function HomeScreen() {
           <View className="mt-6">
             <View className="flex-row justify-between">
               <MainAction
-                route="/main-features/deposit/load-money"
+                route="/main-features/deposit/deposit-verification"
                 image="Plus"
                 title="Nạp tiền"
               />

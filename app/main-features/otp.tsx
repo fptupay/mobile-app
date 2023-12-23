@@ -1,12 +1,11 @@
 /* eslint-disable indent */
 import { getRegisteredPhoneNumber } from '@/api/authentication'
-import { topupConfirm } from '@/api/bank'
+import { topupConfirm, topupVerify } from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { useResendOTP } from '@/hooks/useResendOTP'
-import { MoneyConfirmSchema } from '@/schemas/bank-schema'
+import { MoneyConfirmSchema, MoneyVerifySchema } from '@/schemas/bank-schema'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -27,8 +26,12 @@ import Toast from 'react-native-toast-message'
 
 export default function OtpScreen() {
   const router = useRouter()
-  const params: { type: string; link_account_id: string; trans_id: string } =
-    useLocalSearchParams()
+  const params: {
+    type: string
+    link_account_id: string
+    trans_id: string
+    amount: number
+  } = useLocalSearchParams<any>()
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
 
@@ -69,7 +72,35 @@ export default function OtpScreen() {
     }
   })
 
-  const { mutate, isLoading } = useResendOTP()
+  const depositMutation = useMutation({
+    mutationFn: (data: MoneyVerifySchema) => topupVerify(data),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
+  const handleResendBankOTP = () => {
+    depositMutation.mutate({
+      link_account_id: params.link_account_id,
+      amount: params.amount,
+      content: 'Nạp tiền vào ví FPTU Pay'
+    })
+  }
 
   return (
     <SharedLayout backHref="/account/home" title="Nhập mã OTP">
@@ -106,8 +137,8 @@ export default function OtpScreen() {
                 <NormalText className="text-tertiary mb-2 flex-row items-center">
                   Không nhận được mã?
                 </NormalText>
-                <TouchableOpacity onPress={() => mutate()}>
-                  {isLoading ? (
+                <TouchableOpacity onPress={handleResendBankOTP}>
+                  {depositMutation.isLoading ? (
                     <ActivityIndicator size="small" color="#F97316" />
                   ) : (
                     <NormalText className="text-primary ml-1">
