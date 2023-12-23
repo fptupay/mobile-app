@@ -18,10 +18,12 @@ import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import Toast from 'react-native-toast-message'
 import AccountForm from './account-form'
 import CardForm from './card-form'
+import { useBankStore } from '@/stores/bankStore'
 
 export default function AddBankItemScreen() {
   const { code, type, name } = useLocalSearchParams()
   const router = useRouter()
+  const { setCardForm, setAccountForm } = useBankStore()
 
   const accountForm = useForm<BankLinkAccountVerifySchema>({
     defaultValues: {
@@ -55,11 +57,13 @@ export default function AddBankItemScreen() {
           text2: data.message
         })
       } else {
+        setAccountForm(accountForm.getValues())
         router.push({
           pathname: '/main-features/bank/otp',
           params: {
             trans_id: data.data.trans_id,
-            bank_code: code as string
+            bank_code: code as string,
+            type: type
           }
         })
       }
@@ -85,11 +89,13 @@ export default function AddBankItemScreen() {
           text2: data.message
         })
       } else {
+        setCardForm(cardForm.getValues())
         router.push({
           pathname: '/main-features/bank/otp',
           params: {
             trans_id: data.data.trans_id,
-            bank_code: code as string
+            bank_code: code as string,
+            type: type
           }
         })
       }

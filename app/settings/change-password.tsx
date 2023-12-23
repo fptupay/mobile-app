@@ -3,13 +3,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
 
-import { MediumText, NormalText } from '@/components/Themed'
+import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import TextField from '@/components/TextField'
 import { Controller, useForm } from 'react-hook-form'
 import {
@@ -18,7 +18,6 @@ import {
 } from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import BackButton from '@/components/buttons/BackButton'
 import { useMutation } from '@tanstack/react-query'
 import { changePassword } from '@/api/profile'
 import { useAccountStore } from '@/stores/accountStore'
@@ -27,6 +26,9 @@ import { deleteToken, successResponseStatus } from '@/utils/helper'
 import { logoutUser } from '@/api/authentication'
 import { router } from 'expo-router'
 import Toast from 'react-native-toast-message'
+import SharedLayout from '@/components/SharedLayout'
+import CustomIcon from '@/components/Icon'
+import { useTogglePassword } from '@/hooks/useTogglePassword'
 
 export default function ChangePasswordScreen() {
   const [error, setError] = useState('')
@@ -47,6 +49,8 @@ export default function ChangePasswordScreen() {
   })
   const { username } = useAccountStore((store) => store.details)
   const setDetails = useAccountStore((state) => state.setDetails)
+
+  const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
 
   const logoutMutation = useMutation({
     mutationFn: logoutUser,
@@ -93,38 +97,38 @@ export default function ChangePasswordScreen() {
 
   return (
     <>
-      <SafeAreaView className="flex-1 pt-4 bg-white">
-        <View className="ml-4">
-          <BackButton />
-        </View>
-
+      <SharedLayout title="Đặt lại mật khẩu">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          className="flex-1 px-4 pt-4"
+          className="flex-1 pt-4"
         >
           <StatusBar style="auto" />
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex-1 justify-start">
-              <MediumText className="text-secondary text-3xl tracking-tighter text-left">
-                Đặt lại mật khẩu
-              </MediumText>
-
-              <View className="w-full mt-8 space-y-4">
+              <View className="w-full mt-6 space-y-4">
                 {/* old password */}
                 <View>
                   <Controller
                     control={control}
                     name="old_password"
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <TextField
-                        label="Mật khẩu cũ"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        style={{ fontFamily: 'Inter' }}
-                        returnKeyType="next"
-                        secureTextEntry={true}
-                      />
+                      <>
+                        <TextField
+                          label="Mật khẩu cũ"
+                          value={value}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          secureTextEntry={isPasswordVisible}
+                          style={{ fontFamily: 'Inter' }}
+                          returnKeyType="next"
+                        />
+                        <TouchableOpacity
+                          className="absolute right-2.5 top-1/3"
+                          onPress={togglePassword}
+                        >
+                          <CustomIcon name={icon} size={24} color="#9ca3af" />
+                        </TouchableOpacity>
+                      </>
                     )}
                   />
                 </View>
@@ -138,15 +142,23 @@ export default function ChangePasswordScreen() {
                     control={control}
                     name="new_password"
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <TextField
-                        label="Mật khẩu mới"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        style={{ fontFamily: 'Inter' }}
-                        returnKeyType="next"
-                        secureTextEntry={true}
-                      />
+                      <>
+                        <TextField
+                          label="Mật khẩu mới"
+                          value={value}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          secureTextEntry={isPasswordVisible}
+                          style={{ fontFamily: 'Inter' }}
+                          returnKeyType="next"
+                        />
+                        <TouchableOpacity
+                          className="absolute right-2.5 top-1/3"
+                          onPress={togglePassword}
+                        >
+                          <CustomIcon name={icon} size={24} color="#9ca3af" />
+                        </TouchableOpacity>
+                      </>
                     )}
                   />
                 </View>
@@ -156,15 +168,23 @@ export default function ChangePasswordScreen() {
                     control={control}
                     name="confirm_password"
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <TextField
-                        label="Xác nhận mật khẩu mới"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        style={{ fontFamily: 'Inter' }}
-                        returnKeyType="done"
-                        secureTextEntry={true}
-                      />
+                      <>
+                        <TextField
+                          label="Xác nhận mật khẩu mới"
+                          value={value}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          secureTextEntry={isPasswordVisible}
+                          style={{ fontFamily: 'Inter' }}
+                          returnKeyType="done"
+                        />
+                        <TouchableOpacity
+                          className="absolute right-2.5 top-1/3"
+                          onPress={togglePassword}
+                        >
+                          <CustomIcon name={icon} size={24} color="#9ca3af" />
+                        </TouchableOpacity>
+                      </>
                     )}
                   />
                   {error && (
@@ -186,7 +206,7 @@ export default function ChangePasswordScreen() {
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </SharedLayout>
 
       <Modal isVisible={isVisible}>
         <Modal.Container>

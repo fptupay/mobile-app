@@ -297,6 +297,17 @@ export default function HomeScreen() {
                     </View>
                   </TouchableOpacity>
                 )}
+                ListEmptyComponent={() => (
+                  <View className="flex flex-1 items-center justify-center mt-16 mx-auto">
+                    <CustomIcon name="WalletCards" size={32} color="#666" />
+                    <MediumText className="mt-4 text-lg text-secondary">
+                      Không có giao dịch
+                    </MediumText>
+                    <NormalText className="text-center text-tertiary">
+                      Hiện tại bạn không có giao dịch nào
+                    </NormalText>
+                  </View>
+                )}
               />
             </View>
           )}
@@ -358,7 +369,7 @@ export default function HomeScreen() {
           <View className="mt-6">
             <View className="flex-row justify-between">
               <MainAction
-                route="/main-features/deposit/load-money"
+                route="/main-features/deposit/deposit-verification"
                 image="Plus"
                 title="Nạp tiền"
               />

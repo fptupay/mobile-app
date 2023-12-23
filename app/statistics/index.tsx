@@ -241,23 +241,24 @@ export default function TransactionStatisticsScreen() {
           )}
 
           {display.map((item) => (
-            <View className="flex flex-row justify-between mb-4" key={item.key}>
+            <TouchableOpacity
+              className="flex flex-row justify-between mb-4"
+              key={item.key}
+              onPress={() => {
+                listReportMutation.mutate({
+                  account_no: accountNumber,
+                  from_date: from,
+                  to_date: to
+                })
+                router.push({
+                  pathname: '/statistics/[cash]',
+                  params: { cash: item.key }
+                })
+              }}
+              activeOpacity={0.8}
+            >
               <MediumText className="text-tertiary">{item.title}</MediumText>
-              <TouchableOpacity
-                className="flex flex-row items-center"
-                onPress={async () => {
-                  await listReportMutation.mutateAsync({
-                    account_no: accountNumber,
-                    from_date: from,
-                    to_date: to
-                  })
-                  router.push({
-                    pathname: '/statistics/[cash]',
-                    params: { cash: item.key }
-                  })
-                }}
-                activeOpacity={0.8}
-              >
+              <View className="flex flex-row items-center">
                 <MediumText className="text-secondary mr-1">
                   {item.value} đ
                 </MediumText>
@@ -266,8 +267,8 @@ export default function TransactionStatisticsScreen() {
                   size={16}
                   color={Colors.light.text}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           ))}
         </>
       )}

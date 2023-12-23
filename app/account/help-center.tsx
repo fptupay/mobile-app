@@ -24,7 +24,7 @@ const statuses = [
   },
   {
     id: 'APPROVED',
-    label: 'Đã phê duyệt'
+    label: 'Đã xử lý'
   },
   {
     id: 'CLOSED',

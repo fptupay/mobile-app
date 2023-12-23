@@ -30,7 +30,11 @@ export default function SharedLayout({
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex-row justify-between">
+<<<<<<< HEAD
             {backHref ? <BackButton href={backHref}/> : <BackButton />}
+=======
+            {backHref ? <BackButton href={backHref} /> : <BackButton />}
+>>>>>>> 3a6b3db5ba3d356ef5e42b681e05486b8ec9e273
             {hasInstruction ? <QuestionButton href={questionHref} /> : null}
           </View>
 

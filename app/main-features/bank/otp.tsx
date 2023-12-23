@@ -1,11 +1,20 @@
+/* eslint-disable indent */
 import { getRegisteredPhoneNumber } from '@/api/authentication'
-import { bankLinkConfirm } from '@/api/bank'
+import {
+  bankLinkAccountVerify,
+  bankLinkCardVerify,
+  bankLinkConfirm
+} from '@/api/bank'
 import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
-import { useResendOTP } from '@/hooks/useResendOTP'
-import { BankLinkConfirmSchema } from '@/schemas/bank-schema'
+import {
+  BankLinkAccountVerifySchema,
+  BankLinkCardVerifySchema,
+  BankLinkConfirmSchema
+} from '@/schemas/bank-schema'
+import { useBankStore } from '@/stores/bankStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
 import { formatPhoneNumber, successResponseStatus } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -27,7 +36,9 @@ import Toast from 'react-native-toast-message'
 
 export default function OtpScreen() {
   const router = useRouter()
-  const params: { trans_id: string; bank_code: string } = useLocalSearchParams()
+  const params: { trans_id: string; bank_code: string; type: string } =
+    useLocalSearchParams()
+  const { cardForm, accountForm } = useBankStore()
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
@@ -41,8 +52,6 @@ export default function OtpScreen() {
     queryKey: ['phoneNumber'],
     queryFn: getRegisteredPhoneNumber
   })
-
-  const { mutate, isLoading } = useResendOTP()
 
   const bankLinkMutation = useMutation({
     mutationFn: (data: BankLinkConfirmSchema) => bankLinkConfirm(data),
@@ -73,8 +82,71 @@ export default function OtpScreen() {
     }
   })
 
+  const bankLinkAccountMutation = useMutation({
+    mutationFn: (data: BankLinkAccountVerifySchema) =>
+      bankLinkAccountVerify(data),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Đã gửi lại mã OTP'
+        })
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
+  const bankLinkCardMutation = useMutation({
+    mutationFn: (data: BankLinkCardVerifySchema) => bankLinkCardVerify(data),
+    onSuccess: (data) => {
+      if (!successResponseStatus(data)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: data.message
+        })
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Đã gửi lại mã OTP'
+        })
+      }
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Lỗi',
+          text2: error.response?.data?.message
+        })
+      }
+    }
+  })
+
+  const handleResendOTP = () => {
+    if (params.type === 'CARD') {
+      bankLinkAccountMutation.mutate(accountForm)
+    } else {
+      bankLinkCardMutation.mutate(cardForm)
+    }
+  }
+
   return (
-    <SharedLayout backHref="/account/home" title="Nhập mã OTP">
+    <SharedLayout title="Nhập mã OTP">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 px-4"
@@ -108,8 +180,9 @@ export default function OtpScreen() {
                 <NormalText className="text-tertiary mb-2 flex-row items-center">
                   Không nhận được mã?
                 </NormalText>
-                <TouchableOpacity onPress={() => mutate()}>
-                  {isLoading ? (
+                <TouchableOpacity onPress={handleResendOTP}>
+                  {bankLinkAccountMutation.isLoading ||
+                  bankLinkCardMutation.isLoading ? (
                     <ActivityIndicator size="small" color="#F97316" />
                   ) : (
                     <NormalText className="text-primary ml-1">

@@ -17,6 +17,7 @@ import {
 interface TextFieldProps extends React.ComponentProps<typeof TextInput> {
   label: string
   errorText?: string | null
+  type?: string
 }
 
 const TextField = forwardRef<TextInput | null, TextFieldProps>((props, ref) => {

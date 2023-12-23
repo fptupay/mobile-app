@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message'
 import { isAxiosError } from 'axios'
 import { Dropdown } from 'react-native-element-dropdown'
 import Colors from '@/constants/Colors'
+import { usePaymentStore } from '@/stores/paymentStore'
 
 const dom = [
   { label: 'DOM A', value: 'DOM_A' },
@@ -43,18 +44,18 @@ export default function DormitoryChoiceScreen() {
   const [isFocus, setIsFocus] = useState(false)
   const [isFocus2, setIsFocus2] = useState(false)
   const [isFocus3, setIsFocus3] = useState(false)
-
   const [note, setNote] = useState('')
+
+  const { setPendingBill } = usePaymentStore()
 
   const bookRoomMutation = useMutation({
     mutationKey: ['room'],
     mutationFn: bookDomRoom,
     onSuccess: (data) => {
       if (successResponseStatus(data)) {
-        router.push({
-          pathname: '/payments/payment-bill',
-          params: { type: 'ktx' }
-        })
+        setPendingBill(data.data)
+
+        router.push('/payments/dormitory-checkout')
       } else {
         Toast.show({
           type: 'error',
