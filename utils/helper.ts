@@ -104,7 +104,7 @@ export const getTitle = (status: string | string[]) => {
     case 'PROCESSING':
       return 'Đang xử lý'
     case 'APPROVED':
-      return 'Đã phê duyệt'
+      return 'Đã xử lý'
     case 'CLOSED':
       return 'Đã đóng'
     default:

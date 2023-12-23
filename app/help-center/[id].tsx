@@ -24,6 +24,10 @@ export default function RequestDetailScreen() {
 
   const supportDetails = [
     {
+      key: 'Tiêu đề',
+      value: details?.data?.title
+    },
+    {
       key: 'Loại yêu cầu',
       value: details?.data?.type === 'TRANSACTION' ? 'Lỗi giao dịch' : 'Khác'
     },
