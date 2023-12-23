@@ -10,6 +10,8 @@ interface AccountProps {
   credentials: any
   setCredentials: (credentials: any) => void
   clearCredentials: () => void
+  hasRegisteredOTP: boolean
+  setHasRegisteredOTP: (hasRegisteredOTP: boolean) => void
 }
 
 interface ForgotPasswordProps {
@@ -27,7 +29,9 @@ export const useAccountStore = create<AccountProps>((set) => ({
   setAvatar: (avatar) => set({ avatar }),
   credentials: {},
   setCredentials: (credentials) => set({ credentials }),
-  clearCredentials: () => set({ credentials: {} })
+  clearCredentials: () => set({ credentials: {} }),
+  hasRegisteredOTP: false,
+  setHasRegisteredOTP: (hasRegisteredOTP) => set({ hasRegisteredOTP })
 }))
 
 export const useForgotPasswordStore = create<ForgotPasswordProps>((set) => ({

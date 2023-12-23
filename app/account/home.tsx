@@ -11,12 +11,18 @@ import {
   extractDateStringFromCurrentDate,
   getCurrentYearTime
 } from '@/utils/datetime'
-import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
-import { useQuery } from '@tanstack/react-query'
+import {
+  WINDOW_HEIGHT,
+  formatDateTime,
+  formatMoney,
+  getDeviceId,
+  successResponseStatus
+} from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Animated,
@@ -36,6 +42,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { blurHash } from '@/constants/Hash'
 import { useTransactionStore } from '@/stores/transactionStore'
+import { checkStatusSmartOTP } from '@/api/otp'
+import * as SecureStore from 'expo-secure-store'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -68,8 +76,58 @@ export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
 
+  const { setHasRegisteredOTP } = useAccountStore()
+  /* todo */
+  const { username } = useAccountStore((state) => state.credentials)
+  console.log('🚀 ~ file: home.tsx:82 ~ HomeScreen ~ username:', username)
   const { setBalance, setDetails, setAvatar } = useAccountStore()
   const { accountNumber, setAccountNumber } = useTransactionStore()
+
+  const { mutate } = useMutation({
+    mutationFn: checkStatusSmartOTP,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setHasRegisteredOTP(data.data?.status)
+      } else {
+        setHasRegisteredOTP(false)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    }
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let smartOTPTransactionId = await SecureStore.getItemAsync(
+          `${username.toLowerCase()}_transId`
+        )
+
+        if (smartOTPTransactionId === null) {
+          smartOTPTransactionId = ''
+        }
+
+        console.log(
+          '🚀 ~ file: home.tsx:105 ~ fetchData ~ smartOTPTransactionId:',
+          smartOTPTransactionId
+        )
+        const deviceId = await getDeviceId()
+
+        if (smartOTPTransactionId !== null) {
+          mutate({
+            device_id: deviceId,
+            version: Platform.Version.toString(),
+            trans_id: smartOTPTransactionId
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    void fetchData()
+  }, [])
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
