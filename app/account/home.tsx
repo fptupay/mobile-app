@@ -379,7 +379,7 @@ export default function HomeScreen() {
                 title="Chuyển tiền"
               />
               <MainAction
-                route="/main-features/withdraw/withdrawal"
+                route="/main-features/withdraw/withdraw-verification"
                 image="WalletCards"
                 title="Rút tiền"
               />

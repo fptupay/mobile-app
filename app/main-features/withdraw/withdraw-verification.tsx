@@ -36,7 +36,7 @@ import { checkStatusSmartOTP } from '@/api/otp'
 import { Modal } from '@/components/Modal'
 import { TRANSACTION_TYPE } from '@/constants/payment'
 
-export default function WithdrawalScreen() {
+export default function WithdrawVerificationScreen() {
   const router = useRouter()
 
   const [amount, setAmount] = useState('')
