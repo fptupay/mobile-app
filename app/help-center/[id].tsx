@@ -21,6 +21,10 @@ export default function RequestDetailScreen() {
     queryKey: ['supportDetails', request.id],
     queryFn: () => getSupportRequestDetail(request.id as string)
   })
+  console.log(
+    '🚀 ~ file: [id].tsx:24 ~ RequestDetailScreen ~ details:',
+    details?.data
+  )
 
   const supportDetails = [
     {
@@ -49,6 +53,10 @@ export default function RequestDetailScreen() {
     {
       key: 'Nội dung yêu cầu',
       value: details?.data?.description
+    },
+    {
+      key: 'Ảnh đính kèm',
+      value: details?.data?.images[0]
     },
     {
       key: 'Phản hồi',
@@ -117,9 +125,21 @@ export default function RequestDetailScreen() {
                       <NormalText className="text-tertiary">
                         {item.key}
                       </NormalText>
-                      <NormalText className="flex-1 text-right text-secondary">
-                        {item.value}
-                      </NormalText>
+                      {item.key === 'Ảnh đính kèm' ? (
+                        <View className="flex flex-row justify-end">
+                          <Image
+                            source={{
+                              uri: item.value
+                            }}
+                            transition={200}
+                            className="w-[72px] h-[72px]"
+                          />
+                        </View>
+                      ) : (
+                        <NormalText className="flex-1 text-right text-secondary">
+                          {item.value}
+                        </NormalText>
+                      )}
                     </View>
                   ))}
                 </View>

@@ -79,7 +79,6 @@ export default function HomeScreen() {
   const { setHasRegisteredOTP } = useAccountStore()
   /* todo */
   const { username } = useAccountStore((state) => state.credentials)
-  console.log('🚀 ~ file: home.tsx:82 ~ HomeScreen ~ username:', username)
   const { setBalance, setDetails, setAvatar } = useAccountStore()
   const { accountNumber, setAccountNumber } = useTransactionStore()
 
