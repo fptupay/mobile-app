@@ -67,6 +67,7 @@ export default function RequestsListScreen() {
       title="Hỗ trợ"
       questionHref="/instruction/create-request-instruction"
       hasInstruction
+      isTabItem
     >
       {filteredRequests === 0 ? (
         <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">

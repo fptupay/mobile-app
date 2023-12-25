@@ -118,6 +118,7 @@ export default function PaymentsScreen() {
       questionHref="/instruction/payment-instruction"
       title="Thanh toán"
       hasInstruction
+      isTabItem
     >
       <SemiText className="mt-4 text-secondary">
         Lựa chọn các khoản nộp
