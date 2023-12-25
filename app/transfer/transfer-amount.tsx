@@ -96,7 +96,8 @@ export default function TransferAmountScreen() {
       <SharedLayout title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            className="h-full"
+            className="flex-1 bg-red-200 justify-between"
+            keyboardVerticalOffset={100}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             {/* Recipient info */}
@@ -111,7 +112,7 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Entered amount */}
-            <View className="flex-auto justify-center items-center">
+            <View className="justify-center items-center">
               <TextInput
                 className="text-4xl font-semibold text-primary w-full text-center"
                 placeholder="0đ"
@@ -127,7 +128,7 @@ export default function TransferAmountScreen() {
 
             {/* Suggestion */}
             <View
-              className={`flex-auto ${
+              className={`${
                 isKeyboardVisible ? 'justify-start' : 'justify-end'
               }`}
             >
@@ -144,16 +145,15 @@ export default function TransferAmountScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
+            </View>
 
+            <View className="mb-4">
               <TextField
                 value={message}
                 label="Nhắn gửi"
                 onChangeText={(text) => setMessage(text)}
                 className="my-4"
               />
-            </View>
-
-            <View className="mb-4">
               <TextButton
                 onPress={handleTransfer}
                 text="Tiếp tục"
