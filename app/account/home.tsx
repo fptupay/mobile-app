@@ -8,6 +8,7 @@ import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
 import {
+  convertDateFormat,
   extractDateStringFromCurrentDate,
   getCurrentYearTime
 } from '@/utils/datetime'
@@ -26,12 +27,12 @@ import { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Animated,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   PanResponder,
   Platform,
   Pressable,
+  SectionList,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -107,12 +108,7 @@ export default function HomeScreen() {
           smartOTPTransactionId = ''
         }
 
-        console.log(
-          '🚀 ~ file: home.tsx:105 ~ fetchData ~ smartOTPTransactionId:',
-          smartOTPTransactionId
-        )
         const deviceId = await getDeviceId()
-
         if (smartOTPTransactionId !== null) {
           mutate({
             device_id: deviceId,
@@ -228,6 +224,15 @@ export default function HomeScreen() {
       )
     })
 
+    const groupedData = filteredData?.reduce((acc: any, item: any) => {
+      const created_at = item.created_at.split(' ')[0]
+      if (!acc[created_at]) {
+        acc[created_at] = []
+      }
+      acc[created_at].push(item)
+      return acc
+    }, {})
+
     return (
       <View className="flex-1 bg-black">
         <Animated.View
@@ -243,10 +248,10 @@ export default function HomeScreen() {
 
           {/* toggle search input */}
           {!isSearching ? (
-            <View className="mt-1 flex-row items-center justify-between">
-              <NormalText className="text-tertiary uppercase">
+            <View className="my-1 flex-row items-center justify-between">
+              <MediumText className="text-tertiary uppercase">
                 Lịch sử giao dịch
-              </NormalText>
+              </MediumText>
               <View className="flex-row">
                 <TouchableOpacity
                   className="mr-4"
@@ -306,13 +311,25 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View>
-              <FlatList
+              <SectionList
                 contentContainerStyle={{
                   paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
                 }}
-                data={filteredData}
+                sections={Object.entries(groupedData).map(
+                  ([sectionTitle, data]) => ({
+                    title: sectionTitle,
+                    data: data as readonly any[]
+                  })
+                )}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View className="pt-1">
+                    <NormalText className="text-tertiary">
+                      {convertDateFormat(title)}
+                    </NormalText>
+                  </View>
+                )}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     className="flex flex-row py-3 items-center"
