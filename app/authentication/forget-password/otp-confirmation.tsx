@@ -31,7 +31,6 @@ export default function OTPConfirmationScreen() {
   const { mutate, isLoading } = useMutation({
     mutationFn: confirmOtp,
     onSuccess: (data) => {
-      console.log(data)
       if (successResponseStatus(data)) {
         router.push('/authentication/forget-password/info-confirmation')
       } else {

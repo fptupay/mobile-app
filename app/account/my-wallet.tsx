@@ -50,7 +50,7 @@ const accountDetail: ListItemProps[] = [
   {
     leftIcon: 'User',
     color: '#F97316',
-    href: '/personal-info',
+    href: '/settings/personal-info',
     title: 'Thông tin cá nhân'
   },
   {

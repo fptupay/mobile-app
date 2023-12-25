@@ -96,7 +96,7 @@ export default function TransferAmountScreen() {
       <SharedLayout title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            className="flex-1 bg-red-200 justify-between"
+            className="flex-1 justify-between"
             keyboardVerticalOffset={100}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
@@ -126,28 +126,28 @@ export default function TransferAmountScreen() {
               </NormalText>
             </View>
 
-            {/* Suggestion */}
-            <View
-              className={`${
-                isKeyboardVisible ? 'justify-start' : 'justify-end'
-              }`}
-            >
-              <View className="space-x-2 flex-row">
-                {suggestions.map((suggestion) => (
-                  <TouchableOpacity
-                    key={suggestion}
-                    onPress={() => handleSuggestionPress(suggestion)}
-                    className="flex-wrap p-1 rounded-md bg-orange-100"
-                  >
-                    <MediumText className="text-secondary">
-                      {formatMoney(suggestion)}
-                    </MediumText>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
             <View className="mb-4">
+              {/* Suggestion */}
+              <View
+                className={`${
+                  isKeyboardVisible ? 'justify-start' : 'justify-end'
+                }`}
+              >
+                <View className="space-x-2 flex-row">
+                  {suggestions.map((suggestion) => (
+                    <TouchableOpacity
+                      key={suggestion}
+                      onPress={() => handleSuggestionPress(suggestion)}
+                      className="flex-wrap p-1 rounded-md bg-orange-100"
+                    >
+                      <MediumText className="text-secondary">
+                        {formatMoney(suggestion)}
+                      </MediumText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
               <TextField
                 value={message}
                 label="Nhắn gửi"

@@ -26,7 +26,7 @@ export default function ListItem({
   return (
     <Pressable
       onPress={() => router.push(href)}
-      className="flex flex-row justify-between mx-3 my-1 py-2 bg-[#FAFAFA]"
+      className="flex flex-row justify-between items-center mx-3 my-1 py-2 bg-[#FAFAFA]"
     >
       <View className="flex flex-row bg-[#FAFAFA]">
         <View

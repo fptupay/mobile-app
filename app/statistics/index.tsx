@@ -115,7 +115,13 @@ export default function TransactionStatisticsScreen() {
       }
     },
     onError: (error) => {
-      console.log(error)
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: error.message
+        })
+      }
     }
   })
 

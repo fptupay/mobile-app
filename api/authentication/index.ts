@@ -33,7 +33,6 @@ export const loginUser = async (data: LoginFormSchema, token: any) => {
     },
     config
   )
-  console.log(config)
   return response.data
 }
 

@@ -21,10 +21,6 @@ export default function RequestDetailScreen() {
     queryKey: ['supportDetails', request.id],
     queryFn: () => getSupportRequestDetail(request.id as string)
   })
-  console.log(
-    '🚀 ~ file: [id].tsx:24 ~ RequestDetailScreen ~ details:',
-    details?.data
-  )
 
   const supportDetails = [
     {
@@ -81,8 +77,6 @@ export default function RequestDetailScreen() {
       router.replace('/account/help-center')
     }
   })
-
-  console.log(details)
 
   const handleCloseSupportRequest = () => {
     closeRequestMutation.mutate()

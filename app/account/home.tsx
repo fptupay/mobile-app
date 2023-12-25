@@ -53,14 +53,9 @@ interface MainActionProps {
 }
 
 const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
-  const router = useRouter()
-
-  const handleRouting = () => {
-    router.push(route)
-  }
   return (
     <Pressable
-      onPress={handleRouting}
+      onPress={() => router.push(route)}
       className="w-[30%] h-full relative text-center items-center"
     >
       <View className="w-[48px] h-[48px] items-center bg-black rounded-full justify-center">
@@ -78,7 +73,6 @@ export default function HomeScreen() {
   const [showBalance, setShowBalance] = useState(false)
 
   const { setHasRegisteredOTP } = useAccountStore()
-  /* todo */
   const { username } = useAccountStore((state) => state.credentials)
   const { setBalance, setDetails, setAvatar } = useAccountStore()
   const { accountNumber, setAccountNumber } = useTransactionStore()

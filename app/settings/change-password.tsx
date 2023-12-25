@@ -61,7 +61,11 @@ export default function ChangePasswordScreen() {
         .catch((err) => console.log(err))
     },
     onError: (error: any) => {
-      console.log(error)
+      Toast.show({
+        text1: 'Đã có lỗi xảy ra',
+        text2: error.message,
+        type: 'error'
+      })
     }
   })
 
