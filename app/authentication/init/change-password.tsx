@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -24,10 +25,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import CustomIcon from '@/components/Icon'
 import { useTogglePassword } from '@/hooks/useTogglePassword'
+import { useRef } from 'react'
 
 export default function ChangePasswordScreen() {
   const router = useRouter()
   const params: { username: string } = useLocalSearchParams()
+  const newPasswordRef = useRef<TextInput | null>(null)
   const {
     control,
     getValues,
@@ -51,8 +54,8 @@ export default function ChangePasswordScreen() {
       label: 'Có ít nhất 6 ký tự'
     },
     {
-      isSatisfied: /[A-Za-z]/.test(watch('new_password')),
-      label: 'Có ít nhất 1 chữ cái'
+      isSatisfied: /[A-Z]/.test(watch('new_password')),
+      label: 'Có ít nhất 1 chữ cái viết hoa'
     },
     {
       isSatisfied: /[0-9]/.test(watch('new_password')),
@@ -146,6 +149,7 @@ export default function ChangePasswordScreen() {
                         secureTextEntry={isPasswordVisible}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="next"
+                        onSubmitEditing={() => newPasswordRef.current?.focus()}
                       />
                       <TouchableOpacity
                         className="absolute right-2.5 top-1/3"
@@ -176,6 +180,7 @@ export default function ChangePasswordScreen() {
                         secureTextEntry={isPasswordVisible}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="done"
+                        ref={newPasswordRef}
                       />
                       <TouchableOpacity
                         className="absolute right-2.5 top-1/3"

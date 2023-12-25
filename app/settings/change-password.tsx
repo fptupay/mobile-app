@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -17,7 +18,7 @@ import {
   passwordChangeSchema
 } from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { changePassword } from '@/api/profile'
 import { useAccountStore } from '@/stores/accountStore'
@@ -33,6 +34,8 @@ import { useTogglePassword } from '@/hooks/useTogglePassword'
 export default function ChangePasswordScreen() {
   const [error, setError] = useState('')
   const [isVisible, setIsVisible] = useState(false)
+  const newPasswordRef = useRef<TextInput | null>(null)
+  const confirmPasswordRef = useRef<TextInput | null>(null)
   const {
     control,
     getValues,
@@ -125,6 +128,9 @@ export default function ChangePasswordScreen() {
                           secureTextEntry={isPasswordVisible}
                           style={{ fontFamily: 'Inter' }}
                           returnKeyType="next"
+                          onSubmitEditing={() =>
+                            newPasswordRef.current?.focus()
+                          }
                         />
                         <TouchableOpacity
                           className="absolute right-2.5 top-1/3"
@@ -155,6 +161,10 @@ export default function ChangePasswordScreen() {
                           secureTextEntry={isPasswordVisible}
                           style={{ fontFamily: 'Inter' }}
                           returnKeyType="next"
+                          ref={newPasswordRef}
+                          onSubmitEditing={() =>
+                            confirmPasswordRef.current?.focus()
+                          }
                         />
                         <TouchableOpacity
                           className="absolute right-2.5 top-1/3"
@@ -181,6 +191,7 @@ export default function ChangePasswordScreen() {
                           secureTextEntry={isPasswordVisible}
                           style={{ fontFamily: 'Inter' }}
                           returnKeyType="done"
+                          ref={confirmPasswordRef}
                         />
                         <TouchableOpacity
                           className="absolute right-2.5 top-1/3"

@@ -39,6 +39,9 @@ export default function OTPConfirmationScreen() {
     resolver: zodResolver(infoResetPasswordSchema),
     mode: 'onBlur'
   })
+  const cardNoRef = React.useRef<any>(null)
+  const dateOfBirthRef = React.useRef<any>(null)
+  const cardHolderRef = React.useRef<any>(null)
 
   const handleTextChange = (text: string) => {
     // Remove non-numeric characters
@@ -114,6 +117,7 @@ export default function OTPConfirmationScreen() {
                     onChangeText={onChange}
                     style={{ fontFamily: 'Inter' }}
                     returnKeyType="next"
+                    onSubmitEditing={() => cardNoRef.current?.focus()}
                     className="w-full mt-8"
                   />
                 )}
@@ -131,6 +135,8 @@ export default function OTPConfirmationScreen() {
                   onChangeText={onChange}
                   style={{ fontFamily: 'Inter' }}
                   returnKeyType="next"
+                  ref={cardNoRef}
+                  onSubmitEditing={() => dateOfBirthRef.current?.focus()}
                   className="w-full mt-4"
                 />
               )}
@@ -153,6 +159,8 @@ export default function OTPConfirmationScreen() {
                     placeholderTextColor={'#9CA3AF'}
                     keyboardType="phone-pad"
                     returnKeyType="next"
+                    ref={dateOfBirthRef}
+                    onSubmitEditing={() => cardHolderRef.current?.focus()}
                     className="w-full mt-4"
                   />
                 )}
@@ -172,6 +180,7 @@ export default function OTPConfirmationScreen() {
                     style={{ fontFamily: 'Inter' }}
                     returnKeyType="done"
                     className="w-full mt-4"
+                    ref={cardHolderRef}
                   />
                 )}
               />

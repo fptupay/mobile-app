@@ -133,6 +133,14 @@ export default function LoginScreen() {
     }
   })
 
+  const handleLogin = () => {
+    Keyboard.dismiss()
+    loginMutation.mutate({
+      username: getValues('username'),
+      password: getValues('password')
+    })
+  }
+
   return (
     <SafeAreaView className="flex-1 items-center relative bg-white">
       <StatusBar style="auto" />
@@ -215,12 +223,7 @@ export default function LoginScreen() {
 
             <View className="w-full mt-8 space-y-2">
               <TextButton
-                onPress={() =>
-                  loginMutation.mutate({
-                    username: getValues('username'),
-                    password: getValues('password')
-                  })
-                }
+                onPress={handleLogin}
                 text="Đăng nhập"
                 type={TextButtonType.PRIMARY}
                 disable={loginMutation.isLoading || !isValid}
