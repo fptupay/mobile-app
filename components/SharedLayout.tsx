@@ -14,6 +14,7 @@ interface SharedLayoutProps {
   title: string
   children: React.ReactNode
   hasInstruction?: boolean
+  isTabItem?: boolean
 }
 
 export default function SharedLayout({
@@ -21,7 +22,8 @@ export default function SharedLayout({
   questionHref,
   title,
   children,
-  hasInstruction
+  hasInstruction,
+  isTabItem
 }: SharedLayoutProps) {
   return (
     <View className="flex-1">
@@ -30,7 +32,8 @@ export default function SharedLayout({
         <GradientBackground />
         <SafeAreaView className="px-4 pt-4">
           <View className="flex-row justify-between">
-            {backHref ? <BackButton href={backHref} /> : <BackButton />}
+            {!isTabItem &&
+              (backHref ? <BackButton href={backHref} /> : <BackButton />)}
             {hasInstruction ? <QuestionButton href={questionHref} /> : null}
           </View>
 

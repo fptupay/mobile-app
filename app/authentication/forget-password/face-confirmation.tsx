@@ -16,7 +16,6 @@ import { successResponseStatus } from '@/utils/helper'
 export default function FaceAuthenticatorScreen() {
   let camera: Camera | null
   const { credentials } = useForgotPasswordStore()
-  console.log(credentials)
 
   const [capturedImage, setCapturedImage] = useState<any>()
 

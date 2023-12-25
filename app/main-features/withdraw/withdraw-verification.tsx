@@ -13,7 +13,6 @@ import {
   formatInputMoney,
   formatMoney,
   getBankName,
-  getDeviceId,
   successResponseStatus
 } from '@/utils/helper'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -27,22 +26,20 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  StyleSheet,
-  Platform
+  StyleSheet
 } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { useTransferStore } from '@/stores/transferStore'
-import { checkStatusSmartOTP } from '@/api/otp'
 import { Modal } from '@/components/Modal'
 import { TRANSACTION_TYPE } from '@/constants/payment'
 
-export default function WithdrawalScreen() {
+export default function WithdrawVerificationScreen() {
   const router = useRouter()
 
   const [amount, setAmount] = useState('')
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
 
+  const { hasRegisteredOTP } = useAccountStore()
   const selectedBank = useBankStore((state) => state.selectedBank)
   const setSelectedBank = useBankStore((state) => state.setSelectedBank)
   const balance = useAccountStore((state) => state.balance)
@@ -75,22 +72,6 @@ export default function WithdrawalScreen() {
     }
   })
 
-  const { mutateAsync, isLoading, isSuccess } = useMutation({
-    mutationFn: checkStatusSmartOTP,
-    onSuccess: (data) => {
-      if (successResponseStatus(data)) {
-        if (data.data?.status === true) {
-          setHasRegisteredOTP(true)
-        } else {
-          setHasRegisteredOTP(false)
-        }
-      }
-    },
-    onError: (error) => {
-      console.log(error)
-    }
-  })
-
   const withdrawMutation = useMutation({
     mutationFn: (data: MoneyVerifySchema) => withdrawVerify(data),
     onSuccess: (data) => {
@@ -119,16 +100,6 @@ export default function WithdrawalScreen() {
 
   const handleVerifyWithdrawal = async () => {
     const existingPIN = await SecureStore.getItemAsync(username)
-    const smartOTPTransactionId = await SecureStore.getItemAsync(
-      `${username}_transId` || ''
-    )
-    const deviceId = await getDeviceId()
-
-    await mutateAsync({
-      device_id: deviceId,
-      version: Platform.Version.toString(),
-      trans_id: smartOTPTransactionId
-    })
 
     if (!existingPIN || hasRegisteredOTP === false) {
       setIsVisible(true)
@@ -221,10 +192,7 @@ export default function WithdrawalScreen() {
             text="Tiếp tục"
             type="primary"
             onPress={handleVerifyWithdrawal}
-            loading={isLoading || isSuccess}
-            disable={
-              selectedBank == '' || amount == '' || isLoading || isSuccess
-            }
+            disable={selectedBank == '' || amount == ''}
           />
         </View>
       </SharedLayout>

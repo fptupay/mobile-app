@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -14,7 +15,7 @@ import { useMutation } from '@tanstack/react-query'
 import { changePhoneNumber } from '@/api/profile'
 import { successResponseStatus } from '@/utils/helper'
 import Toast from 'react-native-toast-message'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { router } from 'expo-router'
 import { usePhoneStore } from '@/stores/phoneStore'
 import SharedLayout from '@/components/SharedLayout'
@@ -24,6 +25,7 @@ import { useTogglePassword } from '@/hooks/useTogglePassword'
 export default function ChangePhoneNumberScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
+  const passwordRef = useRef<TextInput | null>(null)
   const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
 
   const setPhone = usePhoneStore((state) => state.setPhone)
@@ -74,6 +76,7 @@ export default function ChangePhoneNumberScreen() {
                 onChangeText={(phone) => setPhoneNumber(phone)}
                 style={{ fontFamily: 'Inter' }}
                 returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
               />
             </View>
 
@@ -84,7 +87,8 @@ export default function ChangePhoneNumberScreen() {
                 value={password}
                 secureTextEntry={isPasswordVisible}
                 onChangeText={(password) => setPassword(password)}
-                returnKeyType="next"
+                ref={passwordRef}
+                returnKeyType="done"
               />
               <TouchableOpacity
                 className="absolute right-2.5 top-1/3"

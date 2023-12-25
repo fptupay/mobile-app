@@ -1,15 +1,14 @@
-import { Platform, View } from 'react-native'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { View } from 'react-native'
+import { useQuery } from '@tanstack/react-query'
 import { getDNGBillByFeeType } from '@/api/bill'
 import SharedLayout from '@/components/SharedLayout'
 import DescriptionRowItem from '@/components/DescriptionRowItem'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
-import { formatMoney, getDeviceId, successResponseStatus } from '@/utils/helper'
+import { formatMoney } from '@/utils/helper'
 import { router, useLocalSearchParams } from 'expo-router'
 import LoadingSpin from '@/components/LoadingSpin'
 import { useTransferStore } from '@/stores/transferStore'
-import { checkStatusSmartOTP } from '@/api/otp'
 import { useState } from 'react'
 import { useAccountStore } from '@/stores/accountStore'
 import * as SecureStore from 'expo-secure-store'
@@ -18,8 +17,9 @@ import { TRANSACTION_TYPE } from '@/constants/payment'
 
 export default function PaymentBillScreen() {
   const { type } = useLocalSearchParams()
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
+
+  const { hasRegisteredOTP } = useAccountStore()
   const { setTransactionType, setTransactionId, setFeeType } =
     useTransferStore()
   const { username } = useAccountStore((state) => state.details)
@@ -34,34 +34,8 @@ export default function PaymentBillScreen() {
     }
   })
 
-  const checkSmartOTPStatusMutation = useMutation({
-    mutationFn: checkStatusSmartOTP,
-    onSuccess: (data) => {
-      if (successResponseStatus(data)) {
-        if (data.data?.status === true) {
-          setHasRegisteredOTP(true)
-        } else {
-          setHasRegisteredOTP(false)
-        }
-      }
-    },
-    onError: (error) => {
-      console.log(error)
-    }
-  })
-
   const handleVerifyBill = async () => {
     const existingPIN = await SecureStore.getItemAsync(username)
-    const smartOTPTransactionId = await SecureStore.getItemAsync(
-      `${username}_transId` || ''
-    )
-    const deviceId = await getDeviceId()
-
-    await checkSmartOTPStatusMutation.mutateAsync({
-      device_id: deviceId,
-      version: Platform.Version.toString(),
-      trans_id: smartOTPTransactionId
-    })
 
     if (!existingPIN && hasRegisteredOTP === false) {
       setIsVisible(true)
@@ -120,8 +94,6 @@ export default function PaymentBillScreen() {
             onPress={handleVerifyBill}
             text="Tiếp tục"
             type="primary"
-            loading={checkSmartOTPStatusMutation.isLoading}
-            disable={checkSmartOTPStatusMutation.isLoading}
           />
         </View>
       </SharedLayout>

@@ -27,14 +27,18 @@ export const getTransactionDates = (period: string) => {
   let toDate = ''
   const today = new Date()
   switch (period) {
-    case 'this_week':
-      fromDate = formatDate(
-        new Date(today.setDate(today.getDate() - today.getDay() + 1))
-      )
-      toDate = formatDate(
-        new Date(today.setDate(today.getDate() - today.getDay() + 7))
-      )
+    case 'this_week': {
+      const dayOfWeek = today.getDay()
+
+      const monday = new Date(today)
+      monday.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1))
+      fromDate = formatDate(monday)
+
+      const sunday = new Date(today)
+      sunday.setDate(monday.getDate() + 6)
+      toDate = formatDate(sunday)
       break
+    }
     case 'this_month':
       fromDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1))
       toDate = formatDate(

@@ -7,20 +7,18 @@ import { useAccountStore } from '@/stores/accountStore'
 import {
   convertNumberToVietnameseWords,
   formatMoney,
-  getDeviceId,
   successResponseStatus
 } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { router, useLocalSearchParams } from 'expo-router'
-import { Platform, View, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import Toast from 'react-native-toast-message'
 import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { Modal } from '@/components/Modal'
 import { useTransferStore } from '@/stores/transferStore'
-import { checkStatusSmartOTP } from '@/api/otp'
 import { TRANSACTION_TYPE } from '@/constants/payment'
 import { useTransactionStore } from '@/stores/transactionStore'
 
@@ -28,8 +26,8 @@ export default function TransferConfirmationScreen() {
   const { amount, message, studentCode, receiver } = useLocalSearchParams()
 
   const [isVisible, setIsVisible] = useState(false)
-  const [hasRegisteredOTP, setHasRegisteredOTP] = useState(true)
 
+  const { hasRegisteredOTP } = useAccountStore()
   const { full_name, username } = useAccountStore((state) => state.details)
   const avatar = useAccountStore((state) => state.avatar)
   const receiverAvatar = useTransferStore((state) => state.receiverAvatar)
@@ -63,34 +61,8 @@ export default function TransferConfirmationScreen() {
     }
   })
 
-  const { mutateAsync, isLoading } = useMutation({
-    mutationFn: checkStatusSmartOTP,
-    onSuccess: (data) => {
-      if (successResponseStatus(data)) {
-        if (data.data?.status === true) {
-          setHasRegisteredOTP(true)
-        } else {
-          setHasRegisteredOTP(false)
-        }
-      }
-    },
-    onError: (error) => {
-      console.log(error)
-    }
-  })
-
   const handleVerifyTransfer = async () => {
     const existingPIN = await SecureStore.getItemAsync(username)
-    const smartOTPTransactionId = await SecureStore.getItemAsync(
-      `${username}_transId` || ''
-    )
-    const deviceId = await getDeviceId()
-
-    await mutateAsync({
-      device_id: deviceId,
-      version: Platform.Version.toString(),
-      trans_id: smartOTPTransactionId
-    })
 
     if (!existingPIN || hasRegisteredOTP === false) {
       setIsVisible(true)
@@ -187,8 +159,8 @@ export default function TransferConfirmationScreen() {
             text="Xác nhận"
             type="primary"
             onPress={handleVerifyTransfer}
-            loading={verifyTransferMutation.isLoading || isLoading}
-            disable={verifyTransferMutation.isLoading || isLoading}
+            loading={verifyTransferMutation.isLoading}
+            disable={verifyTransferMutation.isLoading}
           />
         </View>
       </SharedLayout>

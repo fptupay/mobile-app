@@ -96,7 +96,8 @@ export default function TransferAmountScreen() {
       <SharedLayout title="Chuyển tiền">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            className="h-full"
+            className="flex-1 justify-between"
+            keyboardVerticalOffset={100}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             {/* Recipient info */}
@@ -111,7 +112,7 @@ export default function TransferAmountScreen() {
             </View>
 
             {/* Entered amount */}
-            <View className="flex-auto justify-center items-center">
+            <View className="justify-center items-center">
               <TextInput
                 className="text-4xl font-semibold text-primary w-full text-center"
                 placeholder="0đ"
@@ -125,24 +126,26 @@ export default function TransferAmountScreen() {
               </NormalText>
             </View>
 
-            {/* Suggestion */}
-            <View
-              className={`flex-auto ${
-                isKeyboardVisible ? 'justify-start' : 'justify-end'
-              }`}
-            >
-              <View className="space-x-2 flex-row">
-                {suggestions.map((suggestion) => (
-                  <TouchableOpacity
-                    key={suggestion}
-                    onPress={() => handleSuggestionPress(suggestion)}
-                    className="flex-wrap p-1 rounded-md bg-orange-100"
-                  >
-                    <MediumText className="text-secondary">
-                      {formatMoney(suggestion)}
-                    </MediumText>
-                  </TouchableOpacity>
-                ))}
+            <View className="mb-4">
+              {/* Suggestion */}
+              <View
+                className={`${
+                  isKeyboardVisible ? 'justify-start' : 'justify-end'
+                }`}
+              >
+                <View className="space-x-2 flex-row">
+                  {suggestions.map((suggestion) => (
+                    <TouchableOpacity
+                      key={suggestion}
+                      onPress={() => handleSuggestionPress(suggestion)}
+                      className="flex-wrap p-1 rounded-md bg-orange-100"
+                    >
+                      <MediumText className="text-secondary">
+                        {formatMoney(suggestion)}
+                      </MediumText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               <TextField
@@ -151,9 +154,6 @@ export default function TransferAmountScreen() {
                 onChangeText={(text) => setMessage(text)}
                 className="my-4"
               />
-            </View>
-
-            <View className="mb-4">
               <TextButton
                 onPress={handleTransfer}
                 text="Tiếp tục"

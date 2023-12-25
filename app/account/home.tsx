@@ -8,24 +8,31 @@ import Colors from '@/constants/Colors'
 import { useAccountStore } from '@/stores/accountStore'
 import { IconProps } from '@/types/Icon.type'
 import {
+  convertDateFormat,
   extractDateStringFromCurrentDate,
   getCurrentYearTime
 } from '@/utils/datetime'
-import { WINDOW_HEIGHT, formatDateTime, formatMoney } from '@/utils/helper'
-import { useQuery } from '@tanstack/react-query'
+import {
+  WINDOW_HEIGHT,
+  formatDateTime,
+  formatMoney,
+  getDeviceId,
+  successResponseStatus
+} from '@/utils/helper'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Animated,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   PanResponder,
   Platform,
   Pressable,
+  SectionList,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -36,6 +43,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
 import { blurHash } from '@/constants/Hash'
 import { useTransactionStore } from '@/stores/transactionStore'
+import { checkStatusSmartOTP } from '@/api/otp'
+import * as SecureStore from 'expo-secure-store'
 
 interface MainActionProps {
   image: IconProps['name']
@@ -44,14 +53,9 @@ interface MainActionProps {
 }
 
 const MainAction: React.FC<MainActionProps> = ({ image, title, route }) => {
-  const router = useRouter()
-
-  const handleRouting = () => {
-    router.push(route)
-  }
   return (
     <Pressable
-      onPress={handleRouting}
+      onPress={() => router.push(route)}
       className="w-[30%] h-full relative text-center items-center"
     >
       <View className="w-[48px] h-[48px] items-center bg-black rounded-full justify-center">
@@ -68,8 +72,51 @@ export default function HomeScreen() {
   const [isSearching, setIsSearching] = useState(false)
   const [showBalance, setShowBalance] = useState(false)
 
+  const { setHasRegisteredOTP } = useAccountStore()
+  const { username } = useAccountStore((state) => state.credentials)
   const { setBalance, setDetails, setAvatar } = useAccountStore()
   const { accountNumber, setAccountNumber } = useTransactionStore()
+
+  const { mutate } = useMutation({
+    mutationFn: checkStatusSmartOTP,
+    onSuccess: (data) => {
+      if (successResponseStatus(data)) {
+        setHasRegisteredOTP(data.data?.status)
+      } else {
+        setHasRegisteredOTP(false)
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    }
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let smartOTPTransactionId = await SecureStore.getItemAsync(
+          `${username.toLowerCase()}_transId`
+        )
+
+        if (smartOTPTransactionId === null) {
+          smartOTPTransactionId = ''
+        }
+
+        const deviceId = await getDeviceId()
+        if (smartOTPTransactionId !== null) {
+          mutate({
+            device_id: deviceId,
+            version: Platform.Version.toString(),
+            trans_id: smartOTPTransactionId
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    void fetchData()
+  }, [])
 
   const accountBalanceQuery = useQuery({
     queryKey: ['account-balance'],
@@ -171,6 +218,15 @@ export default function HomeScreen() {
       )
     })
 
+    const groupedData = filteredData?.reduce((acc: any, item: any) => {
+      const created_at = item.created_at.split(' ')[0]
+      if (!acc[created_at]) {
+        acc[created_at] = []
+      }
+      acc[created_at].push(item)
+      return acc
+    }, {})
+
     return (
       <View className="flex-1 bg-black">
         <Animated.View
@@ -186,10 +242,10 @@ export default function HomeScreen() {
 
           {/* toggle search input */}
           {!isSearching ? (
-            <View className="mt-1 flex-row items-center justify-between">
-              <NormalText className="text-tertiary uppercase">
+            <View className="my-1 flex-row items-center justify-between">
+              <MediumText className="text-tertiary uppercase">
                 Lịch sử giao dịch
-              </NormalText>
+              </MediumText>
               <View className="flex-row">
                 <TouchableOpacity
                   className="mr-4"
@@ -249,13 +305,25 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View>
-              <FlatList
+              <SectionList
                 contentContainerStyle={{
                   paddingBottom: (400 * (WINDOW_HEIGHT - 350)) / scrollY
                 }}
-                data={filteredData}
+                sections={Object.entries(groupedData).map(
+                  ([sectionTitle, data]) => ({
+                    title: sectionTitle,
+                    data: data as readonly any[]
+                  })
+                )}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View className="pt-1">
+                    <NormalText className="text-tertiary">
+                      {convertDateFormat(title)}
+                    </NormalText>
+                  </View>
+                )}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     className="flex flex-row py-3 items-center"
@@ -379,7 +447,7 @@ export default function HomeScreen() {
                 title="Chuyển tiền"
               />
               <MainAction
-                route="/main-features/withdraw/withdrawal"
+                route="/main-features/withdraw/withdraw-verification"
                 image="WalletCards"
                 title="Rút tiền"
               />

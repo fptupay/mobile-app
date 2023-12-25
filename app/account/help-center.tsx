@@ -4,6 +4,7 @@ import LoadingSpin from '@/components/LoadingSpin'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import {
+  formatDateTime,
   getLabelBackgroundColor,
   getLabelTextColor,
   getTitle
@@ -66,6 +67,7 @@ export default function RequestsListScreen() {
       title="Hỗ trợ"
       questionHref="/instruction/create-request-instruction"
       hasInstruction
+      isTabItem
     >
       {filteredRequests === 0 ? (
         <View className="flex flex-1 items-center justify-center w-4/5 mx-auto">
@@ -158,7 +160,7 @@ function RequestItem({ request }: { request: any }) {
         <View>
           <MediumText className="text-secondary">{request.title}</MediumText>
           <NormalText className="text-tertiary">
-            {request.created_at}
+            {formatDateTime(request.created_at)}
           </NormalText>
         </View>
         <View

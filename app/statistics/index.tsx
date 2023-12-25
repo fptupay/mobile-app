@@ -67,6 +67,7 @@ export default function TransactionStatisticsScreen() {
   const [from, setFrom] = useState(firstDay)
   const [to, setTo] = useState(lastDay)
   const [isLoading, setIsLoading] = useState(false)
+  const [chosenDateRange, setChosenDateRange] = useState('this_month')
 
   const {
     listTransaction,
@@ -114,7 +115,13 @@ export default function TransactionStatisticsScreen() {
       }
     },
     onError: (error) => {
-      console.log(error)
+      if (isAxiosError(error)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Đã có lỗi xảy ra',
+          text2: error.message
+        })
+      }
     }
   })
 
@@ -124,6 +131,7 @@ export default function TransactionStatisticsScreen() {
     setFrom(fromDate)
     setTo(toDate)
     setModalVisible(false)
+    setChosenDateRange(key)
   }
 
   useEffect(() => {
@@ -293,6 +301,9 @@ export default function TransactionStatisticsScreen() {
                   <NormalText className="text-secondary">
                     {item.title}
                   </NormalText>
+                  {item.key === chosenDateRange && (
+                    <CustomIcon name="Check" size={20} color={Colors.primary} />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>

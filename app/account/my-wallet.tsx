@@ -12,7 +12,13 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  View
+} from 'react-native'
 import { Image } from 'expo-image'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import * as ImagePicker from 'expo-image-picker'
@@ -20,7 +26,6 @@ import { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
 import { uploadUserAvatar } from '@/api/profile'
 import { blurHash } from '@/constants/Hash'
-import * as ImageManipulator from 'expo-image-manipulator';
 
 const walletFunctions: ListItemProps[] = [
   {
@@ -28,7 +33,7 @@ const walletFunctions: ListItemProps[] = [
     color: '#000000',
     title: 'Nạp tiền',
     description: 'Từ ngân hàng vào ví FPTUPay',
-    href: '/main-features/deposit/load-money',
+    href: '/main-features/deposit/deposit-verification',
     rightIcon: 'ChevronRight'
   },
   {
@@ -36,7 +41,7 @@ const walletFunctions: ListItemProps[] = [
     title: 'Rút tiền',
     color: '#000000',
     description: 'Về ngân hàng đã liên kết',
-    href: '/main-features/withdraw/withdrawal',
+    href: '/main-features/withdraw/withdraw-verification',
     rightIcon: 'ChevronRight'
   }
 ]
@@ -45,7 +50,7 @@ const accountDetail: ListItemProps[] = [
   {
     leftIcon: 'User',
     color: '#F97316',
-    href: '/personal-info',
+    href: '/settings/personal-info',
     title: 'Thông tin cá nhân'
   },
   {
@@ -136,23 +141,23 @@ export default function MyWalletScreen() {
   })
 
   const pickImage = async () => {
-    let aspectRatio = [3, 4];
-  
+    let aspectRatio: [number, number] = [3, 4]
+
     if (Platform.OS === 'ios') {
-      aspectRatio = [4, 5];
+      aspectRatio = [4, 5]
     }
-  
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: aspectRatio,
       quality: 0.5
-    });
-  
+    })
+
     if (result?.assets) {
-      avatarMutation.mutate(result.assets[0].uri);
+      avatarMutation.mutate(result.assets[0].uri)
     }
-  };
+  }
 
   return (
     <View className="flex-1 bg-white">

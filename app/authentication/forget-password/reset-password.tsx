@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -15,7 +16,7 @@ import TextField from '@/components/TextField'
 import { Controller, useForm } from 'react-hook-form'
 import { PasswordSchema, passwordSchema } from '@/schemas/auth-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { router } from 'expo-router'
 import BackButton from '@/components/buttons/BackButton'
 import { useForgotPasswordStore } from '@/stores/accountStore'
@@ -31,6 +32,7 @@ export default function ResetPasswordScreen() {
   const { isPasswordVisible, icon, togglePassword } = useTogglePassword()
 
   const [clicked, setClicked] = useState(false)
+  const confirmPasswordRef = useRef<TextInput | null>(null)
   const {
     control,
     formState: { errors, isValid },
@@ -107,6 +109,9 @@ export default function ResetPasswordScreen() {
                         secureTextEntry={isPasswordVisible}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="next"
+                        onSubmitEditing={() => {
+                          confirmPasswordRef.current?.focus()
+                        }}
                       />
                       <TouchableOpacity
                         className="absolute right-2.5 top-1/3"
@@ -138,6 +143,7 @@ export default function ResetPasswordScreen() {
                         onFocus={() => setClicked(true)}
                         style={{ fontFamily: 'Inter' }}
                         returnKeyType="done"
+                        ref={confirmPasswordRef}
                       />
                       <TouchableOpacity
                         className="absolute right-2.5 top-1/3"

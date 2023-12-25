@@ -32,20 +32,22 @@ export default function PaymentInstructionScreen() {
               học phí, bạn sẽ không còn nhìn thấy danh mục này.
             </NormalText>
           </MediumText>
+
           <MediumText className="text-secondary mt-2">
-            2. Thanh toán phí môn:{' '}
+            2. Thanh toán ký túc xá:{' '}
             <NormalText className="text-tertiary mt-2">
-              Số tiền học phí phải nộp sẽ được thông báo đến bạn vào chậm nhất 2
-              tuần trước khi học kỳ mới bắt đầu. Sau khi đã hoàn thành bổn phận
-              học phí, bạn sẽ không còn nhìn thấy danh mục này.
+              Bạn có thể lựa chọn đặt phòng mới hoặc giữ chỗ phòng ký túc xá cho
+              2 kỳ tiếp theo. Ngay sau khi tạo hoá đơn ký túc xá thành công, hệ
+              thống FAP sẽ ghi nhận và cập nhật lại thông tin phòng ký túc xá
+              của bạn.
             </NormalText>
           </MediumText>
+
           <MediumText className="text-secondary mt-2">
-            3. Thanh toán phí ký túc xá:{' '}
+            3. Thanh toán phí đơn từ:{' '}
             <NormalText className="text-tertiary mt-2">
-              Số tiền học phí phải nộp sẽ được thông báo đến bạn vào chậm nhất 2
-              tuần trước khi học kỳ mới bắt đầu. Sau khi đã hoàn thành bổn phận
-              học phí, bạn sẽ không còn nhìn thấy danh mục này.
+              Ngay sau khi tạo 1 khoản nộp tiền phí đơn từ từ FAP, ví FPTUPay sẽ
+              hiển thị danh sách các đơn mà bạn cần thanh toán.
             </NormalText>
           </MediumText>
         </ScrollView>

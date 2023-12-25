@@ -10,7 +10,7 @@ import { successResponseStatus } from '@/utils/helper'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   KeyboardAvoidingView,
   Platform,
@@ -40,6 +40,9 @@ export default function CreateRequestScreen() {
   const [value, setValue] = useState('')
   const [description, setDescription] = useState('')
   const [images, setImages] = useState<string[]>([])
+
+  const titleRef = useRef<TextInput | null>(null)
+  const descriptionRef = useRef<TextInput | null>(null)
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -151,6 +154,7 @@ export default function CreateRequestScreen() {
               className="border border-gray-300 rounded-lg pl-2.5 pr-3 py-3"
               value={transactionId}
               onChangeText={(text) => setTransactionId(text)}
+              onSubmitEditing={() => titleRef.current?.focus()}
             />
           )}
 
@@ -159,6 +163,9 @@ export default function CreateRequestScreen() {
             value={title}
             className="border border-gray-300 rounded-lg pl-2.5 pr-3 py-3"
             onChangeText={(text) => setTitle(text)}
+            ref={titleRef}
+            returnKeyType="next"
+            onSubmitEditing={() => descriptionRef.current?.focus()}
           />
 
           <TextInput
@@ -169,6 +176,7 @@ export default function CreateRequestScreen() {
             textAlignVertical="top"
             value={description}
             onChangeText={(text) => setDescription(text)}
+            ref={descriptionRef}
           />
 
           <NormalText className="text-secondary">
