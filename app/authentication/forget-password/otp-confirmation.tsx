@@ -83,7 +83,8 @@ export default function OTPConfirmationScreen() {
                 Nhập mã OTP
               </SemiText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại đã đăng ký
+                Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại đã đăng
+                ký
               </NormalText>
             </View>
 

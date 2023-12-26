@@ -99,7 +99,7 @@ export default function ChangePINConfirmationScreen() {
                 Xác nhận thay đổi
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã OTP vừa được gửi tới số điện thoại của bạn
+                Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại của bạn
               </NormalText>
             </View>
 
