@@ -104,7 +104,7 @@ export default function ChangePasswordScreen() {
 
   return (
     <>
-      <SharedLayout title="Đặt lại mật khẩu">
+      <SharedLayout title="Đặt lại mật khẩu" backHref={'/account/my-wallet'}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           className="flex-1 pt-4"

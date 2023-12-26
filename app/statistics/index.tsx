@@ -197,7 +197,7 @@ export default function TransactionStatisticsScreen() {
   ]
 
   return (
-    <SharedLayout title="Thống kê giao dịch">
+    <SharedLayout title="Thống kê giao dịch" backHref={'/account/my-wallet'}>
       {isLoading ? (
         <LoadingSpin />
       ) : (
