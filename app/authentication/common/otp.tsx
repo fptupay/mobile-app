@@ -4,6 +4,7 @@ import { Modal } from '@/components/Modal'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import useCountdown from '@/hooks/useCountdown'
 import { useResendOTP } from '@/hooks/useResendOTP'
 import { usePhoneStore } from '@/stores/phoneStore'
 import { OtpInputRef } from '@/types/OtpInput.type'
@@ -11,7 +12,7 @@ import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -31,12 +32,18 @@ export default function SignUpOtpScreen() {
   const [isVisible, setIsVisible] = useState(false)
   const { phone } = usePhoneStore()
 
+  const { secondsLeft, start } = useCountdown()
+
   const { type } = useLocalSearchParams()
 
   const handleClear = () => {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  useEffect(() => {
+    start(60)
+  }, [])
 
   const verifyOtpMutation = useMutation({
     mutationFn: (data: { otp: string }) => {
@@ -92,7 +99,8 @@ export default function SignUpOtpScreen() {
                   Nhập mã OTP
                 </MediumText>
                 <NormalText className="text-tertiary mt-1">
-                  Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại {phone}
+                  Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại{' '}
+                  {phone}
                 </NormalText>
               </View>
 
@@ -111,21 +119,32 @@ export default function SignUpOtpScreen() {
                 </Pressable>
               </View>
 
-              <View className="w-full mt-8 space-y-2">
-                <View className="flex flex-row justify-center">
-                  <NormalText className="text-tertiary mb-2 flex-row items-center">
-                    Không nhận được mã?
-                  </NormalText>
-                  <TouchableOpacity onPress={() => mutate()}>
+              <View>
+                <View className="flex justify-center mb-4">
+                  <TouchableOpacity
+                    onPress={() => mutate()}
+                    disabled={secondsLeft > 0}
+                  >
                     {isLoading ? (
                       <ActivityIndicator size="small" color="#F97316" />
                     ) : (
-                      <NormalText className="text-primary ml-1">
+                      <NormalText
+                        className={`text-center ${
+                          secondsLeft > 0 ? 'text-tertiary' : 'text-primary'
+                        }`}
+                      >
                         {' '}
-                        Gửi lại
+                        Gửi lại mã
                       </NormalText>
                     )}
                   </TouchableOpacity>
+                  <NormalText
+                    className={`text-center text-tertiary ${
+                      secondsLeft > 0 ? 'block' : 'hidden'
+                    }`}
+                  >
+                    Còn lại {secondsLeft} giây
+                  </NormalText>
                 </View>
                 <TextButton
                   text="Xác nhận"

@@ -3,8 +3,11 @@ import { successResponseStatus } from '@/utils/helper'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
+import useCountdown from './useCountdown'
 
 export const useResendOTP = () => {
+  const { start } = useCountdown()
+
   return useMutation({
     mutationFn: generateOTP,
     onSuccess: (data) => {
@@ -13,6 +16,7 @@ export const useResendOTP = () => {
           type: 'success',
           text1: 'Đã gửi lại mã OTP'
         })
+        start(60)
       } else {
         Toast.show({
           type: 'error',

@@ -2,6 +2,7 @@ import { loginOtpUser, loginUser } from '@/api/authentication'
 import { OtpInput } from '@/components/OtpInput'
 import { MediumText, NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import useCountdown from '@/hooks/useCountdown'
 import { usePushNotifications } from '@/hooks/usePushNotification'
 import { LoginOtpFormSchema } from '@/schemas/auth-schema'
 import { useAccountStore } from '@/stores/accountStore'
@@ -11,7 +12,7 @@ import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -33,12 +34,17 @@ export default function SignUpOtpScreen() {
   const [otpCode, setOtpCode] = useState<string>('')
   const { credentials } = useAccountStore()
 
+  const { secondsLeft, start } = useCountdown()
   const { expoPushToken } = usePushNotifications()
 
   const handleClear = () => {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  useEffect(() => {
+    start(60)
+  }, [])
 
   const loginOtpMutation = useMutation({
     mutationFn: (data: LoginOtpFormSchema) => loginOtpUser(data, expoPushToken),
@@ -126,7 +132,8 @@ export default function SignUpOtpScreen() {
                 Nhập mã OTP
               </MediumText>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại đã đăng ký
+                Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại đã đăng
+                ký
               </NormalText>
             </View>
 
@@ -146,20 +153,31 @@ export default function SignUpOtpScreen() {
             </View>
 
             <View className="w-full mt-8">
-              <View className="flex flex-row justify-center">
-                <NormalText className="text-tertiary mb-2 flex-row items-center">
-                  Không nhận được mã?
-                </NormalText>
-                <TouchableOpacity onPress={handleResendOTP}>
+              <View className="flex justify-center mb-4">
+                <TouchableOpacity
+                  onPress={handleResendOTP}
+                  disabled={secondsLeft > 0}
+                >
                   {resendOTPMutation.isLoading ? (
                     <ActivityIndicator size="small" color="#F97316" />
                   ) : (
-                    <NormalText className="text-primary ml-1">
+                    <NormalText
+                      className={`text-center ${
+                        secondsLeft > 0 ? 'text-tertiary' : 'text-primary'
+                      }`}
+                    >
                       {' '}
-                      Gửi lại
+                      Gửi lại mã
                     </NormalText>
                   )}
                 </TouchableOpacity>
+                <NormalText
+                  className={`text-center text-tertiary ${
+                    secondsLeft > 0 ? 'block' : 'hidden'
+                  }`}
+                >
+                  Còn lại {secondsLeft} giây
+                </NormalText>
               </View>
 
               <TextButton

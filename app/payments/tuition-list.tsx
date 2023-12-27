@@ -1,31 +1,31 @@
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import SharedLayout from '@/components/SharedLayout'
-import { useQuery } from '@tanstack/react-query'
 import { getDNGBillByFeeType } from '@/api/bill'
-import LoadingSpin from '@/components/LoadingSpin'
+import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import CustomIcon from '@/components/Icon'
 import { MediumText, NormalText } from '@/components/Themed'
+import CustomIcon from '@/components/Icon'
+import LoadingSpin from '@/components/LoadingSpin'
 
-export default function OtherFeeListScreen() {
-  const otherFeeData = useQuery({
+export default function TuitionScreen() {
+  const tuitionData = useQuery({
     queryKey: ['otherFee'],
-    queryFn: () => getDNGBillByFeeType('khac')
+    queryFn: () => getDNGBillByFeeType('hp')
   })
 
   return (
-    <SharedLayout title="Phí đơn từ" backHref="/account/payments">
-      {otherFeeData.data ? (
+    <SharedLayout title="Học phí" backHref="/account/payments">
+      {tuitionData.data ? (
         <FlatList
-          data={otherFeeData?.data?.data}
+          data={tuitionData?.data?.data}
           renderItem={({ item }) => (
             <TouchableOpacity
               className="p-4 mt-6 border flex-row justify-between items-center border-gray-300 rounded-lg"
               onPress={() =>
                 router.push({
                   pathname: '/payments/payment-bill',
-                  params: { type: 'khac' }
+                  params: { type: 'hp' }
                 } as any)
               }
               activeOpacity={0.8}
@@ -44,9 +44,9 @@ export default function OtherFeeListScreen() {
           keyExtractor={(item) => item.id}
           ListEmptyComponent={() => (
             <View className="flex flex-1 items-center justify-center mt-20 mx-auto">
-              <CustomIcon name="WalletCards" size={32} color="#666" />
+              <CustomIcon name="School" size={32} color="#666" />
               <NormalText className="text-center text-tertiary mt-4 w-72">
-                Hiện tại bạn không có khoản phí đơn từ nào cần đóng.
+                Hiện tại bạn không có khoản học phí nào cần đóng.
               </NormalText>
             </View>
           )}

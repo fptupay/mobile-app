@@ -9,6 +9,7 @@ import { OtpInput } from '@/components/OtpInput'
 import SharedLayout from '@/components/SharedLayout'
 import { NormalText } from '@/components/Themed'
 import TextButton, { TextButtonType } from '@/components/buttons/TextButton'
+import useCountdown from '@/hooks/useCountdown'
 import {
   BankLinkAccountVerifySchema,
   BankLinkCardVerifySchema,
@@ -21,7 +22,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -42,6 +43,12 @@ export default function OtpScreen() {
 
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
+
+  const { secondsLeft, start } = useCountdown()
+
+  useEffect(() => {
+    start(60)
+  }, [])
 
   const handleClear = () => {
     otpInputRef.current?.clear()
@@ -97,6 +104,7 @@ export default function OtpScreen() {
           type: 'success',
           text1: 'Đã gửi lại mã OTP'
         })
+        start(60)
       }
     },
     onError: (error: Error) => {
@@ -155,7 +163,7 @@ export default function OtpScreen() {
           <View className="flex-1 pt-8 space-y-8">
             <View>
               <NormalText className="text-tertiary mt-1">
-                Vui lòng nhập mã 6 số vừa được gửi tới số điện thoại{' '}
+                Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại{' '}
                 {formatPhoneNumber(phone?.data.phone_number || '')}
               </NormalText>
             </View>
@@ -175,22 +183,32 @@ export default function OtpScreen() {
               </Pressable>
             </View>
 
-            <View className="w-full mt-8 space-y-2">
-              <View className="flex flex-row justify-center">
-                <NormalText className="text-tertiary mb-2 flex-row items-center">
-                  Không nhận được mã?
-                </NormalText>
-                <TouchableOpacity onPress={handleResendOTP}>
-                  {bankLinkAccountMutation.isLoading ||
-                  bankLinkCardMutation.isLoading ? (
+            <View>
+              <View className="flex justify-center mb-4">
+                <TouchableOpacity
+                  onPress={handleResendOTP}
+                  disabled={secondsLeft > 0}
+                >
+                  {bankLinkAccountMutation.isLoading || bankLinkCardMutation ? (
                     <ActivityIndicator size="small" color="#F97316" />
                   ) : (
-                    <NormalText className="text-primary ml-1">
+                    <NormalText
+                      className={`text-center ${
+                        secondsLeft > 0 ? 'text-tertiary' : 'text-primary'
+                      }`}
+                    >
                       {' '}
-                      Gửi lại
+                      Gửi lại mã
                     </NormalText>
                   )}
                 </TouchableOpacity>
+                <NormalText
+                  className={`text-center text-tertiary ${
+                    secondsLeft > 0 ? 'block' : 'hidden'
+                  }`}
+                >
+                  Còn lại {secondsLeft} giây
+                </NormalText>
               </View>
               <TextButton
                 text="Xác nhận"

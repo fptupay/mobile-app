@@ -42,8 +42,8 @@ export default function OldPINScreen() {
   return (
     <SharedLayout title="Thay đổi PIN OTP">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex-1 px-4 bg-white">
-          <View className="flex space-y-4 mt-8">
+        <View className="flex-1 mt-4 bg-white">
+          <View className="flex space-y-4 mt-4">
             <MediumText className="text-center text-secondary mb-2">
               Nhâp mã PIN OTP hiện tại
             </MediumText>

@@ -1,13 +1,10 @@
-import { getDNGBillByFeeType } from '@/api/bill'
 import CustomIcon from '@/components/Icon'
-import LoadingSpin from '@/components/LoadingSpin'
 import { Modal } from '@/components/Modal'
 import SharedLayout from '@/components/SharedLayout'
 import { MediumText, NormalText, SemiText } from '@/components/Themed'
 import TextButton from '@/components/buttons/TextButton'
 import { usePaymentStore } from '@/stores/paymentStore'
 import { IconProps } from '@/types/Icon.type'
-import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -16,28 +13,18 @@ interface PaymentItemProps {
   title?: string
   icon: IconProps['name']
   href?: any
-  amount?: number
-  type?: string
 }
 
-const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
+const PaymentItem = ({ title, icon, href }: PaymentItemProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const [isModal2Visible, setIsModal2Visible] = useState(false)
 
   const { pendingBill } = usePaymentStore()
 
   const handlePaymentItemPress = (href: any) => {
     if (pendingBill && title === 'Ký túc xá') {
       setIsModalVisible(true)
-    } else if (title === 'Học phí kỳ tiếp' && amount === 0) {
-      setIsModal2Visible(true)
-    } else if (title === 'Ký túc xá' || title === 'Phí đơn từ') {
-      router.push(href)
     } else {
-      router.push({
-        pathname: '/payments/payment-bill',
-        params: { type: type }
-      } as any)
+      router.push(href)
     }
   }
 
@@ -83,35 +70,11 @@ const PaymentItem = ({ title, icon, href, amount, type }: PaymentItemProps) => {
           </Modal.Body>
         </Modal.Container>
       </Modal>
-
-      <Modal isVisible={isModal2Visible}>
-        <Modal.Container>
-          <Modal.Header title="Lưu ý" />
-          <Modal.Body>
-            <NormalText className="text-tertiary">
-              Bạn đang không có khoản học phí nào cần thanh toán.
-            </NormalText>
-
-            <View className="mt-6 w-full">
-              <TextButton
-                text="Đóng"
-                type="primary"
-                onPress={() => setIsModal2Visible(false)}
-              />
-            </View>
-          </Modal.Body>
-        </Modal.Container>
-      </Modal>
     </>
   )
 }
 
 export default function PaymentsScreen() {
-  const tuitionData = useQuery({
-    queryKey: ['tuition'],
-    queryFn: () => getDNGBillByFeeType('hp')
-  })
-
   return (
     <SharedLayout
       backHref="/account/home"
@@ -124,39 +87,23 @@ export default function PaymentsScreen() {
         Lựa chọn các khoản nộp
       </SemiText>
 
-      {tuitionData ? (
-        <ScrollView className="mt-4">
-          <PaymentItem
-            title="Học phí kỳ tiếp"
-            icon="GraduationCap"
-            href="payment-bill"
-            amount={
-              tuitionData &&
-              tuitionData.data &&
-              tuitionData.data.success &&
-              tuitionData.data.data &&
-              tuitionData.data.data[0]
-                ? tuitionData.data.data[0].amount
-                : 0
-            }
-            type="hp"
-          />
-          <PaymentItem
-            title="Ký túc xá"
-            icon="Home"
-            href="/payments/dormitory-fee"
-            type="ktx"
-          />
-          <PaymentItem
-            title="Phí đơn từ"
-            icon="MoreHorizontal"
-            href="/payments/other-fee-list"
-            type="khac"
-          />
-        </ScrollView>
-      ) : (
-        <LoadingSpin />
-      )}
+      <ScrollView className="mt-4">
+        <PaymentItem
+          title="Học phí"
+          icon="GraduationCap"
+          href="/payments/tuition-list"
+        />
+        <PaymentItem
+          title="Ký túc xá"
+          icon="Home"
+          href="/payments/dormitory-fee"
+        />
+        <PaymentItem
+          title="Phí đơn từ"
+          icon="MoreHorizontal"
+          href="/payments/other-fee-list"
+        />
+      </ScrollView>
     </SharedLayout>
   )
 }

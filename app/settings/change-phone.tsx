@@ -61,7 +61,7 @@ export default function ChangePhoneNumberScreen() {
     changePhoneNumberMutation.isLoading || !phoneNumber || !password
 
   return (
-    <SharedLayout title="Đặt lại số điện thoại">
+    <SharedLayout title="Đặt lại số điện thoại" backHref={'/account/my-wallet'}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 pt-4"

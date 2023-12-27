@@ -13,7 +13,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { StatusBar } from 'expo-status-bar'
 import * as SecureStore from 'expo-secure-store'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -29,18 +29,24 @@ import Toast from 'react-native-toast-message'
 import { router } from 'expo-router'
 import { useAccountStore } from '@/stores/accountStore'
 import { useResendOTP } from '@/hooks/useResendOTP'
+import useCountdown from '@/hooks/useCountdown'
 
 export default function SmartOTPConfirmationScreen() {
   const otpInputRef = useRef<OtpInputRef>(null)
   const [otpCode, setOtpCode] = useState<string>('')
   const [isVisible, setIsVisible] = useState(false)
 
+  const { start, secondsLeft } = useCountdown()
   const { username } = useAccountStore((state) => state.details)
 
   const handleClear = () => {
     otpInputRef.current?.clear()
     setOtpCode('')
   }
+
+  useEffect(() => {
+    start(60)
+  }, [])
 
   const registerOTPMutation = useMutation({
     mutationFn: (data: any) => registerSmartOTP(data),
@@ -103,7 +109,8 @@ export default function SmartOTPConfirmationScreen() {
                   Xác nhận đăng ký
                 </MediumText>
                 <NormalText className="text-tertiary mt-1">
-                  Vui lòng nhập mã OTP vừa được gửi tới số điện thoại của bạn
+                  Vui lòng nhập mã OTP 6 số vừa được gửi tới số điện thoại của
+                  bạn
                 </NormalText>
               </View>
 
@@ -122,21 +129,32 @@ export default function SmartOTPConfirmationScreen() {
                 </Pressable>
               </View>
 
-              <View className="w-full mt-8 space-y-2">
-                <View className="flex flex-row justify-center">
-                  <NormalText className="text-tertiary mb-2 flex-row items-center">
-                    Không nhận được mã?
-                  </NormalText>
-                  <TouchableOpacity onPress={() => mutate()}>
+              <View>
+                <View className="flex justify-center mb-4">
+                  <TouchableOpacity
+                    onPress={() => mutate()}
+                    disabled={secondsLeft > 0}
+                  >
                     {isLoading ? (
                       <ActivityIndicator size="small" color="#F97316" />
                     ) : (
-                      <NormalText className="text-primary ml-1">
+                      <NormalText
+                        className={`text-center ${
+                          secondsLeft > 0 ? 'text-tertiary' : 'text-primary'
+                        }`}
+                      >
                         {' '}
-                        Gửi lại
+                        Gửi lại mã
                       </NormalText>
                     )}
                   </TouchableOpacity>
+                  <NormalText
+                    className={`text-center text-tertiary ${
+                      secondsLeft > 0 ? 'block' : 'hidden'
+                    }`}
+                  >
+                    Còn lại {secondsLeft} giây
+                  </NormalText>
                 </View>
                 <TextButton
                   text="Xác nhận"

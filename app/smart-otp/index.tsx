@@ -8,7 +8,7 @@ import { router } from 'expo-router'
 export default function SmartOTPSetupScreen() {
   const { hasRegisteredOTP } = useAccountStore()
   return (
-    <SharedLayout title="Thiết lập Smart OTP">
+    <SharedLayout title="Thiết lập Smart OTP" backHref={'/account/my-wallet'}>
       <View className="mt-6">
         <View className="flex flex-row justify-between items-baseline">
           <NormalText className="text-secondary">
